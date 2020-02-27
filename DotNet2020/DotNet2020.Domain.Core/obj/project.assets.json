@@ -1053,23 +1053,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\satta\\.nuget\\packages\\": {},
-    "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
+    "C:\\Users\\Arleard\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Projects\\.Net-2020\\DotNet2020\\DotNet2020.Domain.Core\\DotNet2020.Domain.Core.csproj",
+      "projectUniqueName": "C:\\Users\\Arleard\\Documents\\GitHub\\.Net-2020\\DotNet2020\\DotNet2020.Domain.Core\\DotNet2020.Domain.Core.csproj",
       "projectName": "DotNet2020.Domain.Core",
-      "projectPath": "C:\\Projects\\.Net-2020\\DotNet2020\\DotNet2020.Domain.Core\\DotNet2020.Domain.Core.csproj",
-      "packagesPath": "C:\\Users\\satta\\.nuget\\packages\\",
-      "outputPath": "C:\\Projects\\.Net-2020\\DotNet2020\\DotNet2020.Domain.Core\\obj\\",
+      "projectPath": "C:\\Users\\Arleard\\Documents\\GitHub\\.Net-2020\\DotNet2020\\DotNet2020.Domain.Core\\DotNet2020.Domain.Core.csproj",
+      "packagesPath": "C:\\Users\\Arleard\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\Arleard\\Documents\\GitHub\\.Net-2020\\DotNet2020\\DotNet2020.Domain.Core\\obj\\",
       "projectStyle": "PackageReference",
-      "fallbackFolders": [
-        "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
-      ],
       "configFilePaths": [
-        "C:\\Users\\satta\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\Arleard\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -1124,7 +1120,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.100\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.101\\RuntimeIdentifierGraph.json"
       }
     }
   }
