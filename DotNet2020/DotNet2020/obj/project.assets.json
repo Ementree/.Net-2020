@@ -1424,6 +1424,26 @@
         "runtime": {
           "lib/netstandard1.3/System.Xml.XmlSerializer.dll": {}
         }
+      },
+      "DotNet2020.Data/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v3.1",
+        "dependencies": {
+          "Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore": "3.1.0",
+          "Microsoft.AspNetCore.Identity.EntityFrameworkCore": "3.1.0",
+          "Microsoft.AspNetCore.Identity.UI": "3.1.0",
+          "Microsoft.EntityFrameworkCore.SqlServer": "3.1.0",
+          "Microsoft.EntityFrameworkCore.Tools": "3.1.0"
+        },
+        "compile": {
+          "bin/placeholder/DotNet2020.Data.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/DotNet2020.Data.dll": {}
+        },
+        "frameworkReferences": [
+          "Microsoft.AspNetCore.App"
+        ]
       }
     }
   },
@@ -5329,10 +5349,16 @@
         "system.xml.xmlserializer.4.3.0.nupkg.sha512",
         "system.xml.xmlserializer.nuspec"
       ]
+    },
+    "DotNet2020.Data/1.0.0": {
+      "type": "project",
+      "path": "../DotNet2020.Data/DotNet2020.Data.csproj",
+      "msbuildProject": "../DotNet2020.Data/DotNet2020.Data.csproj"
     }
   },
   "projectFileDependencyGroups": {
     ".NETCoreApp,Version=v3.1": [
+      "DotNet2020.Data >= 1.0.0",
       "Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore >= 3.1.0",
       "Microsoft.AspNetCore.Identity.EntityFrameworkCore >= 3.1.0",
       "Microsoft.AspNetCore.Identity.UI >= 3.1.0",
@@ -5369,7 +5395,11 @@
       },
       "frameworks": {
         "netcoreapp3.1": {
-          "projectReferences": {}
+          "projectReferences": {
+            "C:\\Projects\\.Net-2020\\DotNet2020\\DotNet2020.Data\\DotNet2020.Data.csproj": {
+              "projectPath": "C:\\Projects\\.Net-2020\\DotNet2020\\DotNet2020.Data\\DotNet2020.Data.csproj"
+            }
+          }
         }
       },
       "warningProperties": {
