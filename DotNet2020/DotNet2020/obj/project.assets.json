@@ -1429,6 +1429,7 @@
         "type": "project",
         "framework": ".NETCoreApp,Version=v3.1",
         "dependencies": {
+          "DotNet2020.Domain.Core": "1.0.0",
           "Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore": "3.1.0",
           "Microsoft.AspNetCore.Identity.EntityFrameworkCore": "3.1.0",
           "Microsoft.AspNetCore.Identity.UI": "3.1.0",
@@ -1444,6 +1445,21 @@
         "frameworkReferences": [
           "Microsoft.AspNetCore.App"
         ]
+      },
+      "DotNet2020.Domain.Core/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v3.1",
+        "dependencies": {
+          "Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore": "3.1.0",
+          "Microsoft.AspNetCore.Identity.EntityFrameworkCore": "3.1.0",
+          "Microsoft.AspNetCore.Identity.UI": "3.1.0"
+        },
+        "compile": {
+          "bin/placeholder/DotNet2020.Domain.Core.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/DotNet2020.Domain.Core.dll": {}
+        }
       }
     }
   },
@@ -5354,6 +5370,11 @@
       "type": "project",
       "path": "../DotNet2020.Data/DotNet2020.Data.csproj",
       "msbuildProject": "../DotNet2020.Data/DotNet2020.Data.csproj"
+    },
+    "DotNet2020.Domain.Core/1.0.0": {
+      "type": "project",
+      "path": "../DotNet2020.Domain.Core/DotNet2020.Domain.Core.csproj",
+      "msbuildProject": "../DotNet2020.Domain.Core/DotNet2020.Domain.Core.csproj"
     }
   },
   "projectFileDependencyGroups": {
