@@ -43,7 +43,8 @@ namespace DotNet2020.Data.Migrations
                     AccessFailedCount = table.Column<int>(nullable: false),
                     FirstName = table.Column<string>(nullable: true),
                     LastName = table.Column<string>(nullable: true),
-                    Position = table.Column<string>(nullable: true)
+                    Position = table.Column<string>(nullable: true),
+                    Test = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {

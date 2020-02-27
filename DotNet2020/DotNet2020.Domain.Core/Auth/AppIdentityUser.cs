@@ -8,7 +8,9 @@ namespace DotNet2020.Data
         public string LastName { get;protected set; }
         public string Position { get;protected set; }
 
-        public AppIdentityUser(string userName,string email,string firstName,string lastName,string position)
+        public string Test { get; protected set; }
+
+        public AppIdentityUser(string userName,string email,string firstName,string lastName,string position, string test)
             :base(userName)
         {
             Email = email;
@@ -16,6 +18,7 @@ namespace DotNet2020.Data
             FirstName = firstName;
             LastName = lastName;
             Position = position;
+            Test = test;
         }
 
         // For EF Core only
