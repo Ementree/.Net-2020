@@ -12,6 +12,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using DotNet2020.Data;
+using Microsoft.AspNetCore.Mvc.ApplicationParts;
+using DotNet2020.Controllers;
+using System.Reflection;
 
 namespace DotNet2020
 {
@@ -28,12 +31,18 @@ namespace DotNet2020
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseNpgsql(
-                    Configuration.GetConnectionString("DefaultConnection"), b => b.MigrationsAssembly("DotNet2020.Data")));
+                options.UseSqlServer(
+                    Configuration.GetConnectionString("DefaultConnection")));
             services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddControllersWithViews();
             services.AddRazorPages();
+
+            var assembly = typeof(HomeController).GetTypeInfo().Assembly;
+            // This creates an AssemblyPart, but does not create any related parts for items such as views.
+            var part = new AssemblyPart(assembly);
+            services.AddControllersWithViews()
+                .ConfigureApplicationPartManager(apm => apm.ApplicationParts.Add(part));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
