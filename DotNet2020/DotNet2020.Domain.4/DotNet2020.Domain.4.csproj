@@ -8,4 +8,7 @@
   <ItemGroup>
     <Folder Include="Model\" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DotNet2020.Domain.Core\DotNet2020.Domain.Core.csproj" />
+  </ItemGroup>
 </Project>
