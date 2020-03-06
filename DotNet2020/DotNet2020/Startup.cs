@@ -38,11 +38,9 @@ namespace DotNet2020
             services.AddControllersWithViews();
             services.AddRazorPages();
 
-            var assembly = typeof(HomeController).GetTypeInfo().Assembly;
-            // This creates an AssemblyPart, but does not create any related parts for items such as views.
-            var part = new AssemblyPart(assembly);
+            var assembly = typeof(MySharedController).Assembly;
             services.AddControllersWithViews()
-                .ConfigureApplicationPartManager(apm => apm.ApplicationParts.Add(part));
+                .AddApplicationPart(assembly);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
