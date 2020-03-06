@@ -15,6 +15,7 @@ using DotNet2020.Data;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using DotNet2020.Controllers;
 using System.Reflection;
+using DotNet2020.Domain._4.Controllers;
 
 namespace DotNet2020
 {
@@ -38,7 +39,7 @@ namespace DotNet2020
             services.AddControllersWithViews();
             services.AddRazorPages();
 
-            var assembly = typeof(MySharedController).Assembly;
+            var assembly = typeof(CalendarController).Assembly;
             services.AddControllersWithViews()
                 .AddApplicationPart(assembly);
         }

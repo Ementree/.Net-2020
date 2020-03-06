@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNet2020.Domain.Core", "D
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotNet2020.Data", "DotNet2020.Data\DotNet2020.Data.csproj", "{545CEA97-14AD-400D-B714-0987F796FEF2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotNet2020.Domain.4", "DotNet2020.Domain.4\DotNet2020.Domain.4.csproj", "{1EC9CCCA-743E-47D2-915E-1D88699F3A5D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotNet2020.Domain.4", "DotNet2020.Domain.4\DotNet2020.Domain.4.csproj", "{C4D60FA2-0215-4DC3-AC50-039E714348AD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,10 +29,10 @@ Global
 		{545CEA97-14AD-400D-B714-0987F796FEF2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{545CEA97-14AD-400D-B714-0987F796FEF2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{545CEA97-14AD-400D-B714-0987F796FEF2}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1EC9CCCA-743E-47D2-915E-1D88699F3A5D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1EC9CCCA-743E-47D2-915E-1D88699F3A5D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1EC9CCCA-743E-47D2-915E-1D88699F3A5D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1EC9CCCA-743E-47D2-915E-1D88699F3A5D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C4D60FA2-0215-4DC3-AC50-039E714348AD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C4D60FA2-0215-4DC3-AC50-039E714348AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C4D60FA2-0215-4DC3-AC50-039E714348AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C4D60FA2-0215-4DC3-AC50-039E714348AD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
