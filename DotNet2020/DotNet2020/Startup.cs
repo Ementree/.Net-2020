@@ -16,6 +16,8 @@ using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using DotNet2020.Controllers;
 using System.Reflection;
 using DotNet2020.Domain._4.Controllers;
+using Microsoft.AspNetCore.Mvc.Razor;
+using DotNet2020.Domain._4;
 
 namespace DotNet2020
 {
@@ -39,9 +41,16 @@ namespace DotNet2020
             services.AddControllersWithViews();
             services.AddRazorPages();
 
+            services.Configure<RazorViewEngineOptions>(options =>
+            {
+                options.ViewLocationExpanders.Add(new CustomViewLocationExpander2());
+            });
+
             var assembly = typeof(CalendarController).Assembly;
             services.AddControllersWithViews()
                 .AddApplicationPart(assembly);
+
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
