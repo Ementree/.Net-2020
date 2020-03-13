@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
@@ -20,16 +20,8 @@
 
 
   <ItemGroup>
-    <Folder Include="Models\" />
-    <Folder Include="Views\Calendar\" />
-  </ItemGroup>
-
-
-  <ItemGroup>
     <ProjectReference Include="..\DotNet2020.Data\DotNet2020.Data.csproj" />
-    <ProjectReference Include="..\DotNet2020.Domain.4\DotNet2020.Domain.4.csproj">
-      <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
-    </ProjectReference>
+    <ProjectReference Include="..\DotNet2020.Domain.4\DotNet2020.Domain.4.csproj" />
   </ItemGroup>
 
 </Project>

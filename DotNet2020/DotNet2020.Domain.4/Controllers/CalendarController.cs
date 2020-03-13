@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 
 namespace DotNet2020.Domain._4.Controllers
 {
@@ -29,7 +28,7 @@ namespace DotNet2020.Domain._4.Controllers
             return View();
         }
 
-        public IActionResult AddRecomendation()
+        public IActionResult AddRecommendation()
         {
             return View();
         }

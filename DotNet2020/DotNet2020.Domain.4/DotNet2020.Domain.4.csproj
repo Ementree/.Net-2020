@@ -1,27 +1,14 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <RootNamespace>DotNet2020.Domain._4</RootNamespace>
+    <RootNamespace>DotNet2020.Domain.4</RootNamespace>
   </PropertyGroup>
-
   <ItemGroup>
-    <Folder Include="Model\" />
+    <Folder Include="Models\" />
     <Folder Include="Controllers\" />
-    <Folder Include="Views\" />
-    <Folder Include="Views\Calendar\" />
     <Folder Include="Services\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DotNet2020.Domain.Core\DotNet2020.Domain.Core.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Remove="Views\Calendar\Index.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Calendar\Index.cshtml">
-      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
   </ItemGroup>
 </Project>

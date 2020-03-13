@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 
-namespace DotNet2020.Domain._4.Model
+namespace DotNet2020.Domain._4.Models
 {
     public class Seekday : AbstractCalendarEntry
     {

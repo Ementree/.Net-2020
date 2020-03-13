@@ -1,5 +1,6 @@
 ﻿using System;
-namespace DotNet2020.Domain._4.Model
+
+namespace DotNet2020.Domain._4.Models
 {
     public class Illness : AbstractCalendarEntry
     {

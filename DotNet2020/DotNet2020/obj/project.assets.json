@@ -1469,7 +1469,10 @@
         },
         "runtime": {
           "bin/placeholder/DotNet2020.Data.dll": {}
-        }
+        },
+        "frameworkReferences": [
+          "Microsoft.AspNetCore.App"
+        ]
       },
       "DotNet2020.Domain.4/1.0.0": {
         "type": "project",
@@ -1482,7 +1485,10 @@
         },
         "runtime": {
           "bin/placeholder/DotNet2020.Domain.4.dll": {}
-        }
+        },
+        "frameworkReferences": [
+          "Microsoft.AspNetCore.App"
+        ]
       },
       "DotNet2020.Domain.Core/1.0.0": {
         "type": "project",
@@ -1497,7 +1503,10 @@
         },
         "runtime": {
           "bin/placeholder/DotNet2020.Domain.Core.dll": {}
-        }
+        },
+        "frameworkReferences": [
+          "Microsoft.AspNetCore.App"
+        ]
       }
     }
   },
@@ -5474,34 +5483,36 @@
     ]
   },
   "packageFolders": {
-    "/Users/user/.nuget/packages/": {}
+    "C:\\Users\\yasch\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/user/Documents/GitHub/Net-2020/DotNet2020/DotNet2020/DotNet2020.csproj",
+      "projectUniqueName": "C:\\Users\\yasch\\Documents\\GitHub\\.Net-2020\\DotNet2020\\DotNet2020\\DotNet2020.csproj",
       "projectName": "DotNet2020",
-      "projectPath": "/Users/user/Documents/GitHub/Net-2020/DotNet2020/DotNet2020/DotNet2020.csproj",
-      "packagesPath": "/Users/user/.nuget/packages/",
-      "outputPath": "/Users/user/Documents/GitHub/Net-2020/DotNet2020/DotNet2020/obj/",
+      "projectPath": "C:\\Users\\yasch\\Documents\\GitHub\\.Net-2020\\DotNet2020\\DotNet2020\\DotNet2020.csproj",
+      "packagesPath": "C:\\Users\\yasch\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\yasch\\Documents\\GitHub\\.Net-2020\\DotNet2020\\DotNet2020\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "/Users/user/.config/NuGet/NuGet.Config"
+        "C:\\Users\\yasch\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
         "netcoreapp3.1"
       ],
       "sources": {
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
         "netcoreapp3.1": {
           "projectReferences": {
-            "/Users/user/Documents/GitHub/Net-2020/DotNet2020/DotNet2020.Data/DotNet2020.Data.csproj": {
-              "projectPath": "/Users/user/Documents/GitHub/Net-2020/DotNet2020/DotNet2020.Data/DotNet2020.Data.csproj"
+            "C:\\Users\\yasch\\Documents\\GitHub\\.Net-2020\\DotNet2020\\DotNet2020.Data\\DotNet2020.Data.csproj": {
+              "projectPath": "C:\\Users\\yasch\\Documents\\GitHub\\.Net-2020\\DotNet2020\\DotNet2020.Data\\DotNet2020.Data.csproj"
             },
-            "/Users/user/Documents/GitHub/Net-2020/DotNet2020/DotNet2020.Domain.4/DotNet2020.Domain.4.csproj": {
-              "projectPath": "/Users/user/Documents/GitHub/Net-2020/DotNet2020/DotNet2020.Domain.4/DotNet2020.Domain.4.csproj"
+            "C:\\Users\\yasch\\Documents\\GitHub\\.Net-2020\\DotNet2020\\DotNet2020.Domain.4\\DotNet2020.Domain.4.csproj": {
+              "projectPath": "C:\\Users\\yasch\\Documents\\GitHub\\.Net-2020\\DotNet2020\\DotNet2020.Domain.4\\DotNet2020.Domain.4.csproj"
             }
           }
         }
@@ -5560,7 +5571,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/3.1.102/RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.101\\RuntimeIdentifierGraph.json"
       }
     }
   }
