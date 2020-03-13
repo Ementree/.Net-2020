@@ -1,18 +1,29 @@
-﻿@model object
+﻿<h1>Управление компетенций</h1>
+<h2>Добавление содержимого</h2>
 
-@{
-    Layout = null;
-}
+<form method="post">
+    <p>Название содержимого</p>
+    <input type="text" name="contentItem" required/>
+    <input type="text" hidden name="method" value="AddContentItem"/>
+    <p><input type="submit" value="Добавить"/></p>
+</form>
 
-<!DOCTYPE html>
+<br/>
 
-<html>
-<head>
-    <title>title</title>
-</head>
-<body>
-<div>
-      
-</div>
-</body>
-</html>
+<form method="post">
+    <p>Удаление компетенции</p>
+    <input type="text" hidden name="method" value="RemoveCompetence"/>
+    <input type="submit" value="Удалить компетенцию"/>
+</form>
+
+<br/>
+
+<form method="post">
+    <p>Удаление содержимого компетенции</p>
+    <input type="text" hidden name="method" value="RemoveContent"/>
+    @for (var i=0;i<ViewBag.Content.Length;i++)
+    {
+        <p>@ViewBag.Content[i] <input type="checkbox" name="checkboxes" value="@i"/>  </p>
+    }
+    <input type="submit" value="Удалить выбранные"/>
+</form>

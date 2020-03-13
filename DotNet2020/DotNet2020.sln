@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNet2020.Domain.Core", "D
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNet2020.Data", "DotNet2020.Data\DotNet2020.Data.csproj", "{545CEA97-14AD-400D-B714-0987F796FEF2}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNetCore2020.Domain.3", "DotNetCore2020.Domain.3\DotNetCore2020.Domain.3.csproj", "{AD1A8BB7-BB7A-496B-85D8-7C7E348DDCFE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNet2020.Domain.3", "DotNet2020.Domain.3\DotNet2020.Domain.3.csproj", "{AD1A8BB7-BB7A-496B-85D8-7C7E348DDCFE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

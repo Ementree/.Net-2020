@@ -137,12 +137,46 @@
           <e p="20200227164734_InitialCreate.cs" t="Include" />
           <e p="20200227164734_InitialCreate.Designer.cs" t="Include" />
           <e p="ApplicationDbContextModelSnapshot.cs" t="Include" />
+          <e p="Competences" t="Include">
+            <e p="20200313080508_CompetencesAdd.cs" t="Include" />
+            <e p="20200313080508_CompetencesAdd.Designer.cs" t="Include" />
+            <e p="CompetencesContextModelSnapshot.cs" t="Include" />
+          </e>
         </e>
         <e p="obj" t="ExcludeRecursive">
           <e p="Debug" t="Include">
             <e p="netcoreapp3.1" t="Include">
               <e p="DotNet2020.Data.AssemblyInfo.cs" t="Include" />
             </e>
+          </e>
+        </e>
+      </e>
+      <e p="DotNet2020.Domain.3" t="IncludeRecursive">
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="Controllers" t="Include">
+          <e p="AttestationController.cs" t="Include" />
+        </e>
+        <e p="DotNet2020.Domain.3.csproj" t="IncludeRecursive" />
+        <e p="Helpers" t="Include">
+          <e p="CompetenceHelper.cs" t="Include" />
+        </e>
+        <e p="Models" t="Include">
+          <e p="CompetencesModel.cs" t="Include" />
+          <e p="Contexts" t="Include">
+            <e p="CompetencesContext.cs" t="Include" />
+          </e>
+        </e>
+        <e p="obj" t="ExcludeRecursive">
+          <e p="Debug" t="Include">
+            <e p="netcoreapp3.1" t="Include">
+              <e p="DotNet2020.Domain.3.AssemblyInfo.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+        <e p="Repository" t="Include">
+          <e p="CompetencesRepository.cs" t="Include" />
+          <e p="Main" t="Include">
+            <e p="IRepository.cs" t="Include" />
           </e>
         </e>
       </e>
@@ -162,21 +196,6 @@
         </e>
       </e>
       <e p="DotNet2020.sln" t="IncludeFlat" />
-      <e p="DotNetCore2020.Domain.3" t="IncludeRecursive">
-        <e p="bin" t="ExcludeRecursive" />
-        <e p="Controllers" t="Include">
-          <e p="AttestationController.cs" t="Include" />
-        </e>
-        <e p="DotNetCore2020.Domain.3.csproj" t="IncludeRecursive" />
-        <e p="Models" t="Include" />
-        <e p="obj" t="ExcludeRecursive">
-          <e p="Debug" t="Include">
-            <e p="netcoreapp3.1" t="Include">
-              <e p="DotNetCore2020.Domain.3.AssemblyInfo.cs" t="Include" />
-            </e>
-          </e>
-        </e>
-      </e>
       <e p="packages" t="ExcludeRecursive" />
     </e>
   </component>
