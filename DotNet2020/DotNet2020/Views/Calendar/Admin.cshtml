@@ -1,11 +1,9 @@
 ﻿@{
     ViewData["Title"] = "Calendar";
 }
-
 <div class="text-center">
     <h1 class="display-4">Hello in calendar</h1>
 </div>
-
 <div>
     <table>
         <tbody>
@@ -25,42 +23,36 @@
     <h3>Запросы на отпуск</h3>
     <table>
         <tbody>
-            <tr>
-                <td>Иванов Иван Иванович</td>
-                <td>От 03/03/2020 до 07/03/2020  4 дня</td>
-                <td><button>Согласовать</button></td>
-                <td><button>Отклонить</button></td>
-            </tr>
-            <tr>
-                <td>Иванов Иван Иванович</td>
-                <td>От 03/03/2020 до 07/03/2020  4 дня</td>
-                <td><button>Согласовать</button></td>
-                <td><button>Отклонить</button></td>
-            </tr>
-            <tr>
-                <td>Иванов Иван Иванович</td>
-                <td>От 03/03/2020 до 07/03/2020  4 дня</td>
-                <td><button>Согласовать</button></td>
-                <td><button>Отклонить</button></td>
-            </tr>
-            <tr>
-                <td>Иванов Иван Иванович</td>
-                <td>От 03/03/2020 до 07/03/2020  4 дня</td>
-                <td><button>Согласовать</button></td>
-                <td><button>Отклонить</button></td>
-            </tr>
-            <tr>
-                <td>Иванов Иван Иванович</td>
-                <td>От 03/03/2020 до 07/03/2020  4 дня</td>
-                <td><button>Согласовать</button></td>
-                <td><button>Отклонить</button></td>
-            </tr>
-            <tr>
-                <td>Иванов Иван Иванович</td>
-                <td>От 03/03/2020 до 07/03/2020  4 дня</td>
-                <td><button>Согласовать</button></td>
-                <td><button>Отклонить</button></td>
-            </tr>
+        <tr>
+            <td>Иванов Иван Иванович</td>
+            <td>От 03/03/2020 до 07/03/2020  4 дня</td>
+            <td><button>Согласовать</button></td>
+            <td><button>Отклонить</button></td>
+        </tr>
+        <tr>
+            <td>Иванов Иван Иванович</td>
+            <td>От 03/03/2020 до 07/03/2020  4 дня</td>
+            <td><button>Согласовать</button></td>
+            <td><button>Отклонить</button></td>
+        </tr>
+        <tr>
+            <td>Иванов Иван Иванович</td>
+            <td>От 03/03/2020 до 07/03/2020  4 дня</td>
+            <td><button>Согласовать</button></td>
+            <td><button>Отклонить</button></td>
+        </tr>
+        <tr>
+            <td>Иванов Иван Иванович</td>
+            <td>От 03/03/2020 до 07/03/2020  4 дня</td>
+            <td><button>Согласовать</button></td>
+            <td><button>Отклонить</button></td>
+        </tr>
+        <tr>
+            <td>Иванов Иван Иванович</td>
+            <td>От 03/03/2020 до 07/03/2020  4 дня</td>
+            <td><button>Согласовать</button></td>
+            <td><button>Отклонить</button></td>
+        </tr>
         </tbody>
     </table>
     <hr />
@@ -68,14 +60,20 @@
     <div>
         <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
     </div>
-
+    <hr />
     <div>
-        <hr />
-        <button>Добавить рекомендации</button>
+        <form asp-action="AddRecommendation" asp-controller="Calendar">
+            <button type="submit">
+                Добавить рекомендацию
+            </button>
+        </form>
     </div>
     <br />
     <div>
-        <button>Добавить праздничные дни</button>
-        <hr />
+        <form asp-action="AddHoliday" asp-controller="Calendar">
+            <button type="submit">
+                Добавить праздничный день
+            </button>
+        </form>
     </div>
 </div>
