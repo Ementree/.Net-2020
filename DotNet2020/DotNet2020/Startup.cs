@@ -12,6 +12,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using DotNet2020.Data;
+using DotNetCore2020.Domain._3.Controllers;
 
 namespace DotNet2020
 {
@@ -34,6 +35,8 @@ namespace DotNet2020
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddControllersWithViews();
             services.AddRazorPages();
+            var assembly = typeof(AttestationController).Assembly;
+            services.AddControllersWithViews().AddApplicationPart(assembly);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

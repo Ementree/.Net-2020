@@ -26,6 +26,14 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DotNet2020.Data\DotNet2020.Data.csproj" />
+    <ProjectReference Include="..\DotNetCore2020.Domain.3\DotNetCore2020.Domain.3.csproj" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="Views\3\Attestation\Index.cshtml" />
+    <_ContentIncludedByDefault Remove="Views\3\Attestation\Test.cshtml" />
+    <_ContentIncludedByDefault Remove="Views\3\Attestation\Test2.cshtml" />
   </ItemGroup>
 
 </Project>
