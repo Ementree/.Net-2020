@@ -163,7 +163,11 @@
           <e p="CompetencesModel.cs" t="Include" />
           <e p="Contexts" t="Include">
             <e p="CompetencesContext.cs" t="Include" />
+            <e p="GradesContext.cs" t="Include" />
+            <e p="QuestionsContext.cs" t="Include" />
           </e>
+          <e p="GradesModel.cs" t="Include" />
+          <e p="QuestionsModel.cs" t="Include" />
         </e>
         <e p="obj" t="ExcludeRecursive">
           <e p="Debug" t="Include">
@@ -174,6 +178,7 @@
         </e>
         <e p="Repository" t="Include">
           <e p="CompetencesRepository.cs" t="Include" />
+          <e p="GradesRepository.cs" t="Include" />
           <e p="Main" t="Include">
             <e p="IRepository.cs" t="Include" />
           </e>
