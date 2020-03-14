@@ -5,3 +5,36 @@
 <p>@Html.ActionLink("Вопросы", "Questions", "Attestation")</p>
 <p>@Html.ActionLink("Аттестация", "Attestation", "Attestation")</p>
 <p>@Html.ActionLink("Выгрузка", "Output", "Attestation")</p>
+
+<p>@Html.ActionLink("Добавить", "WorkersAdd", "Attestation")</p>
+
+@if (ViewBag.Workers != null && ViewBag.Workers.Count > 0)
+{
+    <table border="1">
+        <tr>
+            <th>ФИО</th>
+            <th>Должность</th>
+            <th>Оклад</th>
+            <th>Премия</th>
+            <th>Комментарий</th>
+            <th>Компетенции</th>
+            <th>Предыдущие места работы</th>
+            <th>Опыт работы</th>
+            <th></th>
+        </tr>
+        @foreach (var element in ViewBag.Workers)
+        {
+            <tr><td>@element.Name</td><td>@element.Position</td><td>@element.Salary</td><td>@element.Bonus</td><td>@element.Commentary</td>
+                <td>
+                    @foreach (var competence in element.Competences)
+                    {
+                        <span>@competence </span> 
+                    }
+                </td><td>@element.PreviousWorkPlaces</td><td>@element.Experience</td>
+                <td>
+                    @Html.ActionLink($"Изменить", "WorkersUpdate", "Attestation", new {id = element.Id}, null)
+                    @Html.ActionLink($"Удалить", "WorkersRemove", "Attestation", new {id = element.Id}, null)
+                    </td></tr>
+        }
+    </table>
+}

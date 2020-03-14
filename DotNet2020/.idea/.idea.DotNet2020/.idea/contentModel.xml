@@ -47,6 +47,7 @@
             <e p="GradesAdd.cshtml" t="Include" />
             <e p="GradesManage.cshtml" t="Include" />
             <e p="Index.cshtml" t="Include" />
+            <e p="js" t="Include" />
             <e p="Output.cshtml" t="Include" />
             <e p="Questions.cshtml" t="Include" />
             <e p="QuestionsManage.cshtml" t="Include" />
@@ -149,6 +150,13 @@
             <e p="20200314162224_grades.Designer.cs" t="Include" />
             <e p="GradesContextModelSnapshot.cs" t="Include" />
           </e>
+          <e p="Worker" t="Include">
+            <e p="20200314184435_workers.cs" t="Include" />
+            <e p="20200314184435_workers.Designer.cs" t="Include" />
+            <e p="20200314192241_workersUpdate.cs" t="Include" />
+            <e p="20200314192241_workersUpdate.Designer.cs" t="Include" />
+            <e p="WorkerContextModelSnapshot.cs" t="Include" />
+          </e>
         </e>
         <e p="obj" t="ExcludeRecursive">
           <e p="Debug" t="Include">
@@ -174,8 +182,10 @@
           <e p="Contexts" t="Include">
             <e p="CompetencesContext.cs" t="Include" />
             <e p="GradesContext.cs" t="Include" />
+            <e p="WorkerContext.cs" t="Include" />
           </e>
           <e p="GradesModel.cs" t="Include" />
+          <e p="WorkerModel.cs" t="Include" />
         </e>
         <e p="obj" t="ExcludeRecursive">
           <e p="Debug" t="Include">
@@ -190,6 +200,7 @@
           <e p="Main" t="Include">
             <e p="IRepository.cs" t="Include" />
           </e>
+          <e p="WorkerRepository.cs" t="Include" />
         </e>
       </e>
       <e p="DotNet2020.Domain.Core" t="IncludeRecursive">

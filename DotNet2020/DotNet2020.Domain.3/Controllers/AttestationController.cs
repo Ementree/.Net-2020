@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using DotNet2020.Domain._3.Helpers;
 using DotNet2020.Domain._3.Models;
 using DotNet2020.Domain._3.Models.Contexts;
@@ -11,10 +12,12 @@ namespace DotNet2020.Domain._3.Controllers
     {
         private readonly CompetencesRepository _competences;
         private readonly GradesRepository _grades;
-        public AttestationController(CompetencesContext competences, GradesContext grades)
+        private readonly WorkerRepository _workers;
+        public AttestationController(CompetencesContext competences, GradesContext grades, WorkerContext workers)
         {
             _competences=new CompetencesRepository(competences);
             _grades=new GradesRepository(grades);
+            _workers = new WorkerRepository(workers);
         }
         public IActionResult Index()
         {
@@ -23,17 +26,46 @@ namespace DotNet2020.Domain._3.Controllers
 
         public IActionResult Workers()
         {
+            ViewBag.Workers = _workers.GetList();
             return View();
         }
 
-        public IActionResult WorkersUpdate()
+        [Route("Attestation/WorkersUpdate/{id}")]
+        public IActionResult WorkersUpdate(long id)
         {
+            ViewBag.Competences = _competences.GetList();
+            ViewBag.Worker = _workers.GetById(id);
+            ViewBag.Competence = _workers.GetById(id).Competences.ToList();
             return View();
+        }
+        
+        [HttpPost]
+        [Route("Attestation/WorkersUpdate/{id}")]
+        public IActionResult WorkersUpdate(long id, WorkerModel worker)
+        {
+            _workers.Update(worker);
+            return RedirectToAction("Workers");
         }
 
         public IActionResult WorkersAdd()
         {
+            ViewBag.Competences = _competences.GetList();
             return View();
+        }
+        
+        [HttpPost]
+        public IActionResult WorkersAdd(WorkerModel worker)
+        {
+            ViewBag.Competences = _competences.GetList();
+            _workers.Create(worker);
+            return RedirectToAction("Workers");
+        }
+        
+        [Route("Attestation/WorkersRemove/{id}")]
+        public IActionResult WorkersRemove(long id)
+        {
+            _workers.DeleteById(id);
+            return RedirectToAction("Workers");
         }
 
         public IActionResult Competences()

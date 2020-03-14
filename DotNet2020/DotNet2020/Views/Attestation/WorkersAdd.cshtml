@@ -1,18 +1,27 @@
-﻿@model object
+﻿@model DotNet2020.Domain._3.Models.WorkerModel
 
-@{
-    Layout = null;
-}
-
-<!DOCTYPE html>
-
-<html>
-<head>
-    <title>title</title>
-</head>
-<body>
-<div>
-      
-</div>
-</body>
-</html>
+<form method="post">
+    <p>ФИО</p>
+    <input type="text" required name="Name"/>
+    <p>Должность</p>
+    <input type="text" required name="Position"/>
+    <p>Оклад</p>
+    <input type="number" required name="Salary" step="0.01"/>
+    <p>Премия</p>
+    <input type="number" required name="Bonus" step="0.01"/>
+    <p>Комментарий</p>
+    <input type="text" required name="Commentary"/>
+    <p>Компетенции</p>
+    <select multiple name="Competences">
+        @foreach (var element in ViewBag.Competences)
+        {
+            <option>@element.Competence</option>
+        }
+    </select>
+    <p>Предыдущие места работы</p>
+    <input type="text" required name="PreviousWorkPlaces"/>
+    <p>Общий стаж</p>
+    <input type="text" required name="Experience"/>
+    <br/>
+    <input type="submit" value="Добавить"/>
+</form>

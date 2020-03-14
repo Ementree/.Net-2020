@@ -34,7 +34,7 @@
     {
         @for (var i=0;i<ViewBag.Competences.Length;i++)
         {
-            <p>@ViewBag.Competences[i] <input type="checkbox" name="checkboxes" value="@i"/>  </p>
+            <p><input type="checkbox" name="checkboxes" value="@i"/> @ViewBag.Competences[i]   </p>
         }
         <input type="submit" value="Удалить выбранные"/>
     }

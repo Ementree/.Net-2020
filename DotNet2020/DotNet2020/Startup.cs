@@ -36,6 +36,9 @@ namespace DotNet2020
             services.AddDbContext<GradesContext>(options =>
                 options.UseNpgsql(
                     Configuration.GetConnectionString("DefaultConnection"), b => b.MigrationsAssembly("DotNet2020.Data")));
+            services.AddDbContext<WorkerContext>(options =>
+                options.UseNpgsql(
+                    Configuration.GetConnectionString("DefaultConnection"), b => b.MigrationsAssembly("DotNet2020.Data")));
             #endregion
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseNpgsql(
