@@ -4,9 +4,10 @@
 <div class="text-center">
     <h1 class="display-4">Hello in calendar</h1>
 </div>
-<div>
-    <table>
-        <tbody>
+<div class="container-fluid">
+    <div class="row col-lg-12">
+        <table>
+            <tbody>
             <tr>
                 <td>A</td>
                 <td>B</td>
@@ -17,63 +18,70 @@
                 <td>2</td>
                 <td>3</td>
             </tr>
-        </tbody>
-    </table>
-    <hr />
-    <h3>Запросы на отпуск</h3>
-    <table>
-        <tbody>
-        <tr>
-            <td>Иванов Иван Иванович</td>
-            <td>От 03/03/2020 до 07/03/2020  4 дня</td>
-            <td><button>Согласовать</button></td>
-            <td><button>Отклонить</button></td>
-        </tr>
-        <tr>
-            <td>Иванов Иван Иванович</td>
-            <td>От 03/03/2020 до 07/03/2020  4 дня</td>
-            <td><button>Согласовать</button></td>
-            <td><button>Отклонить</button></td>
-        </tr>
-        <tr>
-            <td>Иванов Иван Иванович</td>
-            <td>От 03/03/2020 до 07/03/2020  4 дня</td>
-            <td><button>Согласовать</button></td>
-            <td><button>Отклонить</button></td>
-        </tr>
-        <tr>
-            <td>Иванов Иван Иванович</td>
-            <td>От 03/03/2020 до 07/03/2020  4 дня</td>
-            <td><button>Согласовать</button></td>
-            <td><button>Отклонить</button></td>
-        </tr>
-        <tr>
-            <td>Иванов Иван Иванович</td>
-            <td>От 03/03/2020 до 07/03/2020  4 дня</td>
-            <td><button>Согласовать</button></td>
-            <td><button>Отклонить</button></td>
-        </tr>
-        </tbody>
-    </table>
-    <hr />
-    <h3>Рекомендации для всех</h3>
-    <div>
-        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+            </tbody>
+        </table>
     </div>
     <hr />
-    <div>
-        <form asp-action="AddRecommendation" asp-controller="Calendar">
-            <button type="submit">
-                Добавить рекомендацию
-            </button>
-        </form>
+    <div class="row col-lg-12">
+        <h3>Запросы на отпуск</h3>
     </div>
-    <br />
-    <div>
-        <form asp-action="AddHoliday" asp-controller="Calendar">
-            <button type="submit">
-                Добавить праздничный день
-            </button>
-        </form>
+    <div class="row col-lg-12">
+        <table border="1" class="w-100">
+            <tbody>
+            <tr>
+                <td>Иванов Иван Иванович</td>
+                <td>От 03/03/2020 до 07/03/2020</td>
+                <td>4 дня</td>
+                <td><button>Согласовать</button><button>Отклонить</button></td>
+            </tr>
+            <tr>
+                <td>Григорьев Григорий Григорьевич</td>
+                <td>От 14/03/2020 до 20/03/2020  6 дней</td>
+                <td>6 дней</td>
+                <td><button>Согласовать</button><button>Отклонить</button></td>
+            </tr>
+            <tr>
+                <td>Иванов Иван Иванович</td>
+                <td>От 03/03/2020 до 07/03/2020</td>
+                <td>4 дня</td>
+                <td><button>Согласовать</button><button>Отклонить</button></td>
+            </tr>
+            <tr>
+                <td>Иванов Иван Иванович</td>
+                <td>От 03/03/2020 до 07/03/2020</td>
+                <td>4 дня</td>
+                <td><button>Согласовать</button><button>Отклонить</button></td>
+            </tr>
+            <tr>
+                <td>Иванов Иван Иванович</td>
+                <td>От 03/03/2020 до 07/03/2020</td>
+                <td>4 дня</td>
+                <td><button>Согласовать</button><button>Отклонить</button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <hr />
+    <div class="row">
+        <div class="col-lg-6">
+            <form asp-action="AddRecommendation" asp-controller="Calendar">
+                <button type="submit">
+                    Добавить рекомендацию
+                </button>
+            </form>
+            <br />
+            <form asp-action="AddHoliday" asp-controller="Calendar">
+                <button type="submit">
+                    Добавить праздничный день
+                </button>
+            </form>
+        </div>
+        <div class="col-lg-6">
+            <h3>Рекомендации для всех</h3>
+            <p>
+                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+            </p>
+        </div>
     </div>
 </div>
