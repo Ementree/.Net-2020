@@ -10,5 +10,7 @@ namespace DotNet2020.Domain._3.Models
         public string Competence { get; set; }
         
         public string[] Content { get; set; }
+        
+        public string[] Questions { get; set; }
     }
 }

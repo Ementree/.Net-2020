@@ -7,11 +7,11 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
-namespace DotNet2020.Data.Migrations.Questions
+namespace DotNet2020.Data.Migrations.Competences
 {
-    [DbContext(typeof(QuestionsContext))]
-    [Migration("20200314162730_questionsFixed")]
-    partial class questionsFixed
+    [DbContext(typeof(CompetencesContext))]
+    [Migration("20200314181438_competencesUpdate")]
+    partial class competencesUpdate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -21,7 +21,7 @@ namespace DotNet2020.Data.Migrations.Questions
                 .HasAnnotation("ProductVersion", "3.1.2")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
-            modelBuilder.Entity("DotNet2020.Domain._3.Models.QuestionsModel", b =>
+            modelBuilder.Entity("DotNet2020.Domain._3.Models.CompetencesModel", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -31,12 +31,15 @@ namespace DotNet2020.Data.Migrations.Questions
                     b.Property<string>("Competence")
                         .HasColumnType("text");
 
+                    b.Property<string[]>("Content")
+                        .HasColumnType("text[]");
+
                     b.Property<string[]>("Questions")
                         .HasColumnType("text[]");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Questions");
+                    b.ToTable("Competences");
                 });
 #pragma warning restore 612, 618
         }

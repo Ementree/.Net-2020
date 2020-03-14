@@ -4,4 +4,39 @@
  <p>@Html.ActionLink("Грейды", "Grades", "Attestation")</p>
  <p>@Html.ActionLink("Вопросы", "Questions", "Attestation")</p>
  <p>@Html.ActionLink("Аттестация", "Attestation", "Attestation")</p>
- <p>@Html.ActionLink("Выгрузка", "Output", "Attestation")</p>
+<p>@Html.ActionLink("Выгрузка", "Output", "Attestation")</p>
+
+@if (ViewBag.Questions != null && ViewBag.Questions.Count>0)
+{
+ <table border="1">
+  <tr>
+   <th>Компетенция</th>
+   <th>Вопросы</th>
+  </tr>
+  @foreach (var element in ViewBag.Questions)
+  {
+   <tr>
+    <td>
+     @element.Competence
+     <form method="post">
+      <p>@Html.ActionLink($"Изменить", "QuestionsManage", "Attestation", new {id = element.Id}, null) </p>
+     </form>
+    </td>
+    @if (element.Questions.Length == 0)
+    {
+     <td> Список вопросов пуст!</td>
+    }
+    else
+    {
+     <td>
+      @for (int i = 0; i < element.Questions.Length; i++)
+      {
+       @element.Questions[i]
+       <br/>
+      }
+     </td>
+    }
+   </tr>
+  }
+ </table>
+}

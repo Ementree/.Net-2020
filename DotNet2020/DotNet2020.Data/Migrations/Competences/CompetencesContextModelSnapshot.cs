@@ -19,7 +19,7 @@ namespace DotNet2020.Data.Migrations.Competences
                 .HasAnnotation("ProductVersion", "3.1.2")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
-            modelBuilder.Entity("DotNetCore2020.Domain._3.Models.CompetencesModel", b =>
+            modelBuilder.Entity("DotNet2020.Domain._3.Models.CompetencesModel", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -30,6 +30,9 @@ namespace DotNet2020.Data.Migrations.Competences
                         .HasColumnType("text");
 
                     b.Property<string[]>("Content")
+                        .HasColumnType("text[]");
+
+                    b.Property<string[]>("Questions")
                         .HasColumnType("text[]");
 
                     b.HasKey("Id");

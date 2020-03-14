@@ -140,19 +140,14 @@
           <e p="Competences" t="Include">
             <e p="20200313080508_CompetencesAdd.cs" t="Include" />
             <e p="20200313080508_CompetencesAdd.Designer.cs" t="Include" />
+            <e p="20200314181438_competencesUpdate.cs" t="Include" />
+            <e p="20200314181438_competencesUpdate.Designer.cs" t="Include" />
             <e p="CompetencesContextModelSnapshot.cs" t="Include" />
           </e>
           <e p="Grades" t="Include">
             <e p="20200314162224_grades.cs" t="Include" />
             <e p="20200314162224_grades.Designer.cs" t="Include" />
             <e p="GradesContextModelSnapshot.cs" t="Include" />
-          </e>
-          <e p="Questions" t="Include">
-            <e p="20200314162351_questions.cs" t="Include" />
-            <e p="20200314162351_questions.Designer.cs" t="Include" />
-            <e p="20200314162730_questionsFixed.cs" t="Include" />
-            <e p="20200314162730_questionsFixed.Designer.cs" t="Include" />
-            <e p="QuestionsContextModelSnapshot.cs" t="Include" />
           </e>
         </e>
         <e p="obj" t="ExcludeRecursive">
@@ -172,16 +167,15 @@
         <e p="Helpers" t="Include">
           <e p="CompetenceHelper.cs" t="Include" />
           <e p="GradeHelper.cs" t="Include" />
+          <e p="QuestionHelper.cs" t="Include" />
         </e>
         <e p="Models" t="Include">
           <e p="CompetencesModel.cs" t="Include" />
           <e p="Contexts" t="Include">
             <e p="CompetencesContext.cs" t="Include" />
             <e p="GradesContext.cs" t="Include" />
-            <e p="QuestionsContext.cs" t="Include" />
           </e>
           <e p="GradesModel.cs" t="Include" />
-          <e p="QuestionsModel.cs" t="Include" />
         </e>
         <e p="obj" t="ExcludeRecursive">
           <e p="Debug" t="Include">
@@ -196,7 +190,6 @@
           <e p="Main" t="Include">
             <e p="IRepository.cs" t="Include" />
           </e>
-          <e p="QuestionsRepository.cs" t="Include" />
         </e>
       </e>
       <e p="DotNet2020.Domain.Core" t="IncludeRecursive">

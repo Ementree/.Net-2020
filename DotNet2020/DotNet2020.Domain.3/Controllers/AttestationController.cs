@@ -11,12 +11,10 @@ namespace DotNet2020.Domain._3.Controllers
     {
         private readonly CompetencesRepository _competences;
         private readonly GradesRepository _grades;
-        private readonly QuestionsRepository _questions;
-        public AttestationController(CompetencesContext competences, GradesContext grades, QuestionsContext questions)
+        public AttestationController(CompetencesContext competences, GradesContext grades)
         {
             _competences=new CompetencesRepository(competences);
             _grades=new GradesRepository(grades);
-            _questions=new QuestionsRepository(questions);
         }
         public IActionResult Index()
         {
@@ -52,7 +50,11 @@ namespace DotNet2020.Domain._3.Controllers
         [HttpPost]
         public IActionResult CompetencesAdd(string competenceName)
         {
-            var competence= new CompetencesModel {Competence = competenceName, Content = new string[1]{competenceName}};
+            var competence= new CompetencesModel {Competence = competenceName, Content = new string[]{competenceName}, Questions = new string[]
+            {
+                "Вопрос №1",
+                "Вопрос №2"
+            }};
             _competences.Create(competence);
             return RedirectToAction("CompetencesManage", new { id = competence.Id });
         }
@@ -116,11 +118,23 @@ namespace DotNet2020.Domain._3.Controllers
         
         public IActionResult Questions()
         {
+            ViewBag.Questions = _competences.GetList();
             return View();
         }
         
-        public IActionResult QuestionsManage()
+        [Route("Attestation/QuestionsManage/{id}")]
+        public IActionResult QuestionsManage(long id)
         {
+            ViewBag.Questions = _competences.GetById(id).Questions;
+            return View();
+        }
+        
+        [HttpPost]
+        [Route("Attestation/QuestionsManage/{id}")]
+        public IActionResult QuestionsManage(long id, string method, string question, List<int> checkboxes)
+        {
+            QuestionHelper.Manage(_competences, id, method, question, checkboxes);
+            ViewBag.Questions = _competences.GetById(id).Questions;
             return View();
         }
         
