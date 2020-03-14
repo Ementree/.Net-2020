@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ContentModelStore">
-    <e p="C:\Users\kv4sn\.Rider2019.2\system\extResources" t="IncludeRecursive" />
-    <e p="C:\Users\kv4sn\.Rider2019.2\system\resharper-host\local\Transient\ReSharperHost\v192\SolutionCaches\_DotNet2020.-444930441.00" t="ExcludeRecursive" />
-    <e p="C:\Users\kv4sn\Desktop\Репозиторий\.Net-2020\DotNet2020" t="IncludeFlat">
+    <e p="C:\Users\kv4sn\.Rider2019.3\system\extResources" t="IncludeRecursive" />
+    <e p="C:\Users\kv4sn\.Rider2019.3\system\resharper-host\local\Transient\ReSharperHost\v193\SolutionCaches\_DotNet2020.1257148343.00" t="ExcludeRecursive" />
+    <e p="C:\Users\kv4sn\Desktop\dotnet\.Net-2020\DotNet2020" t="IncludeFlat">
       <e p="DotNet2020" t="IncludeRecursive">
         <e p="appsettings.Development.json" t="Include" />
         <e p="appsettings.json" t="Include" />
@@ -25,6 +25,7 @@
           <e p="Debug" t="Include">
             <e p="netcoreapp3.1" t="Include">
               <e p="DotNet2020.AssemblyInfo.cs" t="Include" />
+              <e p="DotNet2020.RazorAssemblyInfo.cs" t="Include" />
             </e>
           </e>
         </e>
@@ -141,6 +142,18 @@
             <e p="20200313080508_CompetencesAdd.Designer.cs" t="Include" />
             <e p="CompetencesContextModelSnapshot.cs" t="Include" />
           </e>
+          <e p="Grades" t="Include">
+            <e p="20200314162224_grades.cs" t="Include" />
+            <e p="20200314162224_grades.Designer.cs" t="Include" />
+            <e p="GradesContextModelSnapshot.cs" t="Include" />
+          </e>
+          <e p="Questions" t="Include">
+            <e p="20200314162351_questions.cs" t="Include" />
+            <e p="20200314162351_questions.Designer.cs" t="Include" />
+            <e p="20200314162730_questionsFixed.cs" t="Include" />
+            <e p="20200314162730_questionsFixed.Designer.cs" t="Include" />
+            <e p="QuestionsContextModelSnapshot.cs" t="Include" />
+          </e>
         </e>
         <e p="obj" t="ExcludeRecursive">
           <e p="Debug" t="Include">
@@ -158,6 +171,7 @@
         <e p="DotNet2020.Domain.3.csproj" t="IncludeRecursive" />
         <e p="Helpers" t="Include">
           <e p="CompetenceHelper.cs" t="Include" />
+          <e p="GradeHelper.cs" t="Include" />
         </e>
         <e p="Models" t="Include">
           <e p="CompetencesModel.cs" t="Include" />
@@ -182,6 +196,7 @@
           <e p="Main" t="Include">
             <e p="IRepository.cs" t="Include" />
           </e>
+          <e p="QuestionsRepository.cs" t="Include" />
         </e>
       </e>
       <e p="DotNet2020.Domain.Core" t="IncludeRecursive">

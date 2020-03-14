@@ -8,26 +8,37 @@
 
 <p>@Html.ActionLink("Добавить компетенцию", actionName:"CompetencesAdd", controllerName:"Attestation")</p>
 
-@if (ViewBag.Competences != null)
+@if (ViewBag.Competences != null&&ViewBag.Competences.Count>0)
 {
-    foreach (var element in ViewBag.Competences)
-    {
-        @element.Competence 
+    <table border="1">
+        <tr>
+            <th>Компетенция</th>
+            <th>Содержание</th>
+        </tr>
+        @foreach (var element in ViewBag.Competences)
+        {
+        <tr>
+        <td>
+            @element.Competence
             <form method="post">
-                <p>@Html.ActionLink($"Изменить", "CompetencesManage", "Attestation", new { id = element.Id }, null) </p>
+                <p>@Html.ActionLink($"Изменить", "CompetencesManage", "Attestation", new {id = element.Id}, null) </p>
             </form>
-            @if (element.Content.Length == 0)
-            {
-                <p>Список содержимого пуст!</p>
-            }
-            else
-            {
-                <p>Содержимое:</p>
-                for (int i = 0; i < element.Content.Length; i++)
+        </td>
+        @if (element.Content.Length == 0)
+        {
+            <td> Список содержимого пуст!</td>
+        }
+        else
+        {
+            <td>
+                @for (int i = 0; i < element.Content.Length; i++)
                 {
-                    <p>@element.Content[i]</p>
+                    @element.Content[i]
+                    <br/>
                 }
-            }
-           
-    }
+            </td>
+        }
+        </tr>
+        }
+    </table>
 }

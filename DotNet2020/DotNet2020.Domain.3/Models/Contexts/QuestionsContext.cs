@@ -9,6 +9,6 @@ namespace DotNet2020.Domain._3.Models.Contexts
             Database.EnsureCreated();
         }
 
-        public DbSet<QuestionsModel> Questions;
+        public DbSet<QuestionsModel> Questions { get; set; }
     }
 }

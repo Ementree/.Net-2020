@@ -1,30 +1,28 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\kv4sn\\Desktop\\Репозиторий\\.Net-2020\\DotNet2020\\DotNet2020.Domain.Core\\DotNet2020.Domain.Core.csproj": {}
+    "C:\\Users\\kv4sn\\Desktop\\dotnet\\.Net-2020\\DotNet2020\\DotNet2020.Domain.Core\\DotNet2020.Domain.Core.csproj": {}
   },
   "projects": {
-    "C:\\Users\\kv4sn\\Desktop\\Репозиторий\\.Net-2020\\DotNet2020\\DotNet2020.Domain.Core\\DotNet2020.Domain.Core.csproj": {
+    "C:\\Users\\kv4sn\\Desktop\\dotnet\\.Net-2020\\DotNet2020\\DotNet2020.Domain.Core\\DotNet2020.Domain.Core.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\kv4sn\\Desktop\\Репозиторий\\.Net-2020\\DotNet2020\\DotNet2020.Domain.Core\\DotNet2020.Domain.Core.csproj",
+        "projectUniqueName": "C:\\Users\\kv4sn\\Desktop\\dotnet\\.Net-2020\\DotNet2020\\DotNet2020.Domain.Core\\DotNet2020.Domain.Core.csproj",
         "projectName": "DotNet2020.Domain.Core",
-        "projectPath": "C:\\Users\\kv4sn\\Desktop\\Репозиторий\\.Net-2020\\DotNet2020\\DotNet2020.Domain.Core\\DotNet2020.Domain.Core.csproj",
+        "projectPath": "C:\\Users\\kv4sn\\Desktop\\dotnet\\.Net-2020\\DotNet2020\\DotNet2020.Domain.Core\\DotNet2020.Domain.Core.csproj",
         "packagesPath": "C:\\Users\\kv4sn\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\kv4sn\\Desktop\\Репозиторий\\.Net-2020\\DotNet2020\\DotNet2020.Domain.Core\\obj\\",
+        "outputPath": "C:\\Users\\kv4sn\\Desktop\\dotnet\\.Net-2020\\DotNet2020\\DotNet2020.Domain.Core\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
         ],
         "configFilePaths": [
-          "C:\\Users\\kv4sn\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+          "C:\\Users\\kv4sn\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "netcoreapp3.1"
         ],
         "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {

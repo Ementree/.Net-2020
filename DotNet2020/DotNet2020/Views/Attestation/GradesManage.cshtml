@@ -1,18 +1,41 @@
-﻿@model object
+﻿<h1>Управление грейдами</h1>
+<h2>Добавление компетенций</h2>
+<p>@Html.ActionLink("Грейды", "Grades", "Attestation")</p>
+<form method="post">
+    <p>Выберите компетенцию</p>
+    <select name="competenceItem">
+        @foreach (var element in ViewBag.CompetencesList)
+        {
+            <option>@element.Competence</option>
+        }
+    </select>
+    <input type="text" hidden name="method" value="AddCompetenceItem"/>
+    <p><input type="submit" value="Добавить"/></p>
+</form>
 
-@{
-    Layout = null;
-}
+<br/>
 
-<!DOCTYPE html>
+<form method="post">
+    <p>Удаление грейда</p>
+    <input type="text" hidden name="method" value="RemoveGrade"/>
+    <input type="submit" value="Удалить грейд"/>
+</form>
 
-<html>
-<head>
-    <title>title</title>
-</head>
-<body>
-<div>
-      
-</div>
-</body>
-</html>
+<br/>
+
+<form method="post">
+    <p>Удаление необходимых компетенций</p>
+    <input type="text" hidden name="method" value="RemoveCompetence"/>
+    @if (ViewBag.Competences.Length == 0)
+    {
+        <p>Список компетенций пуст!</p>
+    }
+    else
+    {
+        @for (var i=0;i<ViewBag.Competences.Length;i++)
+        {
+            <p>@ViewBag.Competences[i] <input type="checkbox" name="checkboxes" value="@i"/>  </p>
+        }
+        <input type="submit" value="Удалить выбранные"/>
+    }
+</form>

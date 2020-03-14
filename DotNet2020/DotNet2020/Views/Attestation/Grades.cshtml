@@ -1,7 +1,44 @@
 ﻿<p>@Html.ActionLink("Главная страница", "Index", "Attestation")</p>
- <p>@Html.ActionLink("Сотрудники", "Workers", "Attestation")</p>
- <p>@Html.ActionLink("Компетенции", "Competences", "Attestation")</p>
- <p>@Html.ActionLink("Грейды", "Grades", "Attestation")</p>
- <p>@Html.ActionLink("Вопросы", "Questions", "Attestation")</p>
- <p>@Html.ActionLink("Аттестация", "Attestation", "Attestation")</p>
- <p>@Html.ActionLink("Выгрузка", "Output", "Attestation")</p>
+<p>@Html.ActionLink("Сотрудники", "Workers", "Attestation")</p>
+<p>@Html.ActionLink("Компетенции", "Competences", "Attestation")</p>
+<p>@Html.ActionLink("Грейды", "Grades", "Attestation")</p>
+<p>@Html.ActionLink("Вопросы", "Questions", "Attestation")</p>
+<p>@Html.ActionLink("Аттестация", "Attestation", "Attestation")</p>
+<p>@Html.ActionLink("Выгрузка", "Output", "Attestation")</p>
+
+<p>@Html.ActionLink("Добавить грейд", actionName:"GradesAdd", controllerName:"Attestation")</p>
+
+@if (ViewBag.Grades != null && ViewBag.Grades.Count>0)
+{
+    <table border="1">
+        <tr>
+            <th>Грейд</th>
+            <th>Компетенции</th>
+        </tr>
+        @foreach (var element in ViewBag.Grades)
+        {
+            <tr>
+                <td>
+                    @element.Grade
+                    <form method="post">
+                        <p>@Html.ActionLink($"Изменить", "GradesManage", "Attestation", new {id = element.Id}, null) </p>
+                    </form>
+                </td>
+                @if (element.Competences.Length == 0)
+                {
+                    <td> Список необходимых компетенций пуст!</td>
+                }
+                else
+                {
+                    <td>
+                        @for (int i = 0; i < element.Competences.Length; i++)
+                        {
+                            @element.Competences[i]
+                            <br/>
+                        }
+                    </td>
+                }
+            </tr>
+        }
+    </table>
+}

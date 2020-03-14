@@ -10,9 +10,13 @@ namespace DotNet2020.Domain._3.Controllers
     public class AttestationController:Controller
     {
         private readonly CompetencesRepository _competences;
-        public AttestationController(CompetencesContext context)
+        private readonly GradesRepository _grades;
+        private readonly QuestionsRepository _questions;
+        public AttestationController(CompetencesContext competences, GradesContext grades, QuestionsContext questions)
         {
-            _competences=new CompetencesRepository(context);
+            _competences=new CompetencesRepository(competences);
+            _grades=new GradesRepository(grades);
+            _questions=new QuestionsRepository(questions);
         }
         public IActionResult Index()
         {
@@ -73,6 +77,7 @@ namespace DotNet2020.Domain._3.Controllers
         
         public IActionResult Grades()
         {
+            ViewBag.Grades = _grades.GetList();
             return View();
         }
         
@@ -80,9 +85,32 @@ namespace DotNet2020.Domain._3.Controllers
         {
             return View();
         }
-        
-        public IActionResult GradesManage()
+
+        [HttpPost]
+        public IActionResult GradesAdd(string gradeName)
         {
+            var grade = new GradesModels {Grade = gradeName, Competences = new string[2]{"Компетенция №1", "Компетенция №2"}};
+            _grades.Create(grade);
+            return RedirectToAction("GradesManage", new { id = grade.Id });
+        }
+        
+        [Route("Attestation/GradesManage/{id}")]
+        public IActionResult GradesManage(long id)
+        {
+            ViewBag.CompetencesList = _competences.GetList();
+            ViewBag.Competences = _grades.GetById(id).Competences;
+            return View();
+        }
+
+        [HttpPost]
+        [Route("Attestation/GradesManage/{id}")]
+        public IActionResult GradesManage(long id, string method, string competenceItem, List<int> checkboxes)
+        {
+            ViewBag.CompetencesList = _competences.GetList();
+            GradeHelper.Manage(_grades, id, method, competenceItem, checkboxes);
+            if (method == "RemoveGrade")
+                return RedirectToAction("Grades");
+            ViewBag.Competences = _grades.GetById(id).Competences;
             return View();
         }
         
