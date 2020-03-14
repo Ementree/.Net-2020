@@ -12,14 +12,22 @@
 {
     foreach (var element in ViewBag.Competences)
     {
-        <p>@element.Competence 
+        @element.Competence 
             <form method="post">
                 <p>@Html.ActionLink($"Изменить", "CompetencesManage", "Attestation", new { id = element.Id }, null) </p>
             </form>
-            <br/> Содержимое:<br/> 
-            @for (int i = 0; i < element.Content.Length; i++)
+            @if (element.Content.Length == 0)
             {
-                @element.Content[i] <br/>
-            }</p>
+                <p>Список содержимого пуст!</p>
+            }
+            else
+            {
+                <p>Содержимое:</p>
+                for (int i = 0; i < element.Content.Length; i++)
+                {
+                    <p>@element.Content[i]</p>
+                }
+            }
+           
     }
 }

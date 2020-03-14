@@ -1,6 +1,6 @@
 ﻿<h1>Управление компетенций</h1>
 <h2>Добавление содержимого</h2>
-
+<p>@Html.ActionLink("Компетенции", "Competences", "Attestation")</p>
 <form method="post">
     <p>Название содержимого</p>
     <input type="text" name="contentItem" required/>
@@ -21,9 +21,16 @@
 <form method="post">
     <p>Удаление содержимого компетенции</p>
     <input type="text" hidden name="method" value="RemoveContent"/>
-    @for (var i=0;i<ViewBag.Content.Length;i++)
+    @if (ViewBag.Content.Length == 0)
     {
-        <p>@ViewBag.Content[i] <input type="checkbox" name="checkboxes" value="@i"/>  </p>
+        <p>Список содержимого пуст!</p>
     }
-    <input type="submit" value="Удалить выбранные"/>
+    else
+    {
+        @for (var i=0;i<ViewBag.Content.Length;i++)
+        {
+            <p>@ViewBag.Content[i] <input type="checkbox" name="checkboxes" value="@i"/>  </p>
+        }
+        <input type="submit" value="Удалить выбранные"/>
+    }
 </form>

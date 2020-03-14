@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ContentModelStore">
-    <e p="C:\Users\kv4sn\.Rider2019.3\system\extResources" t="IncludeRecursive" />
-    <e p="C:\Users\kv4sn\.Rider2019.3\system\resharper-host\local\Transient\ReSharperHost\v193\SolutionCaches\_DotNet2020.1257148343.00" t="ExcludeRecursive" />
-    <e p="C:\Users\kv4sn\Desktop\dotnet\.Net-2020\DotNet2020" t="IncludeFlat">
+    <e p="C:\Users\kv4sn\.Rider2019.2\system\extResources" t="IncludeRecursive" />
+    <e p="C:\Users\kv4sn\.Rider2019.2\system\resharper-host\local\Transient\ReSharperHost\v192\SolutionCaches\_DotNet2020.-444930441.00" t="ExcludeRecursive" />
+    <e p="C:\Users\kv4sn\Desktop\Репозиторий\.Net-2020\DotNet2020" t="IncludeFlat">
       <e p="DotNet2020" t="IncludeRecursive">
         <e p="appsettings.Development.json" t="Include" />
         <e p="appsettings.json" t="Include" />
@@ -25,7 +25,6 @@
           <e p="Debug" t="Include">
             <e p="netcoreapp3.1" t="Include">
               <e p="DotNet2020.AssemblyInfo.cs" t="Include" />
-              <e p="DotNet2020.RazorAssemblyInfo.cs" t="Include" />
             </e>
           </e>
         </e>
