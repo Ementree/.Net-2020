@@ -1,6 +1,8 @@
 ﻿@{
     ViewData["Title"] = "Calendar";
 }
+
+<link rel="stylesheet" href="~/css/calendar.css">
 <div class="text-center">
     <h1 class="display-4">Hello in calendar</h1>
 </div>
@@ -69,15 +71,19 @@
     <div class="row">
         <div class="col-lg-6">
             <form asp-action="AddRecommendation" asp-controller="Calendar">
-                <button type="submit">
-                    Добавить рекомендацию
-                </button>
+                <div class="adminrecomadd">
+                    <button type="submit">
+                        Добавить рекомендацию
+                    </button>
+                </div>
             </form>
             <br />
             <form asp-action="AddHoliday" asp-controller="Calendar">
-                <button type="submit">
-                    Добавить праздничный день
-                </button>
+                <div class="adminrecomadd">
+                    <button type="submit">
+                        Добавить праздничный день
+                    </button>
+                </div>
             </form>
         </div>
         <div class="col-lg-6">
