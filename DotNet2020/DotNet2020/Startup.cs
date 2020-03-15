@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using DotNet2020.Data;
 using DotNet2020.Domain._4.Controllers;
+using DotNet2020.Domain.Services;
 
 namespace DotNet2020
 {
@@ -29,6 +30,7 @@ namespace DotNet2020
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddControllersWithViews();
             services.AddRazorPages();
+            services.AddScoped<IRecomendation, Recomendation>();
 
             var assembly = typeof(CalendarController).Assembly;
             services.AddControllersWithViews()
