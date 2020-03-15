@@ -36,7 +36,21 @@
     cursor: pointer;
 }
 
+.adminrecomadd button {
+    margin: 10px 0 0 0;
+    padding: 15px 10px 15px 10px;
+    border: 2px solid black;
+    box-shadow: 0;
+    background: #fff;
+    cursor: pointer;
+}
+
     .vacation button:hover {
+        box-shadow: 3px 3px 0px 0px #000;
+        transition: .3s;
+    }
+
+    .adminrecomadd button:hover {
         box-shadow: 3px 3px 0px 0px #000;
         transition: .3s;
     }
