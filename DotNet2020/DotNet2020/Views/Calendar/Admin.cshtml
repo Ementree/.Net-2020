@@ -1,7 +1,6 @@
 ﻿@{
     ViewData["Title"] = "Calendar";
 }
-
 <link rel="stylesheet" href="~/css/calendar.css">
 <div class="text-center">
     <h1 class="display-4">Hello in calendar</h1>
@@ -27,70 +26,70 @@
     </div>
     <hr />
     <div class="row">
-        <h3 class="col-lg-12">Запросы на отпуск</h3>
+        <div class="col-lg-12">
+            <h3>Запросы на отпуск</h3>
+        </div>
     </div>
-    <div class="row col-lg-12">
-        <table border="1" class="w-100">
-            <tbody align="center">
-            <tr>
-                <td>Иванов Иван Иванович</td>
-                <td>От 03/03/2020 до 07/03/2020</td>
-                <td>Больничный</td>
-                <td>4 дня</td>
-                <td><button>Согласовать</button><button>Отклонить</button></td>
-            </tr>
-            <tr>
-                <td>Григорьев Григорий Григорьевич</td>
-                <td>От 14/03/2020 до 20/03/2020  6 дней</td>
-                <td>Оплачиваемый отпуск</td>
-                <td>6 дней</td>
-                <td><button>Согласовать</button><button>Отклонить</button></td>
-            </tr>
-            <tr>
-                <td>Иванов Иван Иванович</td>
-                <td>От 03/03/2020 до 07/03/2020</td>
-                <td>Неоплачиваемый отпуск</td>
-                <td>4 дня</td>
-                <td><button>Согласовать</button><button>Отклонить</button></td>
-            </tr>
-            <tr>
-                <td>Иванов Иван Иванович</td>
-                <td>От 03/03/2020 до 07/03/2020</td>
-                <td>Неоплачиваемый отпуск</td>
-                <td>4 дня</td>
-                <td><button>Согласовать</button><button>Отклонить</button></td>
-            </tr>
-            <tr>
-                <td>Иванов Иван Иванович</td>
-                <td>От 03/03/2020 до 07/03/2020</td>
-                <td>Неоплачиваемый отпуск</td>
-                <td>4 дня</td>
-                <td><button>Согласовать</button><button>Отклонить</button></td>
-            </tr>
-            </tbody>
-        </table>
+    <div class="row">
+        <div class="col-lg-12">
+            <table border="1" class="w-100">
+                <tbody align="center">
+                <tr>
+                    <td>Иванов Иван Иванович</td>
+                    <td>От 03/03/2020 до 07/03/2020</td>
+                    <td>Больничный</td>
+                    <td>4 дня</td>
+                    <td><button>Согласовать</button><button>Отклонить</button></td>
+                </tr>
+                <tr>
+                    <td>Григорьев Григорий Григорьевич</td>
+                    <td>От 14/03/2020 до 20/03/2020 6 дней</td>
+                    <td>Оплачиваемый отпуск</td>
+                    <td>6 дней</td>
+                    <td><button>Согласовать</button><button>Отклонить</button></td>
+                </tr>
+                <tr>
+                    <td>Иванов Иван Иванович</td>
+                    <td>От 03/03/2020 до 07/03/2020</td>
+                    <td>Неоплачиваемый отпуск</td>
+                    <td>4 дня</td>
+                    <td><button>Согласовать</button><button>Отклонить</button></td>
+                </tr>
+                <tr>
+                    <td>Иванов Иван Иванович</td>
+                    <td>От 03/03/2020 до 07/03/2020</td>
+                    <td>Неоплачиваемый отпуск</td>
+                    <td>4 дня</td>
+                    <td><button>Согласовать</button><button>Отклонить</button></td>
+                </tr>
+                <tr>
+                    <td>Иванов Иван Иванович</td>
+                    <td>От 03/03/2020 до 07/03/2020</td>
+                    <td>Неоплачиваемый отпуск</td>
+                    <td>4 дня</td>
+                    <td><button>Согласовать</button><button>Отклонить</button></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
     <hr />
     <div class="row">
         <div class="col-lg-6">
-            <form asp-action="AddRecommendation" asp-controller="Calendar">
+            <form asp-action="AddRecommendation" asp-controller="Calendar" method="get">
                 <div class="adminrecomadd">
-                    <button type="submit">
-                        Добавить рекомендацию
-                    </button>
+                    <button type="submit">Добавить рекомендацию</button>
                 </div>
             </form>
             <br />
-            <form asp-action="AddHoliday" asp-controller="Calendar">
+            <form asp-action="AddHoliday" asp-controller="Calendar" method="get">
                 <div class="adminrecomadd">
-                    <button type="submit">
-                        Добавить праздничный день
-                    </button>
+                    <button type="submit">Добавить праздничный день</button>
                 </div>
             </form>
         </div>
         <div class="col-lg-6">
-            <h3>Рекомендации для всех</h3>
+            <h3>Рекомендация для всех</h3>
             <p>
                 Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
             </p>

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using DotNet2020.Domain._4.Models;
+using Microsoft.AspNetCore.Mvc;
 
 namespace DotNet2020.Domain._4.Controllers
 {
@@ -28,9 +29,21 @@ namespace DotNet2020.Domain._4.Controllers
             return View();
         }
 
+        [HttpGet]
         public IActionResult AddRecommendation()
         {
             return View();
+        }
+
+        [HttpPost]
+        public IActionResult AddRecommendation(Recommendation recommendation)
+        {
+            if (ModelState.IsValid)
+            {
+                return RedirectToActionPermanent("Admin");
+            }
+
+            return RedirectToActionPermanent("AddRecommendation");
         }
     }
 }

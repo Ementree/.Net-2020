@@ -1,15 +1,23 @@
 ﻿@{
     ViewData["Title"] = "Добавить Рекомендацию";
 }
-
+@model DotNet2020.Domain._4.Models.Recommendation
 <div class="text-center">
     <h1 class="display-4">Добавьте рекомендацию</h1>
 </div>
-
-<div>
-    <form action="#">
-        <p>Текст рекомендации:</p>
-        <p><input type="text" /></p>
-        <p><input type="submit" value="Добавить" /></p>
-    </form>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-lg-12">
+            <form method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <label asp-for="RecommendationText">Текст рекомендации:</label>
+                <input type="text" asp-for="RecommendationText" />
+                <span asp-validation-for="RecommendationText" class="text-danger"></span>
+                <input type="submit" value="Добавить" />
+            </form>
+        </div>
+    </div>
 </div>
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
