@@ -5,7 +5,7 @@
  <p>@Html.ActionLink("Вопросы", "Questions", "Attestation")</p>
  <p>@Html.ActionLink("Аттестация", "Attestation", "Attestation")</p>
 <p>@Html.ActionLink("Выгрузка", "Output", "Attestation")</p>
-
+@model DotNet2020.Domain._3.Models.AttestationModel
 
 @if (ViewBag.Method == "Choose")
 {
@@ -27,7 +27,7 @@
    {
     <tr>
      <td>
-      <input type="radio" name="workerId" value="@element.Id"/>
+      <input type="radio" name="WorkerId" value="@element.Id"/>
      </td>
      <td>@element.Name</td><td>@element.Position</td><td>@element.Salary</td><td>@element.Bonus</td><td>@element.Commentary</td>
      <td>
@@ -59,7 +59,7 @@
    {
     <tr>
      <td>
-      <input type="checkbox" value="@element.Id" name="competencesId"/>
+      <input type="checkbox" value="@element.Id" name="CompetencesId"/>
      </td>
      <td>@element.Competence</td>
     </tr>
@@ -71,6 +71,71 @@
 }
 else
 {
- 
+ <head>
+  <meta charset="utf-8">
+  <title>Отображение и добавление пользователей</title>
+  <style>
+        #window 
+        {
+            width: 100%;
+            height: 100%;
+            text-align: left;
+            padding: 10px;
+            border: 3px solid black;
+            border-radius: 10px;
+            color: #0000cc;
+            position: center;
+            margin: auto;
+            background: white;
+        }
+    </style>
+ </head>
+ <body>
+ <div id="window">
+  <form method="post">
+   @for (int i = 1; i <= ViewBag.Questions.Count; i++)
+   {
+    <p>Вопрос №@i</p>
+    <p>@ViewBag.Questions[i-1]</p>
+    <p><input type="checkbox" value="@(i-1)" name="rightAnswers" /> Зачтено?
+     <input type="checkbox" value="@(i-1)" name="skipedAnswers" /> Пропустить </p>
+    <p>Комментарий</p>
+    <textarea style="border:none;border-top:groove;border-left:groove;" name="commentaries" cols="100"></textarea>
+   }
+   <br/>
+   <br/>
+   <p>Список компетенций по которым пройдена аттестация</p>
+   <table border="1">
+    <tr>
+     <th>Получил?</th>
+     <th>Компетенции</th>
+    </tr>
+    @foreach (var element in ViewBag.ChosenCompetences)
+    {
+     <tr>
+      <td>
+       <input type="checkbox" value="@element.Id" name="gotCompetences"/>
+      </td>
+      <td>@element.Competence</td>
+     </tr>
+    }
+   </table>
+   <p>Пробелы в знаниях:</p>
+   <textarea style="border:none;border-top:groove;border-left:groove;" name="Problems" cols="100" required></textarea>
+   <p>Дальнейшие действия</p>
+   <textarea style="border:none;border-top:groove;border-left:groove;" name="NextMoves" cols="100" required></textarea>
+   <p>Обратная связь</p>
+   <textarea style="border:none;border-top:groove;border-left:groove;" name="Feedback" cols="100" required></textarea>
+   <input type="text" name="method" hidden value="Finished"/>
+   <input type="number" name="WorkerId" hidden value="@ViewBag.WorkerId"/>
+   @foreach (var element in ViewBag.CompetencesId)
+   {
+    <input type="number" name="CompetencesId" value="@element" hidden/>
+   }
+   <br>
+   <input type="submit" value="Завершить"/>
+  </form>
+ </div>
+ </body>
 }
 

@@ -13,11 +13,13 @@ namespace DotNet2020.Domain._3.Controllers
         private readonly CompetencesRepository _competences;
         private readonly GradesRepository _grades;
         private readonly WorkerRepository _workers;
-        public AttestationController(CompetencesContext competences, GradesContext grades, WorkerContext workers)
+        private readonly AttestationRepository _attestation;
+        public AttestationController(CompetencesContext competences, GradesContext grades, WorkerContext workers, AttestationContext attestation)
         {
             _competences=new CompetencesRepository(competences);
             _grades=new GradesRepository(grades);
             _workers = new WorkerRepository(workers);
+            _attestation = new AttestationRepository(attestation);
         }
         public IActionResult Index()
         {
@@ -180,18 +182,31 @@ namespace DotNet2020.Domain._3.Controllers
         }
         
         [HttpPost]
-        public IActionResult Attestation(string method, long? workerId, List<long> competencesId)
+        public IActionResult Attestation(string method, AttestationModel model, List<long> rightAnswers, List<long> skipedAnswers, List<string> commentaries, List<long> gotCompetences)
         {
             ViewBag.Workers = _workers.GetList();
             ViewBag.Competences = _competences.GetList();
-            if (workerId != null && competencesId.Count > 0)
+            if (model.WorkerId != null && model.CompetencesId.Count > 0)
             {
-                AttestationHelper.Attestate(method, (long)workerId, competencesId, _competences, _workers);
+                switch (method)
+                {
+                    case ("Attestation"):
+                        ViewBag.Questions =
+                            AttestationHelper.GetQuestionsForCompetences(model.CompetencesId, _competences);
+                        ViewBag.ChosenCompetences =
+                            AttestationHelper.GetNamesOfChosenCompetences(model.CompetencesId, _competences);
+                        ViewBag.WorkerId = model.WorkerId;
+                        ViewBag.CompetencesId = model.CompetencesId;
+                        break;
+                    case ("Finished"):
+                        AttestationHelper.SaveAttestation(rightAnswers, skipedAnswers, commentaries, _attestation, model, _competences, gotCompetences);
+                        return RedirectToAction("Attestation");
+                }
                 ViewBag.Method = method;
             }
             else
                 ViewBag.Method = "Choose";
-            return View();
+            return View(model);
         }
 
         public IActionResult Output()

@@ -136,6 +136,15 @@
           <e p="20200227164734_InitialCreate.cs" t="Include" />
           <e p="20200227164734_InitialCreate.Designer.cs" t="Include" />
           <e p="ApplicationDbContextModelSnapshot.cs" t="Include" />
+          <e p="Attestation" t="Include">
+            <e p="20200317162345_AttestationAdd.cs" t="Include" />
+            <e p="20200317162345_AttestationAdd.Designer.cs" t="Include" />
+            <e p="20200317180816_AttestationUpdate.cs" t="Include" />
+            <e p="20200317180816_AttestationUpdate.Designer.cs" t="Include" />
+            <e p="20200317181600_AttestationNew.cs" t="Include" />
+            <e p="20200317181600_AttestationNew.Designer.cs" t="Include" />
+            <e p="AttestationContextModelSnapshot.cs" t="Include" />
+          </e>
           <e p="Competences" t="Include">
             <e p="20200313080508_CompetencesAdd.cs" t="Include" />
             <e p="20200313080508_CompetencesAdd.Designer.cs" t="Include" />
@@ -172,6 +181,7 @@
         <e p="DotNet2020.Domain.3.csproj" t="IncludeRecursive" />
         <e p="Helpers" t="Include">
           <e p="AttestationHelper.cs" t="Include" />
+          <e p="BuilderHelper.cs" t="Include" />
           <e p="CompetenceHelper.cs" t="Include" />
           <e p="GradeHelper.cs" t="Include" />
           <e p="QuestionHelper.cs" t="Include" />
@@ -180,6 +190,7 @@
           <e p="AttestationModel.cs" t="Include" />
           <e p="CompetencesModel.cs" t="Include" />
           <e p="Contexts" t="Include">
+            <e p="AttestationContext.cs" t="Include" />
             <e p="CompetencesContext.cs" t="Include" />
             <e p="GradesContext.cs" t="Include" />
             <e p="WorkerContext.cs" t="Include" />
@@ -195,6 +206,7 @@
           </e>
         </e>
         <e p="Repository" t="Include">
+          <e p="AttestationRepository.cs" t="Include" />
           <e p="CompetencesRepository.cs" t="Include" />
           <e p="GradesRepository.cs" t="Include" />
           <e p="Main" t="Include">
