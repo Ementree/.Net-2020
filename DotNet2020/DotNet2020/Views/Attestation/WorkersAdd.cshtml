@@ -12,12 +12,19 @@
     <p>Комментарий</p>
     <input type="text" required name="Commentary"/>
     <p>Компетенции</p>
-    <select multiple name="Competences">
-        @foreach (var element in ViewBag.Competences)
-        {
-            <option>@element.Competence</option>
-        }
-    </select>
+    @if (ViewBag.Competences != null)
+    {
+        <select multiple name="Competences">
+            @foreach (var element in ViewBag.Competences)
+            {
+                <option>@element.Competence</option>
+            }
+        </select>
+    }
+    else
+    {
+        <p>Компетенции еще не были добавлены!</p>   
+    }
     <p>Предыдущие места работы</p>
     <input type="text" required name="PreviousWorkPlaces"/>
     <p>Общий стаж</p>

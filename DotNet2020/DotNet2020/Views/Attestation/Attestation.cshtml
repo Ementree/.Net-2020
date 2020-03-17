@@ -4,4 +4,73 @@
  <p>@Html.ActionLink("Грейды", "Grades", "Attestation")</p>
  <p>@Html.ActionLink("Вопросы", "Questions", "Attestation")</p>
  <p>@Html.ActionLink("Аттестация", "Attestation", "Attestation")</p>
- <p>@Html.ActionLink("Выгрузка", "Output", "Attestation")</p>
+<p>@Html.ActionLink("Выгрузка", "Output", "Attestation")</p>
+
+
+@if (ViewBag.Method == "Choose")
+{
+ <form method="post">
+  <input type="text" hidden value="Attestation" name="method"/>
+  <table border="1">
+   <tr>
+    <th>Выбрать для аттестации</th>
+    <th>ФИО</th>
+    <th>Должность</th>
+    <th>Оклад</th>
+    <th>Премия</th>
+    <th>Комментарий</th>
+    <th>Компетенции</th>
+    <th>Предыдущие места работы</th>
+    <th>Опыт работы</th>
+   </tr>
+   @foreach (var element in ViewBag.Workers)
+   {
+    <tr>
+     <td>
+      <input type="radio" name="workerId" value="@element.Id"/>
+     </td>
+     <td>@element.Name</td><td>@element.Position</td><td>@element.Salary</td><td>@element.Bonus</td><td>@element.Commentary</td>
+     <td>
+      @if (element.Competences == null)
+      {
+       <span>Компетенции не добавлены!</span>
+      }
+      else
+      {
+       foreach (var competence in element.Competences)
+       {
+        <span>@competence</span>
+       }
+      }
+
+     </td><td>@element.PreviousWorkPlaces</td><td>@element.Experience</td>
+    </tr>
+   }
+  </table>
+  <br/>
+  <br/>
+
+  <table border="1">
+   <tr>
+    <th>Выбрать</th>
+    <th>Компетенции</th>
+   </tr>
+   @foreach (var element in ViewBag.Competences)
+   {
+    <tr>
+     <td>
+      <input type="checkbox" value="@element.Id" name="competencesId"/>
+     </td>
+     <td>@element.Competence</td>
+    </tr>
+   }
+  </table>
+
+  <input type="submit" value="Начать аттестацию по выбранным"/>
+ </form>
+}
+else
+{
+ 
+}
+

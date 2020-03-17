@@ -35,7 +35,8 @@ namespace DotNet2020.Domain._3.Controllers
         {
             ViewBag.Competences = _competences.GetList();
             ViewBag.Worker = _workers.GetById(id);
-            ViewBag.Competence = _workers.GetById(id).Competences.ToList();
+            if(_workers.GetById(id).Competences!=null)
+                ViewBag.WorkerCompetences = _workers.GetById(id).Competences.ToList();
             return View();
         }
         
@@ -172,14 +173,27 @@ namespace DotNet2020.Domain._3.Controllers
         
         public IActionResult Attestation()
         {
+            ViewBag.Method = "Choose";
+            ViewBag.Workers = _workers.GetList();
+            ViewBag.Competences = _competences.GetList();
             return View();
         }
         
-        public IActionResult AttestationResults()
+        [HttpPost]
+        public IActionResult Attestation(string method, long? workerId, List<long> competencesId)
         {
+            ViewBag.Workers = _workers.GetList();
+            ViewBag.Competences = _competences.GetList();
+            if (workerId != null && competencesId.Count > 0)
+            {
+                AttestationHelper.Attestate(method, (long)workerId, competencesId, _competences, _workers);
+                ViewBag.Method = method;
+            }
+            else
+                ViewBag.Method = "Choose";
             return View();
         }
-        
+
         public IActionResult Output()
         {
             return View();

@@ -12,13 +12,23 @@
     <input type="text" required name="Commentary" value="@ViewBag.Worker.Commentary"/>
     <p>Компетенции</p>
     <select multiple name="Competences">
-        @foreach (var element in ViewBag.Competences)
+        @if (ViewBag.WorkerCompetences != null)
         {
-            if (ViewBag.Competence.Contains(element.Competence))
+            @foreach (var element in ViewBag.Competences)
             {
-                <option selected>@element.Competence</option>
+                if (ViewBag.WorkerCompetences.Contains(element.Competence))
+                {
+                    <option selected>@element.Competence</option>
+                }
+                else
+                {
+                    <option>@element.Competence</option>
+                }
             }
-            else
+        }
+        else
+        {
+            foreach (var element in ViewBag.Competences)
             {
                 <option>@element.Competence</option>
             }

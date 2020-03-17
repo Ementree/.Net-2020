@@ -26,10 +26,18 @@
         {
             <tr><td>@element.Name</td><td>@element.Position</td><td>@element.Salary</td><td>@element.Bonus</td><td>@element.Commentary</td>
                 <td>
-                    @foreach (var competence in element.Competences)
+                    @if (element.Competences == null)
                     {
-                        <span>@competence </span> 
+                        <span>Компетенций не добавлены!</span>
                     }
+                    else
+                    {
+                        foreach (var competence in element.Competences)
+                        {
+                            <span>@competence </span>
+                        }
+                    }
+                    
                 </td><td>@element.PreviousWorkPlaces</td><td>@element.Experience</td>
                 <td>
                     @Html.ActionLink($"Изменить", "WorkersUpdate", "Attestation", new {id = element.Id}, null)
