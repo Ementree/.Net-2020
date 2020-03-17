@@ -1446,6 +1446,19 @@
           "Microsoft.AspNetCore.App"
         ]
       },
+      "DotNet2020.Domain.6/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v3.1",
+        "dependencies": {
+          "DotNet2020.Domain.Core": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/DotNet2020.Domain.6.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/DotNet2020.Domain.6.dll": {}
+        }
+      },
       "DotNet2020.Domain.Core/1.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v3.1",
@@ -1459,7 +1472,10 @@
         },
         "runtime": {
           "bin/placeholder/DotNet2020.Domain.Core.dll": {}
-        }
+        },
+        "frameworkReferences": [
+          "Microsoft.AspNetCore.App"
+        ]
       }
     }
   },
@@ -5371,6 +5387,11 @@
       "path": "../DotNet2020.Data/DotNet2020.Data.csproj",
       "msbuildProject": "../DotNet2020.Data/DotNet2020.Data.csproj"
     },
+    "DotNet2020.Domain.6/1.0.0": {
+      "type": "project",
+      "path": "../DotNet2020.Domain.6/DotNet2020.Domain.6.csproj",
+      "msbuildProject": "../DotNet2020.Domain.6/DotNet2020.Domain.6.csproj"
+    },
     "DotNet2020.Domain.Core/1.0.0": {
       "type": "project",
       "path": "../DotNet2020.Domain.Core/DotNet2020.Domain.Core.csproj",
@@ -5380,6 +5401,7 @@
   "projectFileDependencyGroups": {
     ".NETCoreApp,Version=v3.1": [
       "DotNet2020.Data >= 1.0.0",
+      "DotNet2020.Domain.6 >= 1.0.0",
       "Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore >= 3.1.0",
       "Microsoft.AspNetCore.Identity.EntityFrameworkCore >= 3.1.0",
       "Microsoft.AspNetCore.Identity.UI >= 3.1.0",
@@ -5419,6 +5441,9 @@
           "projectReferences": {
             "C:\\Projects\\.Net-2020\\DotNet2020\\DotNet2020.Data\\DotNet2020.Data.csproj": {
               "projectPath": "C:\\Projects\\.Net-2020\\DotNet2020\\DotNet2020.Data\\DotNet2020.Data.csproj"
+            },
+            "C:\\Projects\\.Net-2020\\DotNet2020\\DotNet2020.Domain.6\\DotNet2020.Domain.6.csproj": {
+              "projectPath": "C:\\Projects\\.Net-2020\\DotNet2020\\DotNet2020.Domain.6\\DotNet2020.Domain.6.csproj"
             }
           }
         }

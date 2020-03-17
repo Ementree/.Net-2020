@@ -88,6 +88,68 @@
         }
       }
     },
+    "C:\\Projects\\.Net-2020\\DotNet2020\\DotNet2020.Domain.6\\DotNet2020.Domain.6.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Projects\\.Net-2020\\DotNet2020\\DotNet2020.Domain.6\\DotNet2020.Domain.6.csproj",
+        "projectName": "DotNet2020.Domain.6",
+        "projectPath": "C:\\Projects\\.Net-2020\\DotNet2020\\DotNet2020.Domain.6\\DotNet2020.Domain.6.csproj",
+        "packagesPath": "C:\\Users\\satta\\.nuget\\packages\\",
+        "outputPath": "C:\\Projects\\.Net-2020\\DotNet2020\\DotNet2020.Domain.6\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\satta\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "netcoreapp3.1"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netcoreapp3.1": {
+            "projectReferences": {
+              "C:\\Projects\\.Net-2020\\DotNet2020\\DotNet2020.Domain.Core\\DotNet2020.Domain.Core.csproj": {
+                "projectPath": "C:\\Projects\\.Net-2020\\DotNet2020\\DotNet2020.Domain.Core\\DotNet2020.Domain.Core.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "netcoreapp3.1": {
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.AspNetCore.App": {
+              "privateAssets": "none"
+            },
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.100\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
     "C:\\Projects\\.Net-2020\\DotNet2020\\DotNet2020.Domain.Core\\DotNet2020.Domain.Core.csproj": {
       "version": "1.0.0",
       "restore": {
@@ -188,6 +250,9 @@
             "projectReferences": {
               "C:\\Projects\\.Net-2020\\DotNet2020\\DotNet2020.Data\\DotNet2020.Data.csproj": {
                 "projectPath": "C:\\Projects\\.Net-2020\\DotNet2020\\DotNet2020.Data\\DotNet2020.Data.csproj"
+              },
+              "C:\\Projects\\.Net-2020\\DotNet2020\\DotNet2020.Domain.6\\DotNet2020.Domain.6.csproj": {
+                "projectPath": "C:\\Projects\\.Net-2020\\DotNet2020\\DotNet2020.Domain.6\\DotNet2020.Domain.6.csproj"
               }
             }
           }
