@@ -14,18 +14,21 @@ namespace DotNet2020.Domain._4.Controllers
             _dbContext = dbContext;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
+            ViewBag.Recommendation = await _dbContext.Recommendations.FirstOrDefaultAsync();
             return View();
         }
 
+        [HttpGet]
         public IActionResult AddEvent()
         {
             return View();
         }
 
-        public IActionResult Admin()
+        public async Task<IActionResult> Admin()
         {
+            ViewBag.Recommendation = await _dbContext.Recommendations.FirstOrDefaultAsync();
             return View();
         }
 
@@ -51,6 +54,7 @@ namespace DotNet2020.Domain._4.Controllers
                     await _dbContext.Recommendations.AddAsync(recommendation);
                 else dbEntry.RecommendationText = recommendation.RecommendationText;
                 await _dbContext.SaveChangesAsync();
+                Recommendation = recommendation;
                 return RedirectToActionPermanent("Admin");
             }
 

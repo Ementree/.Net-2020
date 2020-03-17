@@ -6,6 +6,7 @@ namespace DotNet2020.Domain._4.Models
     {
         public int Id { get; set; }
 
+        [DataType(DataType.MultilineText)]
         [Required(ErrorMessage = "Введите текст рекомендации")]
         public string RecommendationText { get; set; }
     }
