@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
@@ -12,6 +13,12 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using DotNet2020.Data;
+using Microsoft.AspNetCore.Mvc.ApplicationParts;
+using DotNet2020.Controllers;
+using System.Reflection;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Razor;
+using Microsoft.Extensions.FileProviders;
 using DotNet2020.Domain._3.Controllers;
 using DotNet2020.Domain._3.Models.Contexts;
 
@@ -47,14 +54,22 @@ namespace DotNet2020
                 options.UseNpgsql(
                     Configuration.GetConnectionString("DefaultConnection"), b => b.MigrationsAssembly("DotNet2020.Data")));
             
-            
-            
             services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
-            services.AddControllersWithViews();
-            services.AddRazorPages();
+            
             var assembly = typeof(AttestationController).Assembly;
-            services.AddControllersWithViews().AddApplicationPart(assembly);
+
+            services.Configure<Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation.MvcRazorRuntimeCompilationOptions>(
+                options =>
+                {
+                    options.FileProviders.Add(
+                        new EmbeddedFileProvider(assembly));
+                });
+
+            services
+                .AddMvc()
+                .AddApplicationPart(assembly)
+                .AddRazorRuntimeCompilation();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

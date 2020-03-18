@@ -37,22 +37,6 @@
         <e p="Views" t="Include">
           <e p="_ViewImports.cshtml" t="Include" />
           <e p="_ViewStart.cshtml" t="Include" />
-          <e p="Attestation" t="Include">
-            <e p="Attestation.cshtml" t="Include" />
-            <e p="Competences.cshtml" t="Include" />
-            <e p="CompetencesAdd.cshtml" t="Include" />
-            <e p="CompetencesManage.cshtml" t="Include" />
-            <e p="Grades.cshtml" t="Include" />
-            <e p="GradesAdd.cshtml" t="Include" />
-            <e p="GradesManage.cshtml" t="Include" />
-            <e p="Index.cshtml" t="Include" />
-            <e p="Output.cshtml" t="Include" />
-            <e p="Questions.cshtml" t="Include" />
-            <e p="QuestionsManage.cshtml" t="Include" />
-            <e p="Workers.cshtml" t="Include" />
-            <e p="WorkersAdd.cshtml" t="Include" />
-            <e p="WorkersUpdate.cshtml" t="Include" />
-          </e>
           <e p="Home" t="Include">
             <e p="Index.cshtml" t="Include" />
             <e p="Privacy.cshtml" t="Include" />
@@ -213,6 +197,24 @@
             <e p="IRepository.cs" t="Include" />
           </e>
           <e p="WorkerRepository.cs" t="Include" />
+        </e>
+        <e p="Views" t="Include">
+          <e p="Attestation" t="Include">
+            <e p="Attestation.cshtml" t="Include" />
+            <e p="Competences.cshtml" t="Include" />
+            <e p="CompetencesAdd.cshtml" t="Include" />
+            <e p="CompetencesManage.cshtml" t="Include" />
+            <e p="Grades.cshtml" t="Include" />
+            <e p="GradesAdd.cshtml" t="Include" />
+            <e p="GradesManage.cshtml" t="Include" />
+            <e p="Index.cshtml" t="Include" />
+            <e p="Output.cshtml" t="Include" />
+            <e p="Questions.cshtml" t="Include" />
+            <e p="QuestionsManage.cshtml" t="Include" />
+            <e p="Workers.cshtml" t="Include" />
+            <e p="WorkersAdd.cshtml" t="Include" />
+            <e p="WorkersUpdate.cshtml" t="Include" />
+          </e>
         </e>
       </e>
       <e p="DotNet2020.Domain.Core" t="IncludeRecursive">
