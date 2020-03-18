@@ -4,11 +4,12 @@
     <RootNamespace>DotNet2020.Domain.4</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <Folder Include="Models\" />
     <Folder Include="Controllers\" />
     <Folder Include="Services\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DotNet2020.Domain.Core\DotNet2020.Domain.Core.csproj" />
+    <ProjectReference Include="..\DotNet2020.Data\DotNet2020.Data.csproj" />
+    <ProjectReference Include="..\DotNet2020.Domain.4_Models\DotNet2020.Domain.4_Models.csproj" />
   </ItemGroup>
 </Project>
