@@ -34,14 +34,21 @@ namespace DotNet2020.Domain._3.Helpers
         }
 
         public static void SaveAttestation(List<long> rightAnswers, List<long> skipedAnswers, List<string> commentaries, AttestationRepository attestation, AttestationModel model,
-            CompetencesRepository competences, List<long> gotCompetences)
+            CompetencesRepository competences, List<long> gotCompetences, WorkerRepository workers)
         {
             var questions= GetQuestionsForCompetences(model.CompetencesId, competences);
-            model.Answers=GetAnswers(rightAnswers, skipedAnswers, commentaries, questions);
+            model.Answers = GetAnswers(rightAnswers, skipedAnswers, commentaries, questions);
             model.CompetencesId = gotCompetences;
-            model.Date=DateTime.Today;
+            model.Date = DateTime.Today;
             attestation.Create(model);
-            //можно добавить сразу через id сотрудника компетенции
+            var worker = workers.GetById((long)model.WorkerId);
+            List<string> gotCompetencesList=new List<string>();
+            foreach (var competenceId in gotCompetences)
+            {
+                gotCompetencesList.Add(competences.GetById(competenceId).Competence);
+            }
+            worker.Competences = worker.Competences.Union(gotCompetencesList).ToArray();
+            workers.Save();
         }
 
         private static string GetAnswers(List<long> rightAnswers, List<long> skipedAnswers, List<string> commentaries, List<string> questions)

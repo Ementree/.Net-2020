@@ -1,0 +1,24 @@
+﻿<p>@Html.ActionLink("Назад", "Attestation", "Attestation")</p>
+<table border="1">
+    <tr>
+        <th>ФИО</th>
+        <th>Полученные компетенции</th>
+        <th>Дата</th>
+        <th>Выгрузить</th>
+    </tr>
+    @foreach (var element in ViewBag.Attestations)
+    {
+        <tr><td>@element.WorkerName</td>
+            <td>
+                @if (element.Competences.Count > 0)
+                {
+                    foreach (var subElement in element.Competences)
+                    {
+                        <p>@subElement</p>
+                    }
+                }
+            </td>
+            <td>@element.Date.ToString("d")</td>
+            <td>@Html.ActionLink("Выгрузить", "AttestationList", "Attestation")</td></tr>
+    }
+</table>

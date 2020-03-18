@@ -4,4 +4,46 @@
  <p>@Html.ActionLink("Грейды", "Grades", "Attestation")</p>
  <p>@Html.ActionLink("Вопросы", "Questions", "Attestation")</p>
  <p>@Html.ActionLink("Аттестация", "Attestation", "Attestation")</p>
- <p>@Html.ActionLink("Выгрузка", "Output", "Attestation")</p>
+<p>@Html.ActionLink("Выгрузка", "Output", "Attestation")</p>
+ @if (ViewBag.Workers.Count > 0)
+ {
+  <form method="post">
+   <table border="1">
+    <tr>
+     <th>ФИО</th>
+     <th>Должность</th>
+     <th>Компетенции</th>
+     <th>Общий стаж</th>
+     <th>Выбрать</th>
+    </tr>
+    @foreach (var element in ViewBag.Workers)
+    {
+     <tr>
+      <td>@element.Name</td>
+      <td>@element.Position</td>
+      <td>
+       @if (element.Competences.Length == 0 || element.Competences.Length == 1 && element.Competences[0] == "")
+       {
+        <span>Данный работник не обладает никакими компетенциями</span>
+       }
+       else
+       {
+        foreach (var subElement in element.Competences)
+        {
+         <p>@subElement</p>
+        }
+       }
+      </td>
+      <td>@element.Experience</td>
+      <td><input type="checkbox" value="@element.Id"/></td>
+     </tr>
+    }
+   </table>
+   <br/>
+   <input type="submit" value="Выгрузить выбранных"/>
+  </form>
+ }
+ else
+ {
+  <p>Список работников пуст!</p>
+ }

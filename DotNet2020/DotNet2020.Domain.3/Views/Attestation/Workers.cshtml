@@ -26,9 +26,9 @@
         {
             <tr><td>@element.Name</td><td>@element.Position</td><td>@element.Salary</td><td>@element.Bonus</td><td>@element.Commentary</td>
                 <td>
-                    @if (element.Competences == null)
+                    @if (element.Competences.Length == 0 || element.Competences.Length == 1 && element.Competences[0]=="")
                     {
-                        <span>Компетенций не добавлены!</span>
+                        <span>Компетенции не добавлены!</span>
                     }
                     else
                     {

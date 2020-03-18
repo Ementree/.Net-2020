@@ -168,6 +168,7 @@
           <e p="BuilderHelper.cs" t="Include" />
           <e p="CompetenceHelper.cs" t="Include" />
           <e p="GradeHelper.cs" t="Include" />
+          <e p="OutputHelper.cs" t="Include" />
           <e p="QuestionHelper.cs" t="Include" />
         </e>
         <e p="Models" t="Include">
@@ -201,6 +202,7 @@
         <e p="Views" t="Include">
           <e p="Attestation" t="Include">
             <e p="Attestation.cshtml" t="Include" />
+            <e p="AttestationList.cshtml" t="Include" />
             <e p="Competences.cshtml" t="Include" />
             <e p="CompetencesAdd.cshtml" t="Include" />
             <e p="CompetencesManage.cshtml" t="Include" />

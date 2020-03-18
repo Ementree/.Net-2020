@@ -44,9 +44,9 @@
         </EmbeddedResource>
         <EmbeddedResource Include="Views\Attestation\WorkersUpdate.cshtml">
         </EmbeddedResource>
-
+        <EmbeddedResource Include="Views\Attestation\AttestationList.cshtml">
+        </EmbeddedResource>
     </ItemGroup>
-
 
     <ItemGroup>
       <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.2" />

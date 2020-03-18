@@ -7,7 +7,12 @@
 <p>@Html.ActionLink("Выгрузка", "Output", "Attestation")</p>
 @model DotNet2020.Domain._3.Models.AttestationModel
 
-@if (ViewBag.Method == "Choose")
+
+<p>@Html.ActionLink("Просмотр аттестаций", "AttestationList", "Attestation")</p>
+
+@if (ViewBag.Workers.Count > 0 && ViewBag.Competences.Count > 0)
+{
+ @if (ViewBag.Method == "Choose")
 {
  <form method="post">
   <input type="text" hidden value="Attestation" name="method"/>
@@ -31,7 +36,7 @@
      </td>
      <td>@element.Name</td><td>@element.Position</td><td>@element.Salary</td><td>@element.Bonus</td><td>@element.Commentary</td>
      <td>
-      @if (element.Competences == null)
+      @if (element.Competences.Length == 0 || element.Competences.Length == 1 && element.Competences[0]=="")
       {
        <span>Компетенции не добавлены!</span>
       }
@@ -39,7 +44,7 @@
       {
        foreach (var competence in element.Competences)
        {
-        <span>@competence</span>
+        <span>@competence</span> <br/>
        }
       }
 
@@ -138,4 +143,11 @@ else
  </div>
  </body>
 }
+}
+else
+{
+ <p>Добавьте хотя бы одного сотрудника и одну компетенцию!</p>
+}
+
+
 

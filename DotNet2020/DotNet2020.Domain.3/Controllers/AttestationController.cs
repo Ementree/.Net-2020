@@ -46,6 +46,8 @@ namespace DotNet2020.Domain._3.Controllers
         [Route("Attestation/WorkersUpdate/{id}")]
         public IActionResult WorkersUpdate(long id, WorkerModel worker)
         {
+            if(worker.Competences==null)
+                worker.Competences=new string[]{""};
             _workers.Update(worker);
             return RedirectToAction("Workers");
         }
@@ -59,6 +61,8 @@ namespace DotNet2020.Domain._3.Controllers
         [HttpPost]
         public IActionResult WorkersAdd(WorkerModel worker)
         {
+            if(worker.Competences==null)
+                worker.Competences=new string[]{""};
             ViewBag.Competences = _competences.GetList();
             _workers.Create(worker);
             return RedirectToAction("Workers");
@@ -199,7 +203,7 @@ namespace DotNet2020.Domain._3.Controllers
                         ViewBag.CompetencesId = model.CompetencesId;
                         break;
                     case ("Finished"):
-                        AttestationHelper.SaveAttestation(rightAnswers, skipedAnswers, commentaries, _attestation, model, _competences, gotCompetences);
+                        AttestationHelper.SaveAttestation(rightAnswers, skipedAnswers, commentaries, _attestation, model, _competences, gotCompetences, _workers);
                         return RedirectToAction("Attestation");
                 }
                 ViewBag.Method = method;
@@ -209,8 +213,20 @@ namespace DotNet2020.Domain._3.Controllers
             return View(model);
         }
 
+        public IActionResult AttestationList()
+        {
+            List<OutputHelper> outputHelpers = new List<OutputHelper>();
+            foreach (var element in _attestation.GetList())
+            {
+                outputHelpers.Add(new OutputHelper(_competences, _workers, element));
+            }
+            ViewBag.Attestations = outputHelpers;
+            return View();
+        }
+
         public IActionResult Output()
         {
+            ViewBag.Workers = _workers.GetList();
             return View();
         }
     }
