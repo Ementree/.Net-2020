@@ -13,6 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\DotNet2020.Domain.6\DotNet2020.Domain.6.csproj" />
     <ProjectReference Include="..\DotNet2020.Domain.Core\DotNet2020.Domain.Core.csproj" />
   </ItemGroup>
 </Project>

@@ -1429,6 +1429,7 @@
         "type": "project",
         "framework": ".NETCoreApp,Version=v3.1",
         "dependencies": {
+          "DotNet2020.Domain.6": "1.0.0",
           "DotNet2020.Domain.Core": "1.0.0",
           "Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore": "3.1.0",
           "Microsoft.AspNetCore.Identity.EntityFrameworkCore": "3.1.0",
@@ -1457,7 +1458,10 @@
         },
         "runtime": {
           "bin/placeholder/DotNet2020.Domain.6.dll": {}
-        }
+        },
+        "frameworkReferences": [
+          "Microsoft.AspNetCore.App"
+        ]
       },
       "DotNet2020.Domain.Core/1.0.0": {
         "type": "project",

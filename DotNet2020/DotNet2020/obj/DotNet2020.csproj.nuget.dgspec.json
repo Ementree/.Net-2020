@@ -30,6 +30,9 @@
         "frameworks": {
           "netcoreapp3.1": {
             "projectReferences": {
+              "C:\\Projects\\.Net-2020\\DotNet2020\\DotNet2020.Domain.6\\DotNet2020.Domain.6.csproj": {
+                "projectPath": "C:\\Projects\\.Net-2020\\DotNet2020\\DotNet2020.Domain.6\\DotNet2020.Domain.6.csproj"
+              },
               "C:\\Projects\\.Net-2020\\DotNet2020\\DotNet2020.Domain.Core\\DotNet2020.Domain.Core.csproj": {
                 "projectPath": "C:\\Projects\\.Net-2020\\DotNet2020\\DotNet2020.Domain.Core\\DotNet2020.Domain.Core.csproj"
               }
@@ -128,6 +131,14 @@
       },
       "frameworks": {
         "netcoreapp3.1": {
+          "dependencies": {
+            "Microsoft.EntityFrameworkCore.Design": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[3.1.2, )"
+            }
+          },
           "imports": [
             "net461",
             "net462",

@@ -4,7 +4,7 @@ using System.Text;
 
 namespace DotNet2020.Domain._6.Models
 {
-    class FunctioningCapacityProject
+    public class FunctioningCapacityProject
     {
         public int Id { get; protected set; }
         public int ProjectId { get; protected set; }
