@@ -13,5 +13,10 @@ namespace DotNet2020.Domain._4.Models
         {
             IsApproved = true;
         }
+        public Illness(DateTime from, DateTime to)
+        {
+            this.From = from;
+            this.To = to;
+        }
     }
 }
