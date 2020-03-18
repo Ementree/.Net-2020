@@ -1,12 +1,10 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations;
 
 namespace DotNet2020.Domain._4.Models
 {
     public abstract class AbstractCalendarEntry
     {
-        [Key]
-        public int Id { get; }
+        public int Id { get; set; }
         public DateTime From { get; set; }
         public DateTime To { get; set; }
         public AbsenceType AbsenceType { get; set; }

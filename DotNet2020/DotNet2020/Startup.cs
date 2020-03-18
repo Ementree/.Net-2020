@@ -44,7 +44,7 @@ namespace DotNet2020
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
             services.AddDbContext<CalendarEntryContext>(options =>
-                options.UseNpgsql(
+                options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection"), b => b.MigrationsAssembly("DotNet2020.Data")));
 
             var assembly = typeof(CalendarController).Assembly;

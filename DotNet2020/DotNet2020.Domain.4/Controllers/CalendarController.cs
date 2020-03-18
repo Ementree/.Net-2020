@@ -41,7 +41,7 @@ namespace DotNet2020.Domain._4.Controllers
                 return RedirectToAction("AddEvent");
             }
             var seekday = new SickDay(eventVM.From, eventVM.From);
-            _dbContext.SickDays.Add(seekday);
+            _dbContext.CalendarEntries.Add(seekday);
             _dbContext.SaveChanges();
             return RedirectToAction("Index");
 
@@ -56,7 +56,7 @@ namespace DotNet2020.Domain._4.Controllers
                 return RedirectToAction("AddEvent");
             }
             var vacation = new Vacation(eventVM.From, eventVM.To);
-            _dbContext.Vacations.Add(vacation);
+            _dbContext.CalendarEntries.Add(vacation);
             _dbContext.SaveChanges();
             return RedirectToAction("Index");
         }
@@ -70,7 +70,7 @@ namespace DotNet2020.Domain._4.Controllers
                 return RedirectToAction("AddEvent");
             }
             var illness = new Illness(eventVM.From, eventVM.To);
-            _dbContext.Illnesses.Add(illness);
+            _dbContext.CalendarEntries.Add(illness);
             _dbContext.SaveChanges();
             return RedirectToAction("Index");
         }
