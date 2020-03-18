@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
@@ -15,6 +16,10 @@ using DotNet2020.Data;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using DotNet2020.Controllers;
 using System.Reflection;
+using DotNet2020.Domain.Core.Controllers;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Razor;
+using Microsoft.Extensions.FileProviders;
 
 namespace DotNet2020
 {
@@ -35,12 +40,21 @@ namespace DotNet2020
                     Configuration.GetConnectionString("DefaultConnection")));
             services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
-            services.AddControllersWithViews();
-            services.AddRazorPages();
 
-            var assembly = typeof(MySharedController).Assembly;
-            services.AddControllersWithViews()
-                .AddApplicationPart(assembly);
+
+            var assembly = typeof(DemoController).Assembly;
+
+            services.Configure<Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation.MvcRazorRuntimeCompilationOptions>(
+                options =>
+                {
+                    options.FileProviders.Add(
+                        new EmbeddedFileProvider(assembly));
+                });
+
+            services
+                .AddMvc()
+                .AddApplicationPart(assembly)
+                .AddRazorRuntimeCompilation();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -57,14 +71,21 @@ namespace DotNet2020
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
-            app.UseHttpsRedirection();
+
+            if (!env.IsDevelopment())
+            {
+                app.UseHttpsRedirection();
+            }
+            
+
             app.UseStaticFiles();
 
             app.UseRouting();
 
             app.UseAuthentication();
             app.UseAuthorization();
-
+            
+            
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
