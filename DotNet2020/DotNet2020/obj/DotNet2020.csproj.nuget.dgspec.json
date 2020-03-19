@@ -27,6 +27,9 @@
         "frameworks": {
           "netcoreapp3.1": {
             "projectReferences": {
+              "C:\\Users\\yasch\\Documents\\GitHub\\.Net-2020\\DotNet2020\\DotNet2020.Domain.4_Models\\DotNet2020.Domain.4_Models.csproj": {
+                "projectPath": "C:\\Users\\yasch\\Documents\\GitHub\\.Net-2020\\DotNet2020\\DotNet2020.Domain.4_Models\\DotNet2020.Domain.4_Models.csproj"
+              },
               "C:\\Users\\yasch\\Documents\\GitHub\\.Net-2020\\DotNet2020\\DotNet2020.Domain.Core\\DotNet2020.Domain.Core.csproj": {
                 "projectPath": "C:\\Users\\yasch\\Documents\\GitHub\\.Net-2020\\DotNet2020\\DotNet2020.Domain.Core\\DotNet2020.Domain.Core.csproj"
               }
@@ -114,6 +117,12 @@
         "frameworks": {
           "netcoreapp3.1": {
             "projectReferences": {
+              "C:\\Users\\yasch\\Documents\\GitHub\\.Net-2020\\DotNet2020\\DotNet2020.Data\\DotNet2020.Data.csproj": {
+                "projectPath": "C:\\Users\\yasch\\Documents\\GitHub\\.Net-2020\\DotNet2020\\DotNet2020.Data\\DotNet2020.Data.csproj"
+              },
+              "C:\\Users\\yasch\\Documents\\GitHub\\.Net-2020\\DotNet2020\\DotNet2020.Domain.4_Models\\DotNet2020.Domain.4_Models.csproj": {
+                "projectPath": "C:\\Users\\yasch\\Documents\\GitHub\\.Net-2020\\DotNet2020\\DotNet2020.Domain.4_Models\\DotNet2020.Domain.4_Models.csproj"
+              },
               "C:\\Users\\yasch\\Documents\\GitHub\\.Net-2020\\DotNet2020\\DotNet2020.Domain.Core\\DotNet2020.Domain.Core.csproj": {
                 "projectPath": "C:\\Users\\yasch\\Documents\\GitHub\\.Net-2020\\DotNet2020\\DotNet2020.Domain.Core\\DotNet2020.Domain.Core.csproj"
               }
@@ -142,6 +151,58 @@
             "Microsoft.AspNetCore.App": {
               "privateAssets": "none"
             },
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.101\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "C:\\Users\\yasch\\Documents\\GitHub\\.Net-2020\\DotNet2020\\DotNet2020.Domain.4_Models\\DotNet2020.Domain.4_Models.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\yasch\\Documents\\GitHub\\.Net-2020\\DotNet2020\\DotNet2020.Domain.4_Models\\DotNet2020.Domain.4_Models.csproj",
+        "projectName": "DotNet2020.Domain.4_Models",
+        "projectPath": "C:\\Users\\yasch\\Documents\\GitHub\\.Net-2020\\DotNet2020\\DotNet2020.Domain.4_Models\\DotNet2020.Domain.4_Models.csproj",
+        "packagesPath": "C:\\Users\\yasch\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\yasch\\Documents\\GitHub\\.Net-2020\\DotNet2020\\DotNet2020.Domain.4_Models\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\yasch\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "netcoreapp3.1"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netcoreapp3.1": {
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "netcoreapp3.1": {
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
             "Microsoft.NETCore.App": {
               "privateAssets": "all"
             }
@@ -247,6 +308,9 @@
               },
               "C:\\Users\\yasch\\Documents\\GitHub\\.Net-2020\\DotNet2020\\DotNet2020.Domain.4\\DotNet2020.Domain.4.csproj": {
                 "projectPath": "C:\\Users\\yasch\\Documents\\GitHub\\.Net-2020\\DotNet2020\\DotNet2020.Domain.4\\DotNet2020.Domain.4.csproj"
+              },
+              "C:\\Users\\yasch\\Documents\\GitHub\\.Net-2020\\DotNet2020\\DotNet2020.Domain.Core\\DotNet2020.Domain.Core.csproj": {
+                "projectPath": "C:\\Users\\yasch\\Documents\\GitHub\\.Net-2020\\DotNet2020\\DotNet2020.Domain.Core\\DotNet2020.Domain.Core.csproj"
               }
             }
           }
@@ -269,6 +333,10 @@
               "version": "[3.1.2, )"
             },
             "Microsoft.AspNetCore.Identity.UI": {
+              "target": "Package",
+              "version": "[3.1.2, )"
+            },
+            "Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation": {
               "target": "Package",
               "version": "[3.1.2, )"
             },
