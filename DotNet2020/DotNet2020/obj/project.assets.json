@@ -1718,7 +1718,10 @@
         },
         "runtime": {
           "bin/placeholder/DotNet2020.Domain.Core.dll": {}
-        }
+        },
+        "frameworkReferences": [
+          "Microsoft.AspNetCore.App"
+        ]
       }
     }
   },
