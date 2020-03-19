@@ -23,6 +23,7 @@ using Microsoft.Extensions.FileProviders;
 using DotNet2020.Domain._3.Controllers;
 using DotNet2020.Domain._3.Models.Contexts;
 
+
 namespace DotNet2020
 {
     public class Startup
@@ -42,6 +43,7 @@ namespace DotNet2020
                     Configuration.GetConnectionString("DefaultConnection")));
             services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
+
 	    #region qwertyRegion
             services.AddDbContext<CompetencesContext>(options =>
                 options.UseNpgsql(
@@ -66,17 +68,16 @@ namespace DotNet2020
                 {
                     options.FileProviders.Add(
                         new EmbeddedFileProvider(assembly));
-		    options.FileProviders.Add(
+
+		                options.FileProviders.Add(
                         new EmbeddedFileProvider(attestationAssembly));
                 });
 
             services
                 .AddMvc()
                 .AddApplicationPart(assembly)
-		.AddApplicationPart(attestationAssembly)
+		            .AddApplicationPart(attestationAssembly)
                 .AddRazorRuntimeCompilation();
-
-
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
