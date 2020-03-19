@@ -10,11 +10,11 @@ namespace DotNet2020.Domain._4.Models
         public AbsenceType AbsenceType { get; set; }
 
 
-        public void ChangeDate(DateTime from, DateTime to)
-        {
-            if (to < from) throw new ArgumentException();
-            From = from;
-            To = to;
-        }
+        //public void ChangeDate(DateTime from, DateTime to)
+        //{
+        //    if (to < from) throw new ArgumentException();
+        //    From = from;
+        //    To = to;
+        //}
     }
 }
