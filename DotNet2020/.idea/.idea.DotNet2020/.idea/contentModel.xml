@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ContentModelStore">
+    <e p="C:\Users\kv4sn\.Rider2019.3\system\extResources" t="IncludeRecursive" />
+    <e p="C:\Users\kv4sn\.Rider2019.3\system\resharper-host\local\Transient\ReSharperHost\v193\SolutionCaches\_DotNet2020.1257148343.00" t="ExcludeRecursive" />
+    <e p="C:\Users\kv4sn\Desktop\dotnet\.Net-2020\DotNet2020" t="IncludeFlat">
+      <e p="DotNet2020" t="IncludeRecursive">
+        <e p="appsettings.Development.json" t="Include" />
+        <e p="appsettings.json" t="Include" />
+        <e p="Areas" t="Include">
+          <e p="Identity" t="Include">
+            <e p="Pages" t="Include">
+              <e p="_ViewStart.cshtml" t="Include" />
+            </e>
+          </e>
+        </e>
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="Controllers" t="Include">
+          <e p="HomeController.cs" t="Include" />
+        </e>
+        <e p="DotNet2020.csproj" t="IncludeRecursive" />
+        <e p="ErrorViewModel.cs" t="Include" />
+        <e p="Models" t="Include" />
+        <e p="obj" t="ExcludeRecursive">
+          <e p="Debug" t="Include">
+            <e p="netcoreapp3.1" t="Include">
+              <e p="DotNet2020.AssemblyInfo.cs" t="Include" />
+              <e p="DotNet2020.RazorAssemblyInfo.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+        <e p="Program.cs" t="Include" />
+        <e p="Properties" t="Include">
+          <e p="launchSettings.json" t="Include" />
+        </e>
+        <e p="Startup.cs" t="Include" />
+        <e p="Views" t="Include">
+          <e p="_ViewImports.cshtml" t="Include" />
+          <e p="_ViewStart.cshtml" t="Include" />
+          <e p="Home" t="Include">
+            <e p="Index.cshtml" t="Include" />
+            <e p="Privacy.cshtml" t="Include" />
+          </e>
+          <e p="Shared" t="Include">
+            <e p="_Layout.cshtml" t="Include" />
+            <e p="_LoginPartial.cshtml" t="Include" />
+            <e p="_ValidationScriptsPartial.cshtml" t="Include" />
+            <e p="Error.cshtml" t="Include" />
+          </e>
+        </e>
+        <e p="wwwroot" t="Include">
+          <e p="css" t="Include">
+            <e p="site.css" t="Include" />
+          </e>
+          <e p="favicon.ico" t="Include" />
+          <e p="js" t="Include">
+            <e p="site.js" t="Include" />
+          </e>
+          <e p="lib" t="Include">
+            <e p="bootstrap" t="Include">
+              <e p="dist" t="Include">
+                <e p="css" t="Include">
+                  <e p="bootstrap-grid.css" t="Include" />
+                  <e p="bootstrap-grid.css.map" t="Include" />
+                  <e p="bootstrap-grid.min.css" t="Include" />
+                  <e p="bootstrap-grid.min.css.map" t="Include" />
+                  <e p="bootstrap-reboot.css" t="Include" />
+                  <e p="bootstrap-reboot.css.map" t="Include" />
+                  <e p="bootstrap-reboot.min.css" t="Include" />
+                  <e p="bootstrap-reboot.min.css.map" t="Include" />
+                  <e p="bootstrap.css" t="Include" />
+                  <e p="bootstrap.css.map" t="Include" />
+                  <e p="bootstrap.min.css" t="Include" />
+                  <e p="bootstrap.min.css.map" t="Include" />
+                </e>
+                <e p="js" t="Include">
+                  <e p="bootstrap.bundle.js" t="Include" />
+                  <e p="bootstrap.bundle.js.map" t="Include" />
+                  <e p="bootstrap.bundle.min.js" t="Include" />
+                  <e p="bootstrap.bundle.min.js.map" t="Include" />
+                  <e p="bootstrap.js" t="Include" />
+                  <e p="bootstrap.js.map" t="Include" />
+                  <e p="bootstrap.min.js" t="Include" />
+                  <e p="bootstrap.min.js.map" t="Include" />
+                </e>
+              </e>
+              <e p="LICENSE" t="Include" />
+            </e>
+            <e p="jquery" t="Include">
+              <e p="dist" t="Include">
+                <e p="jquery.js" t="Include" />
+                <e p="jquery.min.js" t="Include" />
+                <e p="jquery.min.map" t="Include" />
+              </e>
+              <e p="LICENSE.txt" t="Include" />
+            </e>
+            <e p="jquery-validation" t="Include">
+              <e p="dist" t="Include">
+                <e p="additional-methods.js" t="Include" />
+                <e p="additional-methods.min.js" t="Include" />
+                <e p="jquery.validate.js" t="Include" />
+                <e p="jquery.validate.min.js" t="Include" />
+              </e>
+              <e p="LICENSE.md" t="Include" />
+            </e>
+            <e p="jquery-validation-unobtrusive" t="Include">
+              <e p="jquery.validate.unobtrusive.js" t="Include" />
+              <e p="jquery.validate.unobtrusive.min.js" t="Include" />
+              <e p="LICENSE.txt" t="Include" />
+            </e>
+          </e>
+        </e>
+      </e>
+      <e p="DotNet2020.Data" t="IncludeRecursive">
+        <e p="ApplicationDbContext.cs" t="Include" />
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="DotNet2020.Data.csproj" t="IncludeRecursive" />
+        <e p="Migrations" t="Include">
+          <e p=".gitattributes" t="Include" />
+          <e p="20200227164734_InitialCreate.cs" t="Include" />
+          <e p="20200227164734_InitialCreate.Designer.cs" t="Include" />
+          <e p="ApplicationDbContextModelSnapshot.cs" t="Include" />
+          <e p="Attestation" t="Include">
+            <e p="20200317162345_AttestationAdd.cs" t="Include" />
+            <e p="20200317162345_AttestationAdd.Designer.cs" t="Include" />
+            <e p="20200317180816_AttestationUpdate.cs" t="Include" />
+            <e p="20200317180816_AttestationUpdate.Designer.cs" t="Include" />
+            <e p="20200317181600_AttestationNew.cs" t="Include" />
+            <e p="20200317181600_AttestationNew.Designer.cs" t="Include" />
+            <e p="AttestationContextModelSnapshot.cs" t="Include" />
+          </e>
+          <e p="Competences" t="Include">
+            <e p="20200313080508_CompetencesAdd.cs" t="Include" />
+            <e p="20200313080508_CompetencesAdd.Designer.cs" t="Include" />
+            <e p="20200314181438_competencesUpdate.cs" t="Include" />
+            <e p="20200314181438_competencesUpdate.Designer.cs" t="Include" />
+            <e p="CompetencesContextModelSnapshot.cs" t="Include" />
+          </e>
+          <e p="Grades" t="Include">
+            <e p="20200314162224_grades.cs" t="Include" />
+            <e p="20200314162224_grades.Designer.cs" t="Include" />
+            <e p="GradesContextModelSnapshot.cs" t="Include" />
+          </e>
+          <e p="Worker" t="Include">
+            <e p="20200314184435_workers.cs" t="Include" />
+            <e p="20200314184435_workers.Designer.cs" t="Include" />
+            <e p="20200314192241_workersUpdate.cs" t="Include" />
+            <e p="20200314192241_workersUpdate.Designer.cs" t="Include" />
+            <e p="WorkerContextModelSnapshot.cs" t="Include" />
+          </e>
+        </e>
+        <e p="obj" t="ExcludeRecursive">
+          <e p="Debug" t="Include">
+            <e p="netcoreapp3.1" t="Include">
+              <e p="DotNet2020.Data.AssemblyInfo.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+      </e>
+      <e p="DotNet2020.Domain.3" t="IncludeRecursive">
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="Controllers" t="Include">
+          <e p="AttestationController.cs" t="Include" />
+        </e>
+        <e p="DotNet2020.Domain.3.csproj" t="IncludeRecursive" />
+        <e p="Helpers" t="Include">
+          <e p="AttestationHelper.cs" t="Include" />
+          <e p="BuilderHelper.cs" t="Include" />
+          <e p="CompetenceHelper.cs" t="Include" />
+          <e p="GradeHelper.cs" t="Include" />
+          <e p="OutputHelper.cs" t="Include" />
+          <e p="QuestionHelper.cs" t="Include" />
+        </e>
+        <e p="Models" t="Include">
+          <e p="AttestationModel.cs" t="Include" />
+          <e p="CompetencesModel.cs" t="Include" />
+          <e p="Contexts" t="Include">
+            <e p="AttestationContext.cs" t="Include" />
+            <e p="CompetencesContext.cs" t="Include" />
+            <e p="GradesContext.cs" t="Include" />
+            <e p="WorkerContext.cs" t="Include" />
+          </e>
+          <e p="GradesModel.cs" t="Include" />
+          <e p="WorkerModel.cs" t="Include" />
+        </e>
+        <e p="obj" t="ExcludeRecursive">
+          <e p="Debug" t="Include">
+            <e p="netcoreapp3.1" t="Include">
+              <e p="DotNet2020.Domain.3.AssemblyInfo.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+        <e p="Repository" t="Include">
+          <e p="AttestationRepository.cs" t="Include" />
+          <e p="CompetencesRepository.cs" t="Include" />
+          <e p="GradesRepository.cs" t="Include" />
+          <e p="Main" t="Include">
+            <e p="IRepository.cs" t="Include" />
+          </e>
+          <e p="WorkerRepository.cs" t="Include" />
+        </e>
+        <e p="Views" t="Include">
+          <e p="Attestation" t="Include">
+            <e p="Attestation.cshtml" t="Include" />
+            <e p="AttestationList.cshtml" t="Include" />
+            <e p="Competences.cshtml" t="Include" />
+            <e p="CompetencesAdd.cshtml" t="Include" />
+            <e p="CompetencesManage.cshtml" t="Include" />
+            <e p="Grades.cshtml" t="Include" />
+            <e p="GradesAdd.cshtml" t="Include" />
+            <e p="GradesManage.cshtml" t="Include" />
+            <e p="Index.cshtml" t="Include" />
+            <e p="Output.cshtml" t="Include" />
+            <e p="Questions.cshtml" t="Include" />
+            <e p="QuestionsManage.cshtml" t="Include" />
+            <e p="Workers.cshtml" t="Include" />
+            <e p="WorkersAdd.cshtml" t="Include" />
+            <e p="WorkersUpdate.cshtml" t="Include" />
+          </e>
+        </e>
+      </e>
+      <e p="DotNet2020.Domain.Core" t="IncludeRecursive">
+        <e p="Auth" t="Include">
+          <e p="AppIdentityRole.cs" t="Include" />
+          <e p="AppIdentityUser.cs" t="Include" />
+        </e>
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="DotNet2020.Domain.Core.csproj" t="IncludeRecursive" />
+        <e p="obj" t="ExcludeRecursive">
+          <e p="Debug" t="Include">
+            <e p="netcoreapp3.1" t="Include">
+              <e p="DotNet2020.Domain.Core.AssemblyInfo.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+      </e>
+      <e p="DotNet2020.sln" t="IncludeFlat" />
+      <e p="packages" t="ExcludeRecursive" />
+    </e>
+  </component>
+</project>
