@@ -1053,26 +1053,24 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\yasch\\.nuget\\packages\\": {}
+    "/Users/user/.nuget/packages/": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\yasch\\Documents\\GitHub\\.Net-2020\\DotNet2020\\DotNet2020.Domain.Core\\DotNet2020.Domain.Core.csproj",
+      "projectUniqueName": "/Users/user/Documents/GitHub/Net-2020/DotNet2020/DotNet2020.Domain.Core/DotNet2020.Domain.Core.csproj",
       "projectName": "DotNet2020.Domain.Core",
-      "projectPath": "C:\\Users\\yasch\\Documents\\GitHub\\.Net-2020\\DotNet2020\\DotNet2020.Domain.Core\\DotNet2020.Domain.Core.csproj",
-      "packagesPath": "C:\\Users\\yasch\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\yasch\\Documents\\GitHub\\.Net-2020\\DotNet2020\\DotNet2020.Domain.Core\\obj\\",
+      "projectPath": "/Users/user/Documents/GitHub/Net-2020/DotNet2020/DotNet2020.Domain.Core/DotNet2020.Domain.Core.csproj",
+      "packagesPath": "/Users/user/.nuget/packages/",
+      "outputPath": "/Users/user/Documents/GitHub/Net-2020/DotNet2020/DotNet2020.Domain.Core/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\yasch\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        "/Users/user/.config/NuGet/NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "netcoreapp3.1"
       ],
       "sources": {
-        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -1113,14 +1111,11 @@
         "assetTargetFallback": true,
         "warn": true,
         "frameworkReferences": {
-          "Microsoft.AspNetCore.App": {
-            "privateAssets": "none"
-          },
           "Microsoft.NETCore.App": {
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.101\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/3.1.102/RuntimeIdentifierGraph.json"
       }
     }
   }

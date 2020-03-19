@@ -55,7 +55,6 @@ namespace DotNet2020.Domain._4.Controllers
                     await _dbContext.Recommendations.AddAsync(recommendation);
                 else dbEntry.RecommendationText = recommendation.RecommendationText;
                 await _dbContext.SaveChangesAsync();
-                Recommendation = recommendation;
                 return RedirectToActionPermanent("Admin");
             }
 
