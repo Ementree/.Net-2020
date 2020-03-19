@@ -16,6 +16,7 @@ using DotNet2020.Data;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using DotNet2020.Controllers;
 using System.Reflection;
+using DotNet2020.Domain.Core.Controllers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.Extensions.FileProviders;
@@ -36,7 +37,12 @@ namespace DotNet2020
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            #region qwertyRegion
+            services.AddDbContext<ApplicationDbContext>(options =>
+                options.UseSqlServer(
+                    Configuration.GetConnectionString("DefaultConnection")));
+            services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+                .AddEntityFrameworkStores<ApplicationDbContext>();
+	    #region qwertyRegion
             services.AddDbContext<CompetencesContext>(options =>
                 options.UseNpgsql(
                     Configuration.GetConnectionString("DefaultConnection"), b => b.MigrationsAssembly("DotNet2020.Data")));
@@ -50,26 +56,27 @@ namespace DotNet2020
                 options.UseNpgsql(
                     Configuration.GetConnectionString("DefaultConnection"), b => b.MigrationsAssembly("DotNet2020.Data")));
             #endregion
-            services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseNpgsql(
-                    Configuration.GetConnectionString("DefaultConnection"), b => b.MigrationsAssembly("DotNet2020.Data")));
-            
-            services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-                .AddEntityFrameworkStores<ApplicationDbContext>();
-            
-            var assembly = typeof(AttestationController).Assembly;
+
+
+            var assembly = typeof(DemoController).Assembly;
+            var attestationAssembly = typeof(AttestationController).Assembly;
 
             services.Configure<Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation.MvcRazorRuntimeCompilationOptions>(
                 options =>
                 {
                     options.FileProviders.Add(
                         new EmbeddedFileProvider(assembly));
+		    options.FileProviders.Add(
+                        new EmbeddedFileProvider(attestationAssembly));
                 });
 
             services
                 .AddMvc()
                 .AddApplicationPart(assembly)
+		.AddApplicationPart(attestationAssembly)
                 .AddRazorRuntimeCompilation();
+
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -86,14 +93,21 @@ namespace DotNet2020
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
-            app.UseHttpsRedirection();
+
+            if (!env.IsDevelopment())
+            {
+                app.UseHttpsRedirection();
+            }
+            
+
             app.UseStaticFiles();
 
             app.UseRouting();
 
             app.UseAuthentication();
             app.UseAuthorization();
-
+            
+            
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
