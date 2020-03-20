@@ -1,5 +1,4 @@
-﻿using DotNet2020.Domain._4.Models;
-using DotNet2020.Domain.Core.Auth;
+﻿using DotNet2020.Domain.Core.Auth;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
