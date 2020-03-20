@@ -20,6 +20,7 @@ using DotNet2020.Domain.Core.Controllers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.Extensions.FileProviders;
+using DotNet2020.Domain._4.Controllers;
 
 namespace DotNet2020
 {
@@ -42,7 +43,7 @@ namespace DotNet2020
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
 
-            var assembly = typeof(DemoController).Assembly;
+            var assembly = typeof(CalendarController).Assembly;
 
             services.Configure<Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation.MvcRazorRuntimeCompilationOptions>(
                 options =>
