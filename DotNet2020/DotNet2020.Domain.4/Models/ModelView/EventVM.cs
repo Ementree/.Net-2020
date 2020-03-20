@@ -6,7 +6,7 @@ namespace DotNet2020.Domain._4_Models
 {
     public class EventVM
     {
-        public new DateTime From { get; set; }
-        public new DateTime To { get; set; }
+        public DateTime From { get; set; }
+        public DateTime To { get; set; }
     }
 }

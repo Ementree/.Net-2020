@@ -26,7 +26,7 @@ namespace DotNet2020.Domain.Models
 
         public DbSet<Recommendation> Recommendations { get; set; }
         public DbSet<Illness> Illnesses { get; set; }
-        public DbSet<SickDay> Sickdays { get; set; }
+        public DbSet<SickDay> SickDays { get; set; }
         public DbSet<Vacation> Vacations { get; set; }
     }
 }
