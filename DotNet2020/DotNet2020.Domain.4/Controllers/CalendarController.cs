@@ -1,8 +1,7 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using DotNet2020.Data;
 using DotNet2020.Domain._4.Models;
-using DotNet2020.Domain._4_Models.Models;
+using DotNet2020.Domain.Models.Contexts;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,9 +9,9 @@ namespace DotNet2020.Domain._4.Controllers
 {
     public class CalendarController : Controller
     {
-        private readonly ApplicationDbContext _dbContext;
+        private readonly CalendarEntryContext _dbContext;
 
-        public CalendarController(ApplicationDbContext dbContext)
+        public CalendarController(CalendarEntryContext dbContext)
         {
             _dbContext = dbContext;
         }
@@ -27,49 +26,6 @@ namespace DotNet2020.Domain._4.Controllers
         public IActionResult AddEvent()
         {
             return View();
-        }
-
-        [HttpPost]
-        public IActionResult AddSeekday(EventVM eventVM)
-        {
-            if (eventVM.From == DateTime.MinValue)
-            {
-                ModelState.AddModelError("DataError", "Введите дату");
-                return RedirectToAction("AddEvent");
-            }
-            var seekday = new Seekday(eventVM.From, eventVM.From);
-            _dbContext.Seekdays.Add(seekday);
-            _dbContext.SaveChanges();
-            return RedirectToAction("Index");
-
-        }
-
-        [HttpPost]
-        public IActionResult AddVacation(EventVM eventVM)
-        {
-            if (eventVM.From == DateTime.MinValue && eventVM.To == DateTime.MinValue)
-            {
-                ModelState.AddModelError("DataError", "Введите дату");
-                return RedirectToAction("AddEvent");
-            }
-            var vacation = new Vacation(eventVM.From, eventVM.To);
-            _dbContext.Vacations.Add(vacation);
-            _dbContext.SaveChanges();
-            return RedirectToAction("Index");
-        }
-
-        [HttpPost]
-        public IActionResult AddIllness(EventVM eventVM)
-        {
-            if (eventVM.From == DateTime.MinValue && eventVM.To == DateTime.MinValue)
-            {
-                ModelState.AddModelError("DataError", "Введите дату");
-                return RedirectToAction("AddEvent");
-            }
-            var illness = new Illness(eventVM.From, eventVM.To);
-            _dbContext.Illnesses.Add(illness);
-            _dbContext.SaveChanges();
-            return RedirectToAction("Index");
         }
 
         public async Task<IActionResult> Admin()

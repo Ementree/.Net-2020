@@ -351,8 +351,5 @@ MigrationBackup/
 
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
-*.cache
-*.props
-*.targets
-*.props
-DotNet2020/DotNet2020/obj/DotNet2020.csproj.nuget.dgspec.json
+
+.idea/

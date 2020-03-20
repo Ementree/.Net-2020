@@ -7,11 +7,5 @@ namespace DotNet2020.Domain._4.Models
         public int Id { get; }
         public new DateTime From { get; private set; }
         public new DateTime To { get; private set; }
-        public Seekday(DateTime from, DateTime to)
-        {
-            this.From = from;
-            this.To = to;
-        }
-
     }
 }

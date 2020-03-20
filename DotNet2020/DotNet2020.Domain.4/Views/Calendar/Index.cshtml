@@ -1,0 +1,30 @@
+﻿@{
+    ViewData["Title"] = "Calendar";
+}
+<link rel="stylesheet" href="~/css/calendar.css">
+<div class="container">
+    <div class="calendar">
+        <h1>Календарь</h1>
+    </div>
+    <h2>Рекомендация для вас</h2>
+    <div class="recommendations">
+        <div class="block-rec">
+            <div class="box">
+                @if (ViewBag.Recommendation != null)
+                {
+                    <p>@ViewBag.Recommendation.RecommendationText</p>
+                }
+            </div>
+        </div>
+        <form asp-action="AddEvent" asp-controller="Calendar" method="get">
+            <div class="vacation">
+                <h2>У вас осталось 20 дней отпуска</h2>
+                <button type="submit">Запросить новый отпуск</button>
+            </div>
+        </form>
+    </div>
+    <div class="last-vacation">
+        <h1>Ваш последний отпуск был отклонен/согласован</h1>
+    </div>
+</div>  
+        

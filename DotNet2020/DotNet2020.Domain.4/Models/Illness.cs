@@ -2,7 +2,7 @@
 
 namespace DotNet2020.Domain._4.Models
 {
-    public class Vacation : AbstractCalendarEntry
+    public class Illness : AbstractCalendarEntry
     {
         public int Id { get; }
         public new DateTime From { get; private set; }
@@ -12,11 +12,6 @@ namespace DotNet2020.Domain._4.Models
         public void Approve()
         {
             IsApproved = true;
-        }
-        public Vacation(DateTime from, DateTime to)
-        {
-            this.From = from;
-            this.To = to;
         }
     }
 }
