@@ -43,7 +43,9 @@ namespace DotNet2020
             services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
-            services.AddScoped<CalendarEntryContext>();
+            services.AddDbContext<CalendarEntryContext>(options =>
+                options.UseNpgsql(
+                    Configuration.GetConnectionString("DefaultConnection"), b => b.MigrationsAssembly("DotNet2020.Data")));
 
             var assembly = typeof(CalendarController).Assembly;
 
