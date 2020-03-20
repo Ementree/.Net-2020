@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using DotNet2020.Data;
 using DotNet2020.Domain._4.Models;
-using DotNet2020.Domain.Models.Contexts;
+using DotNet2020.Domain.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 

@@ -21,6 +21,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.Extensions.FileProviders;
 using DotNet2020.Domain._4.Controllers;
+using DotNet2020.Domain.Models;
 
 namespace DotNet2020
 {
@@ -42,6 +43,7 @@ namespace DotNet2020
             services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
+            services.AddScoped<CalendarEntryContext>();
 
             var assembly = typeof(CalendarController).Assembly;
 

@@ -7,11 +7,6 @@
     <ProjectReference Include="..\DotNet2020.Data\DotNet2020.Data.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Views\Calendar\AddEvent.cshtml">
-      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
     <EmbeddedResource Include="Views\Calendar\AddHoliday.cshtml">
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
@@ -37,5 +32,8 @@
     <Folder Include="Models\" />
     <Folder Include="Repositories\" />
     <Folder Include="Models\Contexts\" />
+    <Folder Include="Models\Base\" />
+    <Folder Include="Models\ModelView\" />
+    <Folder Include="Models\CalendarEntry\" />
   </ItemGroup>
 </Project>
