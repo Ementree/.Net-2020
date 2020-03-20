@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using DotNet2020.Data;
 using DotNet2020.Domain._4.Models;
+using DotNet2020.Domain.Models.Contexts;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -8,9 +9,9 @@ namespace DotNet2020.Domain._4.Controllers
 {
     public class CalendarController : Controller
     {
-        private readonly ApplicationDbContext _dbContext;
+        private readonly CalendarEntryContext _dbContext;
 
-        public CalendarController(ApplicationDbContext dbContext)
+        public CalendarController(CalendarEntryContext dbContext)
         {
             _dbContext = dbContext;
         }

@@ -19,6 +19,5 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DotNet2020.Domain.Core\DotNet2020.Domain.Core.csproj" />
-    <ProjectReference Include="..\DotNet2020.Domain.4_Models\DotNet2020.Domain.4_Models.csproj" />
   </ItemGroup>
 </Project>

@@ -5,7 +5,6 @@
   <ItemGroup>
     <ProjectReference Include="..\DotNet2020.Domain.Core\DotNet2020.Domain.Core.csproj" />
     <ProjectReference Include="..\DotNet2020.Data\DotNet2020.Data.csproj" />
-    <ProjectReference Include="..\DotNet2020.Domain.4_Models\DotNet2020.Domain.4_Models.csproj" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Views\Calendar\AddEvent.cshtml">
@@ -33,5 +32,10 @@
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Models\" />
+    <Folder Include="Repositories\" />
+    <Folder Include="Models\Contexts\" />
   </ItemGroup>
 </Project>
