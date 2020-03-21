@@ -31,6 +31,9 @@
 	    <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
 	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </EmbeddedResource>  
+	  <EmbeddedResource Include="wwwroot\css\calendar.css">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Models\" />
@@ -39,11 +42,15 @@
     <Folder Include="Models\Base\" />
     <Folder Include="Models\ModelView\" />
     <Folder Include="Models\CalendarEntry\" />
+    <Folder Include="wwwroot\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.2">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="wwwroot\css\calendar.css" />
   </ItemGroup>
 </Project>
