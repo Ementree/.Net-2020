@@ -20,7 +20,7 @@ using DotNet2020.Domain.Core.Controllers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.Extensions.FileProviders;
-//using DotNet2020.Domain._4.Controllers;
+using DotNet2020.Domain._4.Controllers;
 using DotNet2020.Domain.Models;
 
 namespace DotNet2020
@@ -50,19 +50,19 @@ namespace DotNet2020
                     b => b.MigrationsAssembly("DotNet2020.Data")));
             #endregion
 
-            //var assembly = typeof(CalendarController).Assembly;
+            var assembly = typeof(CalendarController).Assembly;
 
-            //services.Configure<Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation.MvcRazorRuntimeCompilationOptions>(
-            //    options =>
-            //    {
-            //        options.FileProviders.Add(
-            //            new EmbeddedFileProvider(assembly));
-            //    });
+            services.Configure<Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation.MvcRazorRuntimeCompilationOptions>(
+                options =>
+                {
+                    options.FileProviders.Add(
+                        new EmbeddedFileProvider(assembly));
+                });
 
-            //services
-            //    .AddMvc()
-            //    .AddApplicationPart(assembly)
-            //    .AddRazorRuntimeCompilation();
+            services
+                .AddMvc()
+                .AddApplicationPart(assembly)
+                .AddRazorRuntimeCompilation();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
