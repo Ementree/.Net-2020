@@ -4,15 +4,17 @@ using DotNet2020.Domain.Models;
 using DotNet2020.Domain._4.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace DotNet2020.Data.Migrations.CalendarEntry
 {
     [DbContext(typeof(CalendarEntryContext))]
-    partial class CalendarEntryContextModelSnapshot : ModelSnapshot
+    [Migration("20200322222723_AddHoliday")]
+    partial class AddHoliday
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
