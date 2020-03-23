@@ -4,22 +4,23 @@ using DotNet2020.Domain._3.Helpers;
 using DotNet2020.Domain._3.Models;
 using DotNet2020.Domain._3.Models.Contexts;
 using DotNet2020.Domain._3.Repository;
+using DotNet2020.Domain._3.Repository.Main;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DotNet2020.Domain._3.Controllers
 {
     public class AttestationController:Controller
     {
-        private readonly CompetencesRepository _competences;
-        private readonly GradesRepository _grades;
-        private readonly WorkerRepository _workers;
         private readonly AttestationRepository _attestation;
-        public AttestationController(CompetencesContext competences, GradesContext grades, WorkerContext workers, AttestationContext attestation)
+        private readonly SpecificWorkerRepository _workers;
+        private readonly GradesRepository _grades;
+        private readonly CompetencesRepository _competences;
+        public AttestationController(AttestationContext attestationContext)
         {
-            _competences=new CompetencesRepository(competences);
-            _grades=new GradesRepository(grades);
-            _workers = new WorkerRepository(workers);
-            _attestation = new AttestationRepository(attestation);
+            _workers = new SpecificWorkerRepository(attestationContext);
+            _attestation = new AttestationRepository(attestationContext);
+            _grades=new GradesRepository(attestationContext);
+            _competences=new CompetencesRepository(attestationContext);
         }
         public IActionResult Index()
         {
@@ -28,7 +29,7 @@ namespace DotNet2020.Domain._3.Controllers
 
         public IActionResult Workers()
         {
-            ViewBag.Workers = _workers.GetList();
+            ViewBag.Workers = WorkerOutputModelHelper.GetList(_workers);
             return View();
         }
 
@@ -37,18 +38,16 @@ namespace DotNet2020.Domain._3.Controllers
         {
             ViewBag.Competences = _competences.GetList();
             ViewBag.Worker = _workers.GetById(id);
-            if(_workers.GetById(id).Competences!=null)
-                ViewBag.WorkerCompetences = _workers.GetById(id).Competences.ToList();
+            ViewBag.Ids = _workers.GetAllCompetencesIdsById(id);
             return View();
         }
         
         [HttpPost]
         [Route("Attestation/WorkersUpdate/{id}")]
-        public IActionResult WorkersUpdate(long id, WorkerModel worker)
+        public IActionResult WorkersUpdate(long id, SpecificWorkerModel workerModel, List<long> ids)
         {
-            if(worker.Competences==null)
-                worker.Competences=new string[]{""};
-            _workers.Update(worker);
+            _workers.Update(workerModel);
+            _workers.UpdateTable(workerModel, ids);
             return RedirectToAction("Workers");
         }
 
@@ -59,12 +58,11 @@ namespace DotNet2020.Domain._3.Controllers
         }
         
         [HttpPost]
-        public IActionResult WorkersAdd(WorkerModel worker)
+        public IActionResult WorkersAdd(SpecificWorkerModel workerModel, List<long> competences)
         {
-            if(worker.Competences==null)
-                worker.Competences=new string[]{""};
             ViewBag.Competences = _competences.GetList();
-            _workers.Create(worker);
+            _workers.AddToAnotherTable(workerModel, competences);
+            _workers.Create(workerModel);
             return RedirectToAction("Workers");
         }
         
@@ -118,7 +116,8 @@ namespace DotNet2020.Domain._3.Controllers
         
         public IActionResult Grades()
         {
-            ViewBag.Grades = _grades.GetList();
+            var a =GradeOutputModelHelper.GetList(_grades);
+            ViewBag.Grades = GradeOutputModelHelper.GetList(_grades);
             return View();
         }
         
@@ -130,7 +129,7 @@ namespace DotNet2020.Domain._3.Controllers
         [HttpPost]
         public IActionResult GradesAdd(string gradeName)
         {
-            var grade = new GradesModels {Grade = gradeName, Competences = new string[2]{"Компетенция №1", "Компетенция №2"}};
+            var grade = new GradesModel {Grade = gradeName};
             _grades.Create(grade);
             return RedirectToAction("GradesManage", new { id = grade.Id });
         }
@@ -138,20 +137,20 @@ namespace DotNet2020.Domain._3.Controllers
         [Route("Attestation/GradesManage/{id}")]
         public IActionResult GradesManage(long id)
         {
-            ViewBag.CompetencesList = _competences.GetList();
-            ViewBag.Competences = _grades.GetById(id).Competences;
+            ViewBag.CompetencesList =  _competences.GetList();
+            ViewBag.AddedCompetences = _grades.GetAllCompetencesById(id);
             return View();
         }
 
         [HttpPost]
         [Route("Attestation/GradesManage/{id}")]
-        public IActionResult GradesManage(long id, string method, string competenceItem, List<int> checkboxes)
+        public IActionResult GradesManage(long id, string method, List<long> competences)
         {
-            ViewBag.CompetencesList = _competences.GetList();
-            GradeHelper.Manage(_grades, id, method, competenceItem, checkboxes);
+            GradeHelper.Manage(_grades, id, method, competences);
             if (method == "RemoveGrade")
                 return RedirectToAction("Grades");
-            ViewBag.Competences = _grades.GetById(id).Competences;
+            ViewBag.CompetencesList =  _competences.GetList();
+            ViewBag.AddedCompetences = _grades.GetAllCompetencesById(id);
             return View();
         }
         
@@ -180,15 +179,16 @@ namespace DotNet2020.Domain._3.Controllers
         public IActionResult Attestation()
         {
             ViewBag.Method = "Choose";
-            ViewBag.Workers = _workers.GetList();
+            ViewBag.Workers = WorkerOutputModelHelper.GetList(_workers);
             ViewBag.Competences = _competences.GetList();
             return View();
         }
         
         [HttpPost]
-        public IActionResult Attestation(string method, AttestationModel model, List<long> rightAnswers, List<long> skipedAnswers, List<string> commentaries, List<long> gotCompetences)
+        public IActionResult Attestation(string method, AttestationModel model, List<long> rightAnswers, List<long> skipedAnswers, 
+            List<string> commentaries, List<long> gotCompetences, List<string> questions)
         {
-            ViewBag.Workers = _workers.GetList();
+            ViewBag.Workers = WorkerOutputModelHelper.GetList(_workers);
             ViewBag.Competences = _competences.GetList();
             if (model.WorkerId != null && model.CompetencesId.Count > 0)
             {
@@ -203,7 +203,7 @@ namespace DotNet2020.Domain._3.Controllers
                         ViewBag.CompetencesId = model.CompetencesId;
                         break;
                     case ("Finished"):
-                        AttestationHelper.SaveAttestation(rightAnswers, skipedAnswers, commentaries, _attestation, model, _competences, gotCompetences, _workers);
+                        AttestationHelper.SaveAttestation(rightAnswers, skipedAnswers, commentaries, gotCompetences, questions, model, _workers, _attestation);
                         return RedirectToAction("Attestation");
                 }
                 ViewBag.Method = method;
@@ -226,7 +226,7 @@ namespace DotNet2020.Domain._3.Controllers
 
         public IActionResult Output()
         {
-            ViewBag.Workers = _workers.GetList();
+            ViewBag.Workers = WorkerOutputModelHelper.GetList(_workers);
             return View();
         }
     }

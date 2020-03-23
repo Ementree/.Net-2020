@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DotNet2020.Domain._3.Models
 {
@@ -12,5 +14,9 @@ namespace DotNet2020.Domain._3.Models
         public string[] Content { get; set; }
         
         public string[] Questions { get; set; }
+        
+        public List<GradeCompetencesModel> GradesCompetences { get; set; }
+        public List<SpecificWorkerCompetencesModel> SpecificWorkerCompetencesModels { get; set; }
+        
     }
 }

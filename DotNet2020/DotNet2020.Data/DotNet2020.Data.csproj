@@ -21,4 +21,8 @@
     <ProjectReference Include="..\DotNet2020.Domain.3\DotNet2020.Domain.3.csproj" />
     <ProjectReference Include="..\DotNet2020.Domain.Core\DotNet2020.Domain.Core.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Migrations" />
+  </ItemGroup>
 </Project>

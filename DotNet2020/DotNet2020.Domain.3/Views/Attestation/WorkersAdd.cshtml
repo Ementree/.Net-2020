@@ -1,4 +1,4 @@
-﻿@model DotNet2020.Domain._3.Models.WorkerModel
+﻿@model DotNet2020.Domain._3.Models.SpecificWorkerModel
 
 <form method="post">
     <p>ФИО</p>
@@ -14,12 +14,10 @@
     <p>Компетенции</p>
     @if (ViewBag.Competences != null)
     {
-        <select multiple name="Competences">
-            @foreach (var element in ViewBag.Competences)
-            {
-                <option>@element.Competence</option>
-            }
-        </select>
+        @foreach (var element in ViewBag.Competences)
+        {
+            <p><input type="checkbox" value="@element.Id" name="competences"> @element.Competence</p>
+        }
     }
     else
     {

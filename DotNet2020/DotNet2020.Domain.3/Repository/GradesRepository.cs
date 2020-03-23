@@ -7,33 +7,32 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DotNet2020.Domain._3.Repository
 {
-    public class GradesRepository:IRepository<GradesModels>
+    public class GradesRepository:IRepository<GradesModel>, ICompetencesGetter<GradesModel>
     {
-        private readonly GradesContext _grades;
-        public GradesRepository(GradesContext grades)
+        private readonly AttestationContext _context;
+        public GradesRepository(AttestationContext context)
         {
-            _grades = grades;
+            _context = context;
+        }
+        public List<GradesModel> GetList()
+        {
+            return _context.Grades.ToList();
         }
 
-        public List<GradesModels> GetList()
+        public GradesModel GetById(long id)
         {
-            return _grades.Grades.ToList();
+            return _context.Grades.Find(id);
         }
 
-        public GradesModels GetById(long id)
+        public void Create(GradesModel item)
         {
-            return _grades.Grades.Find(id);
-        }
-
-        public void Create(GradesModels item)
-        {
-            _grades.Grades.Add(item);
+            _context.Grades.Add(item);
             Save();
         }
 
-        public void Update(GradesModels item)
+        public void Update(GradesModel item)
         {
-            _grades.Entry(item).State = EntityState.Modified;
+            _context.Entry(item).State = EntityState.Modified;
             Save();
         }
 
@@ -41,13 +40,82 @@ namespace DotNet2020.Domain._3.Repository
         {
             var item = GetById(id);
             if (item != null)
-                _grades.Grades.Remove(item);
-            Save();
+                _context.Grades.Remove(item);
         }
 
         public void Save()
         {
-            _grades.SaveChanges();
+            _context.SaveChanges();
+        }
+
+        /// <summary>
+        /// Получить все компетенции по id
+        /// </summary>
+        /// <param name="itemId">Id грейда</param>
+        /// <returns>Лист компетенций</returns>
+        public List<CompetencesModel> GetAllCompetencesById(long itemId)
+        {
+            var unionList = _context.GradeCompetences.Where(x => x.GradeId == itemId).ToList();
+            List<CompetencesModel> competencesModels=new List<CompetencesModel>();
+            foreach (var element in unionList)
+            {
+                competencesModels.Add(_context.Competences.Find(element.CompetenceId));
+            }
+
+            return competencesModels;
+        }
+
+        /// <summary>
+        /// Возвращает true, если у грейда с данным Id есть хотя бы одна компетенция
+        /// </summary>
+        /// <param name="itemId">Id грейда</param>
+        /// <returns>true - хотя бы 1, false - 0</returns>
+        public bool IsAnyCompetences(long itemId)
+        {
+            return _context.GradeCompetences.Any(x=>x.GradeId==itemId);
+        }
+
+        /// <summary>
+        /// Возвращает лист id грейдов, которые содержат Id данной компетенции
+        /// </summary>
+        /// <param name="competenceId">id компетенции</param>
+        /// <returns></returns>
+        public List<long> GetAllItemsThatContainsCompetence(long competenceId)
+        {
+            List<long> workerIds=new List<long>();
+            var unionList = _context.GradeCompetences.Where(x => x.CompetenceId == competenceId).ToList();
+            foreach (var element in unionList)
+            {
+                workerIds.Add(element.GradeId);
+            }
+            return workerIds;
+        }
+
+        public void AddToAnotherTable(GradesModel item, List<long> competences)
+        {
+            throw new System.NotImplementedException();
+        }
+        
+        public void UpdateTable(GradesModel item, List<long> ids)
+        {
+            if(item.GradesCompetences==null)
+                item.GradesCompetences = new List<GradeCompetencesModel>();
+            else
+                item.GradesCompetences.Clear();
+
+            var allOldItems = _context.GradeCompetences.Where(x => x.GradeId == item.Id)
+                .ToList();
+
+            foreach (var element in allOldItems)
+            {
+                _context.GradeCompetences.Remove(element);
+            }
+            
+            foreach (var id in ids)
+            {
+                item.GradesCompetences.Add(new GradeCompetencesModel {GradeId = item.Id, CompetenceId = id});
+            }
+            Save();
         }
     }
 }

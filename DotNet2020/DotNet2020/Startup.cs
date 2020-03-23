@@ -45,21 +45,11 @@ namespace DotNet2020
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
 	    #region qwertyRegion
-            services.AddDbContext<CompetencesContext>(options =>
-                options.UseNpgsql(
-                    Configuration.GetConnectionString("DefaultConnection"), b => b.MigrationsAssembly("DotNet2020.Data")));
-            services.AddDbContext<GradesContext>(options =>
-                options.UseNpgsql(
-                    Configuration.GetConnectionString("DefaultConnection"), b => b.MigrationsAssembly("DotNet2020.Data")));
-            services.AddDbContext<WorkerContext>(options =>
-                options.UseNpgsql(
-                    Configuration.GetConnectionString("DefaultConnection"), b => b.MigrationsAssembly("DotNet2020.Data")));
             services.AddDbContext<AttestationContext>(options =>
-                options.UseNpgsql(
-                    Configuration.GetConnectionString("DefaultConnection"), b => b.MigrationsAssembly("DotNet2020.Data")));
-            #endregion
-
-
+                    options.UseNpgsql(
+                        Configuration.GetConnectionString("DefaultConnection"), b => b.MigrationsAssembly("DotNet2020.Data")));
+        #endregion
+        
             var assembly = typeof(DemoController).Assembly;
             var attestationAssembly = typeof(AttestationController).Assembly;
 

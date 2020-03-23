@@ -32,11 +32,11 @@
    {
     <tr>
      <td>
-      <input type="radio" name="WorkerId" value="@element.Id"/>
+      <input type="radio" name="WorkerId" value="@element.Worker.Id"/>
      </td>
-     <td>@element.Name</td><td>@element.Position</td><td>@element.Salary</td><td>@element.Bonus</td><td>@element.Commentary</td>
+     <td>@element.Worker.Name</td><td>@element.Worker.Position</td><td>@element.Worker.Salary</td><td>@element.Worker.Bonus</td><td>@element.Worker.Commentary</td>
      <td>
-      @if (element.Competences.Length == 0 || element.Competences.Length == 1 && element.Competences[0]=="")
+      @if (element.Competences.Count == 0)
       {
        <span>Компетенции не добавлены!</span>
       }
@@ -44,11 +44,11 @@
       {
        foreach (var competence in element.Competences)
        {
-        <span>@competence</span> <br/>
+        <span>@competence.Competence</span> <br/>
        }
       }
 
-     </td><td>@element.PreviousWorkPlaces</td><td>@element.Experience</td>
+     </td><td>@element.Worker.PreviousWorkPlaces</td><td>@element.Worker.Experience</td>
     </tr>
    }
   </table>
@@ -78,7 +78,7 @@ else
 {
  <head>
   <meta charset="utf-8">
-  <title>Отображение и добавление пользователей</title>
+  <title>Рамка</title>
   <style>
         #window 
         {
@@ -98,12 +98,12 @@ else
  <body>
  <div id="window">
   <form method="post">
-   @for (int i = 1; i <= ViewBag.Questions.Count; i++)
+   @for (int i = 0; i < ViewBag.Questions.Count; i++)
    {
-    <p>Вопрос №@i</p>
-    <p>@ViewBag.Questions[i-1]</p>
-    <p><input type="checkbox" value="@(i-1)" name="rightAnswers" /> Зачтено?
-     <input type="checkbox" value="@(i-1)" name="skipedAnswers" /> Пропустить </p>
+    <p>Вопрос №@(i+1)</p>
+    <p>@ViewBag.Questions[i]</p> <input type="text" value="@ViewBag.Questions[i]" name="questions" hidden>
+    <p><input type="checkbox" value="@i" name="rightAnswers" /> Зачтено?
+     <input type="checkbox" value="@i" name="skipedAnswers" /> Пропустить </p>
     <p>Комментарий</p>
     <textarea style="border:none;border-top:groove;border-left:groove;" name="commentaries" cols="100"></textarea>
    }

@@ -11,7 +11,7 @@ namespace DotNet2020.Domain._3.Helpers
         public List<string> Competences { get; set; }
         public DateTime Date { get; set; }
 
-        public OutputHelper(CompetencesRepository competences, WorkerRepository workers, AttestationModel attestationModel)
+        public OutputHelper(CompetencesRepository competences, SpecificWorkerRepository workers, AttestationModel attestationModel)
         {
             Date = attestationModel.Date;
             WorkerName = workers.GetById((long)attestationModel.WorkerId).Name;

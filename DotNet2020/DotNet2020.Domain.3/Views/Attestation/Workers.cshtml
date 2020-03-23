@@ -24,24 +24,23 @@
         </tr>
         @foreach (var element in ViewBag.Workers)
         {
-            <tr><td>@element.Name</td><td>@element.Position</td><td>@element.Salary</td><td>@element.Bonus</td><td>@element.Commentary</td>
+            <tr><td>@element.Worker.Name</td><td>@element.Worker.Position</td><td>@element.Worker.Salary</td><td>@element.Worker.Bonus</td><td>@element.Worker.Commentary</td>
                 <td>
-                    @if (element.Competences.Length == 0 || element.Competences.Length == 1 && element.Competences[0]=="")
+                    @if (element.Competences != null && element.Competences.Count>0)
                     {
-                        <span>Компетенции не добавлены!</span>
+                        @foreach (var competence in element.Competences)
+                        {
+                            <span>@competence.Competence</span>
+                        }
                     }
                     else
                     {
-                        foreach (var competence in element.Competences)
-                        {
-                            <span>@competence </span>
-                        }
+                        <p>Компетенции не добавлены</p>
                     }
-                    
-                </td><td>@element.PreviousWorkPlaces</td><td>@element.Experience</td>
+                </td><td>@element.Worker.PreviousWorkPlaces</td><td>@element.Worker.Experience</td>
                 <td>
-                    @Html.ActionLink($"Изменить", "WorkersUpdate", "Attestation", new {id = element.Id}, null)
-                    @Html.ActionLink($"Удалить", "WorkersRemove", "Attestation", new {id = element.Id}, null)
+                    @Html.ActionLink($"Изменить", "WorkersUpdate", "Attestation", new {id = element.Worker.Id}, null)
+                    @Html.ActionLink($"Удалить", "WorkersRemove", "Attestation", new {id = element.Worker.Id}, null)
                     </td></tr>
         }
     </table>

@@ -9,8 +9,7 @@ namespace DotNet2020.Domain._3.Helpers
 {
     public static class AttestationHelper
     {
-        public static List<string> GetQuestionsForCompetences(List<long> competencesId,
-            CompetencesRepository competences)
+        public static List<string> GetQuestionsForCompetences(List<long> competencesId, CompetencesRepository competences)
         {
             List<string> questions=new List<string>();
             foreach (var element in competencesId)
@@ -21,8 +20,7 @@ namespace DotNet2020.Domain._3.Helpers
             return questions;
         }
 
-        public static List<CompetencesModel> GetNamesOfChosenCompetences(List<long> competencesId,
-            CompetencesRepository competences)
+        public static List<CompetencesModel> GetNamesOfChosenCompetences(List<long> competencesId, CompetencesRepository competences)
         {
             List<CompetencesModel> chosenCompetences=new List<CompetencesModel>();
             foreach (var element in competencesId)
@@ -33,51 +31,35 @@ namespace DotNet2020.Domain._3.Helpers
             return chosenCompetences;
         }
 
-        public static void SaveAttestation(List<long> rightAnswers, List<long> skipedAnswers, List<string> commentaries, AttestationRepository attestation, AttestationModel model,
-            CompetencesRepository competences, List<long> gotCompetences, WorkerRepository workers)
+        public static void SaveAttestation(List<long> rightAnswers, List<long> skipedAnswers, List<string> commentaries, List<long> gotCompetences,
+            List<string> questions, AttestationModel attestation, SpecificWorkerRepository workerRepository, AttestationRepository attestationRepository)
         {
-            var questions= GetQuestionsForCompetences(model.CompetencesId, competences);
-            model.Answers = GetAnswers(rightAnswers, skipedAnswers, commentaries, questions);
-            model.CompetencesId = gotCompetences;
-            model.Date = DateTime.Today;
-            attestation.Create(model);
-            var worker = workers.GetById((long)model.WorkerId);
-            List<string> gotCompetencesList=new List<string>();
-            foreach (var competenceId in gotCompetences)
-            {
-                gotCompetencesList.Add(competences.GetById(competenceId).Competence);
-            }
-            worker.Competences = worker.Competences.Union(gotCompetencesList).ToArray();
-            workers.Save();
+            attestation.CompetencesId = gotCompetences;
+            attestation.Date = DateTime.Today;
+            attestationRepository.Create(attestation); //Создание аттестации
+            AddCompetencesToWorker(workerRepository, gotCompetences, attestation);//добавить компетенции сотруднику
+            var answersList = GetAnswersList(rightAnswers, skipedAnswers, commentaries, questions); //создать ответы
+            attestationRepository.AddAnswersToAttestation(attestation, answersList); //добавить ответы и связать с аттестацией 
         }
 
-        private static string GetAnswers(List<long> rightAnswers, List<long> skipedAnswers, List<string> commentaries, List<string> questions)
+        private static void AddCompetencesToWorker(SpecificWorkerRepository workerRepository, List<long> gotCompetences, AttestationModel attestation)
         {
-            List<BuilderHelper> list=new List<BuilderHelper>();
+            var worker = workerRepository.GetById(attestation.WorkerId.Value);
+            workerRepository.SaveUpdateTable(worker, gotCompetences);
+        }
+
+        private static List<AnswerModel> GetAnswersList(List<long> rightAnswers, List<long> skipedAnswers, List<string> commentaries, List<string> questions)
+        {
+            List<AnswerModel> list=new List<AnswerModel>();
+
             for (int i = 0; i < questions.Count; i++)
             {
-                var builder=new BuilderHelper();
-                builder.NumberQuestion = i + 1;
-                builder.Question = questions[i];
-                if (rightAnswers.Contains(i))
-                    builder.IsRight = true;
-                if (skipedAnswers.Contains(i))
-                    builder.Skip = true;
-                if (commentaries[i] != null)
-                    builder.Commentary = commentaries[i];
-                list.Add(builder);
+                if (commentaries[i] == null)
+                    commentaries[i] = "Комментарий отсутствует!";
+                list.Add(new AnswerModel{Commentary = commentaries[i], IsRight = rightAnswers.Contains(i), NumberOfAsk = i+1, IsSkipped = skipedAnswers.Contains(i)});
             }
-
-            StringBuilder feedback = new StringBuilder("");
-
-            for (int i = 0; i < list.Count; i++)
-            {
-                if(list[i].Skip==false)
-                    feedback.Append(list[i].ToString());
-            }
-
-            feedback = feedback.Remove(feedback.Length - 3, 3);
-            return feedback.ToString();
+            
+            return list;
         }
     }
 }

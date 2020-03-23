@@ -19,21 +19,21 @@
         {
             <tr>
                 <td>
-                    @element.Grade
+                    @element.Grade.Grade
                     <form method="post">
-                        <p>@Html.ActionLink($"Изменить", "GradesManage", "Attestation", new {id = element.Id}, null) </p>
+                        <p>@Html.ActionLink($"Изменить", "GradesManage", "Attestation", new {id = element.Grade.Id}, null) </p>
                     </form>
                 </td>
-                @if (element.Competences.Length == 0)
+                @if (element.Competences.Count == 0)
                 {
                     <td> Список необходимых компетенций пуст!</td>
                 }
                 else
                 {
                     <td>
-                        @for (int i = 0; i < element.Competences.Length; i++)
+                        @for (int i = 0; i < element.Competences.Count; i++)
                         {
-                            @element.Competences[i]
+                            @element.Competences[i].Competence
                             <br/>
                         }
                     </td>

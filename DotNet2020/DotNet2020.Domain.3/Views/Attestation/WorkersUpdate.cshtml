@@ -1,4 +1,4 @@
-﻿@model DotNet2020.Domain._3.Models.WorkerModel
+﻿@model DotNet2020.Domain._3.Models.SpecificWorkerModel
 <form method="post">
     <p>ФИО</p>
     <input type="text" required name="Name" value="@ViewBag.Worker.Name"/>
@@ -11,29 +11,20 @@
     <p>Комментарий</p>
     <input type="text" required name="Commentary" value="@ViewBag.Worker.Commentary"/>
     <p>Компетенции</p>
-    <select multiple name="Competences">
-        @if (ViewBag.WorkerCompetences != null)
-        {
-            @foreach (var element in ViewBag.Competences)
+    @foreach (var element in ViewBag.Competences)
+    {
+        <p>
+            @if (ViewBag.Ids.Contains(element.Id))
             {
-                if (ViewBag.WorkerCompetences.Contains(element.Competence))
-                {
-                    <option selected>@element.Competence</option>
-                }
-                else
-                {
-                    <option>@element.Competence</option>
-                }
+                <input type="checkbox" value="@element.Id" checked name="ids">
             }
-        }
-        else
-        {
-            foreach (var element in ViewBag.Competences)
+            else
             {
-                <option>@element.Competence</option>
+                <input type="checkbox" value="@element.Id" name="ids">
             }
-        }
-    </select>
+            @element.Competence
+        </p>
+    }
     <p>Предыдущие места работы</p>
     <input type="text" required name="PreviousWorkPlaces" value="@ViewBag.Worker.PreviousWorkPlaces"/>
     <p>Общий стаж</p>

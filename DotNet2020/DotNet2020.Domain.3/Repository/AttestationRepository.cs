@@ -9,43 +9,59 @@ namespace DotNet2020.Domain._3.Repository
 {
     public class AttestationRepository:IRepository<AttestationModel>
     {
-        private readonly AttestationContext _attestation;
-        public AttestationRepository(AttestationContext attestation)
+        private readonly AttestationContext _context;
+        public AttestationRepository(AttestationContext context)
         {
-            _attestation = attestation;
+            _context = context;
         }
         public List<AttestationModel> GetList()
         {
-            return _attestation.Attestations.ToList();
+            return _context.Attestations.ToList();
         }
 
         public AttestationModel GetById(long id)
         {
-            return _attestation.Attestations.Find(id);
+            return _context.Attestations.Find(id);
         }
 
         public void Create(AttestationModel item)
         {
-            _attestation.Attestations.Add(item);
+            _context.Attestations.Add(item);
             Save();
         }
 
         public void Update(AttestationModel item)
         {
-            _attestation.Entry(item).State = EntityState.Modified;
+            _context.Entry(item).State = EntityState.Modified;
         }
 
         public void DeleteById(long id)
         {
             var item = GetById(id);
             if (item != null)
-                _attestation.Attestations.Remove(item);
+                _context.Attestations.Remove(item);
             Save();
         }
 
         public void Save()
         {
-            _attestation.SaveChanges();
+            _context.SaveChanges();
+        }
+
+        public void AddAnswersToAttestation(AttestationModel attestationModel, List<AnswerModel> answers)
+        {
+            if(attestationModel.AttestationAnswer==null)
+                attestationModel.AttestationAnswer=new List<AttestationAnswerModel>();
+            foreach (var answer in answers)
+            {
+                _context.Answers.Add(answer);
+            }
+            Save();
+            foreach (var answer in answers)
+            {
+                attestationModel.AttestationAnswer.Add(new AttestationAnswerModel { AttestationId = attestationModel.Id, AnswerId = answer.AnswerId});
+            }
+            Save();
         }
     }
 }
