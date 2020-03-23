@@ -1,5 +1,4 @@
-﻿using System;
-using DotNet2020.Domain._4.Models;
+﻿using DotNet2020.Domain._4.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace DotNet2020.Domain.Models
@@ -8,7 +7,6 @@ namespace DotNet2020.Domain.Models
     {
         public CalendarEntryContext(DbContextOptions<CalendarEntryContext> options) : base(options)
         {
-            Database.EnsureCreated();
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -22,7 +20,6 @@ namespace DotNet2020.Domain.Models
                 .HasValue<Illness>
                     (AbsenceType.Illness);
         }
-
 
         public DbSet<Recommendation> Recommendations { get; set; }
         public virtual DbSet<AbstractCalendarEntry> CalendarEntries { get; set; }

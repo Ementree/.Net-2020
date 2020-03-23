@@ -1,6 +1,6 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
-using DotNet2020.Data;
 using DotNet2020.Domain._4.Models;
 using DotNet2020.Domain._4_Models;
 using DotNet2020.Domain.Models;
@@ -77,10 +77,32 @@ namespace DotNet2020.Domain._4.Controllers
 
         #endregion
 
+        [HttpGet]
         public async Task<IActionResult> Admin()
         {
             ViewBag.Recommendation = await _dbContext.Recommendations.FirstOrDefaultAsync();
-            return View();
+            return View(_dbContext.CalendarEntries.AsEnumerable());
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ApproveCalendarEntry(int id)
+        {
+            var calendarEntry = await _dbContext.CalendarEntries.FindAsync(id);
+            if (calendarEntry is Vacation vacation) 
+                vacation.Approve();
+            if (calendarEntry is Illness illness)
+                illness.Approve();
+            await _dbContext.SaveChangesAsync();
+            return RedirectToActionPermanent("Admin");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> RefuseCalendarEntry(int id)
+        {
+            var calendarEntry = await _dbContext.CalendarEntries.FindAsync(id);
+            _dbContext.CalendarEntries.Remove(calendarEntry);
+            await _dbContext.SaveChangesAsync();
+            return RedirectToActionPermanent("Admin");
         }
 
         [HttpGet]

@@ -8,8 +8,8 @@ namespace DotNet2020.Domain._4.Models
 
         public Vacation(DateTime from, DateTime to)
         {
-            this.From = from;
-            this.To = to;
+            From = from;
+            To = to;
         }
 
         public void Approve()

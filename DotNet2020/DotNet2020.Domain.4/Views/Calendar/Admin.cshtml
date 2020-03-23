@@ -1,6 +1,8 @@
 ﻿@{
     ViewData["Title"] = "Calendar";
 }
+@using DotNet2020.Domain._4.Models
+@model IEnumerable<DotNet2020.Domain._4.Models.AbstractCalendarEntry>
 <link rel="stylesheet" href="~/css/calendar.css">
 <div class="text-center">
     <h1 class="display-4">Hello in calendar</h1>
@@ -34,41 +36,33 @@
         <div class="col-lg-12">
             <table border="1" class="w-100">
                 <tbody align="center">
-                <tr>
-                    <td>Иванов Иван Иванович</td>
-                    <td>От 03/03/2020 до 07/03/2020</td>
-                    <td>Больничный</td>
-                    <td>4 дня</td>
-                    <td><button>Согласовать</button><button>Отклонить</button></td>
-                </tr>
-                <tr>
-                    <td>Григорьев Григорий Григорьевич</td>
-                    <td>От 14/03/2020 до 20/03/2020 6 дней</td>
-                    <td>Оплачиваемый отпуск</td>
-                    <td>6 дней</td>
-                    <td><button>Согласовать</button><button>Отклонить</button></td>
-                </tr>
-                <tr>
-                    <td>Иванов Иван Иванович</td>
-                    <td>От 03/03/2020 до 07/03/2020</td>
-                    <td>Неоплачиваемый отпуск</td>
-                    <td>4 дня</td>
-                    <td><button>Согласовать</button><button>Отклонить</button></td>
-                </tr>
-                <tr>
-                    <td>Иванов Иван Иванович</td>
-                    <td>От 03/03/2020 до 07/03/2020</td>
-                    <td>Неоплачиваемый отпуск</td>
-                    <td>4 дня</td>
-                    <td><button>Согласовать</button><button>Отклонить</button></td>
-                </tr>
-                <tr>
-                    <td>Иванов Иван Иванович</td>
-                    <td>От 03/03/2020 до 07/03/2020</td>
-                    <td>Неоплачиваемый отпуск</td>
-                    <td>4 дня</td>
-                    <td><button>Согласовать</button><button>Отклонить</button></td>
-                </tr>
+                @foreach (var calendarEntry in Model)
+                {
+                    <tr>
+                        <td>@calendarEntry.From до @calendarEntry.To</td>
+                        <td>@{(calendarEntry.To - calendarEntry.From).Days} дней</td>
+                        @if (calendarEntry.AbsenceType == AbsenceType.Vacation)
+                        {
+                            <td>Оплачиваемый отпуск</td>
+                        }
+                        @if (calendarEntry.AbsenceType == AbsenceType.Illness)
+                        {
+                            <td>Больничный</td>
+                        }
+                        <td>
+                            <form asp-action="ApproveCalendarEntry" asp-controller="Calendar" method="post" asp-route-id="@calendarEntry.Id">
+                                <div class="adminrecomadd">
+                                    <button type="submit">Согласовать</button>
+                                </div>
+                            </form>
+                            <form asp-action="RefuseCalendarEntry" asp-controller="Calendar" method="post" asp-route-id="@calendarEntry.Id">
+                                <div class="adminrecomadd">
+                                    <button type="submit">Отказать</button>
+                                </div>
+                            </form>
+                        </td>
+                    </tr>
+                }
                 </tbody>
             </table>
         </div>
@@ -78,7 +72,7 @@
         <div class="col-lg-6">
             <form asp-action="AddRecommendation" asp-controller="Calendar" method="get">
                 <div class="adminrecomadd">
-                    <button type="submit">Добавить рекомендацию</button>
+                    <button type="submit">Обновить рекомендацию</button>
                 </div>
             </form>
             <br />
