@@ -89,6 +89,19 @@ namespace DotNet2020.Domain._4.Controllers
             return View();
         }
 
+        [HttpPost]
+        public IActionResult AddHoliday(Holiday holiday)
+        {
+            if (ModelState.IsValid)
+            {
+                _dbContext.Holidays.Add(holiday);
+                _dbContext.SaveChanges();
+                return RedirectToActionPermanent("Admin");
+            }
+
+            return View(holiday);
+        }
+
         [HttpGet]
         public IActionResult AddRecommendation()
         {

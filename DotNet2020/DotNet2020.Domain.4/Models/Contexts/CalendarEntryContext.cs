@@ -23,7 +23,7 @@ namespace DotNet2020.Domain.Models
                     (AbsenceType.Illness);
         }
 
-
+        public DbSet<Holiday> Holidays { get; set; }
         public DbSet<Recommendation> Recommendations { get; set; }
         public virtual DbSet<AbstractCalendarEntry> CalendarEntries { get; set; }
     }

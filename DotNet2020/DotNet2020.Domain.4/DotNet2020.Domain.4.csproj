@@ -36,7 +36,6 @@
 	  </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Models\" />
     <Folder Include="Repositories\" />
     <Folder Include="Models\Contexts\" />
     <Folder Include="Models\Base\" />
