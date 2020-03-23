@@ -38,30 +38,57 @@
                 <tbody align="center">
                 @foreach (var calendarEntry in Model)
                 {
-                    <tr>
-                        <td>@calendarEntry.From до @calendarEntry.To</td>
-                        <td>@{(calendarEntry.To - calendarEntry.From).Days} дней</td>
-                        @if (calendarEntry.AbsenceType == AbsenceType.Vacation)
-                        {
-                            <td>Оплачиваемый отпуск</td>
-                        }
-                        @if (calendarEntry.AbsenceType == AbsenceType.Illness)
-                        {
+                    @if (calendarEntry is Vacation vacation && !vacation.IsApproved)
+                    {
+                        <tr>
+                            <td>@vacation.UserName</td>
+                            <td>От @vacation.From.Day/@vacation.From.Month/@vacation.From.Year до @vacation.To.Day/@vacation.To.Month/@vacation.To.Year</td>
+                            @{ var daysCount = (vacation.To - vacation.From).Days; }
+                            <td>@daysCount дней</td>
+                            @if (vacation.IsPaid)
+                            {
+                                <td>Оплачиваемый отпуск</td>
+                            }
+                            else
+                            {
+                                <td>Неоплачиваемый отпуск</td>
+                            }
+                            <td>
+                                <form asp-action="ApproveCalendarEntry" asp-controller="Calendar" method="post" asp-route-id="@calendarEntry.Id">
+                                    <div class="adminrecomadd">
+                                        <button type="submit">Согласовать</button>
+                                    </div>
+                                </form>
+                                <form asp-action="RejectCalendarEntry" asp-controller="Calendar" method="post" asp-route-id="@calendarEntry.Id">
+                                    <div class="adminrecomadd">
+                                        <button type="submit">Отклонить</button>
+                                    </div>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                    @if (calendarEntry is Illness illness && !illness.IsApproved)
+                    {
+                        <tr>
+                            <td>@illness.UserName</td>
+                            <td>От @illness.From.Day/@illness.From.Month/@illness.From.Year до @illness.To.Day/@illness.To.Month/@illness.To.Year</td>
+                            @{ var daysCount = (illness.To - illness.From).Days; }
+                            <td>@daysCount дней</td>
                             <td>Больничный</td>
-                        }
-                        <td>
-                            <form asp-action="ApproveCalendarEntry" asp-controller="Calendar" method="post" asp-route-id="@calendarEntry.Id">
-                                <div class="adminrecomadd">
-                                    <button type="submit">Согласовать</button>
-                                </div>
-                            </form>
-                            <form asp-action="RefuseCalendarEntry" asp-controller="Calendar" method="post" asp-route-id="@calendarEntry.Id">
-                                <div class="adminrecomadd">
-                                    <button type="submit">Отказать</button>
-                                </div>
-                            </form>
-                        </td>
-                    </tr>
+                            <td>
+                                <form asp-action="ApproveCalendarEntry" asp-controller="Calendar" method="post" asp-route-id="@calendarEntry.Id">
+                                    <div class="adminrecomadd">
+                                        <button type="submit">Согласовать</button>
+                                    </div>
+                                </form>
+                                <form asp-action="RejectCalendarEntry" asp-controller="Calendar" method="post" asp-route-id="@calendarEntry.Id">
+                                    <div class="adminrecomadd">
+                                        <button type="submit">Отклонить</button>
+                                    </div>
+                                </form>
+                            </td>
+                        </tr>
+                    }
                 }
                 </tbody>
             </table>
@@ -70,7 +97,7 @@
     <hr />
     <div class="row">
         <div class="col-lg-6">
-            <form asp-action="AddRecommendation" asp-controller="Calendar" method="get">
+            <form asp-action="UpdateRecommendation" asp-controller="Calendar" method="get">
                 <div class="adminrecomadd">
                     <button type="submit">Обновить рекомендацию</button>
                 </div>

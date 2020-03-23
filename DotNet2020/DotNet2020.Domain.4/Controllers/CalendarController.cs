@@ -18,6 +18,7 @@ namespace DotNet2020.Domain._4.Controllers
             _dbContext = dbContext;
         }
 
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
             ViewBag.Recommendation = await _dbContext.Recommendations.FirstOrDefaultAsync();
@@ -33,18 +34,18 @@ namespace DotNet2020.Domain._4.Controllers
         #region Добавление Event в календарь
 
         [HttpPost]
-        public IActionResult AddSeekday(EventVM eventVM)
+        public IActionResult AddSickDay(EventVM eventVM)
         {
             if (eventVM.From == DateTime.MinValue)
             {
                 ModelState.AddModelError("DataError", "Введите дату");
                 return RedirectToAction("AddEvent");
             }
-            var seekday = new SickDay(eventVM.From, eventVM.From);
-            _dbContext.CalendarEntries.Add(seekday);
+
+            var sickDay = new SickDay(eventVM.From, eventVM.From, HttpContext.User.Identity.Name);
+            _dbContext.CalendarEntries.Add(sickDay);
             _dbContext.SaveChanges();
             return RedirectToAction("Index");
-
         }
 
         [HttpPost]
@@ -55,7 +56,8 @@ namespace DotNet2020.Domain._4.Controllers
                 ModelState.AddModelError("DataError", "Введите дату");
                 return RedirectToAction("AddEvent");
             }
-            var vacation = new Vacation(eventVM.From, eventVM.To);
+
+            var vacation = new Vacation(eventVM.From, eventVM.To, HttpContext.User.Identity.Name);
             _dbContext.CalendarEntries.Add(vacation);
             _dbContext.SaveChanges();
             return RedirectToAction("Index");
@@ -69,7 +71,8 @@ namespace DotNet2020.Domain._4.Controllers
                 ModelState.AddModelError("DataError", "Введите дату");
                 return RedirectToAction("AddEvent");
             }
-            var illness = new Illness(eventVM.From, eventVM.To);
+
+            var illness = new Illness(eventVM.From, eventVM.To, HttpContext.User.Identity.Name);
             _dbContext.CalendarEntries.Add(illness);
             _dbContext.SaveChanges();
             return RedirectToAction("Index");
@@ -81,14 +84,16 @@ namespace DotNet2020.Domain._4.Controllers
         public async Task<IActionResult> Admin()
         {
             ViewBag.Recommendation = await _dbContext.Recommendations.FirstOrDefaultAsync();
-            return View(_dbContext.CalendarEntries.AsEnumerable());
+            return View(_dbContext.CalendarEntries
+                .Where(c => c.AbsenceType == AbsenceType.Illness || c.AbsenceType == AbsenceType.Vacation)
+                .AsEnumerable());
         }
 
         [HttpPost]
         public async Task<IActionResult> ApproveCalendarEntry(int id)
         {
             var calendarEntry = await _dbContext.CalendarEntries.FindAsync(id);
-            if (calendarEntry is Vacation vacation) 
+            if (calendarEntry is Vacation vacation)
                 vacation.Approve();
             if (calendarEntry is Illness illness)
                 illness.Approve();
@@ -97,7 +102,7 @@ namespace DotNet2020.Domain._4.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> RefuseCalendarEntry(int id)
+        public async Task<IActionResult> RejectCalendarEntry(int id)
         {
             var calendarEntry = await _dbContext.CalendarEntries.FindAsync(id);
             _dbContext.CalendarEntries.Remove(calendarEntry);
@@ -112,13 +117,13 @@ namespace DotNet2020.Domain._4.Controllers
         }
 
         [HttpGet]
-        public IActionResult AddRecommendation()
+        public IActionResult UpdateRecommendation()
         {
             return View();
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddRecommendation(Recommendation recommendation)
+        public async Task<IActionResult> UpdateRecommendation(Recommendation recommendation)
         {
             if (ModelState.IsValid)
             {
@@ -130,7 +135,7 @@ namespace DotNet2020.Domain._4.Controllers
                 return RedirectToActionPermanent("Admin");
             }
 
-            return RedirectToActionPermanent("AddRecommendation");
+            return RedirectToActionPermanent("UpdateRecommendation");
         }
     }
 }

@@ -8,6 +8,7 @@ namespace DotNet2020.Domain._4.Models
         public DateTime From { get; set; }
         public DateTime To { get; set; }
         public AbsenceType AbsenceType { get; set; }
+        public string UserName { get; set; }
 
         public void ChangeDate(DateTime from, DateTime to)
         {
