@@ -57,6 +57,12 @@ namespace DotNet2020.Domain._4.Controllers
                 return RedirectToAction("AddEvent");
             }
 
+            if(eventVM.From >= eventVM.To)
+            {
+                ModelState.AddModelError("DataError", "Не корректно ведена дата");
+                return RedirectToAction("AddEvent");
+            }
+
             var vacation = new Vacation(eventVM.From, eventVM.To, HttpContext.User.Identity.Name);
             _dbContext.CalendarEntries.Add(vacation);
             _dbContext.SaveChanges();
@@ -69,6 +75,12 @@ namespace DotNet2020.Domain._4.Controllers
             if (eventVM.From == DateTime.MinValue && eventVM.To == DateTime.MinValue)
             {
                 ModelState.AddModelError("DataError", "Введите дату");
+                return RedirectToAction("AddEvent");
+            }
+
+            if (eventVM.From >= eventVM.To)
+            {
+                ModelState.AddModelError("DataError", "Не корректно ведена дата");
                 return RedirectToAction("AddEvent");
             }
 
