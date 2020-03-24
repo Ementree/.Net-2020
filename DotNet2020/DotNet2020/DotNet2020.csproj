@@ -21,11 +21,6 @@
 
 
   <ItemGroup>
-    <Folder Include="Models\" />
-  </ItemGroup>
-
-
-  <ItemGroup>
     <ProjectReference Include="..\DotNet2020.Data\DotNet2020.Data.csproj" />
     <ProjectReference Include="..\DotNet2020.Domain.Core\DotNet2020.Domain.Core.csproj" />
     <ProjectReference Include="..\DotNet2020.Domain.4\DotNet2020.Domain.4.csproj">

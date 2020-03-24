@@ -6,7 +6,6 @@
 <div class="text-center">
     <h1 class="display-4">Добавьте новое событие</h1>
 </div>
-
 <div>
     <p>Выберите тип события</p>
     @Html.ValidationMessage("DataError")
@@ -16,7 +15,7 @@
         <option value="illness">Больничный</option>
     </select>
     <div id="1" style="display:block">
-        @using (Html.BeginForm("AddSeekday", "Calendar", FormMethod.Post))
+        @using (Html.BeginForm("AddSickDay", "Calendar", FormMethod.Post))
         {
             <p>Выберите день болезни</p>
             <p><input asp-for="From" type="date" /></p>
