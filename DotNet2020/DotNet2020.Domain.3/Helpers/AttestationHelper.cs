@@ -31,15 +31,34 @@ namespace DotNet2020.Domain._3.Helpers
             return chosenCompetences;
         }
 
-        public static void SaveAttestation(List<long> rightAnswers, List<long> skipedAnswers, List<string> commentaries, List<long> gotCompetences,
+        public static void SaveAttestation(List<long> rightAnswers, List<long> skippedAnswers, List<string> commentaries, List<long> gotCompetences,
             List<string> questions, AttestationModel attestation, SpecificWorkerRepository workerRepository, AttestationRepository attestationRepository)
         {
+            attestation.Problems = GetProblems(rightAnswers, skippedAnswers, questions);
             attestation.CompetencesId = gotCompetences;
             attestation.Date = DateTime.Today;
             attestationRepository.Create(attestation); //Создание аттестации
             AddCompetencesToWorker(workerRepository, gotCompetences, attestation);//добавить компетенции сотруднику
-            var answersList = GetAnswersList(rightAnswers, skipedAnswers, commentaries, questions); //создать ответы
+            var answersList = GetAnswersList(rightAnswers, skippedAnswers, commentaries, questions); //создать ответы
             attestationRepository.AddAnswersToAttestation(attestation, answersList); //добавить ответы и связать с аттестацией 
+        }
+
+        private static string GetProblems(List<long> rightAnswers, List<long> skippedAnswers,
+            List<string> questions)
+        {
+            StringBuilder builder=new StringBuilder("Выявленные проблемы:\n");
+            for (int i = 0; i < questions.Count; i++)
+            {
+                if (!skippedAnswers.Contains(i)&&!rightAnswers.Contains(i))
+                {
+                    builder.Append($"вопрос №{i}: {questions[i]} \n");
+                }
+            }
+
+            if (builder.ToString() != "Выявленные проблемы:\n")
+                return builder.ToString();
+            else
+                return "Всё верно!";
         }
 
         private static void AddCompetencesToWorker(SpecificWorkerRepository workerRepository, List<long> gotCompetences, AttestationModel attestation)

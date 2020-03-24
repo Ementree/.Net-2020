@@ -1,10 +1,14 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using DotNet2020.Domain._3.Helpers;
 using DotNet2020.Domain._3.Models;
 using DotNet2020.Domain._3.Models.Contexts;
 using DotNet2020.Domain._3.Repository;
 using DotNet2020.Domain._3.Repository.Main;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DotNet2020.Domain._3.Controllers
@@ -15,15 +19,18 @@ namespace DotNet2020.Domain._3.Controllers
         private readonly SpecificWorkerRepository _workers;
         private readonly GradesRepository _grades;
         private readonly CompetencesRepository _competences;
-        public AttestationController(AttestationContext attestationContext)
+        private readonly IWebHostEnvironment _env;
+        public AttestationController(AttestationContext attestationContext, IWebHostEnvironment env)
         {
             _workers = new SpecificWorkerRepository(attestationContext);
             _attestation = new AttestationRepository(attestationContext);
             _grades=new GradesRepository(attestationContext);
             _competences=new CompetencesRepository(attestationContext);
+            _env = env;
         }
         public IActionResult Index()
         {
+            
             return View();
         }
 
@@ -228,6 +235,15 @@ namespace DotNet2020.Domain._3.Controllers
         {
             ViewBag.Workers = WorkerOutputModelHelper.GetList(_workers);
             return View();
+        }
+        
+        [HttpPost]
+        public IActionResult Output(List<long> ids)
+        {
+            ViewBag.Workers = WorkerOutputModelHelper.GetList(_workers);
+            PdfHelper.GetPDFofWorkers(ids, _workers);
+            var stream = new FileStream(Path.Combine(_env.ContentRootPath, "Files", "workertest.pdf"), FileMode.Open);
+            return File(stream, "application/pdf", "workers.pdf");
         }
     }
 }

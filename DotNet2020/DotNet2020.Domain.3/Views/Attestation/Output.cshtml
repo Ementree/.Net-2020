@@ -19,7 +19,7 @@
     @foreach (var element in ViewBag.Workers)
     {
      <tr>
-      <td><input type="checkbox" value="@element.Worker.Id"/></td>
+      <td><input type="checkbox" value="@element.Worker.Id" name="ids"/></td>
       <td>@element.Worker.Name</td>
       <td>@element.Worker.Position</td>
       <td>
