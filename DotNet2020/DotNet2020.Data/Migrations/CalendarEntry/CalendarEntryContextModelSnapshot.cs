@@ -42,26 +42,7 @@ namespace DotNet2020.Data.Migrations.CalendarEntry
 
                     b.HasDiscriminator<int>("AbsenceType");
                 });
-
-            modelBuilder.Entity("DotNet2020.Domain._4.Models.Holiday", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
-
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Holidays");
-                });
-
+          
             modelBuilder.Entity("DotNet2020.Domain._4.Models.Recommendation", b =>
                 {
                     b.Property<int>("Id")
