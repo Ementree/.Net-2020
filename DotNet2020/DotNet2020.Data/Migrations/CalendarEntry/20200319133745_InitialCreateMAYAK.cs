@@ -46,6 +46,9 @@ namespace DotNet2020.Data.Migrations.CalendarEntry
 
             migrationBuilder.DropTable(
                 name: "Recommendations");
+
+            migrationBuilder.DropTable(
+                name: "Holidays");
         }
     }
 }
