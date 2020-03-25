@@ -22,6 +22,7 @@ using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.Extensions.FileProviders;
 using DotNet2020.Domain._4.Controllers;
 using DotNet2020.Domain.Models;
+using Microsoft.EntityFrameworkCore.Design;
 
 namespace DotNet2020
 {
@@ -101,6 +102,21 @@ namespace DotNet2020
                     pattern: "{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapRazorPages();
             });
+        }
+    }
+
+    public class DesignTimeDbContextFactory : IDesignTimeDbContextFactory<CalendarEntryContext>
+    {
+        public CalendarEntryContext CreateDbContext(string[] args)
+        {
+            IConfigurationRoot configuration = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json")
+                .Build();
+            var builder = new DbContextOptionsBuilder<CalendarEntryContext>();
+            var connectionString = configuration.GetConnectionString("CalendarEntryContext");
+            builder.UseNpgsql(connectionString, b => b.MigrationsAssembly("DotNet2020.Data"));
+            return new CalendarEntryContext(builder.Options);
         }
     }
 }
