@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using DotNet2020.Domain._3.Models;
 using DotNet2020.Domain._3.Repository;
 using iTextSharp.text;
@@ -15,11 +17,14 @@ namespace DotNet2020.Domain._3.Helpers
             var document = new Document();
             using (var writer = PdfWriter.GetInstance(document, new FileStream("Files/workertest.pdf", FileMode.Create)))
             {
+                System.Text.EncodingProvider encProvider = System.Text.CodePagesEncodingProvider.Instance;
+                Encoding.RegisterProvider(encProvider);
+                string fg = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Fonts), "arial.ttf");
+                BaseFont fgBaseFont = BaseFont.CreateFont(fg, BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
+                Font fgFont = new Font(fgBaseFont, 10, Font.NORMAL, BaseColor.GREEN);
+                
                 document.Open();
-
-                var helvetica = new Font(Font.FontFamily.HELVETICA, 12);
-                var helveticaBase = helvetica.GetCalculatedBaseFont(false);
-
+                
                 var workers = WorkerOutputModelHelper.GetList(_workers);
 
 
@@ -28,7 +33,7 @@ namespace DotNet2020.Domain._3.Helpers
                 foreach (var worker in workers)
                 {
                     writer.DirectContent.BeginText();
-                    writer.DirectContent.SetFontAndSize(helveticaBase, 12f);
+                    writer.DirectContent.SetFontAndSize(fgBaseFont, 12f);
                     writer.DirectContent.ShowTextAligned(Element.ALIGN_LEFT, worker.Worker.Id + "-" + worker.Worker.Name + "-" + worker.Worker.Position + "-"+ worker.Worker.Salary, 35, 766, 0);
                     writer.DirectContent.EndText();
                     document.NewPage();
@@ -44,11 +49,14 @@ namespace DotNet2020.Domain._3.Helpers
             var document = new Document();
             using (var writer = PdfWriter.GetInstance(document, new FileStream("Files/attestation.pdf", FileMode.Create)))
             {
+                System.Text.EncodingProvider encProvider = System.Text.CodePagesEncodingProvider.Instance;
+                Encoding.RegisterProvider(encProvider);
+                string fg = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Fonts), "arial.ttf");
+                BaseFont fgBaseFont = BaseFont.CreateFont(fg, BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
+                Font fgFont = new Font(fgBaseFont, 10, Font.NORMAL, BaseColor.GREEN);
+                
                 document.Open();
-
-                var helvetica = new Font(Font.FontFamily.HELVETICA, 12);
-                var helveticaBase = helvetica.GetCalculatedBaseFont(false);
-
+                
                 var attestation = AttestationAnswerOutputModelHelper
                     .GetList(attestationRepository)
                     .First(x=>x.Attestation.Id==id);
@@ -56,8 +64,8 @@ namespace DotNet2020.Domain._3.Helpers
                 var worker = workerRepository.GetById(attestation.Attestation.WorkerId.Value);
 
                 writer.DirectContent.BeginText();
-                writer.DirectContent.SetFontAndSize(helveticaBase, 12f);
-                writer.DirectContent.ShowTextAligned(Element.ALIGN_CENTER, $"Attestation worker.Name", 50, 50, 0);
+                writer.DirectContent.SetFontAndSize(fgBaseFont, 12f);
+                writer.DirectContent.ShowTextAligned(Element.ALIGN_CENTER, $"Attestation {worker.Name}", 200, 766, 0);
 
                 int x = 1;
                 
@@ -65,8 +73,8 @@ namespace DotNet2020.Domain._3.Helpers
                 {
                     x++;
                     writer.DirectContent.ShowTextAligned(Element.ALIGN_LEFT, 
-                        $"Nomer voprosa:{answer.NumberOfAsk} \n " +
-                             $"Vopros:{answer.Question}\n Pravilnii{answer.IsRight}\n Skipped{answer.IsSkipped}", 50, 50*x, 0);
+                        $"Номер вопроса:{answer.NumberOfAsk} \n " +
+                             $"Вопрос:{answer.Question}\n Правильный?{answer.IsRight}\n Пропущенный?{answer.IsSkipped}", 1, 765-15*x, 0);
                 }
                 
                 writer.DirectContent.EndText();
