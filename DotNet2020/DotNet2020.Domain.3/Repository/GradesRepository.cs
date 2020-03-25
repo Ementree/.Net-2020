@@ -41,6 +41,7 @@ namespace DotNet2020.Domain._3.Repository
             var item = GetById(id);
             if (item != null)
                 _context.Grades.Remove(item);
+            Save();
         }
 
         public void Save()

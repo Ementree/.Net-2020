@@ -11,6 +11,7 @@ namespace DotNet2020.Domain._3.Models
         public bool IsSkipped { get; set; }
         public bool IsRight { get; set; }
         public string Commentary { get; set; }
+        public string Question { get; set; }
 
         public List<AttestationAnswerModel> AttestationAnswer { get; set; }
     }

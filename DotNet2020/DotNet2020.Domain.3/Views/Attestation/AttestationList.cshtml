@@ -17,8 +17,12 @@
                         <p>@subElement</p>
                     }
                 }
+                else
+                {
+                    <p>Компетенции не были получены!</p>
+                }
             </td>
             <td>@element.Date.ToString("d")</td>
-            <td>@Html.ActionLink("Выгрузить", "AttestationList", "Attestation")</td></tr>
+            <td>@Html.ActionLink($"Выгрузить", "DownloadAttestation", "Attestation", new {id = element.AttestationId}, null)</td></tr>
     }
 </table>

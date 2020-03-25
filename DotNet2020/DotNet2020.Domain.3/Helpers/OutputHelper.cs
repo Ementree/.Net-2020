@@ -10,15 +10,25 @@ namespace DotNet2020.Domain._3.Helpers
         public string WorkerName { get; set; }
         public List<string> Competences { get; set; }
         public DateTime Date { get; set; }
+        public long AttestationId { get; set; }
 
         public OutputHelper(CompetencesRepository competences, SpecificWorkerRepository workers, AttestationModel attestationModel)
         {
             Date = attestationModel.Date;
-            WorkerName = workers.GetById((long)attestationModel.WorkerId).Name;
+            AttestationId = attestationModel.Id;
+            var worker = workers.GetById((long) attestationModel.WorkerId);
+            if (worker != null)
+                WorkerName = worker.Name;
+            else
+                WorkerName = "Данный сотрудник был удалён!";
             Competences = new List<string>();
             foreach (var element in attestationModel.CompetencesId)
             {
-                Competences.Add(competences.GetById(element).Competence);
+                var competence = competences.GetById(element);
+                if(competence!=null)
+                    Competences.Add(competence.Competence);
+                else
+                    Competences.Add("Компетенция была удалена!");
             }
         }
     }

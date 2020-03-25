@@ -31,6 +31,18 @@ namespace DotNet2020.Domain._3.Helpers
             return chosenCompetences;
         }
 
+        public static List<long> GetCompetencesForGrade(long gradeId, GradesRepository grades)
+        {
+            List<long> competencesId=new List<long>();
+            var buf = grades.GetAllCompetencesById(gradeId);
+            foreach (var element in buf)
+            {
+                competencesId.Add(element.Id);
+            }
+
+            return competencesId;
+        }
+
         public static void SaveAttestation(List<long> rightAnswers, List<long> skippedAnswers, List<string> commentaries, List<long> gotCompetences,
             List<string> questions, AttestationModel attestation, SpecificWorkerRepository workerRepository, AttestationRepository attestationRepository)
         {
@@ -75,7 +87,8 @@ namespace DotNet2020.Domain._3.Helpers
             {
                 if (commentaries[i] == null)
                     commentaries[i] = "Комментарий отсутствует!";
-                list.Add(new AnswerModel{Commentary = commentaries[i], IsRight = rightAnswers.Contains(i), NumberOfAsk = i+1, IsSkipped = skipedAnswers.Contains(i)});
+                list.Add(new AnswerModel{Commentary = commentaries[i], IsRight = rightAnswers.Contains(i), 
+                    NumberOfAsk = i+1, IsSkipped = skipedAnswers.Contains(i), Question = questions[i]});
             }
             
             return list;

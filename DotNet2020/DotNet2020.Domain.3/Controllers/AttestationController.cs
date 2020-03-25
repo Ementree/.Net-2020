@@ -186,22 +186,35 @@ namespace DotNet2020.Domain._3.Controllers
         public IActionResult Attestation()
         {
             ViewBag.Method = "Choose";
+            ViewBag.Type = "";
             ViewBag.Workers = WorkerOutputModelHelper.GetList(_workers);
             ViewBag.Competences = _competences.GetList();
+            ViewBag.Grades = _grades.GetList();
             return View();
         }
         
         [HttpPost]
-        public IActionResult Attestation(string method, AttestationModel model, List<long> rightAnswers, List<long> skipedAnswers, 
+        public IActionResult Attestation(bool? isGotGrade,long? gradeId, string type,string method, AttestationModel model, List<long> rightAnswers, List<long> skipedAnswers, 
             List<string> commentaries, List<long> gotCompetences, List<string> questions)
         {
+            ViewBag.Grades = _grades.GetList();
+            ViewBag.Type = type;
             ViewBag.Workers = WorkerOutputModelHelper.GetList(_workers);
             ViewBag.Competences = _competences.GetList();
+            if (type != ""&& method=="Choose")
+            {
+                ViewBag.Method = "Choose";
+                ViewBag.GradeId = gradeId;
+                return View();
+            }
+            if (model.CompetencesId == null)
+                model.CompetencesId = AttestationHelper.GetCompetencesForGrade(gradeId.Value, _grades);
             if (model.WorkerId != null && model.CompetencesId.Count > 0)
             {
                 switch (method)
                 {
                     case ("Attestation"):
+                        ViewBag.GradeId = gradeId;
                         ViewBag.Questions =
                             AttestationHelper.GetQuestionsForCompetences(model.CompetencesId, _competences);
                         ViewBag.ChosenCompetences =
@@ -210,10 +223,18 @@ namespace DotNet2020.Domain._3.Controllers
                         ViewBag.CompetencesId = model.CompetencesId;
                         break;
                     case ("Finished"):
+                        if (isGotGrade != null && isGotGrade == false)
+                        {
+                            model.CompetencesId.Clear();
+                        }
+
+                        if (isGotGrade!=null && isGotGrade == true && gradeId!=null)
+                            gotCompetences = AttestationHelper.GetCompetencesForGrade(gradeId.Value, _grades);
                         AttestationHelper.SaveAttestation(rightAnswers, skipedAnswers, commentaries, gotCompetences, questions, model, _workers, _attestation);
-                        return RedirectToAction("Attestation");
+                        return RedirectToAction("AttestationList");
                 }
                 ViewBag.Method = method;
+                ViewBag.Type = type;
             }
             else
                 ViewBag.Method = "Choose";
@@ -229,6 +250,14 @@ namespace DotNet2020.Domain._3.Controllers
             }
             ViewBag.Attestations = outputHelpers;
             return View();
+        }
+        
+        [Route("Attestation/DownloadAttestation/{id}")]
+        public IActionResult DownloadAttestation(long id)
+        {
+            PdfHelper.GetPdfOfAttestation(id, _attestation, _workers);
+            var stream = new FileStream(Path.Combine(_env.ContentRootPath, "Files", "attestation.pdf"), FileMode.Open);
+            return File(stream, "application/pdf", "attestation.pdf");
         }
 
         public IActionResult Output()
