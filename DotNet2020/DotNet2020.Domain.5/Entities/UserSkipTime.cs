@@ -1,10 +1,12 @@
 ﻿using DotNet2020.Data;
 using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace DotNet2020.Domain._5.Entities
 {
     public class UserSkipTime
     {
+        [Required]
         public AppIdentityUser User { get; private set; }
         public int SpentInHours { get; set; }
         public DateTime Date { get; set; }

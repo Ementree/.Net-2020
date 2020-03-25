@@ -1,10 +1,12 @@
 ﻿using DotNet2020.Data;
 using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace DotNet2020.Domain._5.Entities
 {
     public class UserWorkTime
     {
+        [Required]
         public AppIdentityUser User { get; private set; }
         public int EstimatedTime { get; set; }
         public DayOfWeek DayOfWeek { get; set; }
