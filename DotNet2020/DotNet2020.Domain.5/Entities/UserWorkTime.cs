@@ -4,11 +4,8 @@ using System.ComponentModel.DataAnnotations;
 
 namespace DotNet2020.Domain._5.Entities
 {
-    public class UserWorkTime
+    public class UserWorkTime : UserBase
     {
-        [Required]
-        public AppIdentityUser User { get; private set; }
-
         [Required]
         public int EstimatedTime { get; set; }
 
@@ -17,11 +14,12 @@ namespace DotNet2020.Domain._5.Entities
 
         public bool IsVisible { get; set; }
 
-        public UserWorkTime(AppIdentityUser user, int estimatedTime, DayOfWeek dayOfWeek, bool isVisible)
+        public UserWorkTime(AppIdentityUser user, int estimatedTime, DayOfWeek dayOfWeek, bool isVisible) : base(user)
         {
-            if (user == null)
-                throw new ArgumentNullException("User was null!");
-            User = user;
+            if (estimatedTime < 0)
+                throw new ArgumentException("Should be >= 0", "EstimatedTime");
+            if (estimatedTime > 24)
+                throw new ArgumentException("Should be < 24", "EstimatedTime");
             EstimatedTime = estimatedTime;
             DayOfWeek = dayOfWeek;
             IsVisible = isVisible;

@@ -4,11 +4,8 @@ using System.ComponentModel.DataAnnotations;
 
 namespace DotNet2020.Domain._5.Entities
 {
-    public class UserSkipTime
+    public class UserSkipTime : UserBase
     {
-        [Required]
-        public AppIdentityUser User { get; private set; }
-
         [Required]
         public int SpentInHours { get; set; }
 
@@ -18,11 +15,12 @@ namespace DotNet2020.Domain._5.Entities
         [Required]
         public SickEnum SickReason { get; set; }
 
-        public UserSkipTime(AppIdentityUser user, int spentInHours, DateTime date, SickEnum sickReason)
+        public UserSkipTime(AppIdentityUser user, int spentInHours, DateTime date, SickEnum sickReason) : base(user)
         {
-            if (user == null)
-                throw new ArgumentNullException("User was null!");
-            User = user;
+            if (spentInHours < 0)
+                throw new ArgumentException("Should be >= 0", "SpentInHours");
+            if (spentInHours > 24)
+                throw new ArgumentException("Should be < 24", "SpentInHours");
             SpentInHours = spentInHours;
             Date = date;
             SickReason = sickReason;
