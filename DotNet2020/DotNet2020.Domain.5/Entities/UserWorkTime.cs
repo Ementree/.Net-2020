@@ -19,6 +19,8 @@ namespace DotNet2020.Domain._5.Entities
 
         public UserWorkTime(AppIdentityUser user, int estimatedTime, DayOfWeek dayOfWeek, bool isVisible)
         {
+            if (user == null)
+                throw new ArgumentNullException("User was null!");
             User = user;
             EstimatedTime = estimatedTime;
             DayOfWeek = dayOfWeek;

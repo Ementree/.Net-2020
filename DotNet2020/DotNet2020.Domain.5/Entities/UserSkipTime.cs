@@ -20,6 +20,8 @@ namespace DotNet2020.Domain._5.Entities
 
         public UserSkipTime(AppIdentityUser user, int spentInHours, DateTime date, SickEnum sickReason)
         {
+            if (user == null)
+                throw new ArgumentNullException("User was null!");
             User = user;
             SpentInHours = spentInHours;
             Date = date;
