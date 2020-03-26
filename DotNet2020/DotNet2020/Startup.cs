@@ -43,6 +43,10 @@ namespace DotNet2020
                     Configuration.GetConnectionString("DefaultConnection")));
             services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
+            services.AddControllersWithViews();
+            services.AddRazorPages();
+            services.AddScoped<DbContext, ApplicationDbContext>();
+
 
 	    #region qwertyRegion
             services.AddDbContext<AttestationContext>(options =>
