@@ -8,8 +8,13 @@ namespace DotNet2020.Domain._5.Entities
     {
         [Required]
         public AppIdentityUser User { get; private set; }
+
+        [Required]
         public int EstimatedTime { get; set; }
+
+        [Required]
         public DayOfWeek DayOfWeek { get; set; }
+
         public bool IsVisible { get; set; }
 
         public UserWorkTime(AppIdentityUser user, int estimatedTime, DayOfWeek dayOfWeek, bool isVisible)

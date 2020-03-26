@@ -8,8 +8,14 @@ namespace DotNet2020.Domain._5.Entities
     {
         [Required]
         public AppIdentityUser User { get; private set; }
+
+        [Required]
         public int SpentInHours { get; set; }
+
+        [Required]
         public DateTime Date { get; set; }
+
+        [Required]
         public SickEnum SickReason { get; set; }
 
         public UserSkipTime(AppIdentityUser user, int spentInHours, DateTime date, SickEnum sickReason)
