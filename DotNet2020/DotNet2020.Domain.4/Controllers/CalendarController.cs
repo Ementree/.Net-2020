@@ -114,7 +114,7 @@ namespace DotNet2020.Domain._4.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> RejectCalendarEntry(int id)
+        public async Task<IActionResult> Reject(int id)
         {
             var calendarEntry = await _dbContext.CalendarEntries.FindAsync(id);
             _dbContext.CalendarEntries.Remove(calendarEntry);
