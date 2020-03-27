@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
   <Metadata>
-    <Identity Id="DotNet2020.Domain._1.9ac6ae43-1c91-4e0f-b4e3-7edaf9c7f18f" Version="1.0" Language="en-US" Publisher="Dmitry"/>
+    <Identity Id="DotNet2020.Domain._1.a45f249b-9911-4a52-a4b8-101b8687d9f7" Version="1.0" Language="en-US" Publisher="Dmitry"/>
     <DisplayName>DotNet2020.Domain._1</DisplayName>
     <Description xml:space="preserve">This is a sample diagnostic extension for the .NET Compiler Platform ("Roslyn").</Description>
   </Metadata>

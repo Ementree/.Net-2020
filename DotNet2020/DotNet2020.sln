@@ -7,21 +7,17 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNet2020", "DotNet2020\Do
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNet2020.Domain.Core", "DotNet2020.Domain.Core\DotNet2020.Domain.Core.csproj", "{E50F79EF-02E7-4349-AA45-35D4D05267DB}"
 EndProject
-<<<<<<< Updated upstream
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotNet2020.Data", "DotNet2020.Data\DotNet2020.Data.csproj", "{545CEA97-14AD-400D-B714-0987F796FEF2}"
-=======
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNet2020.Data", "DotNet2020.Data\DotNet2020.Data.csproj", "{545CEA97-14AD-400D-B714-0987F796FEF2}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNet2020.Domain.5", "DotNet2020.Domain.5\DotNet2020.Domain.5.csproj", "{B3300E1D-032C-472F-8C00-10F9CE3F0E6C}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNet2020.Domain.6", "DotNet2020.Domain.6\DotNet2020.Domain.6.csproj", "{FB318EB7-F6F5-45DB-9C12-1D480E4956BA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotNet2020.Domain._1", "DotNet2020.Domain.1\DotNet2020.Domain._1\DotNet2020.Domain._1.csproj", "{4E11F547-2D5F-4581-8DC9-C5380FDE0599}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotNet2020.Domain._1", "DotNet2020.Domain.1\DotNet2020.Domain._1\DotNet2020.Domain._1.csproj", "{D91CB750-F168-4728-B2BD-663AC50EBF01}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotNet2020.Domain._1.Test", "DotNet2020.Domain.1\DotNet2020.Domain._1.Test\DotNet2020.Domain._1.Test.csproj", "{A180C9EA-96E5-4081-B5A0-4811BE417076}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotNet2020.Domain._1.Test", "DotNet2020.Domain.1\DotNet2020.Domain._1.Test\DotNet2020.Domain._1.Test.csproj", "{F0F51648-CA38-4C1D-9F23-258FDDD987EE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotNet2020.Domain._1.Vsix", "DotNet2020.Domain.1\DotNet2020.Domain._1.Vsix\DotNet2020.Domain._1.Vsix.csproj", "{4E9D831B-EC0C-40C4-A394-8291D02C11B0}"
->>>>>>> Stashed changes
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotNet2020.Domain._1.Vsix", "DotNet2020.Domain.1\DotNet2020.Domain._1.Vsix\DotNet2020.Domain._1.Vsix.csproj", "{E0EBDCC6-6820-4E65-895C-443BE32C644E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,8 +37,6 @@ Global
 		{545CEA97-14AD-400D-B714-0987F796FEF2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{545CEA97-14AD-400D-B714-0987F796FEF2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{545CEA97-14AD-400D-B714-0987F796FEF2}.Release|Any CPU.Build.0 = Release|Any CPU
-<<<<<<< Updated upstream
-=======
 		{B3300E1D-032C-472F-8C00-10F9CE3F0E6C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B3300E1D-032C-472F-8C00-10F9CE3F0E6C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B3300E1D-032C-472F-8C00-10F9CE3F0E6C}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -51,19 +45,18 @@ Global
 		{FB318EB7-F6F5-45DB-9C12-1D480E4956BA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FB318EB7-F6F5-45DB-9C12-1D480E4956BA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FB318EB7-F6F5-45DB-9C12-1D480E4956BA}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4E11F547-2D5F-4581-8DC9-C5380FDE0599}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4E11F547-2D5F-4581-8DC9-C5380FDE0599}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4E11F547-2D5F-4581-8DC9-C5380FDE0599}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4E11F547-2D5F-4581-8DC9-C5380FDE0599}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A180C9EA-96E5-4081-B5A0-4811BE417076}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A180C9EA-96E5-4081-B5A0-4811BE417076}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A180C9EA-96E5-4081-B5A0-4811BE417076}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A180C9EA-96E5-4081-B5A0-4811BE417076}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4E9D831B-EC0C-40C4-A394-8291D02C11B0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4E9D831B-EC0C-40C4-A394-8291D02C11B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4E9D831B-EC0C-40C4-A394-8291D02C11B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4E9D831B-EC0C-40C4-A394-8291D02C11B0}.Release|Any CPU.Build.0 = Release|Any CPU
->>>>>>> Stashed changes
+		{D91CB750-F168-4728-B2BD-663AC50EBF01}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D91CB750-F168-4728-B2BD-663AC50EBF01}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D91CB750-F168-4728-B2BD-663AC50EBF01}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D91CB750-F168-4728-B2BD-663AC50EBF01}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F0F51648-CA38-4C1D-9F23-258FDDD987EE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F0F51648-CA38-4C1D-9F23-258FDDD987EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F0F51648-CA38-4C1D-9F23-258FDDD987EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F0F51648-CA38-4C1D-9F23-258FDDD987EE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E0EBDCC6-6820-4E65-895C-443BE32C644E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E0EBDCC6-6820-4E65-895C-443BE32C644E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E0EBDCC6-6820-4E65-895C-443BE32C644E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E0EBDCC6-6820-4E65-895C-443BE32C644E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
