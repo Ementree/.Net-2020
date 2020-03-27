@@ -11,13 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNet2020.Data", "DotNet20
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNet2020.Domain.5", "DotNet2020.Domain.5\DotNet2020.Domain.5.csproj", "{B3300E1D-032C-472F-8C00-10F9CE3F0E6C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNet2020.Domain.6", "DotNet2020.Domain.6\DotNet2020.Domain.6.csproj", "{FB318EB7-F6F5-45DB-9C12-1D480E4956BA}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotNet2020.Domain._1", "DotNet2020.Domain.1\DotNet2020.Domain._1\DotNet2020.Domain._1.csproj", "{D91CB750-F168-4728-B2BD-663AC50EBF01}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotNet2020.Domain._1.Test", "DotNet2020.Domain.1\DotNet2020.Domain._1.Test\DotNet2020.Domain._1.Test.csproj", "{F0F51648-CA38-4C1D-9F23-258FDDD987EE}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotNet2020.Domain._1.Vsix", "DotNet2020.Domain.1\DotNet2020.Domain._1.Vsix\DotNet2020.Domain._1.Vsix.csproj", "{E0EBDCC6-6820-4E65-895C-443BE32C644E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotNet2020.Domain.6", "DotNet2020.Domain.6\DotNet2020.Domain.6.csproj", "{FB318EB7-F6F5-45DB-9C12-1D480E4956BA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -37,26 +31,10 @@ Global
 		{545CEA97-14AD-400D-B714-0987F796FEF2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{545CEA97-14AD-400D-B714-0987F796FEF2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{545CEA97-14AD-400D-B714-0987F796FEF2}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B3300E1D-032C-472F-8C00-10F9CE3F0E6C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B3300E1D-032C-472F-8C00-10F9CE3F0E6C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B3300E1D-032C-472F-8C00-10F9CE3F0E6C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B3300E1D-032C-472F-8C00-10F9CE3F0E6C}.Release|Any CPU.Build.0 = Release|Any CPU
 		{FB318EB7-F6F5-45DB-9C12-1D480E4956BA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{FB318EB7-F6F5-45DB-9C12-1D480E4956BA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FB318EB7-F6F5-45DB-9C12-1D480E4956BA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FB318EB7-F6F5-45DB-9C12-1D480E4956BA}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D91CB750-F168-4728-B2BD-663AC50EBF01}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D91CB750-F168-4728-B2BD-663AC50EBF01}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D91CB750-F168-4728-B2BD-663AC50EBF01}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D91CB750-F168-4728-B2BD-663AC50EBF01}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F0F51648-CA38-4C1D-9F23-258FDDD987EE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F0F51648-CA38-4C1D-9F23-258FDDD987EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F0F51648-CA38-4C1D-9F23-258FDDD987EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F0F51648-CA38-4C1D-9F23-258FDDD987EE}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E0EBDCC6-6820-4E65-895C-443BE32C644E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E0EBDCC6-6820-4E65-895C-443BE32C644E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E0EBDCC6-6820-4E65-895C-443BE32C644E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E0EBDCC6-6820-4E65-895C-443BE32C644E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
