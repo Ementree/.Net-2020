@@ -31,7 +31,7 @@ namespace DotNet2020.Domain._4.Controllers
         #region Добавление Event в календарь
 
         [HttpPost]
-        public IActionResult AddSickDay(EventVM eventVM)
+        public IActionResult AddSickDay(EventViewModel eventVM)
         {
             if (eventVM.From == DateTime.MinValue)
             {
@@ -46,7 +46,7 @@ namespace DotNet2020.Domain._4.Controllers
         }
 
         [HttpPost]
-        public IActionResult AddVacation(EventVM eventVM)
+        public IActionResult AddVacation(EventViewModel eventVM)
         {
             if (eventVM.From == DateTime.MinValue && eventVM.To == DateTime.MinValue)
             {
@@ -67,7 +67,7 @@ namespace DotNet2020.Domain._4.Controllers
         }
 
         [HttpPost]
-        public IActionResult AddIllness(EventVM eventVM)
+        public IActionResult AddIllness(EventViewModel eventVM)
         {
             if (eventVM.From == DateTime.MinValue && eventVM.To == DateTime.MinValue)
             {
