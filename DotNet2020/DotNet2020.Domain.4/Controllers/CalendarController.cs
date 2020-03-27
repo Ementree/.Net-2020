@@ -131,14 +131,12 @@ namespace DotNet2020.Domain._4.Controllers
         [HttpPost]
         public IActionResult AddHoliday(Holiday holiday)
         {
-            if (ModelState.IsValid)
-            {
-                _dbContext.Holidays.Add(holiday);
-                _dbContext.SaveChanges();
-                return RedirectToActionPermanent("Admin");
-            }
+            if (!ModelState.IsValid)
+                return View(holiday);
 
-            return View(holiday);
+            _dbContext.Holidays.Add(holiday);
+            _dbContext.SaveChanges();
+            return RedirectToActionPermanent("Admin");
         }
 
         [HttpGet]
