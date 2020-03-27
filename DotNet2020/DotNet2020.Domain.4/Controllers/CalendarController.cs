@@ -19,9 +19,9 @@ namespace DotNet2020.Domain._4.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            ViewBag.Recommendation = await _dbContext.Recommendations.FirstOrDefaultAsync();
+            ViewBag.Recommendation = _dbContext.Recommendations.FirstOrDefault();
             return View();
         }
 
@@ -93,32 +93,32 @@ namespace DotNet2020.Domain._4.Controllers
         #endregion
 
         [HttpGet]
-        public async Task<IActionResult> Admin()
+        public IActionResult Admin()
         {
-            ViewBag.Recommendation = await _dbContext.Recommendations.FirstOrDefaultAsync();
+            ViewBag.Recommendation = _dbContext.Recommendations.FirstOrDefault();
             return View(_dbContext.CalendarEntries
                 .Where(c => c.AbsenceType == AbsenceType.Illness || c.AbsenceType == AbsenceType.Vacation)
                 .AsEnumerable());
         }
 
         [HttpPost]
-        public async Task<IActionResult> Approve(int id)
+        public IActionResult Approve(int id)
         {
-            var calendarEntry = await _dbContext.CalendarEntries.FindAsync(id);
+            var calendarEntry = _dbContext.CalendarEntries.Find(id);
             if (calendarEntry is Vacation vacation)
                 vacation.Approve();
             if (calendarEntry is Illness illness)
                 illness.Approve();
-            await _dbContext.SaveChangesAsync();
+            _dbContext.SaveChanges();
             return RedirectToActionPermanent("Admin");
         }
 
         [HttpPost]
-        public async Task<IActionResult> Reject(int id)
+        public IActionResult Reject(int id)
         {
-            var calendarEntry = await _dbContext.CalendarEntries.FindAsync(id);
+            var calendarEntry =  _dbContext.CalendarEntries.Find(id);
             _dbContext.CalendarEntries.Remove(calendarEntry);
-            await _dbContext.SaveChangesAsync();
+            _dbContext.SaveChanges();
             return RedirectToActionPermanent("Admin");
         }
 
@@ -148,15 +148,15 @@ namespace DotNet2020.Domain._4.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> UpdateRecommendation(Recommendation recommendation)
+        public IActionResult UpdateRecommendation(Recommendation recommendation)
         {
             if (ModelState.IsValid)
             {
-                var dbEntry = await _dbContext.Recommendations.FirstOrDefaultAsync();
+                var dbEntry = _dbContext.Recommendations.FirstOrDefault();
                 if (dbEntry == null)
-                    await _dbContext.Recommendations.AddAsync(recommendation);
+                    _dbContext.Recommendations.Add(recommendation);
                 else dbEntry.RecommendationText = recommendation.RecommendationText;
-                await _dbContext.SaveChangesAsync();
+                _dbContext.SaveChanges();
                 return RedirectToActionPermanent("Admin");
             }
 
