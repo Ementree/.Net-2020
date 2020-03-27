@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Linq;
-using System.Threading.Tasks;
 using DotNet2020.Domain._4.Models;
 using DotNet2020.Domain._4_Models;
-using DotNet2020.Domain.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace DotNet2020.Domain._4.Controllers
 {
