@@ -102,7 +102,7 @@ namespace DotNet2020.Domain._4.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> ApproveCalendarEntry(int id)
+        public async Task<IActionResult> Approve(int id)
         {
             var calendarEntry = await _dbContext.CalendarEntries.FindAsync(id);
             if (calendarEntry is Vacation vacation)
