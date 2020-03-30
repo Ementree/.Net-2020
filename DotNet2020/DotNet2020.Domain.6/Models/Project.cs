@@ -9,5 +9,6 @@ namespace DotNet2020.Domain._6.Models
         public int Id { get; protected set; }
         public string Name { get; protected set; }
         public int StatusId { get; protected set; }
+        public virtual ProjectStatus ProjectStatus { get; protected set; }
     }
 }
