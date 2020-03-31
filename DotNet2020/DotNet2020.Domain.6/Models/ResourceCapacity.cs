@@ -10,5 +10,7 @@ namespace DotNet2020.Domain._6.Models
         public int ResourceId { get; protected set; }
         public int Capacity { get; protected set; }
         public int PeriodId { get; protected set; }
+        public virtual Resource Resource { get; protected set; }
+        public virtual Period Period { get; protected set; }
     }
 }
