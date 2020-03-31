@@ -5,7 +5,21 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Views\Scripts\**" />
+    <Compile Remove="Views\Styles\**" />
+    <EmbeddedResource Remove="Views\Scripts\**" />
+    <EmbeddedResource Remove="Views\Styles\**" />
+    <None Remove="Views\Scripts\**" />
+    <None Remove="Views\Styles\**" />
+    <TypeScriptCompile Remove="Views\Scripts\**" />
+    <TypeScriptCompile Remove="Views\Styles\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="Views\Plan\Index.cshtml" />
+    <None Remove="Views\Shared\_Layout6.cshtml" />
+    <None Remove="wwwroot\css\TableStyle.css" />
+    <None Remove="wwwroot\js\TableFixColumn.js" />
   </ItemGroup>
 
   <ItemGroup>
@@ -14,6 +28,12 @@
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
+    <EmbeddedResource Include="Views\Shared\_Layout6.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </EmbeddedResource>
+    
   </ItemGroup>
 
   <ItemGroup>

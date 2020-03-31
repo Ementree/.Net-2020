@@ -1,0 +1,18 @@
+﻿@{ 
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+</head>
+<body>
+    <link rel="stylesheet" href="css/TableStyle.css" />
+    <h1>Lay</h1>
+    <div class="container-fluid">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+    <script src="js/TableFixColumn.js"></script>
+    @RenderSection("Scripts", required: false)
+</body>
