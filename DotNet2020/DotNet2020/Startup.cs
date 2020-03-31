@@ -20,6 +20,7 @@ using DotNet2020.Domain.Core.Controllers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.Extensions.FileProviders;
+using DotNet2020.Domain._6.Controllers;
 
 namespace DotNet2020
 {
@@ -46,11 +47,14 @@ namespace DotNet2020
 
 
 
-            var assembly = typeof(DemoController).Assembly;
+            var assembly = typeof(DemoController).Assembly;            
+            var planController = typeof(PlanController).Assembly;
 
             services.Configure<Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation.MvcRazorRuntimeCompilationOptions>(
                 options =>
                 {
+                    options.FileProviders.Add(
+                        new EmbeddedFileProvider(planController));
                     options.FileProviders.Add(
                         new EmbeddedFileProvider(assembly));
                 });
