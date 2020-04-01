@@ -11,6 +11,10 @@
   <ItemGroup>
     <Content Include="wwwroot6\*\*" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="scripts\tsconfig.json" />
+  </ItemGroup>
   
   <ItemGroup>
     <EmbeddedResource Include="Views\*\*.cshtml">
