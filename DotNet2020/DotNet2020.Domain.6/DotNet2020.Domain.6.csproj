@@ -11,6 +11,10 @@
   <ItemGroup>
     <Content Include="wwwroot6\*\*" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="scripts\tsconfig.json" />
+  </ItemGroup>
   
   <ItemGroup>
     <EmbeddedResource Include="Views\*\*.cshtml">
@@ -18,6 +22,10 @@
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
+  </ItemGroup>
+  
+  <ItemGroup>
+    <None Remove="scripts\testScript.ts" />
   </ItemGroup>
 
   <ItemGroup>
