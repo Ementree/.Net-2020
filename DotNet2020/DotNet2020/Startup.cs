@@ -49,24 +49,15 @@ namespace DotNet2020
 
 
             var assembly = typeof(DemoController).Assembly;            
-            var planController = typeof(PlanController).Assembly;
-            var capacityController = typeof(CapacityController).Assembly;
-            var functionalCapacityController = typeof(FunctionalCapacityController).Assembly;
-            var absenceController = typeof(AbsenceController).Assembly;
+            var domain6Assembly = typeof(PlanController).Assembly;
 
             services.Configure<Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation.MvcRazorRuntimeCompilationOptions>(
                 options =>
                 {
                     options.FileProviders.Add(
-                        new EmbeddedFileProvider(planController));
+                        new EmbeddedFileProvider(domain6Assembly));
                     options.FileProviders.Add(
                         new EmbeddedFileProvider(assembly));
-                    options.FileProviders.Add(
-                        new EmbeddedFileProvider(capacityController));
-                    options.FileProviders.Add(
-                        new EmbeddedFileProvider(functionalCapacityController));
-                    options.FileProviders.Add(
-                        new EmbeddedFileProvider(absenceController));
                 });
 
             services
