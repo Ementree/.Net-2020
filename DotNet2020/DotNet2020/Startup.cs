@@ -88,16 +88,11 @@ namespace DotNet2020
             
 
             app.UseStaticFiles();
-
-
-            var dir = Directory.GetCurrentDirectory().Split(@"\");
-            //@"C:\Projects\.Net-2020\DotNet2020\DotNet2020.Domain.6"
-            var dir2 = env.ContentRootPath + ".Domain.6";
-            app.UseStaticFiles(new StaticFileOptions() // обрабатывает запросы к каталогу wwwroot/html
+            app.UseStaticFiles(new StaticFileOptions()
             {
                 
                 FileProvider = new PhysicalFileProvider(
-                Path.Combine(dir2, "wwwroot6")),
+                Path.Combine(env.ContentRootPath + ".Domain.6", "wwwroot6")),
                 RequestPath = "/wwwroot6"
             });
 
