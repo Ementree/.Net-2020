@@ -1,3 +1,61 @@
 ﻿@{ 
     Layout = "~/Views/Shared/_Layout6.cshtml";
 }
+
+    <div class="table-scroll">
+        <table>
+            <thead class="thead-row">
+                <tr>
+                    <td colspan="2">Январь 20</td>
+                    <td colspan="2">Февраль 20</td>
+                    <td colspan="2">Март 20</td>
+
+                    <td colspan="2">Апрель 20</td>
+                    <td colspan="2">Май 20</td>
+                    <td colspan="2">Июнь 20</td>
+
+                    <td colspan="2">Июль 20</td>
+                    <td colspan="2">Август 20</td>
+                    <td colspan="2">Сентябрь 20</td>
+
+                    <td colspan="2">Октябрь 20</td>
+                    <td colspan="2">Ноябрь 20</td>
+                    <td colspan="2">Декабрь 20</td>
+
+                </tr>
+                <tr>
+                    @for (int i = 0; i < 12; i++)
+                    {
+                        <td>Ресурс</td>
+                        <td>загрузка</td>
+                    }
+                </tr>
+            </thead>
+            <thead class="thead-col">
+                <tr><th><b>809</b></th></tr>
+                <tr><th>809</th></tr>
+                <tr><th>809</th></tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Res1</td>
+                    <td>20%</td>
+                    <td>Res1</td>
+                    <td>20%</td>
+                    <td>Res1</td>
+                    <td>20%</td>
+                </tr>
+                <tr>
+                    <td>85</td>
+                    <td>40</td>
+                    <td>42</td>
+                </tr>
+                <tr>
+                    <td>54</td>
+                    <td>4</td>
+                    <td>92</td>
+                </tr>
+
+            </tbody>
+        </table>
+    </div>
