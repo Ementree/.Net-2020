@@ -3,24 +3,27 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
-
+  
   <ItemGroup>
-    <Compile Remove="Views\Scripts\**" />
-    <Compile Remove="Views\Styles\**" />
-    <EmbeddedResource Remove="Views\Scripts\**" />
-    <EmbeddedResource Remove="Views\Styles\**" />
-    <None Remove="Views\Scripts\**" />
-    <None Remove="Views\Styles\**" />
-    <TypeScriptCompile Remove="Views\Scripts\**" />
-    <TypeScriptCompile Remove="Views\Styles\**" />
+      <Folder Include="wwwroot6\" />
+    </ItemGroup>
+  
+  <ItemGroup>
+    <Content Remove="wwwroot6\css\TableStyle.css" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="wwwroot6\css\TableStyle.css" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="Views\Plan\Index.cshtml" />
-    <None Remove="Views\Shared\_Layout6.cshtml" />
-    <None Remove="wwwroot\css\TableStyle.css" />
-    <None Remove="wwwroot\js\TableFixColumn.js" />
+    <Content Remove="wwwroot6\js\TableFixColumn.js" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="wwwroot6\js\TableFixColumn.js" />
+  </ItemGroup>
+  
+  
+  
 
   <ItemGroup>
     <EmbeddedResource Include="Views\Plan\Index.cshtml">

@@ -21,6 +21,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.Extensions.FileProviders;
 using DotNet2020.Domain._6.Controllers;
+using Microsoft.AspNetCore.Http;
 
 namespace DotNet2020
 {
@@ -87,6 +88,18 @@ namespace DotNet2020
             
 
             app.UseStaticFiles();
+
+
+            var dir = Directory.GetCurrentDirectory().Split(@"\");
+            //@"C:\Projects\.Net-2020\DotNet2020\DotNet2020.Domain.6"
+            var dir2 = env.ContentRootPath + ".Domain.6";
+            app.UseStaticFiles(new StaticFileOptions() // обрабатывает запросы к каталогу wwwroot/html
+            {
+                
+                FileProvider = new PhysicalFileProvider(
+                Path.Combine(dir2, "wwwroot6")),
+                RequestPath = "/wwwroot6"
+            });
 
             app.UseRouting();
 
