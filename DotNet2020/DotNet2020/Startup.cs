@@ -20,6 +20,8 @@ using DotNet2020.Domain.Core.Controllers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.Extensions.FileProviders;
+using DotNet2020.Domain._6.Controllers;
+using Microsoft.AspNetCore.Http;
 
 namespace DotNet2020
 {
@@ -46,11 +48,14 @@ namespace DotNet2020
 
 
 
-            var assembly = typeof(DemoController).Assembly;
+            var assembly = typeof(DemoController).Assembly;            
+            var domain6Assembly = typeof(PlanController).Assembly;
 
             services.Configure<Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation.MvcRazorRuntimeCompilationOptions>(
                 options =>
                 {
+                    options.FileProviders.Add(
+                        new EmbeddedFileProvider(domain6Assembly));
                     options.FileProviders.Add(
                         new EmbeddedFileProvider(assembly));
                 });
@@ -83,6 +88,13 @@ namespace DotNet2020
             
 
             app.UseStaticFiles();
+            app.UseStaticFiles(new StaticFileOptions()
+            {
+                
+                FileProvider = new PhysicalFileProvider(
+                Path.Combine(env.ContentRootPath + ".Domain.6", "wwwroot6")),
+                RequestPath = "/wwwroot6"
+            });
 
             app.UseRouting();
 
