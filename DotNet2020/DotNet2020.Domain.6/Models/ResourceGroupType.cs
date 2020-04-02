@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace DotNet2020.Domain._6.Models
+﻿namespace DotNet2020.Domain._6.Models
 {
     public class ResourceGroupType
     {
