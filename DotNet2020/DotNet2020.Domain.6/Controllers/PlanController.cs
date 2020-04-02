@@ -12,7 +12,7 @@ namespace DotNet2020.Domain._6.Controllers
         private static List<FunctioningCapacityResource> functioningCapacityResources;
         public PlanController()
         {
-            var resType = new ResourceType(1, "1");
+            var resType = new ResourceGroupType(1, "1", "worker");
             var resource1 = new Resource(1, "First", "1", resType.Id, resType);
             var resource2 = new Resource(2, "Second", "2", resType.Id, resType);
             var resource3 = new Resource(3, "Third", "3", resType.Id, resType);
@@ -50,19 +50,17 @@ namespace DotNet2020.Domain._6.Controllers
         {
             var model = functioningCapacityResources
                 .GroupBy(f => f.ProjectId)
-                .ToDictionary(group=> group.Key, group=>group.ToList())
+                .ToDictionary(group=> group.ToList().FirstOrDefault().Project, group=>group.ToList())
                 .Select(pair =>
                 {
                     var key = pair.Key;
                     var value = pair.Value.GroupBy(res => res.PeriodId)
-                    .ToDictionary(group => group.Key, group => group.ToList());
+                    .ToDictionary(group => group.ToList().FirstOrDefault().Period, group => group.ToList());
                     return KeyValuePair.Create(key, value);
                 })
                 .ToDictionary(pair=>pair.Key, pair=>pair.Value)
                 ;
-            var dicts = new List<Dictionary<int, FunctioningCapacityResource>>();
-            
-            return View();
+            return View(model: model);
         }
     }
 }

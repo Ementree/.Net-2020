@@ -1,7 +1,21 @@
-﻿@{ 
+﻿@{
     Layout = "~/Views/Shared/_Layout6.cshtml";
+    int maxResourceAmount = 0;
+    Dictionary<int, int> projectsCapacity = new Dictionary<int, int>();
 }
-
+@using DotNet2020.Domain._6.Models;
+@model Dictionary<Project, Dictionary<Period, List<FunctioningCapacityResource>>>
+@foreach (var project in Model)
+{
+    var periods = project.Value;
+    foreach (var periodPair in periods)
+    {
+        if (periodPair.Value.Count > maxResourceAmount)
+            maxResourceAmount = periodPair.Value.Count;
+    }
+    projectsCapacity.Add(project.Key.Id, maxResourceAmount);
+    maxResourceAmount = 0;
+}
     <div class="table-scroll">
         <table>
             <thead class="thead-row">
@@ -32,29 +46,59 @@
                 </tr>
             </thead>
             <thead class="thead-col">
-                <tr><th><b>809</b></th></tr>
-                <tr><th>809</th></tr>
-                <tr><th>809</th></tr>
+                @foreach (var project in Model)
+                {
+                    <tr><th><b>@(project.Key.Name)</b></th></tr>
+                    for (int i = 0; i < projectsCapacity[project.Key.Id] - 1; i++)
+                    {
+                        <tr><th>@(project.Key.Name)</th></tr>
+                    }
+                }
             </thead>
             <tbody>
-                <tr>
-                    <td>Res1</td>
-                    <td>20%</td>
-                    <td>Res1</td>
-                    <td>20%</td>
-                    <td>Res1</td>
-                    <td>20%</td>
-                </tr>
-                <tr>
-                    <td>85</td>
-                    <td>40</td>
-                    <td>42</td>
-                </tr>
-                <tr>
-                    <td>54</td>
-                    <td>4</td>
-                    <td>92</td>
-                </tr>
+
+                @foreach (var project in Model)
+                {
+                    var periods = project.Value;
+                    
+                    for (int i = 0; i < projectsCapacity[project.Key.Id]; i++)
+                    {
+                        <tr>
+                            @foreach (var periodPair in periods)
+                            {
+                                var period = periodPair.Value;
+                                if (period.Count - 1 >= i)
+                                {
+                                    <td>@period[i].Resource.FirstName</td>
+                                    <td>@period[i].FunctionCapacity</td>
+                                }
+                                else
+                                {
+                                    <td></td>
+                                    <td></td>
+                                }
+                            }
+                        </tr>
+                    }
+                }
+                @*<tr>
+                        <td>Res1</td>
+                        <td>20%</td>
+                        <td>Res1</td>
+                        <td>20%</td>
+                        <td>Res1</td>
+                        <td>20%</td>
+                    </tr>
+                    <tr>
+                        <td>85</td>
+                        <td>40</td>
+                        <td>42</td>
+                    </tr>
+                    <tr>
+                        <td>54</td>
+                        <td>4</td>
+                        <td>92</td>
+                    </tr>*@
 
             </tbody>
         </table>
