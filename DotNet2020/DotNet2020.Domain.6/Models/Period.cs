@@ -1,7 +1,4 @@
-﻿using DotNet2020.Data;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System;
 
 namespace DotNet2020.Domain._6.Models
 {
