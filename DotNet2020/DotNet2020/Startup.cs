@@ -52,9 +52,9 @@ namespace DotNet2020
                 options.UseNpgsql(
                     Configuration.GetConnectionString("CalendarEntryContext"), 
                     b => b.MigrationsAssembly("DotNet2020.Data")));
+            var assembly = typeof(CalendarController).Assembly;
             #endregion
 
-            var assembly = typeof(CalendarController).Assembly;
 
             services.Configure<Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation.MvcRazorRuntimeCompilationOptions>(
                 options =>

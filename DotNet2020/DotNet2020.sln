@@ -9,11 +9,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNet2020.Domain.Core", "D
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNet2020.Data", "DotNet2020.Data\DotNet2020.Data.csproj", "{545CEA97-14AD-400D-B714-0987F796FEF2}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNet2020.Domain.5", "DotNet2020.Domain.5\DotNet2020.Domain.5.csproj", "{B3300E1D-032C-472F-8C00-10F9CE3F0E6C}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotNet2020.Domain.6", "DotNet2020.Domain.6\DotNet2020.Domain.6.csproj", "{FB318EB7-F6F5-45DB-9C12-1D480E4956BA}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotNet2020.Domain.4", "DotNet2020.Domain.4\DotNet2020.Domain.4.csproj", "{48950E6D-5322-4DAB-ABF7-9BD7F4559CA8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotNet2020.Domain.5", "DotNet2020.Domain.5\DotNet2020.Domain.5.csproj", "{08B8FDFE-ED75-4558-929A-7197A96E138A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotNet2020.Domain.6", "DotNet2020.Domain.6\DotNet2020.Domain.6.csproj", "{DFDB152C-02ED-41E5-A92B-3E30B01CD4C6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -37,10 +37,10 @@ Global
 		{48950E6D-5322-4DAB-ABF7-9BD7F4559CA8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{48950E6D-5322-4DAB-ABF7-9BD7F4559CA8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{48950E6D-5322-4DAB-ABF7-9BD7F4559CA8}.Release|Any CPU.Build.0 = Release|Any CPU
-		{FB318EB7-F6F5-45DB-9C12-1D480E4956BA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FB318EB7-F6F5-45DB-9C12-1D480E4956BA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FB318EB7-F6F5-45DB-9C12-1D480E4956BA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FB318EB7-F6F5-45DB-9C12-1D480E4956BA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DFDB152C-02ED-41E5-A92B-3E30B01CD4C6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DFDB152C-02ED-41E5-A92B-3E30B01CD4C6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DFDB152C-02ED-41E5-A92B-3E30B01CD4C6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DFDB152C-02ED-41E5-A92B-3E30B01CD4C6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
