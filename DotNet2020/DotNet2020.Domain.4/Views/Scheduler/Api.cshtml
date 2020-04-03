@@ -1,0 +1,65 @@
+<div class="box wide">
+    <div class="box-col">
+        <h4>Current Date</h4>
+        <input id="date" />
+    </div>
+    <div class="box-col">
+        <h4>Current View</h4>
+        <select id="views">
+            <option value="agenda">Agenda</option>
+            <option value="day">Day</option>
+            <option value="month">Month</option>
+            <option value="week">Week</option>
+            <option value="timeline">Timeline</option>
+        </select>
+    </div>
+</div>
+
+@(Html.Kendo().Scheduler<Kendo.Mvc.Examples.Models.Scheduler.TaskViewModel>()
+    .Name("scheduler")
+    .Date(new DateTime(2013, 6, 13))
+    .StartTime(new DateTime(2013, 6, 13, 7, 00, 00))
+    .Height(400)
+    .Timezone("Etc/UTC")
+    .Views(views =>
+    {
+        views.DayView();
+        views.WeekView(weekView => weekView.Selected(true));
+        views.MonthView();
+        views.AgendaView();
+        views.TimelineView();
+    })
+    .DataSource(d => d
+        .Model(m =>
+        {
+            m.Id(f => f.TaskID);
+            m.Field(f => f.Title).DefaultValue("No title");
+            m.RecurrenceId(f => f.RecurrenceID);
+            m.Field(f => f.Title).DefaultValue("No title");
+        })
+        .Read("API_Read", "Scheduler")
+        .Create("API_Create", "Scheduler")
+        .Destroy("API_Destroy", "Scheduler")
+        .Update("API_Update", "Scheduler")
+    )
+)
+
+<script>
+    $(function () {
+        var scheduler = $("#scheduler").data("kendoScheduler");
+
+        $("#date").kendoDatePicker({
+            value: new Date("2013/6/13"),
+            change: function () {
+                scheduler.date(this.value());
+            }
+        });
+
+        $("#views").kendoDropDownList({
+            value: scheduler.view(),
+            change: function () {
+                scheduler.view(this.value());
+            }
+        });
+    });
+</script>

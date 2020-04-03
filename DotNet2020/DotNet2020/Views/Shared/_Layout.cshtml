@@ -6,6 +6,35 @@
     <title>@ViewData["Title"] - DotNet2020</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
+
+    <!--Mayak-->
+    <script src="~/shared/console.js"></script>
+    <script src="~/shared/prettify.js"></script>
+    <script src="~/shared/jquery.validate.js"></script>
+    <script src="~/shared/jquery.validate.unobtrusive.js"></script>
+
+    <script>function resizeContainers() {
+            var headerHeight = $("#header").outerHeight(),
+                navbarWrapper = $("#example-nav-bar").height(),
+                webinarBarHeight = $("#webinar-banner:visible").outerHeight() + 2 || 0,
+                htmlHeight = (kendo.support.mobileOS) ? parseFloat(window.innerHeight) : $('html').height(),
+                sidebarHeight = htmlHeight - headerHeight - webinarBarHeight,
+                borderSize = 2,
+                navHeight = sidebarHeight - (navbarWrapper + borderSize);
+
+            $(".k-no-flexbox #example-sidebar").height(sidebarHeight);
+            $(".k-no-flexbox #nav-wrapper").height(navHeight);
+            $(".k-no-flexbox #main").height(sidebarHeight);
+        }
+
+        $(function () {
+            if (kendo.support.mobileOS) {
+                $(document.documentElement).addClass("k-hover-enabled");
+            }
+        });
+
+        $(document).ready(resizeContainers);
+        $(window).resize(resizeContainers);</script>
 </head>
 <body>
     <header>
@@ -47,3 +76,4 @@
     @RenderSection("Scripts", required: false)
 </body>
 </html>
+

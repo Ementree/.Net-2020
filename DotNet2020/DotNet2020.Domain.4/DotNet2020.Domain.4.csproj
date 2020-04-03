@@ -30,6 +30,11 @@
 	    <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
 	    <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
 	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </EmbeddedResource>
+    <EmbeddedResource Include="Views\Scheduler\Timeline.cshtml">
+	    <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+	    <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </EmbeddedResource>  
 	  <EmbeddedResource Include="wwwroot\css\calendar.css">
 	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -42,12 +47,24 @@
     <Folder Include="Models\ModelView\" />
     <Folder Include="Models\CalendarEntry\" />
     <Folder Include="wwwroot\" />
+    <Folder Include="Data\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.2">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
+    <PackageReference Include="Telerik.Documents.Core.Trial" Version="2020.1.212" />
+    <PackageReference Include="Telerik.Documents.Fixed.Trial" Version="2020.1.212" />
+    <PackageReference Include="Telerik.Documents.Flow.FormatProviders.Pdf.Trial" Version="2020.1.212" />
+    <PackageReference Include="Telerik.Documents.Flow.Trial" Version="2020.1.212" />
+    <PackageReference Include="Telerik.Documents.Spreadsheet.FormatProviders.OpenXml.Trial" Version="2020.1.212" />
+    <PackageReference Include="Telerik.Documents.Spreadsheet.FormatProviders.Pdf.Trial" Version="2020.1.212" />
+    <PackageReference Include="Telerik.Documents.Spreadsheet.Trial" Version="2020.1.212" />
+    <PackageReference Include="Telerik.Documents.SpreadsheetStreaming.Trial" Version="2020.1.212" />
+    <PackageReference Include="Telerik.UI.for.AspNet.Core.Trial" Version="2020.1.219" />
+    <PackageReference Include="Telerik.Zip.Trial" Version="2020.1.212" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="3.1.3" />
   </ItemGroup>
   <ItemGroup>
     <None Remove="wwwroot\css\calendar.css" />

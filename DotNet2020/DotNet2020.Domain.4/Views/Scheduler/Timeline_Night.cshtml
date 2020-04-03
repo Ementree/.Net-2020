@@ -1,0 +1,41 @@
+@(Html.Kendo().Scheduler<Kendo.Mvc.Examples.Models.Scheduler.MeetingViewModel>()
+    .Name("scheduler")
+    .Date(new DateTime(2013, 6, 12))
+    .StartTime(new DateTime(2013, 6, 12, 20, 00, 00))
+    .EndTime(new DateTime(2013, 6, 12, 20, 00, 00))
+    .MajorTick(360)
+    .DateHeaderTemplate("<strong>#=kendo.toString(date, 'D')# - #=kendo.toString(kendo.date.nextDay(date), 'D')#</strong>")
+    .Views(views =>
+    {
+        views.TimelineView(timeline => timeline.EventHeight(50));
+        views.TimelineWeekView(timeline => timeline.EventHeight(50));
+    })
+    .Timezone("Etc/UTC")
+    .Group(group => group.Resources("Rooms").Orientation(SchedulerGroupOrientation.Vertical))
+    .Resources(resource =>
+    {
+        resource.Add(m => m.RoomID)
+            .Title("Room")
+            .Name("Rooms")
+            .DataTextField("Text")
+            .DataValueField("Value")
+            .DataColorField("Color")
+            .BindTo(new[] {
+                    new { Text = "Meeting Room 101", Value = 1, Color = "#6eb3fa" },
+                    new { Text = "Meeting Room 201", Value = 2, Color = "#f58a8a" }
+            });
+    })
+    .DataSource(d => d
+            .Model(m =>
+            {
+                m.Id(f => f.MeetingID);
+                m.Field(f => f.Title).DefaultValue("No title");
+                m.RecurrenceId(f => f.RecurrenceID);
+                m.Field(f => f.Title).DefaultValue("No title");
+            })
+            .Read("Timeline_Night_Read", "Scheduler")
+                .Create("Timeline_Night_Create", "Scheduler")
+                .Destroy("Timeline_Night_Destroy", "Scheduler")
+                .Update("Timeline_Night_Update", "Scheduler")
+    )
+)

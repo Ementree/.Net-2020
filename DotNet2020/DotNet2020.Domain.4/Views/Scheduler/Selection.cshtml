@@ -1,0 +1,203 @@
+@(Html.Kendo().Scheduler<Kendo.Mvc.Examples.Models.Scheduler.MeetingViewModel>()
+    .Name("scheduler")
+    .Date(new DateTime(2013, 6, 13))
+    .StartTime(new DateTime(2013, 6, 13, 7, 00, 00))
+    .Height(600)
+    .Views(views =>
+    {
+        views.DayView();
+        views.WeekView(weekView => weekView.Selected(true));
+        views.MonthView();
+        views.AgendaView();
+        views.TimelineView();
+    })
+    .Selectable(true)
+    .Timezone("Etc/UTC")
+    .Resources(resource =>
+    {
+        resource.Add(m => m.RoomID)
+            .Title("Room")
+            .DataTextField("Text")
+            .DataValueField("Value")
+            .DataColorField("Color")
+            .BindTo(new[] {
+                    new { Text = "Meeting Room 101", Value = 1, Color = "#6eb3fa" },
+                    new { Text = "Meeting Room 201", Value = 2, Color = "#f58a8a" }
+            });
+        resource.Add(m => m.Attendees)
+            .Title("Attendees")
+            .Multiple(true)
+            .DataTextField("Text")
+            .DataValueField("Value")
+            .DataColorField("Color")
+            .BindTo(new[] {
+                    new { Text = "Alex", Value = 1, Color = "#f8a398" } ,
+                    new { Text = "Bob", Value = 2, Color = "#51a0ed" } ,
+                    new { Text = "Charlie", Value = 3, Color = "#56ca85" }
+            });
+    })
+    .DataSource(d => d
+            .Model(m =>
+            {
+                m.Id(f => f.MeetingID);
+                m.Field(f => f.Title).DefaultValue("No title");
+                m.RecurrenceId(f => f.RecurrenceID);
+                m.Field(f => f.Title).DefaultValue("No title");
+            })
+        .Read("Keyboard_Navigation_Read", "Scheduler")
+        .Create("Keyboard_Navigation_Create", "Scheduler")
+        .Destroy("Keyboard_Navigation_Destroy", "Scheduler")
+        .Update("Keyboard_Navigation_Update", "Scheduler")
+    )
+)
+
+<script type="text/javascript">
+    $(document.body).keydown(function (e) {
+        if (e.altKey && e.keyCode == 87) {
+            $("#scheduler").data("kendoScheduler").wrapper.focus();
+        }
+    });
+</script>
+
+<div class="box wide">
+    <div class="box-col">
+        <h4>Focus</h4>
+        <ul class="keyboard-legend" style="margin-bottom: 1em;">
+            <li>
+                <span class="button-preview">
+                    <span class="key-button leftAlign">Alt</span>
+                    +
+                    <span class="key-button">w</span>
+                </span>
+                <span class="button-descr">
+                    focuses the widget
+                </span>
+            </li>
+        </ul>
+
+        <h4>Actions applied on Scheduler toolbar</h4>
+        <ul class="keyboard-legend">
+            <li>
+                <span class="button-preview">
+                    <span class="key-button">F10</span>
+                </span>
+                <span class="button-descr">
+                    focuses toolbar
+                </span>
+            </li>
+            <li>
+                <span class="button-preview">
+                    <span class="key-button">Tab</span>
+                </span>
+                <span class="button-descr">
+                    focuses next toolbar item
+                </span>
+            </li>
+            <li>
+                <span class="button-preview">
+                    <span class="key-button leftAlign">Shift</span>
+                    +
+                    <span class="key-button">Tab</span>
+                </span>
+                <span class="button-descr">
+                    focuses previous toolbar item
+                </span>
+            </li>
+            <li>
+                <span class="button-preview">
+                    <span class="key-button">Enter</span>
+                </span>or
+                <span class="button-preview">
+                    <span class="key-button">Space</span>
+                </span>
+                <span class="button-descr">
+                    activates toolbar item
+                </span>
+            </li>
+            <li>
+                <span class="button-preview">
+                    <span class="key-button">Right</span>
+                </span>
+                <span class="button-descr">
+                    focuses next view when focus is over the views container
+                </span>
+            </li>
+            <li>
+                <span class="button-preview">
+                    <span class="key-button">Left</span>
+                </span>
+                <span class="button-descr">
+                    focuses previous view when focus is over the views container
+                </span>
+            </li>
+        </ul>
+    </div>
+
+    <div class="box-col">
+        <h4>Actions applied on Scheduler table</h4>
+        <ul class="keyboard-legend">
+            <li>
+                <span class="button-preview">
+                    <span class="key-button wider">Arrow Keys</span>
+                </span>
+                <span class="button-descr">
+                    change selected cell
+                </span>
+            </li>
+            <li>
+                <span class="button-preview">
+                    <span class="key-button">Enter</span>
+                </span>
+                <span class="button-descr">
+                    creates new event on selected cells / opens edit window for a selected event
+                </span>
+            </li>
+            <li>
+                <span class="button-preview">
+                    <span class="key-button">Tab</span>
+                </span>
+                <span class="button-descr">
+                    focuses next available event
+                </span>
+            </li>
+            <li>
+                <span class="button-preview">
+                    <span class="key-button leftAlign">Shift</span>
+                    +
+                    <span class="key-button">Tab</span>
+                </span>
+                <span class="button-descr">
+                    focuses previous available event
+                </span>
+            </li>
+            <li>
+                <span class="button-preview">
+                    <span class="key-button">1</span>
+                    -
+                    <span class="key-button">5</span>
+                </span>
+                <span class="button-descr">
+                    switch between available views
+                </span>
+            </li>
+            <li>
+                <span class="button-preview">
+                    <span class="key-button">Esc</span>
+                </span>
+                <span class="button-descr">
+                    closes the edit popup window
+                </span>
+            </li>
+            <li>
+                <span class="button-preview">
+                    <span class="key-button leftAlign">Shift</span>
+                    +
+                    <span class="key-button wider">Arrow Keys</span>
+                </span>
+                <span class="button-descr">
+                    select multiple cells
+                </span>
+            </li>
+        </ul>
+    </div>
+</div>

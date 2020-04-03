@@ -1,0 +1,196 @@
+<!--
+Html.Kendo().Scheduler<Kendo.Mvc.Examples.Models.Scheduler.MeetingViewModel>()
+    .Name("scheduler")
+    .Date(new DateTime(2013, 6, 13))
+    .StartTime(new DateTime(2013, 6, 13, 7, 00, 00))
+    .MajorTick(60)
+    .Views(views =>
+    {
+        views.TimelineView(timeline => timeline.EventHeight(50));
+        views.TimelineWeekView(timeline => timeline.EventHeight(50));
+        views.TimelineWorkWeekView(timeline => timeline.EventHeight(50));
+        views.TimelineMonthView(timeline =>
+        {
+            timeline.StartTime(new DateTime(2013, 6, 13, 00, 00, 00));
+            timeline.EndTime(new DateTime(2013, 6, 13, 00, 00, 00));
+            timeline.MajorTick(1440);
+            timeline.EventHeight(50);
+        });
+    })
+    .Timezone("Etc/UTC")
+    .Group(group => group.Resources("Rooms", "Attendees").Orientation(SchedulerGroupOrientation.Vertical))
+    .Resources(resource =>
+    {
+        resource.Add(m => m.RoomID)
+            .Title("Room")
+            .Name("Rooms")
+            .DataTextField("Text")
+            .DataValueField("Value")
+            .DataColorField("Color")
+            .BindTo(new[] {
+                    new { Text = "Meeting Room 101", Value = 1, Color = "#6eb3fa" },
+                    new { Text = "Meeting Room 201", Value = 2, Color = "#f58a8a" }
+            });
+        resource.Add(m => m.Attendees)
+            .Title("Attendees")
+            .Name("Attendees")
+            .Multiple(true)
+            .DataTextField("Text")
+            .DataValueField("Value")
+            .DataColorField("Color")
+            .BindTo(new[] {
+                    new { Text = "Alex", Value = 1, Color = "#f8a398" } ,
+                    new { Text = "Bob", Value = 2, Color = "#51a0ed" } ,
+                    new { Text = "Charlie", Value = 3, Color = "#56ca85" }
+            });
+    })
+    .DataSource(d => d
+            .Model(m =>
+            {
+                m.Id(f => f.MeetingID);
+                m.Field(f => f.Title).DefaultValue("No title");
+                m.RecurrenceId(f => f.RecurrenceID);
+                m.Field(f => f.Title).DefaultValue("No title");
+            })
+            .Read("Timeline_Read", "Scheduler")
+                .Create("Timeline_Create", "Scheduler")
+                .Destroy("Timeline_Destroy", "Scheduler")
+                .Update("Timeline_Update", "Scheduler")
+    )
+)
+-->
+<!-------------------------------------------------------------------------------->
+@using Kendo.Mvc.UI
+<div id="calendar">
+    <h1>Hello World</h1>
+    @(Html.Kendo().Scheduler<Kendo.Mvc.Examples.Models.Scheduler.MeetingViewModel>()
+    .Name("scheduler")
+    .Date(new DateTime(2013, 6, 13))
+    .StartTime(new DateTime(2013, 6, 13, 7, 00, 00))
+    .MajorTick(60)
+    .Views(views =>
+    {
+        views.TimelineWeekView(timeline => timeline.EventHeight(50));
+        views.TimelineWorkWeekView(timeline => timeline.EventHeight(50));
+        views.TimelineMonthView(timeline =>
+        {
+            timeline.StartTime(new DateTime(2013, 6, 13, 00, 00, 00));
+            timeline.EndTime(new DateTime(2013, 6, 13, 00, 00, 00));
+            timeline.MajorTick(1440);
+            timeline.EventHeight(50);
+        });
+        views.AgendaView();
+    })
+    .Timezone("Etc/UTC")
+    .Group(group => group.Resources("Rooms", "Attendees").Orientation(SchedulerGroupOrientation.Vertical))
+    .Resources(resource =>
+    {
+        resource.Add(m => m.RoomID)
+            .Title("Room")
+            .Name("Rooms")
+            .DataTextField("Text")
+            .DataValueField("Value")
+            .DataColorField("Color")
+            .BindTo(new[] {
+                    new { Text = "Meeting Room 101", Value = 1, Color = "#6eb3fa" },
+                    new { Text = "Meeting Room 201", Value = 2, Color = "#f58a8a" }
+            });
+        resource.Add(m => m.Attendees)
+            .Title("Attendees")
+            .Name("Attendees")
+            .Multiple(true)
+            .DataTextField("Text")
+            .DataValueField("Value")
+            .DataColorField("Color")
+            .BindTo(new[] {
+                    new { Text = "Alex", Value = 1, Color = "#f8a398" } ,
+                    new { Text = "Bob", Value = 2, Color = "#51a0ed" } ,
+                    new { Text = "Charlie", Value = 3, Color = "#56ca85" }
+            });
+    })
+    .DataSource(d => d
+            .Model(m =>
+            {
+                m.Id(f => f.MeetingID);
+                m.Field(f => f.Title).DefaultValue("No title");
+                m.RecurrenceId(f => f.RecurrenceID);
+                m.Field(f => f.Title).DefaultValue("No title");
+            })
+            .Read("Timeline_Read", "Scheduler")
+                .Create("Timeline_Create", "Scheduler")
+                .Destroy("Timeline_Destroy", "Scheduler")
+                .Update("Timeline_Update", "Scheduler")
+    )
+)
+    <h1>Hello End</h1>
+</div>
+
+
+
+
+<script type="text/javascript">function onError(e) {
+    this.cancelChanges();
+
+    var errorMessage = "";
+    if (e.errors) {
+        for (var error in e.errors) {
+            errorMessage += e.errors[error].errors[0] + " ";
+        }
+    }
+
+    alert(errorMessage);
+}
+
+    $(function () {
+        $("#people :checkbox").change(function (e) {
+            var checked = $.map($("#people :checked"), function (checkbox) {
+                return parseInt($(checkbox).val());
+            });
+
+            var filter = {
+                logic: "or",
+                filters: $.map(checked, function (value) {
+                    return {
+                        operator: "eq",
+                        field: "OwnerID",
+                        value: value
+                    };
+                })
+            };
+
+            var scheduler = $("#scheduler").data("kendoScheduler");
+
+            scheduler.dataSource.filter(filter);
+        });
+    })</script>
+
+<style>
+    #team-schedule {
+        background: url('@Url.Content("~/shared/web/scheduler/")team-schedule.png') transparent no-repeat;
+        height: 115px;
+        position: relative;
+    }
+
+    #people {
+        background: url('@Url.Content("~/shared/web/scheduler/")scheduler-people.png') no-repeat;
+        width: 345px;
+        height: 115px;
+        position: absolute;
+        right: 0;
+    }
+    #alex {
+        position: absolute;
+        left: 4px;
+        top: 81px;
+    }
+    #bob {
+        position: absolute;
+        left: 119px;
+        top: 81px;
+    }
+    #charlie {
+        position: absolute;
+        left: 234px;
+        top: 81px;
+    }
+</style>

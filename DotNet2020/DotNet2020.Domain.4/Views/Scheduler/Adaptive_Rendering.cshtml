@@ -1,0 +1,77 @@
+<div id="qr-wrap" style="text-align: center;">
+    <p>To test the Adaptive Rendering, scan the QR code or open this demo on a mobile device.</p>
+    @(Html.Kendo().QRCode()
+        .Name("qrMobile")
+        .HtmlAttributes(new { @style = "display: inline-block; margin-top: 15px;" })
+        .Border(b => b.Color("#000").Width(5))
+    )
+</div>
+<div id="scheduler-wrap" style="display: none;">
+    @(Html.Kendo().Scheduler<Kendo.Mvc.Examples.Models.Scheduler.MeetingViewModel>()
+        .Name("scheduler")
+        .Date(new DateTime(2013, 6, 13))
+        .StartTime(new DateTime(2013, 6, 13, 7, 00, 00))
+        .Height(450)
+        .Mobile(MobileMode.Auto)
+        .Views(views =>
+        {
+            views.DayView();
+            views.WeekView(weekView => weekView.Selected(true));
+            views.MonthView();
+            views.AgendaView();
+            views.TimelineView();
+        })
+        .Timezone("Etc/UTC")
+        .Resources(resource =>
+        {
+            resource.Add(m => m.RoomID)
+                .Title("Room")
+                .DataTextField("Text")
+                .DataValueField("Value")
+                .DataColorField("Color")
+                .BindTo(new[] {
+                    new { Text = "Meeting Room 101", Value = 1, Color = "#6eb3fa" },
+                    new { Text = "Meeting Room 201", Value = 2, Color = "#f58a8a" }
+                });
+            resource.Add(m => m.Attendees)
+                .Title("Attendees")
+                .Multiple(true)
+                .DataTextField("Text")
+                .DataValueField("Value")
+                .DataColorField("Color")
+                .BindTo(new[] {
+                    new { Text = "Alex", Value = 1, Color = "#f8a398" },
+                    new { Text = "Bob", Value = 2, Color = "#51a0ed" },
+                    new { Text = "Charlie", Value = 3, Color = "#56ca85" }
+                });
+        })
+        .DataSource(d => d
+            .Model(m =>
+            {
+                m.Id(f => f.MeetingID);
+                m.Field(f => f.Title).DefaultValue("No title");
+                m.RecurrenceId(f => f.RecurrenceID);
+                m.Field(f => f.Title).DefaultValue("No title");
+            })
+            .Read("AdaptiveRendering_Meetings_Read", "Scheduler")
+            .Create("AdaptiveRendering_Meetings_Create", "Scheduler")
+            .Destroy("AdaptiveRendering_Meetings_Destroy", "Scheduler")
+            .Update("AdaptiveRendering_Meetings_Update", "Scheduler")
+        )
+    )
+</div>
+
+<script>
+    $(document).ready(function () {
+        var isMobile = Boolean(kendo.support.mobileOS);
+        var qr = $("#qrMobile").getKendoQRCode();
+
+        qr.value(window.location.href);
+
+        if (isMobile) {
+            $("#qr-wrap").hide();
+            $("#scheduler-wrap").show();
+            $("#scheduler").data("kendoScheduler").resize();
+        }
+    });
+</script>

@@ -22,6 +22,10 @@ using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.Extensions.FileProviders;
 using DotNet2020.Domain._4.Controllers;
 using DotNet2020.Domain.Models;
+using Kendo.Mvc.Examples.Models;
+using Newtonsoft.Json.Serialization;
+using Kendo.Mvc.Examples.Extensions;
+using Microsoft.AspNetCore.Http;
 
 namespace DotNet2020
 {
@@ -44,14 +48,49 @@ namespace DotNet2020
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
             #region MAYAK
+            services.Configure<IISServerOptions>(options =>
+            {
+                options.AllowSynchronousIO = true;
+            });
+            services.Configure<CookiePolicyOptions>(options =>
+            {
+                // This lambda determines whether user consent for non-essential cookies is needed for a given request.
+                options.CheckConsentNeeded = context => true;
+                options.MinimumSameSitePolicy = SameSiteMode.None;
+            });
+            // // Add Entity Framework services to the services container.
+            services.AddDbContext<SampleEntitiesDataContext>();
+
+            var assembly = typeof(CalendarController).Assembly;
+
+            // Add MVC services to the services container.
+            services
+                .AddMvc(options => options.EnableEndpointRouting = false)
+                .AddApplicationPart(assembly)
+                .AddRazorRuntimeCompilation()
+                .SetCompatibilityVersion(CompatibilityVersion.Version_3_0)
+                .AddNewtonsoftJson(options => options.SerializerSettings.ContractResolver = new DefaultContractResolver());
+
+            services
+                .AddDistributedMemoryCache()
+                .AddSession(opts => {
+                    opts.Cookie.IsEssential = true;
+                });
+
+            // Add Kendo UI services to the services container
+            services.AddKendo();
+
+            // Add Demo database services to the services container
+            services.AddKendoDemo();
+            services.AddSingleton<ReportingConfigurationService>();
+
             services.AddDbContext<CalendarEntryContext>(options =>
                 options.UseNpgsql(
                     Configuration.GetConnectionString("CalendarEntryContext"), 
                     b => b.MigrationsAssembly("DotNet2020.Data")));
             #endregion
 
-            var assembly = typeof(CalendarController).Assembly;
-
+            
             services.Configure<Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation.MvcRazorRuntimeCompilationOptions>(
                 options =>
                 {
@@ -59,10 +98,13 @@ namespace DotNet2020
                         new EmbeddedFileProvider(assembly));
                 });
 
-            services
-                .AddMvc()
-                .AddApplicationPart(assembly)
-                .AddRazorRuntimeCompilation();
+            //services
+            //    .AddMvc()
+            //    .AddApplicationPart(assembly)
+            //    .AddRazorRuntimeCompilation()
+            //    //Mayak
+            //    .SetCompatibilityVersion(CompatibilityVersion.Version_3_0)
+            //    .AddNewtonsoftJson(options => options.SerializerSettings.ContractResolver = new DefaultContractResolver());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -88,12 +130,17 @@ namespace DotNet2020
 
             app.UseStaticFiles();
 
+            #region Mayak
+            app.UseSession();
+            app.UseCookiePolicy();
+            #endregion
+
             app.UseRouting();
 
             app.UseAuthentication();
             app.UseAuthorization();
-            
-            
+
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
@@ -101,6 +148,25 @@ namespace DotNet2020
                     pattern: "{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapRazorPages();
             });
+        }
+
+        public class ReportingConfigurationService
+        {
+            public IConfiguration Configuration { get; private set; }
+
+            public IWebHostEnvironment Environment { get; private set; }
+
+            public ReportingConfigurationService(IWebHostEnvironment environment)
+            {
+                this.Environment = environment;
+
+                var configFileName = System.IO.Path.Combine(environment.ContentRootPath, "appsettings.json");
+                var config = new ConfigurationBuilder()
+                                .AddJsonFile(configFileName, true)
+                                .Build();
+
+                this.Configuration = config;
+            }
         }
     }
 }

@@ -17,6 +17,16 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="3.1.2" />
+    <PackageReference Include="Telerik.UI.for.AspNet.Core.Trial" Version="2020.1.219" />
+    <PackageReference Include="Telerik.Zip.Trial" Version="2020.1.212" />
+    <PackageReference Include="Telerik.Documents.SpreadsheetStreaming.Trial" Version="2020.1.212" />
+    <PackageReference Include="Telerik.Documents.Spreadsheet.Trial" Version="2020.1.212" />
+    <PackageReference Include="Telerik.Documents.Spreadsheet.FormatProviders.Pdf.Trial" Version="2020.1.212" />
+    <PackageReference Include="Telerik.Documents.Spreadsheet.FormatProviders.OpenXml.Trial" Version="2020.1.212" />
+    <PackageReference Include="Telerik.Documents.Flow.Trial" Version="2020.1.212" />
+    <PackageReference Include="Telerik.Documents.Flow.FormatProviders.Pdf.Trial" Version="2020.1.212" />
+    <PackageReference Include="Telerik.Documents.Fixed.Trial" Version="2020.1.212" />
+    <PackageReference Include="Telerik.Documents.Core.Trial" Version="2020.1.212" />
   </ItemGroup>
 
 
