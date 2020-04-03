@@ -8,6 +8,7 @@ namespace DotNet2020.Domain._5.Entities
         public string Name { get; private set; }
         public string ProjectName { get; private set; }
         public string WorkAuthor { get; private set; }
+        public string IssueFilter { get; private set; }
 
         public DateTime PeriodFrom { get; private set; }
         public DateTime PeriodTo { get; private set; }
@@ -25,15 +26,13 @@ namespace DotNet2020.Domain._5.Entities
             Issues = issues;
         }
 
-        public Report(string name, string projectName, string workAuthor, 
+        public Report(string name, string projectName, string workAuthor, string issueFilter, 
             DateTime periodFrom, DateTime periodTo, List<IssueTimeInfo> issues)
         {
             if (String.IsNullOrEmpty(name))
                 throw new ArgumentException("Must be not empty!", "Name");
             if (String.IsNullOrEmpty(projectName))
                 throw new ArgumentException("Must be not empty!", "ProjectName");
-            if (String.IsNullOrEmpty(workAuthor))
-                throw new ArgumentException("Must be not empty!", "WorkAuthor");
             if (issues == null)
                 throw new ArgumentException("Must be not null!", "Issues");
             if (periodFrom > periodTo)
@@ -42,6 +41,7 @@ namespace DotNet2020.Domain._5.Entities
             Name = name;
             ProjectName = projectName;
             WorkAuthor = workAuthor;
+            IssueFilter = issueFilter;
             PeriodFrom = periodFrom;
             PeriodTo = periodTo;
             Issues = issues;
