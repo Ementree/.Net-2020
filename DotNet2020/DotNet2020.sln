@@ -11,9 +11,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNet2020.Data", "DotNet20
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotNet2020.Domain.4", "DotNet2020.Domain.4\DotNet2020.Domain.4.csproj", "{48950E6D-5322-4DAB-ABF7-9BD7F4559CA8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotNet2020.Domain.5", "DotNet2020.Domain.5\DotNet2020.Domain.5.csproj", "{08B8FDFE-ED75-4558-929A-7197A96E138A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotNet2020.Domain.5", "DotNet2020.Domain.5\DotNet2020.Domain.5.csproj", "{2F5EA9F5-FD47-41C8-8360-F920F4AF995D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotNet2020.Domain.6", "DotNet2020.Domain.6\DotNet2020.Domain.6.csproj", "{DFDB152C-02ED-41E5-A92B-3E30B01CD4C6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotNet2020.Domain.6", "DotNet2020.Domain.6\DotNet2020.Domain.6.csproj", "{62F43BCB-BCEE-46A4-98AB-C3DEF60BEA06}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -37,10 +37,10 @@ Global
 		{48950E6D-5322-4DAB-ABF7-9BD7F4559CA8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{48950E6D-5322-4DAB-ABF7-9BD7F4559CA8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{48950E6D-5322-4DAB-ABF7-9BD7F4559CA8}.Release|Any CPU.Build.0 = Release|Any CPU
-		{DFDB152C-02ED-41E5-A92B-3E30B01CD4C6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{DFDB152C-02ED-41E5-A92B-3E30B01CD4C6}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{DFDB152C-02ED-41E5-A92B-3E30B01CD4C6}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{DFDB152C-02ED-41E5-A92B-3E30B01CD4C6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{62F43BCB-BCEE-46A4-98AB-C3DEF60BEA06}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{62F43BCB-BCEE-46A4-98AB-C3DEF60BEA06}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{62F43BCB-BCEE-46A4-98AB-C3DEF60BEA06}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{62F43BCB-BCEE-46A4-98AB-C3DEF60BEA06}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

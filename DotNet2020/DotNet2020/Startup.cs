@@ -50,11 +50,12 @@ namespace DotNet2020
             #region MAYAK
             services.AddDbContext<CalendarEntryContext>(options =>
                 options.UseNpgsql(
-                    Configuration.GetConnectionString("CalendarEntryContext"), 
+                    Configuration.GetConnectionString("DefaultConnection"), 
                     b => b.MigrationsAssembly("DotNet2020.Data")));
-            var assembly = typeof(CalendarController).Assembly;
+            services.AddKendo();
             #endregion
 
+            var assembly = typeof(CalendarController).Assembly;
 
             services.Configure<Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation.MvcRazorRuntimeCompilationOptions>(
                 options =>
