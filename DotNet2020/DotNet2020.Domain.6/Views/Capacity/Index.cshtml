@@ -1,3 +1,71 @@
 @{ 
     Layout = "~/Views/Shared/_Layout6.cshtml";
 }
+
+<div class="table-scroll">
+    <table>
+        <thead class="thead-row">
+        <tr>
+            <td style="background-color: white"></td>
+
+            <td>Январь 20</td>
+            <td>Февраль 20</td>
+            <td>Март 20</td>
+
+            <td>Апрель 20</td>
+            <td>Май 20</td>
+            <td>Июнь 20</td>
+
+            <td>Июль 20</td>
+            <td>Август 20</td>
+            <td>Сентябрь 20</td>
+
+            <td>Октябрь 20</td>
+            <td>Ноябрь 20</td>
+            <td>Декабрь 20</td>
+
+        </tr>
+        </thead>
+        
+        <thead class="thead-col">
+        <tr>
+            <td>group</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>resource1</td>
+            <td>Сотрудник</td>
+        </tr>
+        <tr>
+            <td>resource2</td>
+            <td>Сотрудник</td>
+        </tr>
+        </thead>
+        
+        <tbody>
+        
+        <tr>
+            <td></td>
+            @for (int i = 0; i < 12; i++)
+            {
+                <td></td>
+            }
+        </tr>
+        <tr>
+            <td></td>
+            @for (int i = 0; i < 12; i++)
+            {
+                <td>100%</td>
+            }
+        </tr>
+        <tr>
+            <td></td>
+            @for (int i = 0; i < 12; i++)
+            {
+                <td>100%</td>
+            }
+        </tr>
+
+        </tbody>
+    </table>
+</div>

@@ -20,13 +20,11 @@ namespace DotNet2020.Domain._6.Controllers
         public IActionResult Index(int year = 2020)
         {
             var resources = context.Set<Resource>()
-                .Include(x => x.ResourceGroupType)
-                .ToList();
+                .Include(x => x.ResourceGroupType);
             var resourceCapacities = context.Set<ResourceCapacity>()
                 .Include(x => x.Resource)
                 .Include(x => x.Period)
-                .Where(x => x.Period.Start.Year == year)
-                .ToList();
+                .Where(x => x.Period.Start.Year == year);
 
             var viewModelList = new List<ViewModelCapacity>();
             var capacities = resourceCapacities
