@@ -5,6 +5,7 @@
 }
 <link rel="stylesheet" href="~/css/calendar.css">
 <div class="container">
+
     <div class="calendar">
         <h1>Календарь</h1>
         @(
@@ -12,6 +13,7 @@
             .Name("calendar")
             .Date(DateTime.Now)
             .StartTime(new DateTime(DateTime.Now.Year, 1, 1))
+            .MajorTick(1440)
             .Editable(false)
             .Height(600)
             .Views(views =>
@@ -19,6 +21,21 @@
                 views.TimelineMonthView();
                 views.TimelineWeekView();
                 views.AgendaView();
+            })
+            .Group(group => group.Resources("Users").Orientation(SchedulerGroupOrientation.Vertical))
+            .Resources(resource =>
+            {
+                resource.Add(m => m.UserName)
+                    .Title("UserName")
+                    .Name("Users")
+                    .DataTextField("Text")
+                    .DataColorField("Color")
+                    .BindTo(new[]
+                    {
+                        new {Text = "Иванов Иван Иванович", Color = "#6eb3fa"},
+                        new {Text = "Сидоров Петр Васильевич", Color = "#6eb3fa"},
+                        new {Text = "Аршинов Максим Вячеславович", Color = "#6eb3fa"}
+                    });
             })
             .DataSource(d => d
                 .Model(m =>
@@ -30,6 +47,7 @@
             )
         )
     </div>
+
     <h2 style="margin-top: 40px">Рекомендация для вас</h2>
     <div class="recommendations">
         <div class="block-rec">

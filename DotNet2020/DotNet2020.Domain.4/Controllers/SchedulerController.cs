@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using DotNet2020.Domain._4.Models;
+using Kendo.Mvc.Extensions;
 using Kendo.Mvc.UI;
 using Microsoft.AspNetCore.Mvc;
 
@@ -19,7 +20,9 @@ namespace DotNet2020.Domain.Controllers
                 new Vacation(DateTime.Now, new DateTime(2020, 4, 15), "Иванов Иван Иванович")
             };
 
-            return Json(resultList);
+            var result = Json(resultList.ToDataSourceResult(request));
+
+            return result;
         }
     }
 }

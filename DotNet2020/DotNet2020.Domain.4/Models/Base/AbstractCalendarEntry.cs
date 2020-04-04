@@ -16,10 +16,10 @@ namespace DotNet2020.Domain._4.Models
         public bool IsAllDay { get => true; set => throw new NotImplementedException(); }
         public DateTime Start { get => From; set => From = value; }
         public DateTime End { get => To; set => To = value; }
-        public string StartTimezone { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public string EndTimezone { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public string RecurrenceRule { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public string RecurrenceException { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public string StartTimezone { get => "UTC+3"; set => throw new NotImplementedException(); }
+        public string EndTimezone { get => "UTC+3"; set => throw new NotImplementedException(); }
+        public string RecurrenceRule { get => ""; set => throw new NotImplementedException(); }
+        public string RecurrenceException { get => ""; set => throw new NotImplementedException(); }
 
         public void ChangeDate(DateTime from, DateTime to)
         {
