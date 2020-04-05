@@ -1,4 +1,5 @@
 ﻿using System;
+using DotNet2020.Data;
 using Kendo.Mvc.UI;
 
 namespace DotNet2020.Domain._4.Models
@@ -9,6 +10,7 @@ namespace DotNet2020.Domain._4.Models
         public DateTime From { get; protected set; }
         public DateTime To { get; protected set; }
         public AbsenceType AbsenceType { get; set; }
+        public AppIdentityUser User { get; set; }
         public string UserName { get; set; }
 
 

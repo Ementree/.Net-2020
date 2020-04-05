@@ -3,11 +3,12 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using DotNet2020.Data;
     using Kendo.Mvc.UI;
 
     public class CalendarEventViewModel : ISchedulerEvent
     {
-        public int MeetingID { get; set; }
+        public int Id { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
 
@@ -43,33 +44,9 @@
         public string EndTimezone { get; set; }
 
         public string RecurrenceRule { get; set; }
-        public int? RecurrenceID { get; set; }
         public string RecurrenceException { get; set; }
-        public bool IsAllDay { get; set; }
-        public string Timezone { get; set; }
-        public int? RoomID { get; set; }
-        public IEnumerable<int> Attendees { get; set; }
-
-        //public Meeting ToEntity()
-        //{
-        //    var meeting = new Meeting
-        //    {
-        //        MeetingID = MeetingID,
-        //        Title = Title,
-        //        Start = Start,
-        //        StartTimezone = StartTimezone,
-        //        End = End,
-        //        EndTimezone = EndTimezone,
-        //        Description = Description,
-        //        IsAllDay = IsAllDay,
-        //        RecurrenceRule = RecurrenceRule,
-        //        RecurrenceException = RecurrenceException,
-        //        RecurrenceID = RecurrenceID,
-        //        RoomID = RoomID
-        //    };
-
-        //    return meeting;
-        //}
+        public bool IsAllDay { get => true ; set => throw new NotImplementedException(); }
+        public string UserEmail { get; set; }
     }
 
     public class Projection : ISchedulerEvent

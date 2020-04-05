@@ -22,50 +22,20 @@ namespace DotNet2020.Domain._4.Controllers
         {
             ViewBag.Recommendation = _dbContext.Recommendations.FirstOrDefault();
 
-            var resultList = new List<CalendarEventViewModel>()
-            {
-                new CalendarEventViewModel()
-                {
-                    MeetingID = 1,
-                    Title = "John Snow",
-                    Description = "Soft-Engeneer",
-                    Start = new DateTime(2020, 4, 6),
-                    StartTimezone = "Etc/UTC",
-                    End = new DateTime(2020, 4, 8),
-                    EndTimezone = "Etc/UTC",
-                    IsAllDay = true,
-                    RoomID = 1,
-                    Attendees = new List<int> {1, 2, 3}
-                },
-                new CalendarEventViewModel()
-                {
-                    MeetingID = 2,
-                    Title = "Sara James",
-                    Description = "Soft-Engeneer",
-                    Start = new DateTime(2020, 4, 6),
-                    StartTimezone = "Etc/UTC",
-                    End = new DateTime(2020, 4, 7),
-                    EndTimezone = "Etc/UTC",
-                    IsAllDay = true,
-                    RoomID = 2,
-                    Attendees = new List<int> {1, 2, 3}
-                },
-                new CalendarEventViewModel()
-                {
-                    MeetingID = 3,
-                    Title = "Susan Susan",
-                    Description = "Developer",
-                    Start = new DateTime(2020, 4, 6),
-                    StartTimezone = "Etc/UTC",
-                    End = new DateTime(2020, 4, 8),
-                    EndTimezone = "Etc/UTC",
-                    IsAllDay = true,
-                    RoomID = 3,
-                    Attendees = new List<int> {1, 2, 3}
-                }
-            };
+            var allVacations = _dbContext.CalendarEntries
+                .Where(m => m.AbsenceType == AbsenceType.Vacation)
+                .Select(m =>
+                    new CalendarEventViewModel()
+                    {
+                        Id = m.Id,
+                        Title = $"{m.User.FirstName} {m.User.LastName}",
+                        Start = m.From,
+                        End = m.To,
+                        UserEmail = m.User.Email
+                    }
+                ).ToList();
 
-            return View(resultList);
+            return View(allVacations);
         }
 
         [HttpGet]

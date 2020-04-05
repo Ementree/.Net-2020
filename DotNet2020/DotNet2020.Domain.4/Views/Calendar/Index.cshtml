@@ -19,7 +19,6 @@
             .Height(600)
             .Views(views =>
             {
-                views.MonthView();
                 views.TimelineMonthView();
                 views.TimelineWeekView();
                 views.AgendaView();
@@ -28,7 +27,7 @@
             .Group(group => group.Resources("Titles").Orientation(SchedulerGroupOrientation.Vertical))
             .Resources(resource =>
             {
-                resource.Add(m => m.RoomID)
+                resource.Add(m => m.UserEmail)
                     .Title("Title")
                     .Name("Titles")
                     .Multiple(true)
@@ -36,17 +35,15 @@
                     .DataValueField("Value")
                     .DataColorField("Color")
                     .BindTo(new[] {
-                        new { Text = "Meeting Room 101", Value = 1, Color = "#6eb3fa" },
-                        new { Text = "Meeting Room 201", Value = 2, Color = "#f58a8a" },
-                        new { Text = "Meeting Room 203", Value = 3, Color = "#f58a8a" }
+                        new { Text = "Иванов Иван Иванович", Value = 1, Color = "#6eb3fa" },
+                        new { Text = "Сидоров Петр Васильевич", Value = 2, Color = "#f58a8a" },
+                        new { Text = "Агустов Василий Петрович", Value = 3, Color = "#f58a8a" }
                     });
             })
             .DataSource(d => d
                 .Model(m =>
                 {
-                    m.Id(f => f.MeetingID);
-                    m.Field(f => f.Title).DefaultValue("No title");
-                    m.RecurrenceId(f => f.RecurrenceID);
+                    m.Id(f => f.Id);
                     m.Field(f => f.Title).DefaultValue("No title");
                 })
             )
