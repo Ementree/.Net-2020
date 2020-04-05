@@ -100,7 +100,9 @@ namespace DotNet2020.Domain._6.Controllers
                 });
             }
 
-            var ViewModelDict = new Dictionary<string, List<FunctionalCapacityItemsGroup>>(); ;
+            var ViewModelDict = new Dictionary<string, List<FunctionalCapacityItemsGroup>>();
+            var viewModel = new FunctionalCapacityViewModel();
+            var Periods = new List<Period>();
 
             foreach(var item in itemsGroupPreform)
             {
@@ -109,10 +111,18 @@ namespace DotNet2020.Domain._6.Controllers
                 if (!ViewModelDict.ContainsKey(groupName))
                     ViewModelDict[groupName] = new List<FunctionalCapacityItemsGroup>();
 
+                var periods = item.Items.Select(i => i.Period).ToList();
+
+                if (periods.Count > Periods.Count)
+                    Periods = periods;
+
                 ViewModelDict[groupName].Add(item);
             }
 
-            return View(ViewModelDict);
+            viewModel.Dict = ViewModelDict;
+            viewModel.Periods = Periods;
+
+            return View(viewModel);
         }
     }
 }

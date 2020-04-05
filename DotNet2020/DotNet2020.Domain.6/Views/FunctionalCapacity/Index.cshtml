@@ -1,3 +1,64 @@
+@using DotNet2020.Domain._6.Models.ViewModels
+
 @{ 
     Layout = "~/Views/Shared/_Layout6.cshtml";
 }
+
+@model FunctionalCapacityViewModel
+
+<table >
+    <thead>
+        <tr>
+            <th>
+                Группа ресурса
+            </th>
+            <th>
+                Ресурс
+            </th>         
+                @foreach (var p in Model.Periods)
+                {
+                    <th>
+                        <table>
+                            <tr>
+                                <td colspan="2">
+                                    @p.Start.ToShortDateString()
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    план,%
+                                </td>
+                                <td>
+                                    мощность,%
+                                </td>
+                            </tr>
+                        </table>
+                    </th>
+                }
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(var pair in Model.Dict)
+        {
+            <tr>
+                <th>
+                    @pair.Key
+                </th>
+                <th>
+                    <table >
+                        <tbody>
+                            @foreach (var items in pair.Value)
+                            {
+                                <tr>
+                                    <td>
+                                        @(items.Resource.FirstName + " " + items.Resource.LastName)
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </th>
+            </tr>
+        }
+    </tbody>
+</table>
