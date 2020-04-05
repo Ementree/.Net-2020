@@ -4,6 +4,7 @@
     Dictionary<int, int> projectsCapacity = new Dictionary<int, int>();
 }
 @using DotNet2020.Domain._6.Models;
+@using DotNet2020.Domain._6.ExtensionMethods;
 @model Dictionary<Project, Dictionary<Period, List<FunctioningCapacityResource>>>
 @foreach (var project in Model)
 {
@@ -11,95 +12,184 @@
     foreach (var periodPair in periods)
     {
         if (periodPair.Value.Count > maxResourceAmount)
+        {
             maxResourceAmount = periodPair.Value.Count;
+        }
     }
     projectsCapacity.Add(project.Key.Id, maxResourceAmount);
     maxResourceAmount = 0;
 }
-    <div class="table-scroll">
-        <table>
-            <thead class="thead-row">
-                <tr>
-                    <td colspan="2">Январь 20</td>
-                    <td colspan="2">Февраль 20</td>
-                    <td colspan="2">Март 20</td>
-
-                    <td colspan="2">Апрель 20</td>
-                    <td colspan="2">Май 20</td>
-                    <td colspan="2">Июнь 20</td>
-
-                    <td colspan="2">Июль 20</td>
-                    <td colspan="2">Август 20</td>
-                    <td colspan="2">Сентябрь 20</td>
-
-                    <td colspan="2">Октябрь 20</td>
-                    <td colspan="2">Ноябрь 20</td>
-                    <td colspan="2">Декабрь 20</td>
-
-                </tr>
-                <tr>
-                    @for (int i = 0; i < 12; i++)
-                    {
-                        <td>Ресурс</td>
-                        <td>загрузка</td>
-                    }
-                </tr>
-            </thead>
-            <thead class="thead-col">
-                @foreach (var project in Model)
+<div class="container-fluid mb-3 d-inline-flex">
+    <form asp-action="Index" class="m-2 p-2"> Год - 
+        <select name="year" onchange="this.form.submit()">
+            @for(int i = 0; i < 5; i++)
+            {
+                var year = DateTime.Now.Year + i;
+                if (ViewBag.Year == year)
                 {
-                    <tr><th><b>@(project.Key.Name)</b></th></tr>
-                    for (int i = 0; i < projectsCapacity[project.Key.Id] - 1; i++)
-                    {
-                        <tr><th>@(project.Key.Name)</th></tr>
-                    }
+                    <option value="@(year)" selected="selected">@(year)</option>
                 }
+                <option value="@(year)">@(year)</option>
+            }
+        </select>
+    </form>
+    <button type="button" class="btn btn-primary m-2" data-toggle="modal" data-target="#newProject">
+        Добавить проект
+    </button>
+    <button type="button" class="btn btn-primary m-2">Редактировать проект</button>
+    <button type="button" class="btn btn-primary m-2">Перенести проект в завершенные</button>
+    <div class="modal fade" id="newProject" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            ...
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary">Save changes</button>
+          </div>
+        </div>
+      </div>
+    </div>
+</div>
+<div class="wrapper">
+    <div class="scroller1">
+        <table class="scroll-table table">
+            <thead>
+            <tr>
+                <th class="sticky-col1" >
+                    Группа \ Проект \\ Месяц
+                </th>
+                @foreach (var period in Model.Values.FirstOrDefault().Keys)
+                {
+                    <td colspan="2">
+                        @($"{period.Start.GetMonthName()} {period.Start.Year}")
+                    </td>
+                }
+            </tr>
+            <tr>
+                <th class="sticky-col1">Tut chto-to</th>
+                @for (int i = 0; i < 12; i++)
+                {
+                    <td>Ресурс</td>
+                    <td>Загрузка</td>
+                }
+            </tr>
             </thead>
             <tbody>
-
-                @foreach (var project in Model)
-                {
-                    var periods = project.Value;
-                    
-                    for (int i = 0; i < projectsCapacity[project.Key.Id]; i++)
+            @foreach (var pair in Model)
+            {
+                var periods = pair.Value;
+                <tr>
+                    <td class="sticky-col1"><b>@(pair.Key.Name)</b></td>
+                    @foreach (var period in periods)
                     {
-                        <tr>
-                            @foreach (var periodPair in periods)
-                            {
-                                var period = periodPair.Value;
-                                if (period.Count - 1 >= i)
-                                {
-                                    <td>@period[i].Resource.FirstName</td>
-                                    <td>@period[i].FunctionCapacity</td>
-                                }
-                                else
-                                {
-                                    <td></td>
-                                    <td></td>
-                                }
-                            }
-                        </tr>
+                        <td>@(projectsCapacity[pair.Key.Id]*20)</td>
+                        <td>Summa</td>
                     }
+                </tr>
+                for (int i = 0; i < projectsCapacity[pair.Key.Id]; i++)
+                {
+                    <tr>
+                        <td class="sticky-col1">@i @(pair.Key.Name)</td>
+                        @foreach (var periodPair in periods)
+                        {
+                            var list = periodPair.Value;
+                            if (list.Count - 1 >= i)
+                            {
+                                <td>@list[i].Resource.FirstName</td>
+                                <td>@list[i].FunctionCapacity</td>
+                            }
+                            else
+                            {
+                                <td></td>
+                                <td></td>
+                            }
+                        }
+                    </tr>
                 }
-                @*<tr>
-                        <td>Res1</td>
-                        <td>20%</td>
-                        <td>Res1</td>
-                        <td>20%</td>
-                        <td>Res1</td>
-                        <td>20%</td>
-                    </tr>
-                    <tr>
-                        <td>85</td>
-                        <td>40</td>
-                        <td>42</td>
-                    </tr>
-                    <tr>
-                        <td>54</td>
-                        <td>4</td>
-                        <td>92</td>
-                    </tr>*@
-
+            }
             </tbody>
         </table>
     </div>
+</div>
+
+@*
+<div class="table-scroll">
+    <table>
+        <thead class="thead-row">
+            <tr>
+                @foreach (var period in Model.Values.FirstOrDefault().Keys)
+                {
+                    <td colspan="2">
+                        @($"{period.Start.GetMonthName()} {period.Start.Year}")
+                    </td>
+                }
+            </tr>
+            <tr>
+                @for (int i = 0; i < 12; i++)
+                {
+                    <td>Ресурс</td>
+                    <td>загрузка</td>
+                }
+            </tr>
+        </thead>
+        <thead class="thead-col" style="margin-top:3rem;">
+            <tr>
+                <th>
+                    Year -
+                    <form asp-action="Index" method="get">
+                        <select name="year">
+                            @for(int i = 1; i < 5; i++)
+                            {
+                            <option value="@(DateTime.Now.Year+i)">@(DateTime.Now.Year+i)</option>
+                            }
+                        </select>
+                        <button type="submit">Показать</button>
+                    </form>
+                </th>
+            </tr>
+            @foreach (var project in Model)
+            {
+                <tr><th><b>@(project.Key.Name)</b></th></tr>
+                for (int i = 0; i < projectsCapacity[project.Key.Id] - 1; i++)
+                {
+                    <tr><th>@(project.Key.Name)</th></tr>
+                }
+            }
+        </thead>
+        <tbody>
+            @foreach (var pair in Model)
+            {
+                var periods = pair.Value;
+
+                for (int i = 0; i < projectsCapacity[pair.Key.Id]; i++)
+                {
+                    <tr>
+                        @foreach (var periodPair in periods)
+                        {
+                            var period = periodPair.Value;
+                            if (period.Count - 1 >= i)
+                            {
+                                <td>@period[i].Resource.FirstName</td>
+                                <td>@period[i].FunctionCapacity</td>
+                            }
+                            else
+                            {
+                                <td></td>
+                                <td></td>
+                            }
+                        }
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
+*@

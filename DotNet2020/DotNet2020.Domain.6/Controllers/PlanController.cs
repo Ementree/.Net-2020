@@ -9,9 +9,11 @@ namespace DotNet2020.Domain._6.Controllers
 {
     public class PlanController : Controller
     {
+        private readonly int year;
         private static List<FunctioningCapacityResource> functioningCapacityResources;
         public PlanController()
         {
+            year = DateTime.Now.Year;
             var resType = new ResourceGroupType(1, "1", "worker");
             var resource1 = new Resource(1, "First", "1", resType.Id, resType);
             var resource2 = new Resource(2, "Second", "2", resType.Id, resType);
@@ -46,10 +48,12 @@ namespace DotNet2020.Domain._6.Controllers
                     .Add(new FunctioningCapacityResource(k++, proj2.Id, resource4.Id, 20, periods[i].Id, proj2, resource3, periods[i]));
             }
         }
-        public IActionResult Index()
+        public IActionResult Index(int year = 2020)
         {
-            var model = functioningCapacityResources
-                .GroupBy(f => f.ProjectId)
+            ViewBag.Year = year;
+            var yearResources = functioningCapacityResources
+                .Where(fres=>fres.Period.Start.Year==year);
+            var model = yearResources.GroupBy(f => f.ProjectId)
                 .ToDictionary(group=> group.ToList().FirstOrDefault().Project, group=>group.ToList())
                 .Select(pair =>
                 {
