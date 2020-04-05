@@ -3,7 +3,7 @@ using Kendo.Mvc.UI;
 
 namespace DotNet2020.Domain._4.Models
 {
-    public abstract class AbstractCalendarEntry : ISchedulerEvent
+    public abstract class AbstractCalendarEntry
     {
         public int Id { get; set; }
         public DateTime From { get; protected set; }
@@ -11,15 +11,6 @@ namespace DotNet2020.Domain._4.Models
         public AbsenceType AbsenceType { get; set; }
         public string UserName { get; set; }
 
-        public string Title { get => UserName; set => UserName = value; }
-        public string Description { get => ""; set => throw new NotImplementedException(); }
-        public bool IsAllDay { get => true; set => throw new NotImplementedException(); }
-        public DateTime Start { get => From; set => From = value; }
-        public DateTime End { get => To; set => To = value; }
-        public string StartTimezone { get => "UTC+3"; set => throw new NotImplementedException(); }
-        public string EndTimezone { get => "UTC+3"; set => throw new NotImplementedException(); }
-        public string RecurrenceRule { get => ""; set => throw new NotImplementedException(); }
-        public string RecurrenceException { get => ""; set => throw new NotImplementedException(); }
 
         public void ChangeDate(DateTime from, DateTime to)
         {

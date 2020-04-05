@@ -9,7 +9,7 @@
     <div class="calendar">
         <h1>Календарь</h1>
         @(
-        Html.Kendo().Scheduler<DotNet2020.Domain._4.Models.AbstractCalendarEntry>()
+        Html.Kendo().Scheduler<Kendo.Mvc.Examples.Models.Scheduler.Projection>()
             .Name("calendar")
             .Date(DateTime.Now)
             .StartTime(new DateTime(DateTime.Now.Year, 1, 1))
@@ -18,32 +18,38 @@
             .Height(600)
             .Views(views =>
             {
+                views.MonthView();
                 views.TimelineMonthView();
                 views.TimelineWeekView();
                 views.AgendaView();
             })
-            .Group(group => group.Resources("Users").Orientation(SchedulerGroupOrientation.Vertical))
+            .Group(group => group.Resources("Titles").Orientation(SchedulerGroupOrientation.Vertical))
             .Resources(resource =>
             {
-                resource.Add(m => m.UserName)
-                    .Title("UserName")
-                    .Name("Users")
+                resource.Add(m => m.Title)
+                    .Title("Title")
+                    .Name("Titles")
+                    .Multiple(true)
                     .DataTextField("Text")
+                    .DataValueField("Value")
                     .DataColorField("Color")
-                    .BindTo(new[]
-                    {
-                        new {Text = "Иванов Иван Иванович", Color = "#6eb3fa"},
-                        new {Text = "Сидоров Петр Васильевич", Color = "#6eb3fa"},
-                        new {Text = "Аршинов Максим Вячеславович", Color = "#6eb3fa"}
+                    .BindTo(new[] {
+                        new { Text = "Fast and furious 6", Value = "Fast and furious 6", Color = "green" },
+                        new { Text = "The Internship", Value = "The Internship", Color = "yellow" },
+                        new { Text = "The Perks of Being a Wallflower", Value = "The Perks of Being a Wallflower", Color = "black" }
                     });
             })
             .DataSource(d => d
                 .Model(m =>
                 {
-                    m.Id(f => f.Id);
-                    m.Field(f => f.Title).DefaultValue("No user");
+                    m.Id(f => f.Title);
+                    m.Field(f => f.Title).DefaultValue("No title");
                 })
+                .ServerOperation(true)
                 .Read("Read", "Scheduler")
+                .Create("Create", "Scheduler")
+                .Destroy("Destroy", "Scheduler")
+                .Update("Update", "Scheduler")
             )
         )
     </div>

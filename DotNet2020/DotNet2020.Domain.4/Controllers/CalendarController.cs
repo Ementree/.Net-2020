@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using DotNet2020.Domain._4.Models;
 using DotNet2020.Domain._4_Models;
+using Kendo.Mvc.Examples.Models.Scheduler;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DotNet2020.Domain._4.Controllers
@@ -19,6 +21,24 @@ namespace DotNet2020.Domain._4.Controllers
         public IActionResult Index()
         {
             ViewBag.Recommendation = _dbContext.Recommendations.FirstOrDefault();
+
+            List<Projection> cinemaSchedule = new List<Projection> {
+            new Projection {
+            Title = "Fast and furious 6",
+            Start = new DateTime(2013,6,13,17,00,00),
+            End= new DateTime(2013,6,13,18,30,00)
+            },
+            new Projection {
+            Title= "The Internship",
+            Start= new DateTime(2013,6,13,14,00,00),
+            End= new DateTime(2013,6,13,15,30,00)
+            },
+            new Projection {
+            Title = "The Perks of Being a Wallflower",
+            Start =  new DateTime(2013,6,13,16,00,00),
+            End =  new DateTime(2013,6,13,17,30,00)
+            }};
+
             return View();
         }
 
