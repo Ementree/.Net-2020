@@ -2,7 +2,7 @@
 
 namespace DotNet2020.Domain._5.Services.Interfaces
 {
-    interface ITimeTrackingService
+    public interface ITimeTrackingService
     {
         /// <summary>
         /// Get issues by project name and issue filter
