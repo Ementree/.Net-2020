@@ -3,8 +3,8 @@ using DotNet2020.Domain._6.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Collections.Generic;
-using System;
 using DotNet2020.Domain._6.Models.ViewModels;
+using DotNet2020.Domain._6.ExtensionMethods;
 
 namespace DotNet2020.Domain._6.Controllers
 {
@@ -22,6 +22,8 @@ namespace DotNet2020.Domain._6.Controllers
         {
             //System.InvalidOperationException: 'Client side GroupBy is not supported.' без ToList()
             //в EFCore3.0 не работает
+            var resourceType = _context.Set<ResourceGroupType>().ToList();
+
             var currentCapacityDict = _context.Set<ResourceCapacity>()
                 .Include(rc => rc.Period)
                 .Include(rc => rc.Resource)
@@ -40,8 +42,7 @@ namespace DotNet2020.Domain._6.Controllers
                     .Select(fcr => fcr.FunctionCapacity)
                         .Sum());
 
-            var viewModelPreformDict = new Dictionary<string,List<FunctionalCapacityLineViewModel>>();
-            var viewModelLineList = new List<FunctionalCapacityLineViewModel>();
+            var viewModelLineList = new List<FunctionalCapacityLine>();
 
             foreach(var p in currentCapacityDict)
             {
@@ -49,7 +50,7 @@ namespace DotNet2020.Domain._6.Controllers
 
                 foreach(var val in p.Value)
                 {
-                    var newLineViewModel = new FunctionalCapacityLineViewModel()
+                    var newLineViewModel = new FunctionalCapacityLine()
                     {
                         Resource = currentResource,
                         Period = val.period,
@@ -60,8 +61,6 @@ namespace DotNet2020.Domain._6.Controllers
                     viewModelLineList.Add(newLineViewModel);
                 }
             }
-
-
 
             foreach(var p in plannedCapacityDict)
             {
@@ -79,20 +78,41 @@ namespace DotNet2020.Domain._6.Controllers
                 }
             }
 
-            var test = viewModelLineList
+            var itemsGroup = viewModelLineList
                 .GroupBy(vm => vm.Resource)
                 .ToDictionary(vm => vm.Key, vm => vm
                    .Select(vm =>
-                       new
+                       new FunctionalCapacityItem
                        {
                            Period = vm.Period,
                            PlannedCapacity = vm.plannedCapacity,
                            CurrentCapacity = vm.currentCapacity
                        }).OrderBy(t => t.Period.Start)
                             .ToList());
-                
+            var itemsGroupPreform = new List<FunctionalCapacityItemsGroup>();
 
-            return View();
+            foreach(var itmesPair in itemsGroup)
+            {
+                itemsGroupPreform.Add(new FunctionalCapacityItemsGroup()
+                {
+                    Resource = itmesPair.Key,
+                    Items = itmesPair.Value
+                });
+            }
+
+            var ViewModelDict = new Dictionary<string, List<FunctionalCapacityItemsGroup>>(); ;
+
+            foreach(var item in itemsGroupPreform)
+            {
+                var groupName = item.Resource.ResourceGroupType.Group;
+
+                if (!ViewModelDict.ContainsKey(groupName))
+                    ViewModelDict[groupName] = new List<FunctionalCapacityItemsGroup>();
+
+                ViewModelDict[groupName].Add(item);
+            }
+
+            return View(ViewModelDict);
         }
     }
 }
