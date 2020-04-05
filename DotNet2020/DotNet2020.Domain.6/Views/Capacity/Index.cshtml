@@ -1,71 +1,87 @@
 @{ 
     Layout = "~/Views/Shared/_Layout6.cshtml";
+    var months = ViewBag.Months;
+    var maxLengthName = ViewBag.MaxLengthName;
 }
+@using DotNet2020.Domain._6.Models.ViewModels
+@model Dictionary<string, List<ViewModelCapacity>>
 
-<div class="table-scroll">
-    <table>
-        <thead class="thead-row">
-        <tr>
-            <td style="background-color: white"></td>
+<style>
 
-            <td>Январь 20</td>
-            <td>Февраль 20</td>
-            <td>Март 20</td>
+</style>
 
-            <td>Апрель 20</td>
-            <td>Май 20</td>
-            <td>Июнь 20</td>
-
-            <td>Июль 20</td>
-            <td>Август 20</td>
-            <td>Сентябрь 20</td>
-
-            <td>Октябрь 20</td>
-            <td>Ноябрь 20</td>
-            <td>Декабрь 20</td>
-
-        </tr>
-        </thead>
-        
-        <thead class="thead-col">
-        <tr>
-            <td>group</td>
-            <td></td>
-        </tr>
-        <tr>
-            <td>resource1</td>
-            <td>Сотрудник</td>
-        </tr>
-        <tr>
-            <td>resource2</td>
-            <td>Сотрудник</td>
-        </tr>
-        </thead>
-        
-        <tbody>
-        
-        <tr>
-            <td></td>
-            @for (int i = 0; i < 12; i++)
-            {
-                <td></td>
-            }
-        </tr>
-        <tr>
-            <td></td>
-            @for (int i = 0; i < 12; i++)
-            {
-                <td>100%</td>
-            }
-        </tr>
-        <tr>
-            <td></td>
-            @for (int i = 0; i < 12; i++)
-            {
-                <td>100%</td>
-            }
-        </tr>
-
-        </tbody>
-    </table>
-</div>
+<form asp-controller="Capacity" asp-action="Index">
+    <select name="year" id="" onchange="this.form.submit()" style="margin-bottom: 1vw">
+        <option value="2020">2020</option>
+        <option value="2021">2021</option>
+    </select>
+    
+    <div class="wrapper">
+        <div class="scroller2" style="margin-left: 30%;">
+            <table class="scroll-table table" style="border-bottom: 1px solid #dee2e6">
+                <thead>
+                <tr>
+                    <th class="sticky-col1" style="width: 20%; border-left: 1px solid #dee2e6">
+                        Ресурс
+                    </th>
+                    <th class="sticky-col2" style="width: 10%; margin-left: 20%">
+                        Тип ресурса
+                    </th>
+                    @for (var i = 0; i < 12; i++)
+                    {
+                        <th style="border-right: 1px solid #dee2e6;">
+                            @months[i]
+                        </th>
+                    }
+                </tr>
+                </thead>
+                
+                <tbody>
+                @foreach (var resources in Model)
+                {
+                    <tr>
+                        <th class="sticky-col1" style="width: 20%; border-left: 1px solid #dee2e6" height="45px">
+                            @resources.Key
+                        </th>
+                        <td class="sticky-col2" height="45px" style="width: 10%; margin-left: 20%">
+                            
+                        </td>
+                        @for (var i = 0; i < 12; i++)
+                        {
+                            <td height="45px" style="border-right: 1px solid #dee2e6;">
+                                
+                            </td>
+                        }
+                    </tr>
+                    @foreach (var resource in resources.Value)
+                    {
+                        <tr>
+                            <td class="sticky-col1" style="width: 20%; border-left: 1px solid #dee2e6; border-bottom: 1px solid #dee2e6">
+                                @resource.Name
+                            </td>
+                            <td class="sticky-col2" style="width: 10%; margin-left: 20%; border-bottom: 1px solid #dee2e6">
+                                @resource.Type
+                            </td>
+                            @for (int i = 1; i < 13; i++)
+                            {
+                                if (resource.Capacity.ContainsKey(i))
+                                {
+                                    <td height="45px" style="border-right: 1px solid #dee2e6; text-align: center">
+                                        @resource.Capacity[i]%
+                                    </td>
+                                }
+                                else
+                                {
+                                    <td style="border-right: 1px solid #dee2e6;" height="45px">
+                                        
+                                    </td>
+                                }
+                            }
+                        </tr>
+                    }
+                }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</form>
