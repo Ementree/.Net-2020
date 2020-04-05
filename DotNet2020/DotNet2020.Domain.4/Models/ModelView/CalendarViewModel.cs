@@ -5,7 +5,7 @@
     using System.Linq;
     using Kendo.Mvc.UI;
 
-    public class MeetingViewModel : ISchedulerEvent
+    public class CalendarEventViewModel : ISchedulerEvent
     {
         public int MeetingID { get; set; }
         public string Title { get; set; }

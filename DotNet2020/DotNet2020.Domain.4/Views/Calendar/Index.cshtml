@@ -1,4 +1,5 @@
 ﻿@using Kendo.Mvc.UI
+@model List<Kendo.Mvc.Examples.Models.Scheduler.CalendarEventViewModel>
 
 @{
     ViewData["Title"] = "Calendar";
@@ -9,7 +10,7 @@
     <div class="calendar">
         <h1>Календарь</h1>
         @(
-        Html.Kendo().Scheduler<Kendo.Mvc.Examples.Models.Scheduler.Projection>()
+        Html.Kendo().Scheduler<Kendo.Mvc.Examples.Models.Scheduler.CalendarEventViewModel>()
             .Name("calendar")
             .Date(DateTime.Now)
             .StartTime(new DateTime(DateTime.Now.Year, 1, 1))
@@ -23,10 +24,11 @@
                 views.TimelineWeekView();
                 views.AgendaView();
             })
+            .BindTo(Model)
             .Group(group => group.Resources("Titles").Orientation(SchedulerGroupOrientation.Vertical))
             .Resources(resource =>
             {
-                resource.Add(m => m.Title)
+                resource.Add(m => m.RoomID)
                     .Title("Title")
                     .Name("Titles")
                     .Multiple(true)
@@ -34,22 +36,19 @@
                     .DataValueField("Value")
                     .DataColorField("Color")
                     .BindTo(new[] {
-                        new { Text = "Fast and furious 6", Value = "Fast and furious 6", Color = "green" },
-                        new { Text = "The Internship", Value = "The Internship", Color = "yellow" },
-                        new { Text = "The Perks of Being a Wallflower", Value = "The Perks of Being a Wallflower", Color = "black" }
+                        new { Text = "Meeting Room 101", Value = 1, Color = "#6eb3fa" },
+                        new { Text = "Meeting Room 201", Value = 2, Color = "#f58a8a" },
+                        new { Text = "Meeting Room 203", Value = 3, Color = "#f58a8a" }
                     });
             })
             .DataSource(d => d
                 .Model(m =>
                 {
-                    m.Id(f => f.Title);
+                    m.Id(f => f.MeetingID);
+                    m.Field(f => f.Title).DefaultValue("No title");
+                    m.RecurrenceId(f => f.RecurrenceID);
                     m.Field(f => f.Title).DefaultValue("No title");
                 })
-                .ServerOperation(true)
-                .Read("Read", "Scheduler")
-                .Create("Create", "Scheduler")
-                .Destroy("Destroy", "Scheduler")
-                .Update("Update", "Scheduler")
             )
         )
     </div>
