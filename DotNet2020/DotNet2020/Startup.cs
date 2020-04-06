@@ -20,6 +20,8 @@ using DotNet2020.Domain.Core.Controllers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.Extensions.FileProviders;
+using DotNet2020.Domain._4.Controllers;
+using DotNet2020.Domain._4.Models;
 using DotNet2020.Domain._6.Controllers;
 using Microsoft.AspNetCore.Http;
 
@@ -47,13 +49,22 @@ namespace DotNet2020
             services.AddScoped<DbContext, ApplicationDbContext>();
 
 
+            #region MAYAK
+            services.AddDbContext<CalendarEntryContext>(options =>
+                options.UseNpgsql(
+                    Configuration.GetConnectionString("DefaultConnection"), 
+                    b => b.MigrationsAssembly("DotNet2020.Data")));
+            #endregion
 
+            var domain4Assembly = typeof(CalendarController).Assembly;
             var assembly = typeof(DemoController).Assembly;            
             var domain6Assembly = typeof(PlanController).Assembly;
 
             services.Configure<Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation.MvcRazorRuntimeCompilationOptions>(
                 options =>
                 {
+                    options.FileProviders.Add(
+                        new EmbeddedFileProvider(domain4Assembly));
                     options.FileProviders.Add(
                         new EmbeddedFileProvider(domain6Assembly));
                     options.FileProviders.Add(

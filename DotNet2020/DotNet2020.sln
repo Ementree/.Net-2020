@@ -13,6 +13,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNet2020.Domain.5", "DotN
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNet2020.Domain.6", "DotNet2020.Domain.6\DotNet2020.Domain.6.csproj", "{FB318EB7-F6F5-45DB-9C12-1D480E4956BA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotNet2020.Domain.4", "DotNet2020.Domain.4\DotNet2020.Domain.4.csproj", "{48950E6D-5322-4DAB-ABF7-9BD7F4559CA8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -31,6 +33,10 @@ Global
 		{545CEA97-14AD-400D-B714-0987F796FEF2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{545CEA97-14AD-400D-B714-0987F796FEF2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{545CEA97-14AD-400D-B714-0987F796FEF2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{48950E6D-5322-4DAB-ABF7-9BD7F4559CA8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{48950E6D-5322-4DAB-ABF7-9BD7F4559CA8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{48950E6D-5322-4DAB-ABF7-9BD7F4559CA8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{48950E6D-5322-4DAB-ABF7-9BD7F4559CA8}.Release|Any CPU.Build.0 = Release|Any CPU
 		{B3300E1D-032C-472F-8C00-10F9CE3F0E6C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B3300E1D-032C-472F-8C00-10F9CE3F0E6C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B3300E1D-032C-472F-8C00-10F9CE3F0E6C}.Release|Any CPU.ActiveCfg = Release|Any CPU

@@ -1,0 +1,20 @@
+﻿@{
+    ViewData["Title"] = "Добавить Праздник";
+}
+@model DotNet2020.Domain._4.Models.Holiday
+<div class="text-center">
+    <h1 class="display-4">Добавьте новый праздничный день</h1>
+</div>
+
+<div>
+    <form method="post">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <label asp-for="Name">Название праздника:</label><br />
+        <input type="text" asp-for="Name" placeholder="Введите название..." /><br />
+        <span asp-validation-for="Name" class="text-danger"></span>
+        <label asp-for="Date">Дата праздника:</label><br />
+        <input type="date" asp-for="Date" />
+        <p><span asp-validation-for="Name" class="text-danger"></span></p>
+        <p><input type="submit" value="Добавить праздник" /></p>
+    </form>
+</div>
