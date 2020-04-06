@@ -3,15 +3,17 @@ using System;
 using DotNet2020.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace DotNet2020.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200330132148_Domain.6.ToPostgreSQL")]
+    partial class Domain6ToPostgreSQL
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -242,12 +244,12 @@ namespace DotNet2020.Data.Migrations
                     b.Property<string>("LastName")
                         .HasColumnType("text");
 
-                    b.Property<int>("ResourceGroupTypeId")
+                    b.Property<int>("ResourceTypeId")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ResourceGroupTypeId");
+                    b.HasIndex("ResourceTypeId");
 
                     b.ToTable("Resources");
                 });
@@ -277,22 +279,19 @@ namespace DotNet2020.Data.Migrations
                     b.ToTable("ResourceCapacities");
                 });
 
-            modelBuilder.Entity("DotNet2020.Domain._6.Models.ResourceGroupType", b =>
+            modelBuilder.Entity("DotNet2020.Domain._6.Models.ResourceType", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
-                    b.Property<string>("Group")
-                        .HasColumnType("text");
-
                     b.Property<string>("Type")
                         .HasColumnType("text");
 
                     b.HasKey("Id");
 
-                    b.ToTable("ResourceGroupsTypes");
+                    b.ToTable("ResourceTypes");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -448,9 +447,9 @@ namespace DotNet2020.Data.Migrations
 
             modelBuilder.Entity("DotNet2020.Domain._6.Models.Resource", b =>
                 {
-                    b.HasOne("DotNet2020.Domain._6.Models.ResourceGroupType", "ResourceGroupType")
+                    b.HasOne("DotNet2020.Domain._6.Models.ResourceType", "ResourceType")
                         .WithMany()
-                        .HasForeignKey("ResourceGroupTypeId")
+                        .HasForeignKey("ResourceTypeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

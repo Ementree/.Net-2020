@@ -22,6 +22,8 @@ using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.Extensions.FileProviders;
 using DotNet2020.Domain._4.Controllers;
 using DotNet2020.Domain._4.Models;
+using DotNet2020.Domain._6.Controllers;
+using Microsoft.AspNetCore.Http;
 
 namespace DotNet2020
 {
@@ -38,9 +40,9 @@ namespace DotNet2020
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(
+                options.UseNpgsql(
                     Configuration.GetConnectionString("DefaultConnection")));
-            services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+            services.AddDefaultIdentity<AppIdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddControllersWithViews();
             services.AddRazorPages();
@@ -55,11 +57,17 @@ namespace DotNet2020
             services.AddKendo();
             #endregion
 
-            var assembly = typeof(CalendarController).Assembly;
+            var domain4Assembly = typeof(CalendarController).Assembly;
+            var assembly = typeof(DemoController).Assembly;            
+            var domain6Assembly = typeof(PlanController).Assembly;
 
             services.Configure<Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation.MvcRazorRuntimeCompilationOptions>(
                 options =>
                 {
+                    options.FileProviders.Add(
+                        new EmbeddedFileProvider(domain4Assembly));
+                    options.FileProviders.Add(
+                        new EmbeddedFileProvider(domain6Assembly));
                     options.FileProviders.Add(
                         new EmbeddedFileProvider(assembly));
                 });
@@ -92,6 +100,13 @@ namespace DotNet2020
             
 
             app.UseStaticFiles();
+            app.UseStaticFiles(new StaticFileOptions()
+            {
+                
+                FileProvider = new PhysicalFileProvider(
+                Path.Combine(env.ContentRootPath + ".Domain.6", "wwwroot6")),
+                RequestPath = "/wwwroot6"
+            });
 
             app.UseRouting();
 
