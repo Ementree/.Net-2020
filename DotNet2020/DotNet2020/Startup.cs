@@ -52,7 +52,7 @@ namespace DotNet2020
             #region MAYAK
             services.AddDbContext<CalendarEntryContext>(options =>
                 options.UseNpgsql(
-                    Configuration.GetConnectionString("CalendarEntryContext"), 
+                    Configuration.GetConnectionString("DefaultConnection"), 
                     b => b.MigrationsAssembly("DotNet2020.Data")));
             #endregion
 
