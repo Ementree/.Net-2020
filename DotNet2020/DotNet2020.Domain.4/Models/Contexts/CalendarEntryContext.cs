@@ -13,6 +13,8 @@ namespace DotNet2020.Domain._4.Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
+
             modelBuilder.Entity<AbstractCalendarEntry>()
                 .HasDiscriminator<AbsenceType>(nameof(AbstractCalendarEntry.AbsenceType))
                 .HasValue<Vacation>

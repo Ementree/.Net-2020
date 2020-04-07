@@ -11,7 +11,6 @@ namespace DotNet2020.Domain._4.Models
         public DateTime To { get; protected set; }
         public AbsenceType AbsenceType { get; set; }
         public AppIdentityUser User { get; set; }
-        public string UserName { get; set; }
 
 
         public void ChangeDate(DateTime from, DateTime to)

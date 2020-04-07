@@ -6,6 +6,7 @@ using DotNet2020.Domain._4_Models;
 using DotNet2020.Domain.Models.ModelView;
 using Kendo.Mvc.Examples.Models.Scheduler;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace DotNet2020.Domain._4.Controllers
 {
@@ -23,8 +24,9 @@ namespace DotNet2020.Domain._4.Controllers
         {
             ViewBag.Recommendation = _dbContext.Recommendations.FirstOrDefault();
 
-            var allVacations = _dbContext.CalendarEntries
-                .Where(m => m.AbsenceType == AbsenceType.Vacation)
+            var allVacations = _dbContext.Set<Vacation>()
+                .Include(v => v.User)
+                .ToList()
                 .Select(m =>
                     new CalendarEventViewModel()
                     {
@@ -39,7 +41,7 @@ namespace DotNet2020.Domain._4.Controllers
             var users = _dbContext.Users.Select(u =>
                 new UserViewModel()
                 {
-                    Name = $"{u.FirstName} {u.LastName}",
+                    Name = $"{u.FirstName} {u.LastName}" == " "? u.Email : $"{u.FirstName} {u.LastName}",
                     Email = u.Email,
                     Color = "#6eb3fa"
                 }).ToList();
@@ -64,7 +66,8 @@ namespace DotNet2020.Domain._4.Controllers
                 return RedirectToAction("AddEvent");
             }
 
-            var sickDay = new SickDay(eventVM.From, eventVM.From, HttpContext.User.Identity.Name);
+            var sickDay = new SickDay(eventVM.From, eventVM.From,
+                _dbContext.Users.FirstOrDefault(u => u.Email == HttpContext.User.Identity.Name));
             _dbContext.CalendarEntries.Add(sickDay);
             _dbContext.SaveChanges();
             return RedirectToAction("Index");
@@ -85,7 +88,8 @@ namespace DotNet2020.Domain._4.Controllers
                 return RedirectToAction("AddEvent");
             }
 
-            var vacation = new Vacation(eventVM.From, eventVM.To, HttpContext.User.Identity.Name);
+            var vacation = new Vacation(eventVM.From, eventVM.To,
+                _dbContext.Users.FirstOrDefault(u => u.Email == HttpContext.User.Identity.Name));
             _dbContext.CalendarEntries.Add(vacation);
             _dbContext.SaveChanges();
             return RedirectToAction("Index");
@@ -106,7 +110,8 @@ namespace DotNet2020.Domain._4.Controllers
                 return RedirectToAction("AddEvent");
             }
 
-            var illness = new Illness(eventVM.From, eventVM.To, HttpContext.User.Identity.Name);
+            var illness = new Illness(eventVM.From, eventVM.To,
+                _dbContext.Users.FirstOrDefault(u => u.Email == HttpContext.User.Identity.Name));
             _dbContext.CalendarEntries.Add(illness);
             _dbContext.SaveChanges();
             return RedirectToAction("Index");
