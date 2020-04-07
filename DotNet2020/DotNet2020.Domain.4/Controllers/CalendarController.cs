@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using DotNet2020.Domain._4.Models;
 using DotNet2020.Domain._4_Models;
+using DotNet2020.Domain.Models.ModelView;
 using Kendo.Mvc.Examples.Models.Scheduler;
 using Microsoft.AspNetCore.Mvc;
 
@@ -35,7 +36,15 @@ namespace DotNet2020.Domain._4.Controllers
                     }
                 ).ToList();
 
-            return View(allVacations);
+            var users = _dbContext.Users.Select(u =>
+                new UserViewModel()
+                {
+                    Name = $"{u.FirstName} {u.LastName}",
+                    Email = u.Email,
+                    Color = "#6eb3fa"
+                }).ToList();
+
+            return View(new IndexViewModel() { Events = allVacations, Users = users });
         }
 
         [HttpGet]

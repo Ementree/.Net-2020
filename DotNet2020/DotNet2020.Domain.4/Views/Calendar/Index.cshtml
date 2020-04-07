@@ -1,5 +1,6 @@
 ﻿@using Kendo.Mvc.UI
-@model List<Kendo.Mvc.Examples.Models.Scheduler.CalendarEventViewModel>
+@using DotNet2020.Domain.Models.ModelView
+@model IndexViewModel
 
 @{
     ViewData["Title"] = "Calendar";
@@ -23,7 +24,7 @@
                 views.TimelineWeekView();
                 views.AgendaView();
             })
-            .BindTo(Model)
+            .BindTo(Model.Events)
             .Group(group => group.Resources("Titles").Orientation(SchedulerGroupOrientation.Vertical))
             .Resources(resource =>
             {
@@ -31,14 +32,10 @@
                     .Title("Title")
                     .Name("Titles")
                     .Multiple(true)
-                    .DataTextField("Text")
-                    .DataValueField("Value")
+                    .DataTextField("Name")
+                    .DataValueField("Email")
                     .DataColorField("Color")
-                    .BindTo(new[] {
-                        new { Text = "Иванов Иван Иванович", Value = "@gmail.com", Color = "#6eb3fa" },
-                        new { Text = "Сидоров Петр Васильевич", Value = "", Color = "#f58a8a" },
-                        new { Text = "Агустов Василий Петрович", Value = "", Color = "#f58a8a" }
-                    });
+                    .BindTo(Model.Users);
             })
             .DataSource(d => d
                 .Model(m =>
