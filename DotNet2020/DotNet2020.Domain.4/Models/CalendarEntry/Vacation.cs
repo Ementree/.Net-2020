@@ -8,6 +8,8 @@ namespace DotNet2020.Domain._4.Models
         public bool IsApproved { get; private set; }
         public bool IsPaid { get; private set; }
 
+        protected Vacation() { }
+
         public Vacation(DateTime from, DateTime to, AppIdentityUser user)
         {
             From = from;

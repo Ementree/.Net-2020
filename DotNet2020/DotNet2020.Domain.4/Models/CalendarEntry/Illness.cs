@@ -7,6 +7,8 @@ namespace DotNet2020.Domain._4.Models
     {
         public bool IsApproved { get; private set; }
 
+        protected Illness() { }
+
         public Illness(DateTime from, DateTime to, AppIdentityUser user)
         {
             From = from;

@@ -10,6 +10,7 @@ namespace DotNet2020.Domain._4.Models
         public DateTime From { get; protected set; }
         public DateTime To { get; protected set; }
         public AbsenceType AbsenceType { get; set; }
+        public string UserId { get; set; }
         public AppIdentityUser User { get; set; }
 
 
