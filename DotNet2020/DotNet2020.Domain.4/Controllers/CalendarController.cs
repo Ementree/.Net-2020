@@ -2,6 +2,7 @@
 using System.Linq;
 using DotNet2020.Domain._4.Models;
 using DotNet2020.Domain._4_Models;
+using DotNet2020.Domain.Filters;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DotNet2020.Domain._4.Controllers
@@ -126,11 +127,9 @@ namespace DotNet2020.Domain._4.Controllers
         }
 
         [HttpPost]
+        [ValidationFilter]
         public IActionResult AddHoliday(Holiday holiday)
         {
-            if (!ModelState.IsValid)
-                return View(holiday);
-
             _dbContext.Holidays.Add(holiday);
             _dbContext.SaveChanges();
             return RedirectToActionPermanent("Admin");
@@ -143,6 +142,7 @@ namespace DotNet2020.Domain._4.Controllers
         }
 
         [HttpPost]
+        [ValidationFilter]
         public IActionResult UpdateRecommendation(Recommendation recommendation)
         {
             if (ModelState.IsValid)
