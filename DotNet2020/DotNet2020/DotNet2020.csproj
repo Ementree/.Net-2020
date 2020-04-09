@@ -6,7 +6,7 @@
   </PropertyGroup>
 
 
-  <ItemGroup>
+   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.1.2" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.2" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="3.1.2" />
@@ -20,6 +20,11 @@
   </ItemGroup>
 
 
+   <ItemGroup>
+    <Folder Include="Models\" />
+  </ItemGroup>
+
+
   <ItemGroup>
     <ProjectReference Include="..\DotNet2020.Data\DotNet2020.Data.csproj" />
     <ProjectReference Include="..\DotNet2020.Domain.6\DotNet2020.Domain.6.csproj" />
@@ -29,4 +34,8 @@
     </ProjectReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\DotNet2020.Domain.3\DotNet2020.Domain.3.csproj" />
+  </ItemGroup>
+  
 </Project>

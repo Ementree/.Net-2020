@@ -1,0 +1,32 @@
+﻿@model DotNet2020.Domain._3.Models.SpecificWorkerModel
+
+<form method="post">
+    <p>ФИО</p>
+    <input type="text" required name="Name"/>
+    <p>Должность</p>
+    <input type="text" required name="Position"/>
+    <p>Оклад</p>
+    <input type="number" required name="Salary" step="0.01"/>
+    <p>Премия</p>
+    <input type="number" required name="Bonus" step="0.01"/>
+    <p>Комментарий</p>
+    <input type="text" required name="Commentary"/>
+    <p>Компетенции</p>
+    @if (ViewBag.Competences != null)
+    {
+        @foreach (var element in ViewBag.Competences)
+        {
+            <p><input type="checkbox" value="@element.Id" name="competences"> @element.Competence</p>
+        }
+    }
+    else
+    {
+        <p>Компетенции еще не были добавлены!</p>   
+    }
+    <p>Предыдущие места работы</p>
+    <input type="text" required name="PreviousWorkPlaces"/>
+    <p>Общий стаж</p>
+    <input type="text" required name="Experience"/>
+    <br/>
+    <input type="submit" value="Добавить"/>
+</form>
