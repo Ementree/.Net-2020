@@ -1,3 +1,47 @@
-@{ 
+@{
     Layout = "~/Views/Shared/_Layout6.cshtml";
 }
+@using DotNet2020.Domain._6.Controllers
+@model Absences
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>Untitled</title>
+    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+
+<body>
+    <div class="table-responsive table-bordered border-success" style="opacity: 1;">
+        <table class="table table-striped table-bordered">
+            <thead>
+                <tr>
+                    <th></th>
+                    @foreach (var period in Model.Periods)
+                    {
+                        <td>@period.Start</td>
+                    }
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var resource in Model.ResourceAbsences)
+                {
+                    <tr>
+                        <td>@resource.Key</td>
+                        @foreach (var absence in resource.Value)
+                        {
+                            <td>@absence</td>
+                        }
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <script src="assets/js/jquery.min.js"></script>
+    <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+</body>
+
+</html>
