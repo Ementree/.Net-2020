@@ -33,23 +33,23 @@ namespace DotNet2020.Domain._6.Controllers
                 .GroupBy(res => res.Resource.Id)
                 .Select(x => new
                 {
-                    key = x.Key,
-                    value = x.ToDictionary(y => y.Period.Start.Month, y => y.Capacity)
+                    resourceId = x.Key,
+                    capacity = x.ToDictionary(y => y.Period.Start.Month, y => y.Capacity)
                 })
-                .ToDictionary(pair => pair.key, pair => pair.value);
+                .ToDictionary(pair => pair.resourceId, pair => pair.capacity);
             foreach (var resource in resources)
             {
-                var capacityDic = new Dictionary<int, int>();
+                var capacity = new Dictionary<int, int>();
                 if (capacities.ContainsKey(resource.Id))
                 {
-                    capacityDic = capacities[resource.Id];
+                    capacity = capacities[resource.Id];
                 }
                 viewModelList.Add(new ViewModelCapacity(
                     resource.Id, 
                     resource.FirstName + ' ' + resource.LastName, 
                     resource.ResourceGroupType.Type, 
                     resource.ResourceGroupType.Group,
-                    capacityDic));
+                    capacity));
             }
 
             var model = new Dictionary<string, List<ViewModelCapacity>>();
@@ -66,21 +66,9 @@ namespace DotNet2020.Domain._6.Controllers
             }
 
             ViewBag.Months = GetMonths(year);
-            ViewBag.MaxLengthName = GetMaxLengthName(model);
             return View(model);
         }
 
-        private int GetMaxLengthName(Dictionary<string, List<ViewModelCapacity>> model)
-        {
-            var max = 0;
-            foreach (var resources in model)
-            {
-                var tmax = resources.Value.Max(x => x.Name.Length);
-                if (tmax > max) max = tmax;
-            }
-
-            return max;
-        }
         private List<string> GetMonths(int year)
         {
             var months = new List<string>()
