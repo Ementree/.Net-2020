@@ -15,6 +15,9 @@ namespace DotNet2020.Domain._3.Models
         public string NextMoves { get; set; }
         public string Feedback { get; set; }
         public DateTime Date { get; set; }
+        
+        public List<long> TestedCompetences { get; set; }
+        
         public List<AttestationAnswerModel> AttestationAnswer { get; set; }
     }
 }

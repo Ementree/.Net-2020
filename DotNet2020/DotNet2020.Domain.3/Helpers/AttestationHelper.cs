@@ -58,16 +58,16 @@ namespace DotNet2020.Domain._3.Helpers
         private static string GetProblems(List<long> rightAnswers, List<long> skippedAnswers,
             List<string> questions)
         {
-            StringBuilder builder=new StringBuilder("Выявленные проблемы:\n");
+            StringBuilder builder=new StringBuilder("");
             for (int i = 0; i < questions.Count; i++)
             {
                 if (!skippedAnswers.Contains(i)&&!rightAnswers.Contains(i))
                 {
-                    builder.Append($"вопрос №{i}: {questions[i]} \n");
+                    builder.Append($"вопрос №{i+1}: {questions[i]} \n");
                 }
             }
 
-            if (builder.ToString() != "Выявленные проблемы:\n")
+            if (builder.ToString() != "")
                 return builder.ToString();
             else
                 return "Всё верно!";

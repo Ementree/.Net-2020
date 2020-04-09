@@ -30,7 +30,6 @@ namespace DotNet2020.Domain._3.Controllers
         }
         public IActionResult Index()
         {
-            
             return View();
         }
 
@@ -39,8 +38,7 @@ namespace DotNet2020.Domain._3.Controllers
             ViewBag.Workers = WorkerOutputModelHelper.GetList(_workers);
             return View();
         }
-
-        [Route("Attestation/WorkersUpdate/{id}")]
+        
         public IActionResult WorkersUpdate(long id)
         {
             ViewBag.Competences = _competences.GetList();
@@ -50,7 +48,6 @@ namespace DotNet2020.Domain._3.Controllers
         }
         
         [HttpPost]
-        [Route("Attestation/WorkersUpdate/{id}")]
         public IActionResult WorkersUpdate(long id, SpecificWorkerModel workerModel, List<long> ids)
         {
             _workers.Update(workerModel);
@@ -73,7 +70,6 @@ namespace DotNet2020.Domain._3.Controllers
             return RedirectToAction("Workers");
         }
         
-        [Route("Attestation/WorkersRemove/{id}")]
         public IActionResult WorkersRemove(long id)
         {
             _workers.DeleteById(id);
@@ -103,7 +99,6 @@ namespace DotNet2020.Domain._3.Controllers
             return RedirectToAction("CompetencesManage", new { id = competence.Id });
         }
         
-        [Route("Attestation/CompetencesManage/{id}")]
         public IActionResult CompetencesManage(long id)
         {
             ViewBag.Content = _competences.GetById(id).Content;
@@ -111,7 +106,6 @@ namespace DotNet2020.Domain._3.Controllers
         }
         
         [HttpPost]
-        [Route("Attestation/CompetencesManage/{id}")]
         public IActionResult CompetencesManage(long id, string method, string contentItem, List<int> checkboxes)
         {
             CompetenceHelper.Manage(_competences, id, method, contentItem, checkboxes);
@@ -141,7 +135,6 @@ namespace DotNet2020.Domain._3.Controllers
             return RedirectToAction("GradesManage", new { id = grade.Id });
         }
         
-        [Route("Attestation/GradesManage/{id}")]
         public IActionResult GradesManage(long id)
         {
             ViewBag.CompetencesList =  _competences.GetList();
@@ -150,7 +143,6 @@ namespace DotNet2020.Domain._3.Controllers
         }
 
         [HttpPost]
-        [Route("Attestation/GradesManage/{id}")]
         public IActionResult GradesManage(long id, string method, List<long> competences)
         {
             GradeHelper.Manage(_grades, id, method, competences);
@@ -167,7 +159,6 @@ namespace DotNet2020.Domain._3.Controllers
             return View();
         }
         
-        [Route("Attestation/QuestionsManage/{id}")]
         public IActionResult QuestionsManage(long id)
         {
             ViewBag.Questions = _competences.GetById(id).Questions;
@@ -175,7 +166,6 @@ namespace DotNet2020.Domain._3.Controllers
         }
         
         [HttpPost]
-        [Route("Attestation/QuestionsManage/{id}")]
         public IActionResult QuestionsManage(long id, string method, string question, List<int> checkboxes)
         {
             QuestionHelper.Manage(_competences, id, method, question, checkboxes);
@@ -205,6 +195,7 @@ namespace DotNet2020.Domain._3.Controllers
             {
                 ViewBag.Method = "Choose";
                 ViewBag.GradeId = gradeId;
+                ViewBag.Type = type;
                 return View();
             }
             if (model.CompetencesId == null)
@@ -223,6 +214,7 @@ namespace DotNet2020.Domain._3.Controllers
                         ViewBag.CompetencesId = model.CompetencesId;
                         break;
                     case ("Finished"):
+                        model.TestedCompetences = model.CompetencesId.ToList();
                         if (isGotGrade != null && isGotGrade == false)
                         {
                             model.CompetencesId.Clear();
@@ -230,6 +222,7 @@ namespace DotNet2020.Domain._3.Controllers
 
                         if (isGotGrade!=null && isGotGrade == true && gradeId!=null)
                             gotCompetences = AttestationHelper.GetCompetencesForGrade(gradeId.Value, _grades);
+
                         AttestationHelper.SaveAttestation(rightAnswers, skipedAnswers, commentaries, gotCompetences, questions, model, _workers, _attestation);
                         return RedirectToAction("AttestationList");
                 }
@@ -252,11 +245,10 @@ namespace DotNet2020.Domain._3.Controllers
             return View();
         }
         
-        [Route("Attestation/DownloadAttestation/{id}")]
         public IActionResult DownloadAttestation(long id)
         {
-            PdfHelper.GetPdfOfAttestation(id, _attestation, _workers);
-            var stream = new FileStream(Path.Combine(_env.ContentRootPath, "Files", "attestation.pdf"), FileMode.Open);
+            PdfHelper.GetPdfOfAttestation(id, _attestation, _workers, _competences);
+            var stream = new FileStream(Path.Combine(_env.ContentRootPath, "Files", "attestation.pdf"), FileMode.OpenOrCreate);
             return File(stream, "application/pdf", "attestation.pdf");
         }
 
@@ -270,8 +262,8 @@ namespace DotNet2020.Domain._3.Controllers
         public IActionResult Output(List<long> ids)
         {
             ViewBag.Workers = WorkerOutputModelHelper.GetList(_workers);
-            PdfHelper.GetPDFofWorkers(ids, _workers);
-            var stream = new FileStream(Path.Combine(_env.ContentRootPath, "Files", "workertest.pdf"), FileMode.Open);
+            PdfHelper.GetPdfofWorkers(ids, _workers);
+            var stream = new FileStream(Path.Combine(_env.ContentRootPath, "Files", "workers.pdf"), FileMode.OpenOrCreate);
             return File(stream, "application/pdf", "workers.pdf");
         }
     }
