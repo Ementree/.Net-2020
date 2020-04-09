@@ -1,5 +1,5 @@
-using DotNet2020.Domain._4.Models;
 using DotNet2020.Domain._6.Models;
+using DotNet2020.Domain._6.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
@@ -18,32 +18,32 @@ namespace DotNet2020.Domain._6.Controllers
         public IActionResult Index()
         {
             var viewAbsences = new Absences();
-            var absences = new List<AbstractCalendarEntry>();
+
+            var absences = new List<CalendarEntry>();
+
             for(int i = 0;i < 6; i++)
             {
-                absences.Add(new AbstractCalendarEntry() { UserName = "User " + i.ToString() });
+                absences.Add(new CalendarEntry() { UserName = "User " + i.ToString() });
             }
+
             var periods = context.Set<Period>().ToList();
             viewAbsences.Periods = periods;
-            var dic = new Dictionary<string, List<int>>();
-            foreach(var item in absences)
+
+            var resourceAbsences = new Dictionary<string, List<int>>();
+
+            foreach(var absence in absences)
             {
-                var a = new List<int>();
+                var countAbs = new List<int>();
                 foreach(var per in periods)
                 {
-                    a.Add(0);
+                    countAbs.Add(0);
                 }
-                dic.Add(item.UserName, a);
+                resourceAbsences.Add(absence.UserName, countAbs);
             }
-            viewAbsences.ResourceAbsences = dic;
+            viewAbsences.ResourceAbsences = resourceAbsences;
             return View(viewAbsences);
         }
     }
 
-    public class Absences
-    {
-        public List<Period> Periods { get; set; }
-
-        public Dictionary<string, List<int>> ResourceAbsences { get; set; }
-    }
+    
 }
