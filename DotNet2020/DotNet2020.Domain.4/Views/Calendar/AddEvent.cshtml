@@ -1,0 +1,65 @@
+﻿@{
+    ViewData["Title"] = "Добавить";
+}
+@model DotNet2020.Domain._4_Models.EventVM
+
+<div class="text-center">
+    <h1 class="display-4">Добавьте новое событие</h1>
+</div>
+<div>
+    <p>Выберите тип события</p>
+    @Html.ValidationMessage("DataError")
+    <select id="eventType">
+        <option value="seekday">Seekday</option>
+        <option value="vacation">Отпуск</option>
+        <option value="illness">Больничный</option>
+    </select>
+    <div id="1" style="display:block">
+        @using (Html.BeginForm("AddSickDay", "Calendar", FormMethod.Post))
+        {
+            <p>Выберите день болезни</p>
+            <p><input asp-for="From" type="date" /></p>
+            <p><input type="submit" value="Добавить" /></p>
+        }
+    </div>
+    <div id="2" style="display:none">
+        @using (Html.BeginForm("AddVacation", "Calendar", FormMethod.Post))
+        {
+            <p>Выберите интервал времени</p>
+            <p>От: <input asp-for="From" type="date" /></p>
+            <p>До: <input asp-for="To" type="date" /></p>
+            <p><input type="submit" value="Добавить" /></p>
+        }
+    </div>
+    <div id="3" style="display:none">
+        @using (Html.BeginForm("AddIllness", "Calendar", FormMethod.Post))
+        {
+            <p>Выберите интервал времени</p>
+            <p>От: <input asp-for="From" type="date" /></p>
+            <p>До: <input asp-for="To" type="date" /></p>
+            <p><input type="submit" value="Добавить" /></p>
+        }
+    </div>
+</div>
+
+
+<script>var selected = document.getElementById('eventType');
+ selected.addEventListener('change', function () {
+     var newSelect = selected.options[selected.selectedIndex].value;
+     if (newSelect == 'seekday') {
+         document.getElementById('1').style.display = 'block';
+         document.getElementById('2').style.display = 'none';
+         document.getElementById('3').style.display = 'none';
+     }
+     if (newSelect == 'vacation') {
+         document.getElementById('1').style.display = 'none';
+         document.getElementById('2').style.display = 'block';
+         document.getElementById('3').style.display = 'none';
+     }
+     if (newSelect == 'illness') {
+         document.getElementById('1').style.display = 'none';
+         document.getElementById('2').style.display = 'none';
+         document.getElementById('3').style.display = 'block';
+     }
+ }
+ )</script> 
