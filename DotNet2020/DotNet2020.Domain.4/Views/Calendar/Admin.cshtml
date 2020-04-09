@@ -54,12 +54,12 @@
                                 <td>Неоплачиваемый отпуск</td>
                             }
                             <td>
-                                <form asp-action="ApproveCalendarEntry" asp-controller="Calendar" method="post" asp-route-id="@calendarEntry.Id">
+                                <form asp-action="Approve" asp-controller="Calendar" method="post" asp-route-id="@calendarEntry.Id">
                                     <div class="adminrecomadd">
                                         <button type="submit">Согласовать</button>
                                     </div>
                                 </form>
-                                <form asp-action="RejectCalendarEntry" asp-controller="Calendar" method="post" asp-route-id="@calendarEntry.Id">
+                                <form asp-action="Reject" asp-controller="Calendar" method="post" asp-route-id="@calendarEntry.Id">
                                     <div class="adminrecomadd">
                                         <button type="submit">Отклонить</button>
                                     </div>
@@ -76,12 +76,12 @@
                             <td>@daysCount дней</td>
                             <td>Больничный</td>
                             <td>
-                                <form asp-action="ApproveCalendarEntry" asp-controller="Calendar" method="post" asp-route-id="@calendarEntry.Id">
+                                <form asp-action="Approve" asp-controller="Calendar" method="post" asp-route-id="@calendarEntry.Id">
                                     <div class="adminrecomadd">
                                         <button type="submit">Согласовать</button>
                                     </div>
                                 </form>
-                                <form asp-action="RejectCalendarEntry" asp-controller="Calendar" method="post" asp-route-id="@calendarEntry.Id">
+                                <form asp-action="Reject" asp-controller="Calendar" method="post" asp-route-id="@calendarEntry.Id">
                                     <div class="adminrecomadd">
                                         <button type="submit">Отклонить</button>
                                     </div>

@@ -144,6 +144,7 @@ namespace DotNet2020.Domain._4.Controllers
             ViewBag.Recommendation = _dbContext.Recommendations.FirstOrDefault();
             return View(_dbContext.CalendarEntries
                 .Where(c => c.AbsenceType == AbsenceType.Illness || c.AbsenceType == AbsenceType.Vacation)
+                .Include(m => m.User)
                 .AsEnumerable());
         }
 
