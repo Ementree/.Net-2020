@@ -5,6 +5,14 @@
 @{
     ViewData["Title"] = "Calendar";
 }
+
+    <script id="task-template" type="text/x-kendo-template">
+            <div style="background-color: #: kendo.toString(ColorId) #; height: 100%">
+                <div class="k-event-template k-event-time">12:00 AM - 12:00 AM</div>
+                <div class="k-event-template"> </div>
+            </div>
+    </script>
+
 <link rel="stylesheet" href="~/css/calendar.css">
 <div class="container">
 
@@ -18,10 +26,12 @@
             .MajorTick(1440)
             .Editable(false)
             .Height(600)
+            .EventTemplateId("task-template")
             .Views(views =>
             {
                 views.TimelineMonthView();
                 views.TimelineWeekView();
+                views.DayView();
                 views.AgendaView();
             })
             .BindTo(Model.Events)
@@ -47,7 +57,8 @@
         )
     </div>
 
-    <h2 style="margin-top: 40px">Рекомендация для вас</h2>
+    <h2 style="        margin-top: 40px
+">Рекомендация для вас</h2>
     <div class="recommendations">
         <div class="block-rec">
             <div class="box">
@@ -68,4 +79,12 @@
         <h1>Ваш последний отпуск был отклонен/согласован</h1>
     </div>
 </div>
-        
+
+<style>
+    .k-event, .k-task-complete {
+        color: #fff;
+        background: yellow;
+        border-color: #24c6db;
+    }
+</style>
+

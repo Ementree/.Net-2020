@@ -47,6 +47,7 @@
         public string RecurrenceException { get; set; }
         public bool IsAllDay { get => true ; set => throw new NotImplementedException(); }
         public string UserEmail { get; set; }
+        public string ColorId { get; set; }
     }
 
     public class Projection : ISchedulerEvent

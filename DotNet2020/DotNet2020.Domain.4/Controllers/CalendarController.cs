@@ -34,7 +34,8 @@ namespace DotNet2020.Domain._4.Controllers
                         Title = $"{m.User.FirstName} {m.User.LastName}",
                         Start = m.From,
                         End = m.To,
-                        UserEmail = m.User?.Email
+                        UserEmail = m.User?.Email,
+                        ColorId = "black"
                     }
                 ).ToList();
 
