@@ -21,5 +21,13 @@ namespace DotNet2020.Domain._4.Models
             From = from;
             To = to;
         }
+
+        public string UserName
+        {
+            get
+            {
+                return $"{User.FirstName} {User.LastName}" == " " ? User.Email : $"{User.FirstName} {User.LastName}";
+            }
+        }
     }
 }
