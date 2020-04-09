@@ -10,7 +10,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DotNet2020.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20200227163647_InitialCreate")]
+    [Migration("20200227164734_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -99,6 +99,9 @@ namespace DotNet2020.Data.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("SecurityStamp")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Test")
                         .HasColumnType("text");
 
                     b.Property<bool>("TwoFactorEnabled")

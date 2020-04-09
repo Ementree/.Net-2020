@@ -1,0 +1,34 @@
+﻿@model DotNet2020.Domain._3.Models.SpecificWorkerModel
+<form method="post">
+    <p>ФИО</p>
+    <input type="text" required name="Name" value="@ViewBag.Worker.Name"/>
+    <p>Должность</p>
+    <input type="text" required name="Position" value="@ViewBag.Worker.Position"/>
+    <p>Оклад</p>
+    <input type="number" required name="Salary" step="0.01" value="@ViewBag.Worker.Salary"/>
+    <p>Премия</p>
+    <input type="number" required name="Bonus" step="0.01" value="@ViewBag.Worker.Bonus"/>
+    <p>Комментарий</p>
+    <input type="text" required name="Commentary" value="@ViewBag.Worker.Commentary"/>
+    <p>Компетенции</p>
+    @foreach (var element in ViewBag.Competences)
+    {
+        <p>
+            @if (ViewBag.Ids.Contains(element.Id))
+            {
+                <input type="checkbox" value="@element.Id" checked name="ids">
+            }
+            else
+            {
+                <input type="checkbox" value="@element.Id" name="ids">
+            }
+            @element.Competence
+        </p>
+    }
+    <p>Предыдущие места работы</p>
+    <input type="text" required name="PreviousWorkPlaces" value="@ViewBag.Worker.PreviousWorkPlaces"/>
+    <p>Общий стаж</p>
+    <input type="text" required name="Experience" value="@ViewBag.Worker.Experience"/>
+    <br/>
+    <input type="submit" value="Обновить"/>
+</form>

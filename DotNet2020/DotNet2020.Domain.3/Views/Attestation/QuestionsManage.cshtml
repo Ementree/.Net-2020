@@ -1,0 +1,28 @@
+﻿<h1>Управление вопросами</h1>
+<h2>Добавление вопроса</h2>
+<p>@Html.ActionLink("Вернуться", "Questions", "Attestation")</p>
+<form method="post">
+    <p>Введите вопрос</p>
+    <textarea style="border:none;border-top:groove;border-left:groove;"  name="question" cols="100" required></textarea>
+    <input type="text" hidden name="method" value="AddQuestion"/>
+    <p><input type="submit" value="Добавить"/></p>
+</form>
+
+<br/>
+
+<form method="post">
+    <p>Удаление необходимых вопросов</p>
+    <input type="text" hidden name="method" value="RemoveQuestion"/>
+    @if (ViewBag.Questions.Length == 0)
+    {
+        <p>Список вопросов пуст!</p>
+    }
+    else
+    {
+        @for (var i=0;i<ViewBag.Questions.Length;i++)
+        {
+            <p><input type="checkbox" name="checkboxes" value="@i"/> @ViewBag.Questions[i] </p>
+        }
+        <input type="submit" value="Удалить выбранные"/>
+    }
+</form>
