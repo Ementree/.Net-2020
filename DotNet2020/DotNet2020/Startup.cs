@@ -54,6 +54,7 @@ namespace DotNet2020
                 options.UseNpgsql(
                     Configuration.GetConnectionString("DefaultConnection"), 
                     b => b.MigrationsAssembly("DotNet2020.Data")));
+            services.AddKendo();
             #endregion
 
             var domain4Assembly = typeof(CalendarController).Assembly;

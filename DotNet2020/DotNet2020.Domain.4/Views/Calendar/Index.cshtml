@@ -1,12 +1,64 @@
-﻿@{
+﻿@using Kendo.Mvc.UI
+@using DotNet2020.Domain.Models.ModelView
+@model IndexViewModel
+
+@{
     ViewData["Title"] = "Calendar";
 }
+
+    <script id="task-template" type="text/x-kendo-template">
+            <div style="background-color: #: kendo.toString(ColorId) #; height: 100%">
+                <div class="k-event-template k-event-time">12:00 AM - 12:00 AM</div>
+                <div class="k-event-template"> </div>
+            </div>
+    </script>
+
 <link rel="stylesheet" href="~/css/calendar.css">
 <div class="container">
+
     <div class="calendar">
         <h1>Календарь</h1>
+        @(
+        Html.Kendo().Scheduler<Kendo.Mvc.Examples.Models.Scheduler.CalendarEventViewModel>()
+            .Name("calendar")
+            .Date(DateTime.Now)
+            .StartTime(new DateTime(DateTime.Now.Year, 1, 1))
+            .MajorTick(1440)
+            .Editable(false)
+            .Height(600)
+            .EventTemplateId("task-template")
+            .Views(views =>
+            {
+                views.TimelineMonthView();
+                views.TimelineWeekView();
+                views.DayView();
+                views.AgendaView();
+            })
+            .BindTo(Model.Events)
+            .Group(group => group.Resources("Titles").Orientation(SchedulerGroupOrientation.Vertical))
+            .Resources(resource =>
+            {
+                resource.Add(m => m.UserEmail)
+                    .Title("Title")
+                    .Name("Titles")
+                    .Multiple(true)
+                    .DataTextField("Name")
+                    .DataValueField("Email")
+                    .DataColorField("Color")
+                    .BindTo(Model.Users);
+            })
+            .DataSource(d => d
+                .Model(m =>
+                {
+                    m.Id(f => f.Id);
+                    m.Field(f => f.Title).DefaultValue("No title");
+                })
+            )
+        )
     </div>
-    <h2>Рекомендация для вас</h2>
+
+    <h2 style="        margin-top: 40px
+">Рекомендация для вас</h2>
     <div class="recommendations">
         <div class="block-rec">
             <div class="box">
@@ -27,4 +79,12 @@
         <h1>Ваш последний отпуск был отклонен/согласован</h1>
     </div>
 </div>
-        
+
+<style>
+    .k-event, .k-task-complete {
+        color: #fff;
+        background: yellow;
+        border-color: #24c6db;
+    }
+</style>
+

@@ -1,9 +1,11 @@
-﻿using DotNet2020.Domain._4.Models;
+﻿using DotNet2020.Data;
+using DotNet2020.Domain._4.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace DotNet2020.Domain._4.Models
 {
-    public class CalendarEntryContext : DbContext
+    public class CalendarEntryContext : IdentityDbContext<AppIdentityUser, AppIdentityRole, string>
     {
         public CalendarEntryContext(DbContextOptions<CalendarEntryContext> options) : base(options)
         {
@@ -11,6 +13,8 @@ namespace DotNet2020.Domain._4.Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
+
             modelBuilder.Entity<AbstractCalendarEntry>()
                 .HasDiscriminator<AbsenceType>(nameof(AbstractCalendarEntry.AbsenceType))
                 .HasValue<Vacation>

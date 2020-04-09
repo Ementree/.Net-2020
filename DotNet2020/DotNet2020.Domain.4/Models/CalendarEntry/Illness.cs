@@ -1,4 +1,5 @@
 ﻿using System;
+using DotNet2020.Data;
 
 namespace DotNet2020.Domain._4.Models
 {
@@ -6,12 +7,14 @@ namespace DotNet2020.Domain._4.Models
     {
         public bool IsApproved { get; private set; }
 
-        public Illness(DateTime from, DateTime to, string userName)
+        protected Illness() { }
+
+        public Illness(DateTime from, DateTime to, AppIdentityUser user)
         {
             From = from;
             To = to;
             AbsenceType = AbsenceType.Illness;
-            UserName = userName;
+            User = user;
         }
 
         public void Approve()

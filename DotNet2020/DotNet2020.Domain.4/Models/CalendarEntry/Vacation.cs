@@ -1,4 +1,5 @@
 ﻿using System;
+using DotNet2020.Data;
 
 namespace DotNet2020.Domain._4.Models
 {
@@ -7,12 +8,14 @@ namespace DotNet2020.Domain._4.Models
         public bool IsApproved { get; private set; }
         public bool IsPaid { get; private set; }
 
-        public Vacation(DateTime from, DateTime to, string userName)
+        protected Vacation() { }
+
+        public Vacation(DateTime from, DateTime to, AppIdentityUser user)
         {
             From = from;
             To = to;
             AbsenceType = AbsenceType.Vacation;
-            UserName = userName;
+            User = user;
         }
 
         public void Pay()

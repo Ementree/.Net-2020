@@ -1,9 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using DotNet2020.Domain._4.Models;
 using DotNet2020.Domain._4_Models;
 using DotNet2020.Domain.Filters;
+using DotNet2020.Domain.Models.ModelView;
+using Kendo.Mvc.Examples.Models.Scheduler;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace DotNet2020.Domain._4.Controllers
 {
@@ -20,7 +24,48 @@ namespace DotNet2020.Domain._4.Controllers
         public IActionResult Index()
         {
             ViewBag.Recommendation = _dbContext.Recommendations.FirstOrDefault();
-            return View();
+
+            var allVacations = _dbContext.CalendarEntries
+                .Include(v => v.User)
+                .ToList()
+                .Select(m =>
+                {
+                    var color = "brown";
+                    switch (m.AbsenceType)
+                    {
+                        case AbsenceType.Vacation:
+                            if ((m as Vacation).IsApproved)
+                                color = "green";
+                            else color = "red";
+                            break;
+                        case AbsenceType.SickDay:
+                            color = "#6eb3fa";
+                            break;
+                        case AbsenceType.Illness:
+                            color = "yellow";
+                            break;
+                    }
+                    return new CalendarEventViewModel()
+                    {
+                        Id = m.Id,
+                        Title = $"{m.User.FirstName} {m.User.LastName}",
+                        Start = m.From,
+                        End = m.To,
+                        UserEmail = m.User?.Email,
+                        ColorId = color
+                    };
+                }  
+                ).ToList();
+
+            var users = _dbContext.Users.Select(u =>
+                new UserViewModel()
+                {
+                    Name = $"{u.FirstName} {u.LastName}" == " "? u.Email : $"{u.FirstName} {u.LastName}",
+                    Email = u.Email,
+                    Color = "#6eb3fa"
+                }).ToList();
+
+            return View(new IndexViewModel() { Events = allVacations, Users = users });
         }
 
         [HttpGet]
@@ -40,7 +85,8 @@ namespace DotNet2020.Domain._4.Controllers
                 return RedirectToAction("AddEvent");
             }
 
-            var sickDay = new SickDay(eventVM.From, eventVM.From, HttpContext.User.Identity.Name);
+            var sickDay = new SickDay(eventVM.From, eventVM.From,
+                _dbContext.Users.FirstOrDefault(u => u.Email == HttpContext.User.Identity.Name));
             _dbContext.CalendarEntries.Add(sickDay);
             _dbContext.SaveChanges();
             return RedirectToAction("Index");
@@ -61,7 +107,8 @@ namespace DotNet2020.Domain._4.Controllers
                 return RedirectToAction("AddEvent");
             }
 
-            var vacation = new Vacation(eventVM.From, eventVM.To, HttpContext.User.Identity.Name);
+            var vacation = new Vacation(eventVM.From, eventVM.To,
+                _dbContext.Users.FirstOrDefault(u => u.Email == HttpContext.User.Identity.Name));
             _dbContext.CalendarEntries.Add(vacation);
             _dbContext.SaveChanges();
             return RedirectToAction("Index");
@@ -82,7 +129,8 @@ namespace DotNet2020.Domain._4.Controllers
                 return RedirectToAction("AddEvent");
             }
 
-            var illness = new Illness(eventVM.From, eventVM.To, HttpContext.User.Identity.Name);
+            var illness = new Illness(eventVM.From, eventVM.To,
+                _dbContext.Users.FirstOrDefault(u => u.Email == HttpContext.User.Identity.Name));
             _dbContext.CalendarEntries.Add(illness);
             _dbContext.SaveChanges();
             return RedirectToAction("Index");
