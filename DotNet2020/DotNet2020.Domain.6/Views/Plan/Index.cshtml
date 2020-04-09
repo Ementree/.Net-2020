@@ -21,7 +21,7 @@
 }
 <div class="container-fluid mb-3 d-inline-flex">
     <form asp-action="Index" class="m-2 p-2"> Год - 
-        <select name="year" onchange="console.log('year changed')">
+        <select name="year" onchange="this.form.submit()">
             @for(int i = 0; i < 5; i++)
             {
                 var year = DateTime.Now.Year + i;
