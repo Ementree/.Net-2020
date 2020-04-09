@@ -24,19 +24,36 @@ namespace DotNet2020.Domain._4.Controllers
         {
             ViewBag.Recommendation = _dbContext.Recommendations.FirstOrDefault();
 
-            var allVacations = _dbContext.Set<Vacation>()
+            var allVacations = _dbContext.CalendarEntries
                 .Include(v => v.User)
                 .ToList()
                 .Select(m =>
-                    new CalendarEventViewModel()
+                {
+                    var color = "brown";
+                    switch (m.AbsenceType)
+                    {
+                        case AbsenceType.Vacation:
+                            if ((m as Vacation).IsApproved)
+                                color = "green";
+                            else color = "red";
+                            break;
+                        case AbsenceType.SickDay:
+                            color = "#6eb3fa";
+                            break;
+                        case AbsenceType.Illness:
+                            color = "yellow";
+                            break;
+                    }
+                    return new CalendarEventViewModel()
                     {
                         Id = m.Id,
                         Title = $"{m.User.FirstName} {m.User.LastName}",
                         Start = m.From,
                         End = m.To,
                         UserEmail = m.User?.Email,
-                        ColorId = "black"
-                    }
+                        ColorId = color
+                    };
+                }  
                 ).ToList();
 
             var users = _dbContext.Users.Select(u =>
