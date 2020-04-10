@@ -1,0 +1,41 @@
+﻿<h1>Управление грейдами</h1>
+<h2>Добавление компетенций</h2>
+<p>@Html.ActionLink("Грейды", "Grades", "Attestation")</p>
+<form method="post">
+    <p>Компетенции:</p>
+    @foreach (var element in ViewBag.CompetencesList)
+    {
+        if (ViewBag.AddedCompetences.Contains(element))
+        {
+            <p><input type="checkbox" value="@element.Id" name="competences" checked=""/> @element.Competence</p>
+        }
+        else
+        {
+            <p><input type="checkbox" value="@element.Id" name="competences"/> @element.Competence</p>
+        }
+    }
+    <input type="text" hidden name="method" value="AddCompetenceItem"/>
+    <p><input type="submit" value="Обновить"/></p>
+</form>
+
+<br/>
+@if (ViewBag.AddedCompetences != null && ViewBag.AddedCompetences.Count > 0)
+{
+    <p>Список прикреплённых на данный момент компетенций:</p>
+    @foreach (var element in ViewBag.AddedCompetences)
+    {
+        <p><b>@element.Competence</b></p>
+    }
+}
+else
+{
+    <p>Компетенции не привязаны!</p>
+}
+
+
+<br/>
+<form method="post">
+    <p>Удаление грейда</p>
+    <input type="text" hidden name="method" value="RemoveGrade"/>
+    <input type="submit" value="Удалить грейд"/>
+</form>

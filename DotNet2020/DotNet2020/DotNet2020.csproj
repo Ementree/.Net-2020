@@ -6,7 +6,7 @@
   </PropertyGroup>
 
 
-  <ItemGroup>
+   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.1.2" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.2" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="3.1.2" />
@@ -20,7 +20,7 @@
   </ItemGroup>
 
 
-  <ItemGroup>
+   <ItemGroup>
     <Folder Include="Models\" />
   </ItemGroup>
 
@@ -29,6 +29,13 @@
     <ProjectReference Include="..\DotNet2020.Data\DotNet2020.Data.csproj" />
     <ProjectReference Include="..\DotNet2020.Domain.6\DotNet2020.Domain.6.csproj" />
     <ProjectReference Include="..\DotNet2020.Domain.Core\DotNet2020.Domain.Core.csproj" />
+    <ProjectReference Include="..\DotNet2020.Domain.4\DotNet2020.Domain.4.csproj">
+      <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
+    </ProjectReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\DotNet2020.Domain.3\DotNet2020.Domain.3.csproj" />
+  </ItemGroup>
+  
 </Project>

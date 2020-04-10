@@ -1,0 +1,101 @@
+﻿body {
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.container {
+    max-width: 1300px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.recommendations {
+    display: flex;
+    justify-content: space-between;
+}
+
+    .recommendations .block-rec {
+        width: 40%;
+    }
+
+        .recommendations .block-rec .box {
+            border: 2px solid black;
+            padding: 10px;
+        }
+
+.frame {
+    border: 2px solid black;
+    padding: 10px;
+}
+
+.vacation h2 {
+    margin: 0;
+    width: 55%;
+}
+
+.vacation button {
+    margin: 30px 0 0 0;
+    padding: 15px 10px 15px 10px;
+    border: 2px solid black;
+    box-shadow: 0;
+    background: #fff;
+    cursor: pointer;
+}
+
+.adminrecomadd button {
+    margin: 10px 0 0 0;
+    padding: 15px 10px 15px 10px;
+    border: 2px solid black;
+    box-shadow: 0;
+    background: #fff;
+    cursor: pointer;
+}
+
+    .vacation button:hover {
+        box-shadow: 3px 3px 0px 0px #000;
+        transition: .3s;
+    }
+
+    .adminrecomadd button:hover {
+        box-shadow: 3px 3px 0px 0px #000;
+        transition: .3s;
+    }
+
+.last-vacation h1 {
+    border-bottom: 2px solid black;
+    width: max-content;
+    padding-bottom: 15px;
+}
+
+@media screen and (max-width: 900px) {
+    .recommendations {
+        display: block;
+    }
+
+    .vacation h2 {
+        width: 80%;
+    }
+
+    .last-vacation h1 {
+        padding-bottom: unset;
+    }
+
+
+    .recommendations .block-rec {
+        width: unset;
+    }
+
+    .vacation h2 {
+        margin: unset;
+        width: 100%;
+    }
+
+    .last-vacation h1 {
+        font-size: 1em;
+        width: 100%;
+    }
+
+    .vacation {
+        margin: 50px 0px;
+    }
+
+}
