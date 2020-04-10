@@ -19,6 +19,7 @@ namespace DotNet2020.Domain._1
     public class DotNet2020Domain_1CodeFixProvider : CodeFixProvider
     {
         private const string title = "Encapsulate property";
+        private const string title2 = "add line break after attribute";
 
         public sealed override ImmutableArray<string> FixableDiagnosticIds
         {
@@ -39,6 +40,13 @@ namespace DotNet2020.Domain._1
                     title: title,
                     createChangedSolution: c => EncapsulatePropertyAsync(context.Document, context, c),
                     equivalenceKey: title),
+                diagnostic);
+
+            context.RegisterCodeFix(
+                CodeAction.Create(
+                    title2,
+                    c => OneAttributePerLine(context.Document, context, c),
+                    title2),
                 diagnostic);
         }
 
@@ -66,6 +74,25 @@ namespace DotNet2020.Domain._1
 
             var newRoot = root.ReplaceNode(property, modifiedProperty);
 
+            return document.WithSyntaxRoot(newRoot).Project.Solution;
+        }
+
+        private async Task<Solution> OneAttributePerLine(Document document, CodeFixContext context,
+            CancellationToken cancellationToken)
+        {
+            var root = await context.Document
+                .GetSyntaxRootAsync(context.CancellationToken)
+                .ConfigureAwait(false);
+
+            var diagnostic = context.Diagnostics.First();
+            var diagnosticSpan = diagnostic.Location.SourceSpan;
+
+            //var classDeclaration = root.FindNode(diagnosticSpan) as ClassDeclarationSyntax;
+            var attributeList = root.FindNode(diagnosticSpan) as AttributeListSyntax;
+
+            var modified = attributeList.CloseBracketToken.TrailingTrivia.Add(SyntaxFactory.EndOfLine(""));
+            var modifiedBracket = attributeList.CloseBracketToken.WithTrailingTrivia(modified);
+            var newRoot = root.ReplaceToken(attributeList.CloseBracketToken, modifiedBracket);
             return document.WithSyntaxRoot(newRoot).Project.Solution;
         }
     }

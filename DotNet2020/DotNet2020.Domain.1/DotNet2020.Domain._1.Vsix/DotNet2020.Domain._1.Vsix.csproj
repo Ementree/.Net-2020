@@ -12,7 +12,7 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectTypeGuids>{82b43b9b-a64c-4715-b499-d71e9ca2bd60};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <ProjectGuid>{E0EBDCC6-6820-4E65-895C-443BE32C644E}</ProjectGuid>
+    <ProjectGuid>{EB22BDB9-627C-41B8-BC1D-9ACAB41D495C}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>DotNet2020.Domain._1.Vsix</RootNamespace>
@@ -55,7 +55,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DotNet2020.Domain._1\DotNet2020.Domain._1.csproj">
-      <Project>{D91CB750-F168-4728-B2BD-663AC50EBF01}</Project>
+      <Project>{B2BE68D5-0A09-4FB0-9535-AF0865C5A6A3}</Project>
       <Name>DotNet2020.Domain._1</Name>
     </ProjectReference>
   </ItemGroup>

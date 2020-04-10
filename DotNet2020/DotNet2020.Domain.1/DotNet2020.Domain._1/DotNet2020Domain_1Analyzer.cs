@@ -18,7 +18,7 @@ namespace DotNet2020.Domain._1
 
         private const string Title = "Property encapsulation problem";
         private const string MessageFormat = @"Property should have public get and protected set";
-        private const string Category = "Incapsulation";
+        private const string Category = "Encapsulation";
         private const string Description = @"Property should have public get and protected set";
         private static DiagnosticDescriptor Rule = new DiagnosticDescriptor(DiagnosticId, Title, MessageFormat, Category, DiagnosticSeverity.Warning, isEnabledByDefault: true, description: Description);
 
@@ -27,10 +27,11 @@ namespace DotNet2020.Domain._1
 
         public override void Initialize(AnalysisContext context)
         {
-            context.RegisterSyntaxNodeAction(AnalyzeSymbol, SyntaxKind.PropertyDeclaration);
+            context.RegisterSyntaxNodeAction(AnalyzeProperty, SyntaxKind.PropertyDeclaration);
+            context.RegisterSyntaxNodeAction(AnalyzeAttribute, SyntaxKind.AttributeList);
         }
 
-        private static void AnalyzeSymbol(SyntaxNodeAnalysisContext context)
+        private static void AnalyzeProperty(SyntaxNodeAnalysisContext context)
         {
             var propertyNode = (PropertyDeclarationSyntax)context.Node;
             var setAccessor = propertyNode.AccessorList.Accessors
@@ -45,6 +46,31 @@ namespace DotNet2020.Domain._1
             context.ReportDiagnostic(Diagnostic.Create(Rule,
                 propertyNode.Identifier.GetLocation(),
                 propertyNode.Identifier.Text));
+        }
+
+        private static void AnalyzeAttribute(SyntaxNodeAnalysisContext context)
+        {
+            // var classNode = context.Node as ClassDeclarationSyntax;
+            var attributeListNode = (AttributeListSyntax)context.Node;
+
+            if (attributeListNode.CloseBracketToken.HasTrailingTrivia &&
+                attributeListNode.CloseBracketToken.TrailingTrivia.Any(t => t.IsKind(SyntaxKind.EndOfLineTrivia)))
+            {
+                return;
+            }
+
+            context.ReportDiagnostic(
+                Diagnostic.Create(
+                    new DiagnosticDescriptor(
+                        "AttributeDiagnosticId",
+                        "Attribute indentation problem",
+                        @"Every attribute should be on new line",
+                        "Formatting",
+                        DiagnosticSeverity.Warning,
+                        isEnabledByDefault: true,
+                        description: @"Every attribute should be on new line"),
+                    attributeListNode.GetLocation(),
+                    attributeListNode.GetText()));
         }
     }
 }
