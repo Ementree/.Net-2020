@@ -65,6 +65,7 @@ namespace DotNet2020.Domain._6.Controllers
                 }
             }
 
+            ViewBag.Year = year;
             ViewBag.Months = GetMonths(year);
             return View(model);
         }
