@@ -14,7 +14,7 @@
                     <th class="sticky-col1">  </th>
                     @foreach (var period in Model.Periods)
                     {
-                        <td >@period.Start.Day.@period.Start.Month.@period.Start.Year - @period.Start.Day.@period.End.Month.@period.End.Year</td>
+                        <td >@period.Start.Day.@period.Start.Month.@period.Start.Year - @period.End.Day.@period.End.Month.@period.End.Year</td>
                     }
                 </tr>
             </thead>
