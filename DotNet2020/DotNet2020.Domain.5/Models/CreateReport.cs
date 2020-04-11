@@ -13,7 +13,6 @@ namespace DotNet2020.Domain._5.Models
         [Required]
         [MaxLength(50)]
         public string Project { get; set; }
-        [Required]
         [MaxLength(1000)]
         public string IssueFilter { get; set; }
     }
