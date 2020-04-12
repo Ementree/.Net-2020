@@ -64,7 +64,9 @@ namespace DotNet2020.Domain._6.Controllers
                     model.Add(viewModel.Group, new List<ViewModelCapacity>() {viewModel});
                 }
             }
-
+            
+            ViewBag.CurrentYear = DateTime.Now.Year;
+            ViewBag.Year = year;
             ViewBag.Months = GetMonths(year);
             return View(model);
         }

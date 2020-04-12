@@ -1,6 +1,8 @@
-@{ 
+@{
     Layout = "~/Views/Shared/_Layout6.cshtml";
     var months = ViewBag.Months;
+    var date = DateTime.Now;
+    var year = ViewBag.Year;
 }
 @using DotNet2020.Domain._6.Models.ViewModels
 @model Dictionary<string, List<ViewModelCapacity>>
@@ -41,10 +43,17 @@
 </style>
 
 <form asp-controller="Capacity" asp-action="Index">
-    <select name="year" id="" onchange="this.form.submit()" class="year">
-        <option value="2020">2020</option>
-        <option value="2021">2021</option>
-    </select>
+    <div class="btn-group dropleft" >
+        <a type="button" asp-route-year="@(year-1)" class="btn btn-secondary dropdown-toggle" onclick="this.form.submit()">
+            @(year - 1)
+        </a>
+    </div>
+    @ViewBag.Year
+    <div class="btn-group dropright">
+        <a type="button" asp-route-year="@(year+1)" class="btn btn-secondary dropdown-toggle" onclick="this.form.submit()">
+            @(year + 1)
+        </a>
+    </div>
     
     <div class="wrapper">
         <div class="scroller2 scroller">
@@ -59,9 +68,19 @@
                     </th>
                     @for (var i = 0; i < 12; i++)
                     {
-                        <th class="right">
-                            @months[i]
-                        </th>
+                        @if (date.Month == i + 1 && ViewBag.Year== ViewBag.CurrentYear)
+                        {
+                            <th class="right" style="background-color: darkseagreen">
+                                @months[i]
+                            </th>                            
+                        }
+                        else
+                        {
+                            <th class="right">
+                                @months[i]
+                            </th>                               
+                        }
+
                     }
                 </tr>
                 </thead>
