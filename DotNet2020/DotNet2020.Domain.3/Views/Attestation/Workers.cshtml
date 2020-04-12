@@ -43,7 +43,7 @@
         </tr>
         @foreach (var element in ViewBag.Workers)
         {
-            <tr><td>@element.Worker.Name</td><td>@element.Worker.Position</td><td>@element.Worker.Salary</td><td>@element.Worker.Bonus</td><td>@element.Worker.Commentary</td>
+            <tr><td>@element.Worker.FullName</td><td>@element.Worker.Position</td><td>@element.Worker.Salary</td><td>@element.Worker.Bonus</td><td>@element.Worker.Commentary</td>
                 <td>
                     @if (element.Competences != null && element.Competences.Count>0)
                     {

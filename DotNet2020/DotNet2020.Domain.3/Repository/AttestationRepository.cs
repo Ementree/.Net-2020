@@ -71,14 +71,14 @@ namespace DotNet2020.Domain._3.Repository
         /// <returns>Лист вопросов</returns>
         public List<AnswerModel> GetAllAnswersById(long itemId)
         {
-            var unionList = _context.AttestationAnswer.Where(x => x.AnswerId == itemId).ToList();
-            var attestationModels=new List<AnswerModel>();
+            var unionList = _context.AttestationAnswer.Where(x => x.AttestationId == itemId).ToList();
+            var answers=new List<AnswerModel>();
             foreach (var element in unionList)
             {
-                attestationModels.Add(_context.Answers.Find(element.AnswerId));
+                answers.Add(_context.Answers.Find(element.AnswerId));
             }
 
-            return attestationModels;
+            return answers;
         }
     }
 }

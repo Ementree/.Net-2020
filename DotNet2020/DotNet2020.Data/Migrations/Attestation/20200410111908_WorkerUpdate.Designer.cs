@@ -4,15 +4,17 @@ using System.Collections.Generic;
 using DotNet2020.Domain._3.Models.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace DotNet2020.Data.Migrations.Attestation
 {
     [DbContext(typeof(AttestationContext))]
-    partial class AttestationContextModelSnapshot : ModelSnapshot
+    [Migration("20200410111908_WorkerUpdate")]
+    partial class WorkerUpdate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
