@@ -5,6 +5,7 @@ using System.Linq;
 using DotNet2020.Domain._6.Models;
 using Microsoft.EntityFrameworkCore;
 using DotNet2020.Domain._6.Models.ViewModels;
+using DotNet2020.Domain._6.Services;
 
 
 namespace DotNet2020.Domain._6.Controllers
@@ -64,26 +65,11 @@ namespace DotNet2020.Domain._6.Controllers
                     model.Add(viewModel.Group, new List<ViewModelCapacity>() {viewModel});
                 }
             }
-            
             ViewBag.CurrentYear = DateTime.Now.Year;
             ViewBag.Year = year;
-            ViewBag.Months = GetMonths(year);
+            ViewBag.Months = MonthGeneratorService.GetAllMonths(year);
+            
             return View(model);
-        }
-
-        private List<string> GetMonths(int year)
-        {
-            var months = new List<string>()
-            {
-                "Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь",
-                "Декабрь"
-            };
-            for (var i = 0; i < 12; i++)
-            {
-                months[i] += " " + year;
-            }
-
-            return months;
         }
     }
 }
