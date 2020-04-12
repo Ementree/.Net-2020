@@ -1,4 +1,5 @@
-﻿<!doctype html>
+﻿@model IEnumerable<DotNet2020.Domain._3.Models.GradesModel>
+<!doctype html>
 <html class="no-js" lang="en">
 
 <head>
@@ -11,57 +12,57 @@
 </head>
 
 <body>
-<input type="checkbox" id="nav-toggle" hidden>
-<nav class="nav">
-    <label for="nav-toggle" class="nav-toggle" onclick></label>
-    <ul>
-        <li>@Html.ActionLink("Главная страница", "Index", "Attestation")
-        <li>@Html.ActionLink("Сотрудники", "Workers", "Attestation")
-        <li>@Html.ActionLink("Компетенции", "Competences", "Attestation")
-        <li>@Html.ActionLink("Грейды", "Grades", "Attestation")
-        <li>@Html.ActionLink("Вопросы", "Questions", "Attestation")
-        <li>@Html.ActionLink("Аттестация", "Attestation", "Attestation")
-        <li>@Html.ActionLink("Выгрузка", "Output", "Attestation")
-    </ul>
-</nav>
-<main role="main">
-<p>@Html.ActionLink("Добавить грейд", actionName:"GradesAdd", controllerName:"Attestation")</p>
+    <input type="checkbox" id="nav-toggle" hidden>
+    <nav class="nav">
+        <label for="nav-toggle" class="nav-toggle" onclick></label>
+        <ul>
+            <li>@Html.ActionLink("Главная страница", "Index", "Attestation")
+            <li>@Html.ActionLink("Сотрудники", "Workers", "Attestation")
+            <li>@Html.ActionLink("Компетенции", "Competences", "Attestation")
+            <li>@Html.ActionLink("Грейды", "Grades", "Attestation")
+            <li>@Html.ActionLink("Вопросы", "Questions", "Attestation")
+            <li>@Html.ActionLink("Аттестация", "Attestation", "Attestation")
+            <li>@Html.ActionLink("Выгрузка", "Output", "Attestation")
+        </ul>
+    </nav>
+    <main role="main">
+        <p>@Html.ActionLink("Добавить грейд", actionName: "GradesAdd", controllerName: "Attestation")</p>
 
-@if (ViewBag.Grades != null && ViewBag.Grades.Count>0)
-{
-    <table border="1">
-        <tr>
-            <th>Грейд</th>
-            <th>Компетенции</th>
-        </tr>
-        @foreach (var element in ViewBag.Grades)
+        @if (Model != null && Model.Any())
         {
-            <tr>
-                <td>
-                    @element.Grade.Grade
-                    <form method="post">
-                        <p>@Html.ActionLink($"Изменить", "GradesManage", "Attestation", new {id = element.Grade.Id}, null) </p>
-                    </form>
-                </td>
-                @if (element.Competences.Count == 0)
+            <table border="1">
+                <tr>
+                    <th>Грейд</th>
+                    <th>Компетенции</th>
+                </tr>
+                @foreach (var element in Model)
                 {
-                    <td> Список необходимых компетенций пуст!</td>
-                }
-                else
-                {
-                    <td>
-                        @for (int i = 0; i < element.Competences.Count; i++)
+                    <tr>
+                        <td>
+                            @element.Grade
+                            <form method="post">
+                                <p>@Html.ActionLink($"Изменить", "GradesManage", "Attestation", new { id = element.Id }, null) </p>
+                            </form>
+                        </td>
+                        @if (element.GradesCompetences.Count == 0)
                         {
-                            @element.Competences[i].Competence
-                            <br/>
+                            <td> Список необходимых компетенций пуст!</td>
                         }
-                    </td>
+                        else
+                        {
+                            <td>
+                                @for (int i = 0; i < element.GradesCompetences.Count; i++)
+                                {
+                                    @element.GradesCompetences[i].Competence.Competence
+                                    <br />
+                                }
+                            </td>
+                        }
+                    </tr>
                 }
-            </tr>
+            </table>
         }
-    </table>
-}
-</main>
+    </main>
 </body>
 </html>
 

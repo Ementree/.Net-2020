@@ -1,36 +1,68 @@
-﻿<h1>Управление компетенций</h1>
-<h2>Добавление содержимого</h2>
-<p>@Html.ActionLink("Компетенции", "Competences", "Attestation")</p>
-<form method="post">
-    <p>Название содержимого</p>
-    <input type="text" name="contentItem" required/>
-    <input type="text" hidden name="method" value="AddContentItem"/>
-    <p><input type="submit" value="Добавить"/></p>
-</form>
+﻿@model DotNet2020.Domain._3.Models.CompetenceUpdateModel
+<!doctype html>
+<html class="no-js" lang="en">
 
-<br/>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" href="favicon.ico" />
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/left-nav-style.css">
+</head>
 
-<form method="post">
-    <p>Удаление компетенции</p>
-    <input type="text" hidden name="method" value="RemoveCompetence"/>
-    <input type="submit" value="Удалить компетенцию"/>
-</form>
+<body>
+    <input type="checkbox" id="nav-toggle" hidden>
+    <nav class="nav">
+        <label for="nav-toggle" class="nav-toggle" onclick></label>
+        <ul>
+            <li>@Html.ActionLink("Главная страница", "Index", "Attestation")
+            <li>@Html.ActionLink("Сотрудники", "Workers", "Attestation")
+            <li>@Html.ActionLink("Компетенции", "Competences", "Attestation")
+            <li>@Html.ActionLink("Грейды", "Grades", "Attestation")
+            <li>@Html.ActionLink("Вопросы", "Questions", "Attestation")
+            <li>@Html.ActionLink("Аттестация", "Attestation", "Attestation")
+            <li>@Html.ActionLink("Выгрузка", "Output", "Attestation")
+        </ul>
+    </nav>
+    <main role="main">
+        <h1>Управление компетенций</h1>
+        <h2>Добавление содержимого</h2>
+        <p>@Html.ActionLink("Компетенции", "Competences", "Attestation")</p>
 
-<br/>
+        <form method="post">
+            <p>Название содержимого</p>
+            <input type="text" name="Content" required />
+            <input type="text" hidden name="Action" value="AddContent" />
+            <p><input type="submit" value="Добавить" /></p>
+        </form>
 
-<form method="post">
-    <p>Удаление содержимого компетенции</p>
-    <input type="text" hidden name="method" value="RemoveContent"/>
-    @if (ViewBag.Content.Length == 0)
-    {
-        <p>Список содержимого пуст!</p>
-    }
-    else
-    {
-        @for (var i=0;i<ViewBag.Content.Length;i++)
-        {
-            <p><input type="checkbox" name="checkboxes" value="@i"/> @ViewBag.Content[i] </p>
-        }
-        <input type="submit" value="Удалить выбранные"/>
-    }
-</form>
+        <br />
+
+        <form method="post">
+            <p>Удаление компетенции</p>
+            <input type="text" hidden name="Action" value="RemoveCompetence" />
+            <input type="submit" value="Удалить компетенцию" />
+        </form>
+
+        <br />
+
+        <form method="post">
+            <p>Удаление содержимого компетенции</p>
+            <input type="text" hidden name="Action" value="RemoveContent" />
+            @if (Model.Competence.Content.Count == 0)
+            {
+                <p>Список содержимого пуст!</p>
+            }
+            else
+            {
+                @for (var i = 0; i < Model.Competence.Content.Count; i++)
+                {
+                    <p><input type="checkbox" name="Checkboxes" value="@i" /> @Model.Competence.Content[i] </p>
+                }
+                <input type="submit" value="Удалить выбранные" />
+            }
+        </form>
+    </main>
+</body>
+</html>

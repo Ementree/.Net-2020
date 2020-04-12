@@ -16,6 +16,6 @@ namespace DotNet2020.Domain._3.Models
         [NotMapped]
         public string FullName => Surname + " " + Name + " " + Patronymic;
 
-        public List<SpecificWorkerCompetencesModel> SpecificWorkerCompetencesModels { get; set; }
+        public List<SpecificWorkerCompetencesModel> SpecificWorkerCompetencesModels { get; set; } = new List<SpecificWorkerCompetencesModel>();
     }
 }

@@ -3,29 +3,22 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using DotNet2020.Domain._3.Helpers;
 using DotNet2020.Domain._3.Models;
 using DotNet2020.Domain._3.Models.Contexts;
-using DotNet2020.Domain._3.Repository;
-using DotNet2020.Domain._3.Repository.Main;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DotNet2020.Domain._3.Controllers
 {
-    public class AttestationController:Controller
+    public class AttestationController : Controller
     {
-        private readonly AttestationRepository _attestation;
-        private readonly SpecificWorkerRepository _workers;
-        private readonly GradesRepository _grades;
-        private readonly CompetencesRepository _competences;
+        private readonly AttestationContext _context;
         private readonly IWebHostEnvironment _env;
         public AttestationController(AttestationContext attestationContext, IWebHostEnvironment env)
         {
-            _workers = new SpecificWorkerRepository(attestationContext);
-            _attestation = new AttestationRepository(attestationContext);
-            _grades=new GradesRepository(attestationContext);
-            _competences=new CompetencesRepository(attestationContext);
+            _context = attestationContext;
             _env = env;
         }
         public IActionResult Index()
@@ -33,238 +26,490 @@ namespace DotNet2020.Domain._3.Controllers
             return View();
         }
 
+        #region Workers
+
         public IActionResult Workers()
         {
-            ViewBag.Workers = WorkerOutputModelHelper.GetList(_workers);
-            return View();
+            var workers = GetLoadedWorkers();
+
+            return View(workers);
         }
-        
+
         public IActionResult WorkersUpdate(long id)
         {
-            ViewBag.Competences = _competences.GetList();
-            ViewBag.Worker = _workers.GetById(id);
-            ViewBag.Ids = _workers.GetAllCompetencesIdsById(id);
-            return View();
+            var worker = _context.Workers.Find(id);
+
+            _context.Entry(worker).Collection(x => x.SpecificWorkerCompetencesModels).Load();
+
+            foreach (var specificWorkerCompetence in worker.SpecificWorkerCompetencesModels)
+            {
+                specificWorkerCompetence.Competence = _context.Competences.Find(specificWorkerCompetence.CompetenceId);
+            }
+
+            WorkerUpdateModel workerUpdateModel = new WorkerUpdateModel { Worker = worker, Competences = _context.Competences.ToList() };
+
+            return View(workerUpdateModel);
         }
-        
+
         [HttpPost]
-        public IActionResult WorkersUpdate(long id, SpecificWorkerModel workerModel, List<long> ids)
+        public IActionResult WorkersUpdate(long id, WorkerUpdateModel workerUpdateModel)
         {
-            _workers.Update(workerModel);
-            _workers.UpdateTable(workerModel, ids);
+            workerUpdateModel.Worker.Id = id;
+
+            var oldSpecificWorkerCompetencesModels = _context.SpecificWorkerCompetences.Where(x => x.WorkerId == id);
+            _context.SpecificWorkerCompetences.RemoveRange(oldSpecificWorkerCompetencesModels);
+
+            foreach (var competenceId in workerUpdateModel.NewCompetencesIds)
+            {
+                var competence = _context.Competences.Find(competenceId);
+
+                var workerCompetences = new SpecificWorkerCompetencesModel();
+
+                workerCompetences.Competence = competence;
+                workerCompetences.Worker = workerUpdateModel.Worker;
+
+                workerUpdateModel.Worker.SpecificWorkerCompetencesModels.Add(workerCompetences);
+                _context.SpecificWorkerCompetences.Add(workerCompetences);
+            }
+
+            _context.Entry(workerUpdateModel.Worker).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+            _context.SaveChanges();
             return RedirectToAction("Workers");
         }
 
         public IActionResult WorkersAdd()
         {
-            ViewBag.Competences = _competences.GetList();
+            ViewBag.Competences = _context.Competences; //для вывода всех компетенций
             return View();
         }
-        
+
         [HttpPost]
         public IActionResult WorkersAdd(SpecificWorkerModel workerModel, List<long> competences)
         {
-            ViewBag.Competences = _competences.GetList();
-            _workers.AddToAnotherTable(workerModel, competences);
-            _workers.Create(workerModel);
-            return RedirectToAction("Workers");
-        }
-        
-        public IActionResult WorkersRemove(long id)
-        {
-            _workers.DeleteById(id);
+            ViewBag.Competences = _context.Competences; //для вывода всех компетенций
+
+            foreach (var competenceId in competences)
+            {
+                var competence = _context.Competences.Find(competenceId);
+
+                var workerCompetences = new SpecificWorkerCompetencesModel();
+
+                workerCompetences.Competence = competence;
+                workerCompetences.Worker = workerModel;
+
+                workerModel.SpecificWorkerCompetencesModels.Add(workerCompetences);
+            }
+
+            _context.Workers.Add(workerModel);
+            _context.SaveChanges();
+
             return RedirectToAction("Workers");
         }
 
+        public IActionResult WorkersRemove(long id)
+        {
+            var item = _context.Workers.Find(id);
+            if (item != null)
+                _context.Workers.Remove(item);
+            _context.SaveChanges();
+            return RedirectToAction("Workers");
+        }
+        #endregion
+        #region Competences
+
         public IActionResult Competences()
         {
-            ViewBag.Competences = _competences.GetList();
-            return View();
+            var competences = _context.Competences;
+            return View(competences);
         }
-        
+
         public IActionResult CompetencesAdd()
         {
             return View();
         }
 
         [HttpPost]
-        public IActionResult CompetencesAdd(string competenceName)
+        public IActionResult CompetencesAdd(CompetencesModel competenceModel)
         {
-            var competence= new CompetencesModel {Competence = competenceName, Content = new string[]{competenceName}, Questions = new string[]
-            {
-                "Вопрос №1",
-                "Вопрос №2"
-            }};
-            _competences.Create(competence);
-            return RedirectToAction("CompetencesManage", new { id = competence.Id });
+            _context.Competences.Add(competenceModel);
+            _context.SaveChanges();
+            return RedirectToAction("CompetencesManage", new { id = competenceModel.Id });
         }
-        
+
         public IActionResult CompetencesManage(long id)
         {
-            ViewBag.Content = _competences.GetById(id).Content;
-            return View();
+            var competence = _context.Competences.Find(id);
+            var competenceUpdateModel = new CompetenceUpdateModel { Competence = competence };
+            return View(competenceUpdateModel);
         }
-        
+
         [HttpPost]
-        public IActionResult CompetencesManage(long id, string method, string contentItem, List<int> checkboxes)
+        public IActionResult CompetencesManage(long id, CompetenceUpdateModel competenceUpdateModel)
         {
-            CompetenceHelper.Manage(_competences, id, method, contentItem, checkboxes);
-            if (method == "RemoveCompetence")
-                return RedirectToAction("Competences");
-            ViewBag.Content = _competences.GetById(id).Content;
-            return View();
+            var competence = _context.Competences.Find(id);
+            switch (competenceUpdateModel.Action)
+            {
+                case Models.CompetenceActions.AddContent:
+                    competence.Content.Add(competenceUpdateModel.Content);
+                    break;
+
+                case Models.CompetenceActions.RemoveCompetence:
+                    _context.Competences.Remove(competence);
+                    _context.SaveChanges();
+                    return RedirectToAction("Competences");
+
+                case Models.CompetenceActions.RemoveContent:
+                    List<string> newContent = new List<string>();
+                    for (int i = 0; i < competence.Content.Count; i++)
+                    {
+                        if (!competenceUpdateModel.Checkboxes.Contains(i))
+                            newContent.Add(competence.Content[i]);
+                    }
+                    competence.Content = newContent;
+                    break;
+            }
+
+            competenceUpdateModel.Competence = competence;
+            _context.SaveChanges();
+            return View(competenceUpdateModel);
         }
-        
+
+        #endregion
+        #region Grades
+
+
         public IActionResult Grades()
         {
-            var a =GradeOutputModelHelper.GetList(_grades);
-            ViewBag.Grades = GradeOutputModelHelper.GetList(_grades);
-            return View();
+            var grades = _context.Grades.ToList();
+
+            foreach (var grade in grades)
+            {
+                _context.Entry(grade).Collection(x => x.GradesCompetences).Load();
+                foreach (var gradeCompetences in grade.GradesCompetences)
+                {
+                    gradeCompetences.Competence = _context.Competences.Find(gradeCompetences.CompetenceId);
+                }
+            }
+
+            return View(grades);
         }
-        
+
         public IActionResult GradesAdd()
         {
             return View();
         }
 
         [HttpPost]
-        public IActionResult GradesAdd(string gradeName)
+        public IActionResult GradesAdd(GradesModel gradeModel)
         {
-            var grade = new GradesModel {Grade = gradeName};
-            _grades.Create(grade);
-            return RedirectToAction("GradesManage", new { id = grade.Id });
+            _context.Grades.Add(gradeModel);
+            _context.SaveChanges();
+            return RedirectToAction("GradesManage", new { id = gradeModel.Id });
         }
-        
+
         public IActionResult GradesManage(long id)
         {
-            ViewBag.CompetencesList =  _competences.GetList();
-            ViewBag.AddedCompetences = _grades.GetAllCompetencesById(id);
-            return View();
+            var grade = _context.Grades.Find(id);
+            _context.Entry(grade).Collection(x => x.GradesCompetences).Load();
+            var gradeUpdateModel = new GradeUpdateModel { GradeModel = grade, Competences = _context.Competences.ToList() };
+            return View(gradeUpdateModel);
         }
 
         [HttpPost]
-        public IActionResult GradesManage(long id, string method, List<long> competences)
+        public IActionResult GradesManage(long id, GradeUpdateModel gradeUpdateModel)
         {
-            GradeHelper.Manage(_grades, id, method, competences);
-            if (method == "RemoveGrade")
-                return RedirectToAction("Grades");
-            ViewBag.CompetencesList =  _competences.GetList();
-            ViewBag.AddedCompetences = _grades.GetAllCompetencesById(id);
-            return View();
+            var grade = _context.Grades.Find(id);
+            switch (gradeUpdateModel.Action)
+            {
+                case GradeActions.SetCompetences:
+                    var oldGradesCompetences = _context.GradeCompetences.Where(x => x.GradeId == id);
+                    _context.GradeCompetences.RemoveRange(oldGradesCompetences);
+
+                    foreach (var competenceId in gradeUpdateModel.NewCompetencesIds)
+                    {
+                        var gradeCompetence = new GradeCompetencesModel();
+
+                        gradeCompetence.Competence = _context.Competences.Find(competenceId);
+                        gradeCompetence.Grade = grade;
+
+                        grade.GradesCompetences.Add(gradeCompetence);
+
+                        _context.GradeCompetences.Add(gradeCompetence);
+                    }
+                    _context.SaveChanges();
+
+                    break;
+                case GradeActions.RemoveGrade:
+                    _context.Grades.Remove(grade);
+                    _context.SaveChanges();
+                    return RedirectToAction("Grades");
+            }
+
+            _context.Entry(grade).Collection(x => x.GradesCompetences).Load();
+            gradeUpdateModel.GradeModel = grade;
+            gradeUpdateModel.Competences = _context.Competences.ToList();
+            return View(gradeUpdateModel);
         }
-        
+
+        #endregion
+        #region Questions
         public IActionResult Questions()
         {
-            ViewBag.Questions = _competences.GetList();
-            return View();
+            var competences = _context.Competences;
+            return View(competences);
         }
-        
+
         public IActionResult QuestionsManage(long id)
         {
-            ViewBag.Questions = _competences.GetById(id).Questions;
-            return View();
+            var questions = _context.Competences.Find(id).Questions;
+            var questionUpdateModel = new QuestionUpdateModel { Questions = questions };
+            return View(questionUpdateModel);
         }
-        
+
         [HttpPost]
-        public IActionResult QuestionsManage(long id, string method, string question, List<int> checkboxes)
+        public IActionResult QuestionsManage(long id, QuestionUpdateModel questionUpdateModel)
         {
-            QuestionHelper.Manage(_competences, id, method, question, checkboxes);
-            ViewBag.Questions = _competences.GetById(id).Questions;
-            return View();
-        }
-        
-        public IActionResult Attestation()
-        {
-            ViewBag.Method = "Choose";
-            ViewBag.Type = "";
-            ViewBag.Workers = WorkerOutputModelHelper.GetList(_workers);
-            ViewBag.Competences = _competences.GetList();
-            ViewBag.Grades = _grades.GetList();
-            return View();
-        }
-        
-        [HttpPost]
-        public IActionResult Attestation(bool? isGotGrade,long? gradeId, string type,string method, AttestationModel model, List<long> rightAnswers, List<long> skipedAnswers, 
-            List<string> commentaries, List<long> gotCompetences, List<string> questions)
-        {
-            ViewBag.Grades = _grades.GetList();
-            ViewBag.Type = type;
-            ViewBag.Workers = WorkerOutputModelHelper.GetList(_workers);
-            ViewBag.Competences = _competences.GetList();
-            if (type != ""&& method=="Choose")
+            var competence = _context.Competences.Find(id);
+            switch (questionUpdateModel.Action)
             {
-                ViewBag.Method = "Choose";
-                ViewBag.GradeId = gradeId;
-                ViewBag.Type = type;
-                return View();
+                case QuestionActions.RemoveQuestions:
+                    foreach (var question in questionUpdateModel.QuestionsToRemove)
+                    {
+                        competence.Questions.Remove(question);
+                    }
+                    break;
+                case QuestionActions.AddQuestion:
+                    competence.Questions.Add(questionUpdateModel.NewQuestion);
+                    break;
             }
-            if (model.CompetencesId == null)
-                model.CompetencesId = AttestationHelper.GetCompetencesForGrade(gradeId.Value, _grades);
-            if (model.WorkerId != null && model.CompetencesId.Count > 0)
+            _context.SaveChanges();
+            questionUpdateModel.Questions = competence.Questions;
+            return View(questionUpdateModel);
+        }
+
+        #endregion
+        #region Attestation
+        public IActionResult Attestation()
+        {           
+            AttestationModel attestation = new AttestationModel();
+
+            attestation.Workers = GetLoadedWorkers();
+            attestation.Grades = GetLoadedGrades();
+            attestation.Competences = _context.Competences.ToList();
+
+            if (attestation.Competences.Count == 0)
             {
-                switch (method)
-                {
-                    case ("Attestation"):
-                        ViewBag.GradeId = gradeId;
-                        ViewBag.Questions =
-                            AttestationHelper.GetQuestionsForCompetences(model.CompetencesId, _competences);
-                        ViewBag.ChosenCompetences =
-                            AttestationHelper.GetNamesOfChosenCompetences(model.CompetencesId, _competences);
-                        ViewBag.WorkerId = model.WorkerId;
-                        ViewBag.CompetencesId = model.CompetencesId;
-                        break;
-                    case ("Finished"):
-                        model.TestedCompetences = model.CompetencesId.ToList();
-                        if (isGotGrade != null && isGotGrade == false)
-                        {
-                            model.CompetencesId.Clear();
-                        }
-
-                        if (isGotGrade!=null && isGotGrade == true && gradeId!=null)
-                            gotCompetences = AttestationHelper.GetCompetencesForGrade(gradeId.Value, _grades);
-
-                        AttestationHelper.SaveAttestation(rightAnswers, skipedAnswers, commentaries, gotCompetences, questions, model, _workers, _attestation);
-                        return RedirectToAction("AttestationList");
-                }
-                ViewBag.Method = method;
-                ViewBag.Type = type;
+                attestation.Action = AttestationAction.None;
             }
             else
-                ViewBag.Method = "Choose";
+            {
+                if (attestation.Grades.Count != 0)
+                {
+                    attestation.Action = AttestationAction.Choosing;
+                }
+                else
+                {
+                    attestation.Action = AttestationAction.CompetencesChose;
+                }
+            }
+
+            return View(attestation);
+        }
+
+        [HttpPost]
+        public IActionResult Attestation(AttestationModel model)
+        {
+            switch (model.Action)
+            {
+                case AttestationAction.Choosing: //вывести окно выбора
+                    break;
+
+                case AttestationAction.CompetencesChose: //вывести таблицу компетенций и работников
+                    model.Workers = GetLoadedWorkers();
+                    model.Competences = _context.Competences.ToList();
+                    model.Grades = GetLoadedGrades();
+                    break;
+
+                case AttestationAction.GradeChose: //вывести таблицу грейдов и работников
+                    model.Workers = GetLoadedWorkers();
+                    model.Competences = _context.Competences.ToList();
+                    model.Grades = GetLoadedGrades();
+                    break;
+
+                case AttestationAction.AttestationByCompetences: //вывести окно аттестации по компетенциям
+                    var questions = new List<string>();
+                    var testedCompetences = new List<CompetencesModel>();
+                    foreach (var competenceId in model.IdsTestedCompetences)
+                    {
+                        var competence = _context.Competences.Find(competenceId);
+                        testedCompetences.Add(competence);
+                        questions = questions.Union(competence.Questions).ToList(); 
+                    }
+                    questions = questions.Distinct().ToList();
+                    model.Questions = questions;
+                    model.TestedCompetences = testedCompetences;
+                    break;
+
+                case AttestationAction.AttestationByGrade: //вывести окно аттестации по грейдам
+                    var questionsForGrade = new List<string>();
+                    var gradeId = model.GradeId.Value;
+
+                    var testedGradeCompetences = _context.GradeCompetences.Where(x => x.GradeId == gradeId).ToList();
+
+                    var idsOfTestedCompetences = new List<CompetencesModel>(); 
+
+                    foreach (var testedGradeCompetence in testedGradeCompetences)
+                    {
+                        var competence = _context.Competences.Find(testedGradeCompetence.CompetenceId);
+                        questionsForGrade = questionsForGrade.Union(competence.Questions).ToList();
+                        idsOfTestedCompetences.Add(competence);
+                    }
+                    questionsForGrade = questionsForGrade.Distinct().ToList();
+                    model.TestedCompetences = idsOfTestedCompetences;
+                    model.Questions = questionsForGrade;
+                    break;
+
+                case AttestationAction.Finished: //сохранить результаты
+                    var answers = new List<AnswerModel>();
+                    var problems = new StringBuilder("");
+
+                    for (int i = 0; i < model.Questions.Count; i++)
+                    {
+                        var answerModel = new AnswerModel();
+                        if (model.Commentaries[i] == "")
+                            model.Commentaries[i] = "Комментарий не добавлен";
+                        answerModel.Commentary = model.Commentaries[i];
+                        answerModel.Question = model.Questions[i];
+                        answerModel.IsRight = model.RightAnswers.Contains(i);
+                        answerModel.IsSkipped = model.SkipedAnswers.Contains(i);
+                        answerModel.NumberOfAsk = i + 1;
+                        answers.Add(answerModel);
+
+                        if (!answerModel.IsRight && !answerModel.IsSkipped)
+                        {
+                            problems.Append($"вопрос №{i + 1}: {answerModel.Question[i]} \n");
+                        }
+                    }
+
+                    if (problems.ToString() == "")
+                        problems.Append("Всё верно!");
+
+                    model.Problems = problems.ToString();
+                    model.Date = DateTime.Today;
+
+                    if (model.GradeId != null) //по грейду
+                    {
+                        if (model.IsGotGrade != null)
+                        {
+                            model.GotCompetences = model.IdsTestedCompetences;
+                        }
+                        else
+                        {
+                            model.GotCompetences = new List<long>();
+                        }
+                    }
+
+                    var specificWorkerModel = _context.SpecificWorkerCompetences.Where(x => x.WorkerId == model.WorkerId).ToList();
+                    var newSpecificWorkerCompetences = new List<SpecificWorkerCompetencesModel>();
+
+                    foreach (var competence in model.GotCompetences)
+                    {
+                        newSpecificWorkerCompetences.Add(new SpecificWorkerCompetencesModel { CompetenceId = competence, WorkerId = model.WorkerId });
+                    }
+
+                    newSpecificWorkerCompetences = newSpecificWorkerCompetences.Union(specificWorkerModel).Distinct().ToList();
+
+                    var newCompetences = newSpecificWorkerCompetences.Except(specificWorkerModel).ToList();
+
+                    var gotCompetences = new List<long>();
+
+                    foreach (var newCompetence in newCompetences)
+                    {
+                        _context.SpecificWorkerCompetences.Add(newCompetence);
+                        gotCompetences.Add(newCompetence.CompetenceId);
+                    }
+
+                    model.GotCompetences = gotCompetences;
+
+                    foreach (var answer in answers)
+                    {
+                        var attestationAnswerModel = new AttestationAnswerModel();
+
+                        attestationAnswerModel.Answer = answer;
+                        attestationAnswerModel.Attestation = model;
+
+                        model.AttestationAnswer.Add(attestationAnswerModel);
+                        answer.AttestationAnswer.Add(attestationAnswerModel);
+                        _context.Add(answer);
+                    }
+                    _context.Add(model);
+                    _context.SaveChanges();
+                    return RedirectToAction("AttestationList");
+            }
             return View(model);
+        }
+        #endregion
+        private List<SpecificWorkerModel> GetLoadedWorkers()
+        {
+            var workers = _context.Workers.ToList();
+            foreach (var worker in workers)
+            {
+                _context.Entry(worker).Collection(x => x.SpecificWorkerCompetencesModels).Load();
+                foreach (var specificWorkerCompetence in worker.SpecificWorkerCompetencesModels)
+                {
+                    specificWorkerCompetence.Competence = _context.Competences.Find(specificWorkerCompetence.CompetenceId);
+                }
+            }
+            return workers;
+        }
+
+        private List<GradesModel> GetLoadedGrades()
+        {
+            var grades = _context.Grades.ToList();
+            foreach (var grade in grades)
+            {
+                _context.Entry(grade).Collection(x => x.GradesCompetences).Load();
+                foreach (var gradeCompetences in grade.GradesCompetences)
+                {
+                    gradeCompetences.Competence = _context.Competences.Find(gradeCompetences.CompetenceId);
+                }
+            }
+            return grades;
         }
 
         public IActionResult AttestationList()
         {
-            List<OutputHelper> outputHelpers = new List<OutputHelper>();
-            foreach (var element in _attestation.GetList())
+            List<AttestationListModel> attestationListModels = new List<AttestationListModel>();
+            foreach (var element in _context.Attestations.ToList())
             {
-                outputHelpers.Add(new OutputHelper(_competences, _workers, element));
+                var attestationListModel = new AttestationListModel(element);
+                attestationListModel.Worker = _context.Workers.Find(element.WorkerId);
+                attestationListModel.Competences = element.GotCompetences.Select(x => _context.Competences.Find(x)).ToList();
+                attestationListModels.Add(attestationListModel);
             }
-            ViewBag.Attestations = outputHelpers;
-            return View();
-        }
-        
-        public IActionResult DownloadAttestation(long id)
-        {
-            PdfHelper.GetPdfOfAttestation(id, _attestation, _workers, _competences);
-            var stream = new FileStream(Path.Combine(_env.ContentRootPath, "Files", "attestation.pdf"), FileMode.OpenOrCreate);
-            return File(stream, "application/pdf", "attestation.pdf");
+            return View(attestationListModels);
         }
 
         public IActionResult Output()
         {
-            ViewBag.Workers = WorkerOutputModelHelper.GetList(_workers);
-            return View();
+            var workers = GetLoadedWorkers();
+            return View(workers);
         }
-        
+
         [HttpPost]
         public IActionResult Output(List<long> ids)
         {
-            ViewBag.Workers = WorkerOutputModelHelper.GetList(_workers);
-            PdfHelper.GetPdfofWorkers(ids, _workers);
+            var workers = GetLoadedWorkers();
+            PdfHelper.GetPdfofWorkers(ids, GetLoadedWorkers());
             var stream = new FileStream(Path.Combine(_env.ContentRootPath, "Files", "workers.pdf"), FileMode.OpenOrCreate);
             return File(stream, "application/pdf", "workers.pdf");
+        }
+
+        public IActionResult DownloadAttestation(long id)
+        {
+            PdfHelper.GetPdfOfAttestation(id, _context);
+            var stream = new FileStream(Path.Combine(_env.ContentRootPath, "Files", "attestation.pdf"), FileMode.OpenOrCreate);
+            return File(stream, "application/pdf", "attestation.pdf");
         }
     }
 }

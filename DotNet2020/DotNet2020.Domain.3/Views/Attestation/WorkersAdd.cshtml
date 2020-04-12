@@ -1,36 +1,68 @@
 ﻿@model DotNet2020.Domain._3.Models.SpecificWorkerModel
 
-<form method="post">
-    <p>Фамилия</p>
-    <input type="text" required name="Surname"/>
-    <p>Имя</p>
-    <input type="text" required name="Name"/>
-    <p>Отчество</p>
-    <input type="text" required name="Patronymic"/>
-    <p>Должность</p>
-    <input type="text" required name="Position"/>
-    <p>Оклад</p>
-    <input type="number" required name="Salary" step="0.01"/>
-    <p>Премия</p>
-    <input type="number" required name="Bonus" step="0.01"/>
-    <p>Компетенции</p>
-    @if (ViewBag.Competences != null)
-    {
-        @foreach (var element in ViewBag.Competences)
-        {
-            <p><input type="checkbox" value="@element.Id" name="competences"> @element.Competence</p>
-        }
-    }
-    else
-    {
-        <p>Компетенции еще не были добавлены!</p>   
-    }
-     <p>Комментарий</p>
-    <textarea style="border:none;border-top:groove;border-left:groove;" name="Commentary" required cols="100"></textarea>
-    <p>Предыдущие места работы</p>
-    <textarea style="border:none;border-top:groove;border-left:groove;" name="PreviousWorkPlaces" required cols="100"></textarea>
-    <p>Общий стаж</p>
-     <textarea style="border:none;border-top:groove;border-left:groove;" name="Experience" required cols="100"></textarea>
-    <br/>
-    <input type="submit" value="Добавить"/>
-</form>
+<!doctype html>
+<html class="no-js" lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" href="favicon.ico" />
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/left-nav-style.css">
+</head>
+
+<body>
+    <input type="checkbox" id="nav-toggle" hidden>
+    <nav class="nav">
+        <label for="nav-toggle" class="nav-toggle" onclick></label>
+        <ul>
+            <li>@Html.ActionLink("Главная страница", "Index", "Attestation")
+            <li>@Html.ActionLink("Сотрудники", "Workers", "Attestation")
+            <li>@Html.ActionLink("Компетенции", "Competences", "Attestation")
+            <li>@Html.ActionLink("Грейды", "Grades", "Attestation")
+            <li>@Html.ActionLink("Вопросы", "Questions", "Attestation")
+            <li>@Html.ActionLink("Аттестация", "Attestation", "Attestation")
+            <li>@Html.ActionLink("Выгрузка", "Output", "Attestation")
+        </ul>
+    </nav>
+    <main role="main">
+        <form method="post">
+            <p>Фамилия</p>
+            <input type="text" required name="Surname" />
+            <p>Имя</p>
+            <input type="text" required name="Name" />
+            <p>Отчество</p>
+            <input type="text" required name="Patronymic" />
+            <p>Должность</p>
+            <input type="text" required name="Position" />
+            <p>Оклад</p>
+            <input type="number" required name="Salary" step="0.01" />
+            <p>Премия</p>
+            <input type="number" required name="Bonus" step="0.01" />
+            <p>Компетенции</p>
+            @if (ViewBag.Competences != null)
+            {
+                @foreach (var element in ViewBag.Competences)
+                {
+                    <p><input type="checkbox" value="@element.Id" name="competences"> @element.Competence</p>
+                }
+            }
+            else
+            {
+                <p>Компетенции еще не были добавлены!</p>
+            }
+            <p>Комментарий</p>
+            <textarea style="border:none;border-top:groove;border-left:groove;" name="Commentary" required cols="100"></textarea>
+            <p>Предыдущие места работы</p>
+            <textarea style="border:none;border-top:groove;border-left:groove;" name="PreviousWorkPlaces" required cols="100"></textarea>
+            <p>Общий стаж</p>
+            <textarea style="border:none;border-top:groove;border-left:groove;" name="Experience" required cols="100"></textarea>
+            <br />
+            <input type="submit" value="Добавить" />
+        </form>
+    </main>
+</body>
+</html>
+
+

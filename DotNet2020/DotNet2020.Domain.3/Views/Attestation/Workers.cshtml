@@ -1,4 +1,5 @@
-﻿<!doctype html>
+﻿@model IEnumerable<DotNet2020.Domain._3.Models.SpecificWorkerModel>
+<!doctype html>
 <html class="no-js" lang="en">
 
 <head>
@@ -11,60 +12,65 @@
 </head>
 
 <body>
-<input type="checkbox" id="nav-toggle" hidden>
-<nav class="nav">
-    <label for="nav-toggle" class="nav-toggle" onclick></label>
-    <ul>
-        <li>@Html.ActionLink("Главная страница", "Index", "Attestation")
-        <li>@Html.ActionLink("Сотрудники", "Workers", "Attestation")
-        <li>@Html.ActionLink("Компетенции", "Competences", "Attestation")
-        <li>@Html.ActionLink("Грейды", "Grades", "Attestation")
-        <li>@Html.ActionLink("Вопросы", "Questions", "Attestation")
-        <li>@Html.ActionLink("Аттестация", "Attestation", "Attestation")
-        <li>@Html.ActionLink("Выгрузка", "Output", "Attestation")
-    </ul>
-</nav>
-<main role="main">
-<p>@Html.ActionLink("Добавить", "WorkersAdd", "Attestation")</p>
+    <input type="checkbox" id="nav-toggle" hidden>
+    <nav class="nav">
+        <label for="nav-toggle" class="nav-toggle" onclick></label>
+        <ul>
+            <li>@Html.ActionLink("Главная страница", "Index", "Attestation")
+            <li>@Html.ActionLink("Сотрудники", "Workers", "Attestation")
+            <li>@Html.ActionLink("Компетенции", "Competences", "Attestation")
+            <li>@Html.ActionLink("Грейды", "Grades", "Attestation")
+            <li>@Html.ActionLink("Вопросы", "Questions", "Attestation")
+            <li>@Html.ActionLink("Аттестация", "Attestation", "Attestation")
+            <li>@Html.ActionLink("Выгрузка", "Output", "Attestation")
+        </ul>
+    </nav>
+    <main role="main">
+        <p>@Html.ActionLink("Добавить", "WorkersAdd", "Attestation")</p>
 
-@if (ViewBag.Workers != null && ViewBag.Workers.Count > 0)
-{
-    <table border="1">
-        <tr>
-            <th>ФИО</th>
-            <th>Должность</th>
-            <th>Оклад</th>
-            <th>Премия</th>
-            <th>Комментарий</th>
-            <th>Компетенции</th>
-            <th>Предыдущие места работы</th>
-            <th>Опыт работы</th>
-            <th></th>
-        </tr>
-        @foreach (var element in ViewBag.Workers)
-        {
-            <tr><td>@element.Worker.FullName</td><td>@element.Worker.Position</td><td>@element.Worker.Salary</td><td>@element.Worker.Bonus</td><td>@element.Worker.Commentary</td>
-                <td>
-                    @if (element.Competences != null && element.Competences.Count>0)
-                    {
-                        @foreach (var competence in element.Competences)
+        <table border="1">
+            <tr>
+                <th>ФИО</th>
+                <th>Должность</th>
+                <th>Оклад</th>
+                <th>Премия</th>
+                <th>Комментарий</th>
+                <th>Компетенции</th>
+                <th>Предыдущие места работы</th>
+                <th>Опыт работы</th>
+                <th></th>
+            </tr>
+            @foreach (var element in Model)
+            {
+                <tr>
+                    <td>@element.FullName</td>
+                    <td>@element.Position</td>
+                    <td>@element.Salary</td>
+                    <td>@element.Bonus</td>
+                    <td>@element.Commentary</td>
+                    <td>
+                        @if (element.SpecificWorkerCompetencesModels.Count > 0)
                         {
-                            <span>@competence.Competence</span>
+                            @foreach (var competence in element.SpecificWorkerCompetencesModels)
+                            {
+                                <span>@competence.Competence.Competence</span><br />
+                            }
                         }
-                    }
-                    else
-                    {
-                        <p>Компетенции не добавлены</p>
-                    }
-                </td><td>@element.Worker.PreviousWorkPlaces</td><td>@element.Worker.Experience</td>
-                <td>
-                    @Html.ActionLink($"Изменить", "WorkersUpdate", "Attestation", new {id = element.Worker.Id}, null)
-                    @Html.ActionLink($"Удалить", "WorkersRemove", "Attestation", new {id = element.Worker.Id}, null)
-                    </td></tr>
-        }
-    </table>
-}
-</main>
+                        else
+                        {
+                            <p>Компетенции не добавлены</p>
+                        }
+                    </td>
+                    <td>@element.PreviousWorkPlaces</td>
+                    <td>@element.Experience</td>
+                    <td>
+                        @Html.ActionLink($"Изменить", "WorkersUpdate", "Attestation", new { id = element.Id }, null)
+                        @Html.ActionLink($"Удалить", "WorkersRemove", "Attestation", new { id = element.Id }, null)
+                    </td>
+                </tr>
+            }
+        </table>
+    </main>
 </body>
 </html>
 

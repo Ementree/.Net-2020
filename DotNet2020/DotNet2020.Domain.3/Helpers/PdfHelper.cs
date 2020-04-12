@@ -5,15 +5,16 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using DotNet2020.Domain._3.Models;
-using DotNet2020.Domain._3.Repository;
+using DotNet2020.Domain._3.Models.Contexts;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
+using Microsoft.EntityFrameworkCore;
 
 namespace DotNet2020.Domain._3.Helpers
 {
     public static class PdfHelper
     {
-        public static void GetPdfofWorkers(List<long> ids, SpecificWorkerRepository _workers)
+        public static void GetPdfofWorkers(List<long> ids, List<SpecificWorkerModel> workers)
         {
             var document = new Document(PageSize.A4, 75, 65, 75, 75);
             document.AddTitle("Выгрузка работников");
@@ -32,10 +33,8 @@ namespace DotNet2020.Domain._3.Helpers
 
 
             document.Open();
-            
-            var workers = WorkerOutputModelHelper.GetList(_workers);
 
-            workers = workers.Where(x => ids.Contains(x.Worker.Id)).ToList();
+            workers = workers.Where(x => ids.Contains(x.Id)).ToList();
 
             document.Add(new Paragraph($"Работники", head));
             document.Add(new Paragraph($" ", body));
@@ -58,14 +57,14 @@ namespace DotNet2020.Domain._3.Helpers
             
             foreach (var worker in workers)
             {
-                PdfPCell tablecellx1 = new PdfPCell(new Phrase($"{worker.Worker.Position}", body));
+                PdfPCell tablecellx1 = new PdfPCell(new Phrase($"{worker.Position}", body));
                 table.AddCell(tablecellx1);
 
                 StringBuilder builder = new StringBuilder("");
 
-                foreach (var competence in worker.Competences)
+                foreach (var competence in worker.SpecificWorkerCompetencesModels)
                 {
-                    builder.Append(competence.Competence+", ");
+                    builder.Append(competence.Competence.Competence+", ");
                 }
 
                 if (builder.ToString() == "")
@@ -79,10 +78,10 @@ namespace DotNet2020.Domain._3.Helpers
                 table.AddCell(tablecellx2);
                 
                 PdfPCell tablecellx3 = new PdfPCell();
-                tablecellx3 = new PdfPCell(new Phrase($"{worker.Worker.Experience}", body));
+                tablecellx3 = new PdfPCell(new Phrase($"{worker.Experience}", body));
                 table.AddCell(tablecellx3);
                 
-                PdfPCell tablecellx4 = new PdfPCell(new Phrase($"{worker.Worker.PreviousWorkPlaces}", body));
+                PdfPCell tablecellx4 = new PdfPCell(new Phrase($"{worker.PreviousWorkPlaces}", body));
                 table.AddCell(tablecellx4);
             }
             document.Add(table);
@@ -91,8 +90,7 @@ namespace DotNet2020.Domain._3.Helpers
             Thread.Sleep(100);
         }
         
-        public static void GetPdfOfAttestation(long id, AttestationRepository attestationRepository, 
-            SpecificWorkerRepository workerRepository, CompetencesRepository competencesRepository)
+        public static void GetPdfOfAttestation(long id, AttestationContext context)
         {
             var document = new Document(PageSize.A4, 75, 65, 75, 75);
             document.AddTitle("Результаты аттестации");
@@ -110,13 +108,18 @@ namespace DotNet2020.Domain._3.Helpers
             Font boldBody=new Font(baseFont, 10, Font.BOLD, BaseColor.BLACK);
             Font head=new Font(baseFont, 16, Font.NORMAL, BaseColor.BLACK);
 
-            var attestation = AttestationAnswerOutputModelHelper
-                .GetList(attestationRepository)
-                .First(x=>x.Attestation.Id==id);
-            
-            attestation.Answers = attestation.Answers.Where(x => x.IsSkipped == false).OrderBy(x=>x.NumberOfAsk).ToList();
+            var attestation = context.Attestations.First(x => x.Id == id);
 
-            var testedCompetences = attestation.Attestation.TestedCompetences;
+            context.Entry(attestation).Collection(x => x.AttestationAnswer).Load();
+
+            foreach (var attestationAnswer in attestation.AttestationAnswer)
+            {
+                attestationAnswer.Answer = context.Answers.Find(attestationAnswer.AnswerId);
+            }
+
+            attestation.AttestationAnswer = attestation.AttestationAnswer.Where(x => x.Answer.IsSkipped == false).OrderBy(x=>x.Answer.NumberOfAsk).ToList();
+
+            var testedCompetences = attestation.IdsTestedCompetences;
 
             List<CompetencesModel> competencesModels=new List<CompetencesModel>();
             
@@ -125,24 +128,24 @@ namespace DotNet2020.Domain._3.Helpers
 
             foreach (var testedCompetence in testedCompetences)
             {
-                competencesModels.Add(competencesRepository.GetById(testedCompetence));
+                competencesModels.Add(context.Competences.Find(testedCompetence));
             }
             
-            var worker = workerRepository.GetById(attestation.Attestation.WorkerId.Value);
+            var worker = context.Workers.Find(attestation.WorkerId);
             
             document.Open();
             if (worker == null)
             {
                 worker=new SpecificWorkerModel();
                 document.Add(new Paragraph($"Аттестация удалённого работника", head));
-                document.Add(new Paragraph(attestation.Attestation.Date.ToString("d"), head));
+                document.Add(new Paragraph(attestation.Date.ToString("d"), head));
                 document.Add(new Paragraph(" ", body));
             }
                 
             else
             {
                 document.Add(new Paragraph($"{worker.Name} - результаты аттестации", head));
-                document.Add(new Paragraph(attestation.Attestation.Date.ToString("d"), head));
+                document.Add(new Paragraph(attestation.Date.ToString("d"), head));
                 document.Add(new Paragraph(" ", body));
             }
             document.Add(new Paragraph("Техническое интервью", head));
@@ -156,7 +159,7 @@ namespace DotNet2020.Domain._3.Helpers
             document.Add(new Paragraph(" ", body));
             
             document.Add(new Paragraph("Выявлены пробелы в знаниях:", boldBody));
-            document.Add(new Paragraph($"{attestation.Attestation.Problems}", body));
+            document.Add(new Paragraph($"{attestation.Problems}", body));
             
             document.Add(new Paragraph(" ", body));
             
@@ -166,12 +169,12 @@ namespace DotNet2020.Domain._3.Helpers
             document.Add(new Paragraph(" ", body));
             
             document.Add(new Paragraph("Дальнейшие действия", head));
-            document.Add(new Paragraph($"{attestation.Attestation.NextMoves}", body));
+            document.Add(new Paragraph($"{attestation.NextMoves}", body));
             
             document.Add(new Paragraph(" ", body));
             
             document.Add(new Paragraph("Обратная связь от руководителя проекта:", boldBody));
-            document.Add(new Paragraph($"{attestation.Attestation.Feedback}", body));
+            document.Add(new Paragraph($"{attestation.Feedback}", body));
             
             document.Add(new Paragraph(" ", body));
 
@@ -191,22 +194,22 @@ namespace DotNet2020.Domain._3.Helpers
             PdfPCell tablecell14 = new PdfPCell(new Phrase("Комментарий", body));
             table.AddCell(tablecell14);
             
-            foreach (var answer in attestation.Answers)
+            foreach (var answer in attestation.AttestationAnswer)
             {
-                PdfPCell tablecellx1 = new PdfPCell(new Phrase($"{answer.NumberOfAsk}", body));
+                PdfPCell tablecellx1 = new PdfPCell(new Phrase($"{answer.Answer.NumberOfAsk}", body));
                 table.AddCell(tablecellx1);
                 
-                PdfPCell tablecellx2 = new PdfPCell(new Phrase($"{answer.Question}", body));
+                PdfPCell tablecellx2 = new PdfPCell(new Phrase($"{answer.Answer.Question}", body));
                 table.AddCell(tablecellx2);
                 
                 PdfPCell tablecellx3 = new PdfPCell();
-                if (answer.IsRight)
+                if (answer.Answer.IsRight)
                     tablecellx3 = new PdfPCell(new Phrase("+", body));
                 else
                     tablecellx3 = new PdfPCell(new Phrase("-", body));
                 table.AddCell(tablecellx3);
                 
-                PdfPCell tablecellx4 = new PdfPCell(new Phrase($"{answer.Commentary}", body));
+                PdfPCell tablecellx4 = new PdfPCell(new Phrase($"{answer.Answer.Commentary}", body));
                 table.AddCell(tablecellx4);
             }
             document.Add(table);
