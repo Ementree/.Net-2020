@@ -18,7 +18,7 @@ namespace DotNet2020.Domain._3.Helpers
             AttestationId = attestationModel.Id;
             var worker = workers.GetById((long) attestationModel.WorkerId);
             if (worker != null)
-                WorkerName = worker.Name;
+                WorkerName = worker.FullName;
             else
                 WorkerName = "Данный сотрудник был удалён!";
             Competences = new List<string>();
