@@ -55,4 +55,8 @@
     <ProjectReference Include="..\DotNet2020.Domain.Core\DotNet2020.Domain.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <TypeScriptCompile Include="scripts\AddProject.ts" />
+  </ItemGroup>
+
 </Project>
