@@ -144,7 +144,7 @@ namespace DotNet2020.Domain._3.Helpers
                 
             else
             {
-                document.Add(new Paragraph($"{worker.Name} - результаты аттестации", head));
+                document.Add(new Paragraph($"{worker.FullName} - результаты аттестации", head));
                 document.Add(new Paragraph(attestation.Date.ToString("d"), head));
                 document.Add(new Paragraph(" ", body));
             }

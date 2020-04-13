@@ -290,7 +290,7 @@ namespace DotNet2020.Domain._3.Controllers
         #endregion
         #region Attestation
         public IActionResult Attestation()
-        {           
+        {
             AttestationModel attestation = new AttestationModel();
 
             attestation.Workers = GetLoadedWorkers();
@@ -343,7 +343,7 @@ namespace DotNet2020.Domain._3.Controllers
                     {
                         var competence = _context.Competences.Find(competenceId);
                         testedCompetences.Add(competence);
-                        questions = questions.Union(competence.Questions).ToList(); 
+                        questions = questions.Union(competence.Questions).ToList();
                     }
                     questions = questions.Distinct().ToList();
                     model.Questions = questions;
@@ -356,7 +356,7 @@ namespace DotNet2020.Domain._3.Controllers
 
                     var testedGradeCompetences = _context.GradeCompetences.Where(x => x.GradeId == gradeId).ToList();
 
-                    var idsOfTestedCompetences = new List<CompetencesModel>(); 
+                    var idsOfTestedCompetences = new List<CompetencesModel>();
 
                     foreach (var testedGradeCompetence in testedGradeCompetences)
                     {
@@ -370,58 +370,21 @@ namespace DotNet2020.Domain._3.Controllers
                     break;
 
                 case AttestationAction.Finished: //сохранить результаты
-                    var answers = new List<AnswerModel>();
-                    var problems = new StringBuilder("");
-
-                    for (int i = 0; i < model.Questions.Count; i++)
-                    {
-                        var answerModel = new AnswerModel();
-                        if (model.Commentaries[i] == "")
-                            model.Commentaries[i] = "Комментарий не добавлен";
-                        answerModel.Commentary = model.Commentaries[i];
-                        answerModel.Question = model.Questions[i];
-                        answerModel.IsRight = model.RightAnswers.Contains(i);
-                        answerModel.IsSkipped = model.SkipedAnswers.Contains(i);
-                        answerModel.NumberOfAsk = i + 1;
-                        answers.Add(answerModel);
-
-                        if (!answerModel.IsRight && !answerModel.IsSkipped)
-                        {
-                            problems.Append($"вопрос №{i + 1}: {answerModel.Question[i]} \n");
-                        }
-                    }
-
-                    if (problems.ToString() == "")
-                        problems.Append("Всё верно!");
-
-                    model.Problems = problems.ToString();
+                    var tuple = GetProblemsAndAnswers(model);
+                    model.Problems = tuple.Item1;
+                    var answers = tuple.Item2;
                     model.Date = DateTime.Today;
 
                     if (model.GradeId != null) //по грейду
                     {
                         if (model.IsGotGrade != null)
-                        {
                             model.GotCompetences = model.IdsTestedCompetences;
-                        }
                         else
-                        {
                             model.GotCompetences = new List<long>();
-                        }
                     }
-
-                    var specificWorkerModel = _context.SpecificWorkerCompetences.Where(x => x.WorkerId == model.WorkerId).ToList();
-                    var newSpecificWorkerCompetences = new List<SpecificWorkerCompetencesModel>();
-
-                    foreach (var competence in model.GotCompetences)
-                    {
-                        newSpecificWorkerCompetences.Add(new SpecificWorkerCompetencesModel { CompetenceId = competence, WorkerId = model.WorkerId });
-                    }
-
-                    newSpecificWorkerCompetences = newSpecificWorkerCompetences.Union(specificWorkerModel).Distinct().ToList();
-
-                    var newCompetences = newSpecificWorkerCompetences.Except(specificWorkerModel).ToList();
 
                     var gotCompetences = new List<long>();
+                    var newCompetences = GetNewCompetences(model);
 
                     foreach (var newCompetence in newCompetences)
                     {
@@ -431,19 +394,11 @@ namespace DotNet2020.Domain._3.Controllers
 
                     model.GotCompetences = gotCompetences;
 
-                    foreach (var answer in answers)
-                    {
-                        var attestationAnswerModel = new AttestationAnswerModel();
+                    AddAnswers(answers, model);
 
-                        attestationAnswerModel.Answer = answer;
-                        attestationAnswerModel.Attestation = model;
-
-                        model.AttestationAnswer.Add(attestationAnswerModel);
-                        answer.AttestationAnswer.Add(attestationAnswerModel);
-                        _context.Add(answer);
-                    }
                     _context.Add(model);
                     _context.SaveChanges();
+
                     return RedirectToAction("AttestationList");
             }
             return View(model);
@@ -510,6 +465,67 @@ namespace DotNet2020.Domain._3.Controllers
             PdfHelper.GetPdfOfAttestation(id, _context);
             var stream = new FileStream(Path.Combine(_env.ContentRootPath, "Files", "attestation.pdf"), FileMode.OpenOrCreate);
             return File(stream, "application/pdf", "attestation.pdf");
+        }
+
+        private Tuple<string, List<AnswerModel>> GetProblemsAndAnswers(AttestationModel model)
+        {
+            var problems = new StringBuilder("");
+            var answers = new List<AnswerModel>();
+
+            for (int i = 0; i < model.Questions.Count; i++)
+            {
+                var answerModel = new AnswerModel();
+                if (model.Commentaries[i] == null || model.Commentaries[i] == "")
+                    model.Commentaries[i] = "Комментарий не добавлен";
+                answerModel.Commentary = model.Commentaries[i];
+                answerModel.Question = model.Questions[i];
+                answerModel.IsRight = model.RightAnswers.Contains(i);
+                answerModel.IsSkipped = model.SkipedAnswers.Contains(i);
+                answerModel.NumberOfAsk = i + 1;
+                answers.Add(answerModel);
+
+                if (!answerModel.IsRight && !answerModel.IsSkipped)
+                {
+                    problems.Append($"вопрос №{i + 1}: {answerModel.Question} \n");
+                }
+            }
+
+            if (problems.ToString() == "")
+                problems.Append("Всё верно!");
+            Tuple<string, List<AnswerModel>> tuple = new Tuple<string, List<AnswerModel>>(problems.ToString(), answers);
+            return tuple;
+        }
+
+        private List<SpecificWorkerCompetencesModel> GetNewCompetences(AttestationModel model)
+        {
+            var specificWorkerModel = _context.SpecificWorkerCompetences.Where(x => x.WorkerId == model.WorkerId).ToList();
+            var newSpecificWorkerCompetences = new List<SpecificWorkerCompetencesModel>();
+
+            foreach (var competence in model.GotCompetences)
+            {
+                newSpecificWorkerCompetences.Add(new SpecificWorkerCompetencesModel { CompetenceId = competence, WorkerId = model.WorkerId });
+            }
+
+            newSpecificWorkerCompetences = newSpecificWorkerCompetences.Union(specificWorkerModel).Distinct(new SpecificWorkerCompetencesComparer()).ToList();
+
+            var newCompetences = newSpecificWorkerCompetences.Except(specificWorkerModel, new SpecificWorkerCompetencesComparer()).ToList();
+
+            return newCompetences;
+        }
+
+        private void AddAnswers(List<AnswerModel> answers, AttestationModel model)
+        {
+            foreach (var answer in answers)
+            {
+                var attestationAnswerModel = new AttestationAnswerModel();
+
+                attestationAnswerModel.Answer = answer;
+                attestationAnswerModel.Attestation = model;
+
+                model.AttestationAnswer.Add(attestationAnswerModel);
+                answer.AttestationAnswer.Add(attestationAnswerModel);
+                _context.Add(answer);
+            }
         }
     }
 }

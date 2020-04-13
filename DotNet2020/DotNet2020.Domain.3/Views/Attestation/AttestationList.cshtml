@@ -26,36 +26,36 @@
         </ul>
     </nav>
     <main role="main">
-</html>
-<p>@Html.ActionLink("Назад", "Attestation", "Attestation")</p>
-<table border="1">
-    <tr>
-        <th>ФИО</th>
-        <th>Полученные компетенции</th>
-        <th>Дата</th>
-        <th>Выгрузить</th>
-    </tr>
-    @foreach (var element in Model)
-    {
-        <tr>
-            <td>@element.Worker.FullName</td>
-            <td>
-                @if (element.Competences.Count > 0)
-                {
-                    foreach (var subElement in element.Competences)
-                    {
-                        <p>@subElement.Competence</p>
-                    }
-                }
-                else
-                {
-                    <p>Компетенции не были получены!</p>
-                }
-            </td>
-            <td>@element.Attestation.Date.ToString("d")</td>
-            <td>@Html.ActionLink($"Выгрузить", "DownloadAttestation", "Attestation", new { id = element.Attestation.Id }, null)</td>
-        </tr>
-    }
-</table>
+        <p>@Html.ActionLink("Назад", "Attestation", "Attestation")</p>
+        <table border="1">
+            <tr>
+                <th>ФИО</th>
+                <th>Полученные компетенции</th>
+                <th>Дата</th>
+                <th>Выгрузить</th>
+            </tr>
+            @foreach (var element in Model)
+            {
+                <tr>
+                    <td>@element.Worker.FullName</td>
+                    <td>
+                        @if (element.Competences.Count > 0)
+                        {
+                            foreach (var subElement in element.Competences)
+                            {
+                                <p>@subElement.Competence</p>
+                            }
+                        }
+                        else
+                        {
+                            <p>Компетенции не были получены!</p>
+                        }
+                    </td>
+                    <td>@element.Attestation.Date.ToString("d")</td>
+                    <td>@Html.ActionLink($"Выгрузить", "DownloadAttestation", "Attestation", new { id = element.Attestation.Id }, null)</td>
+                </tr>
+            }
+        </table>
     </main>
 </body>
+</html>
