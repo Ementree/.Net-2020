@@ -41,7 +41,7 @@
                     @if (calendarEntry is Vacation vacation && !vacation.IsApproved)
                     {
                         <tr>
-                            <td>@vacation.User.UserName</td>
+                            <td>@vacation.UserName</td>
                             <td>От @vacation.From.Day/@vacation.From.Month/@vacation.From.Year до @vacation.To.Day/@vacation.To.Month/@vacation.To.Year</td>
                             @{ var daysCount = (vacation.To - vacation.From).Days; }
                             <td>@daysCount дней</td>

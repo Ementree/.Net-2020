@@ -48,7 +48,7 @@ namespace DotNet2020.Domain._4.Controllers
                     return new CalendarEventViewModel()
                     {
                         Id = m.Id,
-                        Title = $"{m.User.FirstName} {m.User.LastName}",
+                        Title = m.AbsenceType.ToString(),
                         Start = m.From,
                         End = m.To,
                         UserEmail = m.User?.Email,
