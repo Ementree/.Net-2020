@@ -17,6 +17,8 @@ namespace DotNet2020.Domain._6.Controllers
         // GET
         public IActionResult Index()
         {
+            int year = 2020;
+            ViewBag.Year = year;
             var viewAbsences = new Absences();
 
             var absences = new List<CalendarEntry>();
@@ -33,20 +35,21 @@ namespace DotNet2020.Domain._6.Controllers
             viewAbsences.Periods = periods;
 
             var resourceAbsences = new Dictionary<string, List<int>>();
-            var periodNum = 0;
 
-            var countAbs = new List<int>();
+            var periodsList = new List<int>();
             foreach(var per in periods)
             {
-                countAbs.Add(0);
+                periodsList.Add(0);
             }
-            foreach (var period in periods)
+
+            for (var i = 0; i < periods.Count;i++)
             {
+                var period = periods[i];
                 foreach (var absence in absences)
                 {
                     if (!resourceAbsences.ContainsKey(absence.UserName))
                     {
-                        resourceAbsences.Add(absence.UserName, new List<int>(countAbs));
+                        resourceAbsences.Add(absence.UserName, new List<int>(periodsList));
                     }
                     if (!Contains(period, absence))
                     {
@@ -54,11 +57,11 @@ namespace DotNet2020.Domain._6.Controllers
                     }
                     else
                     {
-                        resourceAbsences[absence.UserName][periodNum] += (CalculateAbsences(period, absence));
+                        resourceAbsences[absence.UserName][i] += (CalculateAbsences(period, absence));
                     }
                 }
-                periodNum++;
             }
+
             viewAbsences.ResourceAbsences = resourceAbsences;
             return View(viewAbsences);
         }

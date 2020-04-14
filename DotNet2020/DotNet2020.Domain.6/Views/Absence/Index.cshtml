@@ -4,32 +4,46 @@
 @using DotNet2020.Domain._6.Models.ViewModels
 @model Absences
 <!DOCTYPE html>
-
-
-<div class="wrapper">
-    <div class="scroller1">
-        <table class="scroll-table table">
-            <thead>
-                <tr>
-                    <th class="sticky-col1">  </th>
-                    @foreach (var period in Model.Periods)
-                    {
-                        <td >@period.Start.Day.@period.Start.Month.@period.Start.Year - @period.End.Day.@period.End.Month.@period.End.Year</td>
-                    }
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var resource in Model.ResourceAbsences)
+    <div class="container-fluid mb-3 d-inline-flex">
+        <select name="year" onchange="this.form.submit()">
+            @for (int i = 0; i < 5; i++)
+            {
+                var year = DateTime.Now.Year + i;
+                if (ViewBag.Year == year)
                 {
+                    <option value="@(year)" selected="selected">@(year)</option>
+                }
+                else
+                {
+                    <option value="@(year)">@(year)</option>
+                }
+            }
+        </select>
+    </div>
+    <div class="wrapper">
+        <div class="scroller1">
+            <table class="scroll-table table">
+                <thead>
                     <tr>
-                        <td class="sticky-col1">@resource.Key</td>
-                        @foreach (var absence in resource.Value)
+                        <th class="sticky-col1">  </th>
+                        @foreach (var period in Model.Periods)
                         {
-                            <td colspan="1">@absence</td>
+                            <td>@period.Start.Day.@period.Start.Month.@period.Start.Year - @period.End.Day.@period.End.Month.@period.End.Year</td>
                         }
                     </tr>
-                }
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    @foreach (var resource in Model.ResourceAbsences)
+                    {
+                        <tr>
+                            <td class="sticky-col1">@resource.Key</td>
+                            @foreach (var absence in resource.Value)
+                            {
+                                <td colspan="1">@absence</td>
+                            }
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
     </div>
-</div>
