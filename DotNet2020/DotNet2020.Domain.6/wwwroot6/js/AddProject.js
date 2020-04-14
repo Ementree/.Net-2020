@@ -31,7 +31,20 @@ function AddYear() {
     }
 }
 function AddResource(year, month) {
-    console.log(year, month);
-    var monthElem = document.getElementById("year" + year + "month" + month);
+    var deleteButton = document.getElementById("RemoveButtonYear" + year + "Month" + month);
+    console.log(deleteButton);
+    var monthElem = document.getElementById("addResourceYear" + year + "Month" + month);
+    var select = monthElem.children[0].cloneNode(true);
+    monthElem.appendChild(select);
+    deleteButton.disabled = false;
+}
+function RemoveResource(year, month) {
+    var monthElem = document.getElementById("addResourceYear" + year + "Month" + month);
+    var select = monthElem.children[monthElem.children.length - 1];
+    monthElem.removeChild(select);
+    if (monthElem.childElementCount === 1) {
+        var deleteButton = document.getElementById("RemoveButtonYear" + year + "Month" + month);
+        deleteButton.disabled = true;
+    }
 }
 //# sourceMappingURL=AddProject.js.map

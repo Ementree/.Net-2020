@@ -5,7 +5,7 @@
     List<ResourceService.ResourceToSelect> resources = ViewData["resources"] as List<ResourceService.ResourceToSelect>;
 }
 
-<div class="col-2" id="year@(DateTime.Now.Year)month@(i + 1)">
+<div class="col-2" id="year@(DateTime.Now.Year)Month@(i + 1)">
     <div class="row">
         <div class="col-12 text-center font-weight-bold">@(monthName)</div>
     </div>
@@ -13,22 +13,35 @@
         <div class="col-7 pl-1 pr-1 text-left">Ресурс</div>
         <div class="col-5 p-0 text-right">Загрузка, %</div>
     </div>
-    <div class="row mb-2 month">
-        <div class="col-9 p-0">
-            <select
-                name="resourceSelect"
-                id="year@(DateTime.Now.Year)month@(i + 1)"
-                class="custom-select">
-                <option value="" disabled="disabled" selected="">Выберите человека</option>
-                @foreach (var res in resources)
-                {
-                    <option value="@(res.Id)">@(res.FullName)</option>
-                }
-            </select>
+    <div id="addResourceYear@(DateTime.Now.Year)Month@(i + 1)">
+        <div class="row mb-2 month">
+            <div class="col-9 p-0">
+                <select
+                    name="resourceSelect"
+                    id="selectYear@(DateTime.Now.Year)Month@(i + 1)"
+                    class="custom-select">
+                    <option value="" disabled="disabled" selected="">Выберите человека</option>
+                    @foreach (var res in resources)
+                    {
+                        <option value="@(res.Id)">@(res.FullName)</option>
+                    }
+                </select>
+            </div>
+            <div class="col-3 p-0 text-center overflow-hidden" contenteditable="true">100</div>
         </div>
-        <div class="col-3 p-0 text-center overflow-hidden" contenteditable="true">100</div>
     </div>
     <div class="row pl-1 pr-1">
-        <button class="btn btn-sm btn-outline-dark w-100 p-1" onclick="AddResource(@(DateTime.Now.Year),@(i + 1))">Добавить человека</button>
+        <button
+            class="btn btn-sm btn-outline-dark w-100 p-1"
+            onclick="AddResource(@(DateTime.Now.Year),@(i + 1))">
+            Добавить человека
+        </button>
+        <button
+            id="RemoveButtonYear@(DateTime.Now.Year)Month@(i + 1)"
+            class="btn btn-sm btn-outline-dark w-100 p-1"
+            onclick="RemoveResource(@(DateTime.Now.Year),@(i + 1))"
+            disabled="disabled">
+            Удалить последнего человека
+        </button>
     </div>
 </div>
