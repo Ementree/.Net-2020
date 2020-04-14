@@ -71,5 +71,12 @@ namespace DotNet2020.Domain._6.Controllers
             
             return View(model);
         }
+
+        [HttpPost("/changeCapacity")]
+        public void ChangeCapacity([FromBody]string data)
+        {
+            
+            
+        }
     }
 }

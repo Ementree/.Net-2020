@@ -114,13 +114,13 @@
                             {
                                 if (resource.Capacity.ContainsKey(i))
                                 {
-                                    <td class="right align-center h45">
+                                    <td style="padding: 7px;" id="@(resource.ResourceId.ToString() + ';' + i.ToString() + ';' + year)" class="right align-center" ondblclick="handle(this)">
                                         @resource.Capacity[i]%
                                     </td>
                                 }
                                 else
                                 {
-                                    <td class="right h45">
+                                    <td style="padding: 7px;" class="right h45 align-center" ondblclick="handle(this)">
                                         
                                     </td>
                                 }
@@ -132,4 +132,5 @@
             </table>
         </div>
     </div>
+    <script src="~/wwwroot6/js/Capacity.js"></script>
 </form>
