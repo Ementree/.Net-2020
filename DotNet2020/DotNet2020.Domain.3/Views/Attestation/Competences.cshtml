@@ -7,8 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="shortcut icon" href="favicon.ico" />
-    <link rel="stylesheet" href="/css/style.css">
-    <link rel="stylesheet" href="/css/left-nav-style.css">
+    <link rel="stylesheet" href="/css/QWERTYstyles.css">
 </head>
 
 <body>
@@ -28,40 +27,44 @@
     <main role="main">
         <p>@Html.ActionLink("Добавить компетенцию", actionName: "CompetencesAdd", controllerName: "Attestation")</p>
 
-        @if (Model != null && Model.Any())
-        {
-            <table border="1">
-                <tr>
-                    <th>Компетенция</th>
-                    <th>Содержание</th>
-                </tr>
-                @foreach (var competence in Model)
-                {
+            @if (Model != null && Model.Any())
+            {
+            <table class="table d">
+                <thead class="thead-dark">
                     <tr>
-                        <td>
-                            @competence.Competence
-                            <form method="post">
-                                <p>@Html.ActionLink($"Изменить", "CompetencesManage", "Attestation", new { id = competence.Id }, null) </p>
-                            </form>
-                        </td>
-                        @if (competence.Content.Count == 0)
-                        {
-                            <td> Список содержимого пуст!</td>
-                        }
-                        else
-                        {
-                            <td>
-                                @for (int i = 0; i < competence.Content.Count; i++)
-                                {
-                                    @competence.Content[i]
-                                    <br />
-                                }
-                            </td>
-                        }
+                        <th>Компетенция</th>
+                        <th>Содержание</th>
                     </tr>
-                }
+                </thead>
+                <tbody>
+                    @foreach (var competence in Model)
+                    {
+                        <tr>
+                            <td>
+                                @competence.Competence
+                                <form method="post">
+                                    <p>@Html.ActionLink($"Изменить", "CompetencesManage", "Attestation", new { id = competence.Id }, null) </p>
+                                </form>
+                            </td>
+                            @if (competence.Content.Count == 0)
+                            {
+                                <td> Список содержимого пуст!</td>
+                            }
+                            else
+                            {
+                                <td>
+                                    @for (int i = 0; i < competence.Content.Count; i++)
+                                    {
+                                        @competence.Content[i]
+                                        <br />
+                                    }
+                                </td>
+                            }
+                        </tr>
+                    }
+                </tbody>
             </table>
-        }
+            }
     </main>
 </body>
 </html>

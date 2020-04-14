@@ -7,8 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="shortcut icon" href="favicon.ico" />
-    <link rel="stylesheet" href="/css/style.css">
-    <link rel="stylesheet" href="/css/left-nav-style.css">
+    <link rel="stylesheet" href="/css/QWERTYstyles.css">
 </head>
 
 <body>
@@ -28,41 +27,47 @@
     <main role="main">
         @if (Model.Any())
         {
+        <div class="scrollTable">
             <form method="post">
-                <table border="1">
-                    <tr>
-                        <th>Выбрать</th>
-                        <th>ФИО</th>
-                        <th>Должность</th>
-                        <th>Компетенции</th>
-                        <th>Общий стаж</th>
-                    </tr>
-                    @foreach (var element in Model)
-                    {
+                <table class="table table-striped d">
+                    <thead class="thead-dark">
                         <tr>
-                            <td><input type="checkbox" value="@element.Id" name="ids" /></td>
-                            <td>@element.FullName</td>
-                            <td>@element.Position</td>
-                            <td>
-                                @if (element.SpecificWorkerCompetencesModels.Count == 0)
-                                {
-                                    <span>Данный работник не обладает никакими компетенциями</span>
-                                }
-                                else
-                                {
-                                    foreach (var subElement in element.SpecificWorkerCompetencesModels)
-                                    {
-                                        <p>@subElement.Competence.Competence</p>
-                                    }
-                                }
-                            </td>
-                            <td>@element.Experience</td>
+                            <th>Выбрать</th>
+                            <th>ФИО</th>
+                            <th>Должность</th>
+                            <th>Компетенции</th>
+                            <th>Общий стаж</th>
                         </tr>
-                    }
+                    </thead>
+                    <tbody>
+                        @foreach (var element in Model)
+                        {
+                            <tr>
+                                <td><input type="checkbox" value="@element.Id" name="ids" /></td>
+                                <td>@element.FullName</td>
+                                <td>@element.Position</td>
+                                <td>
+                                    @if (element.SpecificWorkerCompetencesModels.Count == 0)
+                                    {
+                                        <span>Данный работник не обладает никакими компетенциями</span>
+                                    }
+                                    else
+                                    {
+                                        foreach (var subElement in element.SpecificWorkerCompetencesModels)
+                                        {
+                                            <p>@subElement.Competence.Competence</p>
+                                        }
+                                    }
+                                </td>
+                                <td>@element.Experience</td>
+                            </tr>
+                        }
+                    </tbody>
                 </table>
                 <br />
                 <input type="submit" value="Выгрузить выбранных" />
             </form>
+        </div>
         }
         else
         {

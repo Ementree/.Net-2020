@@ -7,14 +7,13 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="shortcut icon" href="favicon.ico" />
-    <link rel="stylesheet" href="/css/style.css">
-    <link rel="stylesheet" href="/css/left-nav-style.css">
+    <link rel="stylesheet" href="/css/QWERTYstyles.css">
 </head>
 
 <body>
     <input type="checkbox" id="nav-toggle" hidden>
     <nav class="nav">
-        <label for="nav-toggle" class="nav-toggle" onclick></label>
+        <label for="nav-toggle" class="nav-toggle"></label>
         <ul>
             <li>@Html.ActionLink("Главная страница", "Index", "Attestation")
             <li>@Html.ActionLink("Сотрудники", "Workers", "Attestation")
@@ -28,48 +27,54 @@
     <main role="main">
         <p>@Html.ActionLink("Добавить", "WorkersAdd", "Attestation")</p>
 
-        <table border="1">
-            <tr>
-                <th>ФИО</th>
-                <th>Должность</th>
-                <th>Оклад</th>
-                <th>Премия</th>
-                <th>Комментарий</th>
-                <th>Компетенции</th>
-                <th>Предыдущие места работы</th>
-                <th>Опыт работы</th>
-                <th></th>
-            </tr>
-            @foreach (var element in Model)
-            {
-                <tr>
-                    <td>@element.FullName</td>
-                    <td>@element.Position</td>
-                    <td>@element.Salary</td>
-                    <td>@element.Bonus</td>
-                    <td>@element.Commentary</td>
-                    <td>
-                        @if (element.SpecificWorkerCompetencesModels.Count > 0)
-                        {
-                            @foreach (var competence in element.SpecificWorkerCompetencesModels)
-                            {
-                                <span>@competence.Competence.Competence</span><br />
-                            }
-                        }
-                        else
-                        {
-                            <p>Компетенции не добавлены</p>
-                        }
-                    </td>
-                    <td>@element.PreviousWorkPlaces</td>
-                    <td>@element.Experience</td>
-                    <td>
-                        @Html.ActionLink($"Изменить", "WorkersUpdate", "Attestation", new { id = element.Id }, null)
-                        @Html.ActionLink($"Удалить", "WorkersRemove", "Attestation", new { id = element.Id }, null)
-                    </td>
-                </tr>
-            }
-        </table>
+        <div class="scrollTable">
+            <table class="table table-striped d">
+                <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">ФИО</th>
+                        <th scope="col">Должность</th>
+                        <th scope="col">Оклад</th>
+                        <th scope="col">Премия</th>
+                        <th scope="col">Комментарий</th>
+                        <th scope="col">Компетенции</th>
+                        <th scope="col">Предыдущие места работы</th>
+                        <th scope="col">Опыт работы</th>
+                        <th scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var element in Model)
+                    {
+                        <tr>
+                            <th scope="row">@element.FullName</th>
+                            <td>@element.Position</td>
+                            <td>@element.Salary</td>
+                            <td>@element.Bonus</td>
+                            <td>@element.Commentary</td>
+                            <td>
+                                @if (element.SpecificWorkerCompetencesModels.Count > 0)
+                                {
+                                    @foreach (var competence in element.SpecificWorkerCompetencesModels)
+                                    {
+                                        <span>@competence.Competence.Competence</span><br />
+                                    }
+                                }
+                                else
+                                {
+                                    <p>Компетенции не добавлены</p>
+                                }
+                            </td>
+                            <td>@element.PreviousWorkPlaces</td>
+                            <td>@element.Experience</td>
+                            <td>
+                                @Html.ActionLink($"Изменить", "WorkersUpdate", "Attestation", new { id = element.Id }, null)
+                                @Html.ActionLink($"Удалить", "WorkersRemove", "Attestation", new { id = element.Id }, null)
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
     </main>
 </body>
 </html>

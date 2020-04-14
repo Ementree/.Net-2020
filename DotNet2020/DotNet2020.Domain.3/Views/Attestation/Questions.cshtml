@@ -7,8 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="shortcut icon" href="favicon.ico" />
-    <link rel="stylesheet" href="/css/style.css">
-    <link rel="stylesheet" href="/css/left-nav-style.css">
+    <link rel="stylesheet" href="/css/QWERTYstyles.css">
 </head>
 
 <body>
@@ -28,39 +27,45 @@
     <main role="main">
         @if (Model != null && Model.Any())
         {
-            <table border="1">
-                <tr>
-                    <th>Компетенция</th>
-                    <th>Вопросы</th>
-                </tr>
-                @foreach (var element in Model)
-                {
-                    <tr>
-                        <td>
-                            @element.Competence
-                            <form method="post">
-                                <p>@Html.ActionLink($"Изменить", "QuestionsManage", "Attestation", new { id = element.Id }, null) </p>
-                            </form>
-                        </td>
-                        @if (element.Questions.Count == 0)
+            <div class="scrollTable">
+                <table class="table table-striped d">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>Компетенция</th>
+                            <th>Вопросы</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var element in Model)
                         {
-                            <td> Список вопросов пуст!</td>
-                        }
-                        else
-                        {
-                            <td>
-                                @for (int i = 0; i < element.Questions.Count; i++)
+                            <tr>
+                                <td>
+                                    @element.Competence
+                                    <form method="post">
+                                        <p>@Html.ActionLink($"Изменить", "QuestionsManage", "Attestation", new { id = element.Id }, null) </p>
+                                    </form>
+                                </td>
+                                @if (element.Questions.Count == 0)
                                 {
-                                    @element.Questions[i]
-                                    <br />
+                                    <td> Список вопросов пуст!</td>
                                 }
-                            </td>
+                                else
+                                {
+                                    <td>
+                                        @for (int i = 0; i < element.Questions.Count; i++)
+                                        {
+                                            @element.Questions[i]
+                                            <br />
+                                        }
+                                    </td>
+                                }
+                            </tr>
                         }
-                    </tr>
+                    </tbody>
+                </table>
+            </div>
                 }
-            </table>
-        }
-    </main>
+        </main>
 </body>
 </html>
 

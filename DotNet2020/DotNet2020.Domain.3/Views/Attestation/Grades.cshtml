@@ -7,8 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="shortcut icon" href="favicon.ico" />
-    <link rel="stylesheet" href="/css/style.css">
-    <link rel="stylesheet" href="/css/left-nav-style.css">
+    <link rel="stylesheet" href="/css/QWERTYstyles.css">
 </head>
 
 <body>
@@ -27,41 +26,44 @@
     </nav>
     <main role="main">
         <p>@Html.ActionLink("Добавить грейд", actionName: "GradesAdd", controllerName: "Attestation")</p>
-
-        @if (Model != null && Model.Any())
-        {
-            <table border="1">
-                <tr>
-                    <th>Грейд</th>
-                    <th>Компетенции</th>
-                </tr>
-                @foreach (var element in Model)
-                {
+            @if (Model != null && Model.Any())
+            {
+            <table class="table d">
+                <thead class="thead-dark">
                     <tr>
-                        <td>
-                            @element.Grade
-                            <form method="post">
-                                <p>@Html.ActionLink($"Изменить", "GradesManage", "Attestation", new { id = element.Id }, null) </p>
-                            </form>
-                        </td>
-                        @if (element.GradesCompetences.Count == 0)
-                        {
-                            <td> Список необходимых компетенций пуст!</td>
-                        }
-                        else
-                        {
-                            <td>
-                                @for (int i = 0; i < element.GradesCompetences.Count; i++)
-                                {
-                                    @element.GradesCompetences[i].Competence.Competence
-                                    <br />
-                                }
-                            </td>
-                        }
+                        <th>Грейд</th>
+                        <th>Компетенции</th>
                     </tr>
-                }
+                </thead>
+                <tbody>
+                    @foreach (var element in Model)
+                    {
+                        <tr>
+                            <td>
+                                @element.Grade
+                                <form method="post">
+                                    <p>@Html.ActionLink($"Изменить", "GradesManage", "Attestation", new { id = element.Id }, null) </p>
+                                </form>
+                            </td>
+                            @if (element.GradesCompetences.Count == 0)
+                            {
+                                <td> Список необходимых компетенций пуст!</td>
+                            }
+                            else
+                            {
+                                <td>
+                                    @for (int i = 0; i < element.GradesCompetences.Count; i++)
+                                    {
+                                        @element.GradesCompetences[i].Competence.Competence
+                                        <br />
+                                    }
+                                </td>
+                            }
+                        </tr>
+                    }
+                </tbody>
             </table>
-        }
+            }
     </main>
 </body>
 </html>

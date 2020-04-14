@@ -7,8 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="shortcut icon" href="favicon.ico" />
-    <link rel="stylesheet" href="/css/style.css">
-    <link rel="stylesheet" href="/css/left-nav-style.css">
+    <link rel="stylesheet" href="/css/QWERTYstyles.css">
 </head>
 
 <body>
@@ -27,35 +26,41 @@
     </nav>
     <main role="main">
         <p>@Html.ActionLink("Назад", "Attestation", "Attestation")</p>
-        <table border="1">
-            <tr>
-                <th>ФИО</th>
-                <th>Полученные компетенции</th>
-                <th>Дата</th>
-                <th>Выгрузить</th>
-            </tr>
-            @foreach (var element in Model)
-            {
-                <tr>
-                    <td>@element.Worker.FullName</td>
-                    <td>
-                        @if (element.Competences.Count > 0)
-                        {
-                            foreach (var subElement in element.Competences)
-                            {
-                                <p>@subElement.Competence</p>
-                            }
-                        }
-                        else
-                        {
-                            <p>Компетенции не были получены!</p>
-                        }
-                    </td>
-                    <td>@element.Attestation.Date.ToString("d")</td>
-                    <td>@Html.ActionLink($"Выгрузить", "DownloadAttestation", "Attestation", new { id = element.Attestation.Id }, null)</td>
-                </tr>
-            }
-        </table>
+        <div class="scrollTable">
+            <table class="table table-striped d">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>ФИО</th>
+                        <th>Полученные компетенции</th>
+                        <th>Дата</th>
+                        <th>Выгрузить</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var element in Model)
+                    {
+                        <tr>
+                            <td>@element.Worker.FullName</td>
+                            <td>
+                                @if (element.Competences.Count > 0)
+                                {
+                                    foreach (var subElement in element.Competences)
+                                    {
+                                        <p>@subElement.Competence</p>
+                                    }
+                                }
+                                else
+                                {
+                                    <p>Компетенции не были получены!</p>
+                                }
+                            </td>
+                            <td>@element.Attestation.Date.ToString("d")</td>
+                            <td>@Html.ActionLink($"Выгрузить", "DownloadAttestation", "Attestation", new { id = element.Attestation.Id }, null)</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
     </main>
 </body>
 </html>
