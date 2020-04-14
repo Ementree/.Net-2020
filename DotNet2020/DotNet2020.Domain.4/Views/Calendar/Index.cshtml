@@ -13,6 +13,22 @@
             </div>
     </script>
 
+    <script id="my-holiday" type="text/x-kendo-template">
+        function onDataBound(e) {
+        var scheduler = e.sender;
+        var slots = $('.k-scheduler-content td[role=gridcell]');
+
+        for (var i = 0; i < slots.length; i += 1) {
+        var currentSlot = $(slots[i]);
+        var slotData = scheduler.slotByElement(currentSlot);
+
+        if (slotData.startDate.getTime() === new Date("2020/4/14").getTime()) {
+        currentSlot.css('background-color', 'red');
+        }
+        }
+        }
+    </script>
+
 <link rel="stylesheet" href="~/css/calendar.css">
 <div class="container">
 
@@ -29,7 +45,7 @@
             .EventTemplateId("task-template")
             .Views(views =>
             {
-                views.TimelineMonthView();
+                views.TimelineMonthView(view => view.SlotTemplateId("my-holiday"));
                 views.TimelineWeekView();
                 views.DayView();
                 views.AgendaView();
@@ -85,6 +101,10 @@
         color: #fff;
         background: yellow;
         border-color: #24c6db;
+    }
+    .k-scheduler-dayview .k-today.k-nonwork-hour, .k-scheduler-table .k-nonwork-hour, .k-scheduler-timelineview .k-today.k-nonwork-hour {
+        background-color: darkred;
+        opacity: .2;
     }
 </style>
 
