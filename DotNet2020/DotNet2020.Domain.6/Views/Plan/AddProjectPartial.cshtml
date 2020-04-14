@@ -1,34 +1,36 @@
-﻿<script src="~/wwwroot6/js/AddProject.js"></script>
+﻿@using DotNet2020.Domain._6.Services
+<script src="~/wwwroot6/js/AddProject.js"></script>
+@{
+    var months = MonthGeneratorService.GetMonthNames();
+    var resources = ResourceService.GetResources();
+    var viewDictionary = new ViewDataDictionary(ViewData);
+    viewDictionary.Add("resources", resources);
+    viewDictionary.Add("i", 0);
+    viewDictionary.Add("monthName", "");
+}
 <div class="container-fluid">
-    
-        <div class="form-inline pb-1">
-            <label for="projectName">Название проекта: </label>
-            <input type="text" class="form-control w-75" id="projectName" placeholder="Название проекта">
-        </div>
-    <button class="btn btn-primary" onclick="AddYear()">Добавить год</button>
+
+    <div class="form-inline">
+        <label for="projectName">Название проекта: </label>
+        <input type="text" class="form-control w-75 ml-2" id="projectName" placeholder="Название проекта">
+    </div>
+    <button class="btn btn-primary mt-2 mb-4" onclick="AddYear()">Добавить год</button>
     <div id="yearsContainer">
+        <p class="font-weight-bold">@(DateTime.Now.Year)</p>
         <div class="row pb-3 halfYear" id="year@(DateTime.Now.Year)">
             @for (int i = 0; i < 6; i++)
             {
-                <div class="col-2" id="year@(DateTime.Now.Year)month@(i + 1)">
-                    <div class="row month">
-                        <div class="col-10">Name LastName</div>
-                        <div class="col-2">30</div>
-                    </div>
-                    <button class="btn btn-sm" onclick="AddResource(@(DateTime.Now.Year),@(i + 1))">Добавить человека</button>
-                </div>
+                viewDictionary["i"] = i;
+                viewDictionary["monthName"] = months[i];
+                Html.RenderPartial("MonthPartial", null, viewDictionary);
             }
         </div>
         <div class="row pb-5 halfYear" id="year@(DateTime.Now.Year)">
             @for (int i = 6; i < 12; i++)
             {
-                <div class="col-2" id="year@(DateTime.Now.Year)month@(i + 1)">
-                    <div class="row month">
-                        <div class="col-10">Name LastName</div>
-                        <div class="col-2">30</div>
-                    </div>
-                    <button class="btn btn-sm" onclick="AddResource(@(DateTime.Now.Year),@(i + 1))">Добавить человека</button>
-                </div>
+                viewDictionary["i"] = i;
+                viewDictionary["monthName"] = months[i];
+                Html.RenderPartial("MonthPartial", null, viewDictionary);
             }
         </div>
     </div>
