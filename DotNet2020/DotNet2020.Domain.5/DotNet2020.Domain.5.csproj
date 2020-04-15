@@ -6,6 +6,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="YouTrackSharp" Version="2020.1.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\DotNet2020.Domain.Core\DotNet2020.Domain.Core.csproj" />
   </ItemGroup>
 
