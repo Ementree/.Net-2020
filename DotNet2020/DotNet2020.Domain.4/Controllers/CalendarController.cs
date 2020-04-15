@@ -65,7 +65,18 @@ namespace DotNet2020.Domain._4.Controllers
                     Color = "#6eb3fa"
                 }).ToList();
 
-            return View(new IndexViewModel() { Events = allVacations, Users = users });
+            var holidays = _dbContext.Holidays
+                .ToList()
+                .Select(u =>
+                {
+                    var year = u.Date.Year.ToString();
+                    var month = u.Date.Month.ToString().StartsWith('0') ? u.Date.Month.ToString().Skip(1) : u.Date.Month.ToString();
+                    var day = u.Date.Day.ToString().StartsWith('0') ? u.Date.Day.ToString().Skip(1) : u.Date.Day.ToString();
+                    return $"{year}/{month}/{day}";
+                })
+                .ToList();
+
+            return View(new IndexViewModel() { Events = allVacations, Users = users, Holidays=holidays });
         }
 
         [HttpGet]
@@ -205,6 +216,24 @@ namespace DotNet2020.Domain._4.Controllers
             }
 
             return RedirectToActionPermanent("UpdateRecommendation");
+        }
+
+        public ActionResult GetHolidays()
+        {
+            // logic
+            // Edit you don't need to serialize it just return the object
+            var result = _dbContext.Holidays
+                .ToList()
+                .Select(u =>
+                {
+                    var year = u.Date.Year.ToString();
+                    var month = u.Date.Month.ToString().StartsWith('0') ? u.Date.Month.ToString().Skip(1) : u.Date.Month.ToString();
+                    var day = u.Date.Day.ToString().StartsWith('0') ? u.Date.Day.ToString().Skip(1) : u.Date.Day.ToString();
+                    return $"{year}/{month}/{day}";
+                })
+                .ToList();
+
+            return Json(result);
         }
     }
 }

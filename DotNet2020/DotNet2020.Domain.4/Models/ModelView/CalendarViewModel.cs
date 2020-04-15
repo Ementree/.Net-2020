@@ -49,17 +49,4 @@
         public string UserEmail { get; set; }
         public string ColorId { get; set; }
     }
-
-    public class Projection : ISchedulerEvent
-    {
-        public string Title { get; set; }
-        public DateTime Start { get; set; }
-        public DateTime End { get; set; }
-        public string Description { get; set; }
-        public bool IsAllDay { get; set; }
-        public string RecurrenceRule { get; set; }
-        public string RecurrenceException { get; set; }
-        string ISchedulerEvent.StartTimezone { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        string ISchedulerEvent.EndTimezone { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-    }
 }

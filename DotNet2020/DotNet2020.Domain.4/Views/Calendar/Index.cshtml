@@ -14,19 +14,7 @@
     </script>
 
     <script id="my-holiday" type="text/x-kendo-template">
-        function onDataBound(e) {
-        var scheduler = e.sender;
-        var slots = $('.k-scheduler-content td[role=gridcell]');
-
-        for (var i = 0; i < slots.length; i += 1) {
-        var currentSlot = $(slots[i]);
-        var slotData = scheduler.slotByElement(currentSlot);
-
-        if (slotData.startDate.getTime() === new Date("2020/4/14").getTime()) {
-        currentSlot.css('background-color', 'red');
-        }
-        }
-        }
+        <div style='background:#=getColorBasedOnHour(date)#; height: 100%;width: 100%;'></div>
     </script>
 
 <link rel="stylesheet" href="~/css/calendar.css">
@@ -46,7 +34,7 @@
             .Views(views =>
             {
                 views.TimelineMonthView(view => view.SlotTemplateId("my-holiday"));
-                views.TimelineWeekView();
+                views.TimelineWeekView(view => view.SlotTemplateId("my-holiday"));
                 views.DayView();
                 views.AgendaView();
             })
@@ -103,8 +91,38 @@
         border-color: #24c6db;
     }
     .k-scheduler-dayview .k-today.k-nonwork-hour, .k-scheduler-table .k-nonwork-hour, .k-scheduler-timelineview .k-today.k-nonwork-hour {
-        background-color: darkred;
-        opacity: .2;
+        background-color: gray;
+        opacity: .3;
+    }
+    .k-scheduler-table td, .k-scheduler-table th {
+        padding: 0;
+        opacity: .5;
     }
 </style>
 
+<script>
+
+    async function getData(ajaxurl) {
+        return await $.ajax({
+            url: ajaxurl,
+            type: 'GET',
+        });
+    };
+
+
+    function getColorBasedOnHour(date) {
+        const holidays = JSON.parse('@Html.Raw(Json.Serialize(@Model.Holidays))')
+
+        console.log(holidays)
+        var month = date.getUTCMonth() + 1;
+        var day = date.getUTCDate() + 1;
+        var year = date.getUTCFullYear();
+
+        newdate = year + "/" + month + "/" + day;
+        if (holidays.includes(newdate)) {
+            console.log('holiday')
+            console.log(newdate)
+            return "red";
+        }
+    }
+</script>
