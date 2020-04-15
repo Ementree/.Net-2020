@@ -2,9 +2,8 @@
 {
     public class Resource
     {
-        public Resource(int id, string firstName, string lastName, int resourceGroupTypeId, ResourceGroupType resourceGroupType)
+        public Resource(string firstName, string lastName, int resourceGroupTypeId, ResourceGroupType resourceGroupType)
         {
-            Id = id;
             FirstName = firstName;
             LastName = lastName;
             ResourceGroupTypeId = resourceGroupTypeId;
