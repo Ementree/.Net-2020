@@ -2,9 +2,8 @@
 {
     public class FunctioningCapacityProject
     {
-        public FunctioningCapacityProject(int id, int projectId, int periodId, int functioningCapacity, Project project, Period period)
+        public FunctioningCapacityProject(int projectId, int periodId, int functioningCapacity, Project project, Period period)
         {
-            Id = id;
             ProjectId = projectId;
             PeriodId = periodId;
             FunctioningCapacity = functioningCapacity;
