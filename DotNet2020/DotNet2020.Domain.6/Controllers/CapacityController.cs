@@ -85,19 +85,38 @@ namespace DotNet2020.Domain._6.Controllers
             var resources = context.Set<Resource>()
                 .Include(x => x.ResourceGroupType)
                 .ToList();
-            var resourceCapacities = context.Set<ResourceCapacity>()
-                .Include(x => x.Resource)
-                .Include(x => x.Period)
-                .Where(x => x.Period.Start.Year == year)
-                .ToList();
+            var resourceCapacities = context.Set<ResourceCapacity>();
             var periods = context.Set<Period>();
 
+            var periodId = 0;
             var period = periods.FirstOrDefault(per => per.Start.Month == month && per.Start.Year == year);
             if (period == null)
             {
-                periods.Add(new Period());
+                periods.Add(new Period(new DateTime(year, month, 1), new DateTime(year, month, 28)));
+                context.SaveChanges();
+
+                periodId = periods.FirstOrDefault(per => per.Start.Month == month && per.Start.Year == year).Id;
+                context.SaveChanges();
             }
-            
+            else
+            {
+                periodId = period.Id;
+            }
+
+            var resourceCapacity =
+                resourceCapacities.FirstOrDefault(res => res.ResourceId == resourceId && res.PeriodId == periodId);
+            var newResourceCapacity = new ResourceCapacity(resourceId, capacity, periodId);
+
+            if (resourceCapacity == null)
+            {
+                resourceCapacities.Add(newResourceCapacity);
+            }
+            else
+            {
+                resourceCapacities.Update(newResourceCapacity);
+            }
+
+            context.SaveChanges();
         }
 }
 }
