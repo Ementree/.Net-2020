@@ -75,8 +75,29 @@ namespace DotNet2020.Domain._6.Controllers
         [HttpPost("/changeCapacity")]
         public void ChangeCapacity([FromBody]string data)
         {
+            var dataArr = data.Split(';');
             
+            var resourceId = int.Parse(dataArr[0]);
+            var month = int.Parse(dataArr[1]);
+            var year = int.Parse(dataArr[2]);
+            var capacity = int.Parse(dataArr[3]);
+            
+            var resources = context.Set<Resource>()
+                .Include(x => x.ResourceGroupType)
+                .ToList();
+            var resourceCapacities = context.Set<ResourceCapacity>()
+                .Include(x => x.Resource)
+                .Include(x => x.Period)
+                .Where(x => x.Period.Start.Year == year)
+                .ToList();
+            var periods = context.Set<Period>();
+
+            var period = periods.FirstOrDefault(per => per.Start.Month == month && per.Start.Year == year);
+            if (period == null)
+            {
+                periods.Add(new Period());
+            }
             
         }
-    }
+}
 }
