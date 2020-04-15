@@ -2,9 +2,8 @@
 {
     public class Project
     {
-        public Project(int id, string name, int statusId, ProjectStatus projectStatus)
+        public Project(string name, int statusId, ProjectStatus projectStatus)
         {
-            Id = id;
             Name = name;
             StatusId = statusId;
             ProjectStatus = projectStatus;
