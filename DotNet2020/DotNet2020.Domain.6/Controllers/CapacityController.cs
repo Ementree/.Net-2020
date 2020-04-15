@@ -109,11 +109,12 @@ namespace DotNet2020.Domain._6.Controllers
 
             if (resourceCapacity == null)
             {
-                resourceCapacities.Add(newResourceCapacity);
+                resourceCapacities.Add(new ResourceCapacity(resourceId, capacity, periodId));
             }
             else
             {
-                resourceCapacities.Update(newResourceCapacity);
+                resourceCapacity.Capacity = capacity;
+                resourceCapacities.Update(resourceCapacity);
             }
 
             context.SaveChanges();
