@@ -1,0 +1,107 @@
+﻿@model List<DotNet2020.Domain._5.Entities.IssueTimeInfo>
+<head>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+
+<div id='myDiv' style="position:absolute; left:10%; top:10%; width:500px; height:350px"></div>
+<script>
+    @{
+        var massiveX = new int[Model.Count];
+        var massiveY = new int?[Model.Count];
+     }
+    @for (int i = 0; i<Model.Count; i++)
+    {
+        massiveY[i] = Model[i].EstimatedTime;
+        massiveX[i] = i;
+    }
+    var arrY = @Json.Serialize(massiveY);
+    var arrX = @Json.Serialize(massiveX);
+
+    var data = [
+        {
+            x: arrX,
+            y: arrY,
+            type: 'bar'
+        }
+    ];
+    var layout = {
+        title: 'Запланированное время',
+        showlegend: false
+    };
+
+    Plotly.newPlot('myDiv', data, layout, { staticPlot: true });
+</script>
+<div id='myDiv1' style="position:absolute; right:10%; top:10%; width:500px; height:350px"></div>
+<script>
+    @for (int i = 0; i<Model.Count; i++)
+    {
+        massiveY[i] = Model[i].SpentTime;
+    }
+    var arrY = @Json.Serialize(massiveY);
+    var arrX = @Json.Serialize(massiveX);
+
+    var data = [
+        {
+            x: arrX,
+            y: arrY,
+            type: 'bar'
+        }
+    ];
+    var layout = {
+        title: 'Потраченное время',
+        showlegend: false
+    };
+
+    Plotly.newPlot('myDiv1', data, layout, { staticPlot: true });
+</script>
+<div id='myDiv2' style="position:absolute; left:10%; top:50%; width:500px; height:350px"></div>
+<script>
+    @{
+        var massY = new double?[Model.Count];
+    }
+    @for (int i = 0; i<Model.Count; i++)
+    {
+        massY[i] = Model[i].GetErrorCoef();
+    }
+    var arrY = @Json.Serialize(massY);
+    var arrX = @Json.Serialize(massiveX);
+
+    var data = [
+        {
+            x: arrX,
+            y: arrY,
+            type: 'bar'
+        }
+    ];
+    var layout = {
+        title: 'Ошибка в процентах',
+        showlegend: false
+    };
+
+    Plotly.newPlot('myDiv2', data, layout, { staticPlot: true });
+</script>
+<div id='myDiv3' style="position:absolute; right:10%; top:50%; width:500px; height:350px"></div>
+<script>
+    @for (int i = 0; i<Model.Count; i++)
+    {
+        massiveY[i] = Model[i].GetErrorHours();
+        massiveX[i] = i;
+    }
+    var arrY = @Json.Serialize(massiveY);
+    var arrX = @Json.Serialize(massiveX);
+
+    var data = [
+        {
+            x: arrX,
+            y: arrY,
+            type: 'bar'
+        }
+    ];
+    var layout = {
+        title: 'Ошибка в часах',
+        showlegend: false
+    };
+
+    Plotly.newPlot('myDiv3', data, layout, { staticPlot: true });
+</script>
+

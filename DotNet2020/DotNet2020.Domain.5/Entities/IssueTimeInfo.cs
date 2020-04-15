@@ -27,5 +27,13 @@ namespace DotNet2020.Domain._5.Entities
                 ? (double)EstimatedTime / SpentTime
                 : null;
         }
+
+        /// <summary>
+        /// Получить ошибку в часах
+        /// </summary>
+        public int? GetErrorHours()
+        {
+            return Math.Abs((EstimatedTime - SpentTime).Value);
+        }
     }
 }
