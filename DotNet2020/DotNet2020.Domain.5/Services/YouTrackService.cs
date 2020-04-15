@@ -1,10 +1,6 @@
 ﻿using DotNet2020.Domain._5.Entities;
 using DotNet2020.Domain._5.Services.Interfaces;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using YouTrackSharp;
 
 namespace DotNet2020.Domain._5.Services
