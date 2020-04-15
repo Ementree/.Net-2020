@@ -10,6 +10,6 @@ namespace DotNet2020.Domain._5.Services.Interfaces
         /// <param name="projectName">Project name</param>
         /// <param name="issueFilter">Issue filter</param>
         /// <returns>Issue time info array</returns>
-        IssueTimeInfo[] GetIssues(string projectName, string issueFilter);
+        IssueTimeInfo[] GetIssues(string projectName, string issueFilter = "");
     }
 }
