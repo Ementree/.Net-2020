@@ -5,6 +5,8 @@ using System.Linq;
 using System.Collections.Generic;
 using DotNet2020.Domain._6.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using DotNet2020.Domain._6.Services;
+using System;
 
 namespace DotNet2020.Domain._6.Controllers
 {
@@ -20,8 +22,8 @@ namespace DotNet2020.Domain._6.Controllers
         // GET
         public IActionResult Index()
         {
-            //System.InvalidOperationException: 'Client side GroupBy is not supported.' без ToList()
-            //в EFCore3.0 не работает
+            //System.InvalidOperationException: 'Client side GroupBy is not supported.' пїЅпїЅпїЅ ToList()
+            //пїЅ EFCore3.0 пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
             var resourceType = _context.Set<ResourceGroupType>().ToList();
 
             var currentCapacityDict = _context.Set<ResourceCapacity>()
@@ -42,7 +44,7 @@ namespace DotNet2020.Domain._6.Controllers
                     .Select(fcr => fcr.FunctionCapacity)
                         .Sum());
 
-            var viewModelLineList = new List<FunctionalCapacityLine>();
+            var viewModelLineList = new List<FCLine>();
 
             foreach(var p in currentCapacityDict)
             {
@@ -50,7 +52,7 @@ namespace DotNet2020.Domain._6.Controllers
 
                 foreach(var val in p.Value)
                 {
-                    var newLineViewModel = new FunctionalCapacityLine()
+                    var newLineViewModel = new FCLine()
                     {
                         Resource = currentResource,
                         Period = val.period,
@@ -82,25 +84,27 @@ namespace DotNet2020.Domain._6.Controllers
                 .GroupBy(vm => vm.Resource)
                 .ToDictionary(vm => vm.Key, vm => vm
                    .Select(vm =>
-                       new FunctionalCapacityItem
+                       new FCItem
                        {
                            Period = vm.Period,
                            PlannedCapacity = vm.plannedCapacity,
                            CurrentCapacity = vm.currentCapacity
                        }).OrderBy(t => t.Period.Start)
                             .ToList());
-            var itemsGroupPreform = new List<FunctionalCapacityItemsGroup>();
+            var itemsGroupPreform = new List<FCItemsGroup>();
 
             foreach(var itmesPair in itemsGroup)
             {
-                itemsGroupPreform.Add(new FunctionalCapacityItemsGroup()
+
+
+                itemsGroupPreform.Add(new FCItemsGroup()
                 {
                     Resource = itmesPair.Key,
                     Items = itmesPair.Value
                 });
             }
 
-            var ViewModelDict = new Dictionary<string, List<FunctionalCapacityItemsGroup>>();
+            var ViewModelDict = new Dictionary<string, List<FCItemsGroup>>();
             var viewModel = new FunctionalCapacityViewModel();
             var Periods = new List<Period>();
 
@@ -109,7 +113,7 @@ namespace DotNet2020.Domain._6.Controllers
                 var groupName = item.Resource.ResourceGroupType.Group;
 
                 if (!ViewModelDict.ContainsKey(groupName))
-                    ViewModelDict[groupName] = new List<FunctionalCapacityItemsGroup>();
+                    ViewModelDict[groupName] = new List<FCItemsGroup>();
 
                 var periods = item.Items.Select(i => i.Period).ToList();
 
@@ -121,6 +125,8 @@ namespace DotNet2020.Domain._6.Controllers
 
             viewModel.Dict = ViewModelDict;
             viewModel.Periods = Periods;
+
+            FunctionalCapacityService.SortViewModelOnYears(viewModel);
 
             return View(viewModel);
         }

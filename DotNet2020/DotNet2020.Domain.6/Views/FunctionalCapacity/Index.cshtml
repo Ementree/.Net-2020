@@ -1,79 +1,120 @@
 ﻿@using DotNet2020.Domain._6.Models.ViewModels
-@using DotNet2020.Domain._6.ExtensionMethods
-@{ 
+@using DotNet2020.Domain._6.Services
+@{
     Layout = "~/Views/Shared/_Layout6.cshtml";
+    List<string> months = MonthGeneratorService.GetAllMonths(DateTime.Now.Year);
+    var currentYear = DateTime.Now.Year;
 }
 
 @model FunctionalCapacityViewModel
 
-<div class="wrapper">
-    <div class="scroller2">
-        <table class="scroll-table table">
+    <style>
+        .scroller {
+            margin-left: 30%;
+        }
+
+        .year {
+            margin-bottom: 1vw;
+        }
+
+        .top {
+            border-top: 1px solid #dee2e6;
+        }
+
+        .left {
+            border-left: 1px solid #dee2e6;
+        }
+
+        .right {
+            border-right: 1px solid #dee2e6;
+        }
+
+        .bottom {
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .no-bottom{
+            border-bottom: none;
+        }
+
+        .no-top{
+            border-top: none;
+        }
+
+        .align-center {
+            text-align: center;
+        }
+
+        .h45 {
+            height: 45px;
+        }
+    </style>
+
+
+
+<div class="fcwrapper">
+    <div class="fcscroller1">
+        <table class="fcscroll-table table bottom">
             <thead>
                 <tr>
-                    <td class="sticky-col1" @*rowspan="2*@>
-                        &nbsp
+                    <td class="fcsticky-col1 left">
+                        &nbsp;
                     </td>
-                    <td class="sticky-col2" @*rowspan="2"*@>
-                        &nbsp
-                    </td>         
-                    @foreach(var p in Model.Periods)
+                    @foreach (var m in months)
                     {
-                        <td colspan="2">
-                            @p.Start.ToShortDateString()
-                        </td>
+                        <th class="right" colspan="2">
+                            @m
+                        </th>
                     }
                 </tr>
                 <tr>
-                    <td class="sticky-col1">
-                        <p>Группа ресурса</p>
-                    </td>
-                    <td class="sticky-col2">
+                    <th class="fcsticky-col1 left align-center">
                         <p>Ресурс</p>
-                    </td>
-                    @foreach(var p in Model.Periods)
+                    </th>
+                    @foreach (var m in months)
                     {
-                        <td>
+                        <th class="right">
                             план,%
-                        </td>
-                        <td>
+                        </th>
+                        <th class="right">
                             мощность,%
-                        </td>
+                        </th>
                     }
                 </tr>
             </thead>
             <tbody>
-                @foreach(var val in Model.Dict)
+                @foreach(var pair in Model.Dict)
                 {
-                    foreach(var m in val.Value)
+                    <tr>
+                        <td class="fcsticky-col1 left h45">
+                            <h6>@pair.Key</h6>
+                        </td>
+
+                        @for(int i = 0; i < 24; i++)
+                        {
+                            <td class="right h45">
+                                -
+                            </td>
+                        }
+                    </tr>
+
+                    @foreach(var m in pair.Value)
                     {
                         <tr>
-                            @if (m == val.Value.First())
-                            {
-                                <td class="sticky-col1">
-                                    @val.Key
-                                </td>
-                            }
-                            else
-                            {
-                                <td class="sticky-col1 no-border">
-                                    &nbsp;
-                                </td>
-                            }
-                            <td class="sticky-col2">
+                            <td class="fcsticky-col1 left h45">
                                 @(m.Resource.FirstName + " " + m.Resource.LastName)
                             </td>
-                            
-                            @foreach(var i in m.Items)
+
+                            @foreach(var capacItem in m.YearItemsDict[currentYear])
                             {
-                                <td>
-                                    @i.PlannedCapacity%
+                                <td class="right align-center h45">
+                                    @capacItem.PlannedCapacity%
                                 </td>
-                                <td>
-                                    @i.CurrentCapacity%
+                                <td class="right align-center h45">
+                                    @capacItem.CurrentCapacity%
                                 </td>
                             }
-                        </tr>                  
+                        </tr>
                     }
                 }
             </tbody>
