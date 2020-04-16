@@ -42,7 +42,9 @@ namespace DotNet2020.Domain._4.Controllers
                             color = "#6eb3fa";
                             break;
                         case AbsenceType.Illness:
-                            color = "yellow";
+                            if ((m as Illness).IsApproved)
+                                color = "violet";
+                            else color = "yellow";
                             break;
                     }
                     return new CalendarEventViewModel()
