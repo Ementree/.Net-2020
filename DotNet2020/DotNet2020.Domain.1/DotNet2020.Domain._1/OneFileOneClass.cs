@@ -17,7 +17,7 @@ namespace DotNet2020.Domain._1
     /// </summary>
     public class OneFileOneClass
     {
-        private const string DiagnosticId = "OneFileOneClass";
+        public const string DiagnosticId = "OneFileOneClass";
         private const string Title = "Use one class in one file";
         private const string MessageFormat = "Use one class in one file";
         private const string Category = "Syntax";
