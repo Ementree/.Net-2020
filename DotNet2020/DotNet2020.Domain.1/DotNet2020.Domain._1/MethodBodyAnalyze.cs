@@ -15,7 +15,7 @@ namespace DotNet2020.Domain._1
     /// </summary>
     class MethodBodyAnalyze
     {
-        private const string DiagnosticId = "MethodBodyAnalyze";
+        public const string DiagnosticId = "MethodBodyAnalyze";
         private const string Title = "MethodBodyAnalyze";
         private const string MessageFormat = "MethodBodyAnalyze";
         private const string Category = "Syntax";

@@ -16,7 +16,7 @@ namespace DotNet2020.Domain._1
     /// </summary>
     public class BooleanPropsNameAnalyzer
     {
-        private const string DiagnosticId = "BooleanPropsName";
+        public const string DiagnosticId = "BooleanPropsName";
         private const string Title = "Rename boolean property with Is prefix";
         private const string MessageFormat = "Rename boolean property with Is prefix";
         private const string Category = "Syntax";

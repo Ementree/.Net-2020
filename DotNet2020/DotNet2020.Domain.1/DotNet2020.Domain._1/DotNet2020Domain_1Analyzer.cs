@@ -13,8 +13,9 @@ namespace DotNet2020.Domain._1
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
     public class DotNet2020Domain_1Analyzer : DiagnosticAnalyzer
     {
-        public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics 
-        { get
+        public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics
+        {
+            get
             {
                 return ImmutableArray.Create(
                     LineLengthAnalyzer.Rule,
