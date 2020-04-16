@@ -2,14 +2,11 @@
 {
     public class ResourceCapacity
     {
-        public ResourceCapacity(int id, int resourceId, int capacity, int periodId, Resource resource, Period period)
+        public ResourceCapacity(int resourceId, int capacity, int periodId)
         {
-            Id = id;
             ResourceId = resourceId;
             Capacity = capacity;
             PeriodId = periodId;
-            Resource = resource;
-            Period = period;
         }
         protected ResourceCapacity() : base() { }
         public int Id { get; protected set; }
