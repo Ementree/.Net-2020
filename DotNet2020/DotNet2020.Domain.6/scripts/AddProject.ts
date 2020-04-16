@@ -3,54 +3,147 @@
     Name: string;
     Periods: Period[];
 }
+
 class Period {
     Id: number;
     Date: Date;
     Resources: ResourceCapacity[];
 }
-class ResourceCapacity{
+
+class ResourceCapacity {
     constructor(id: number, name: string, capacity: number) {
         this.Id = id;
         this.Name = name;
         this.Capacity = capacity;
     }
+
     Id: number;
     Name: string;
     Capacity: number;
 }
+
 let lastYear: number = new Date(Date.now()).getFullYear();
+
 function AddYear() {
     lastYear++;
-    console.log(lastYear);
-    let yearContainer = document.getElementById('yearsContainer');
+    const localYear = lastYear;
+    console.log(localYear);
+    let yearsContainer = document.getElementById('yearsContainer');
     let yearDiv: HTMLDivElement = document.createElement('div');
-    yearDiv.id = `year${lastYear}`;
-    yearDiv.classList.add('row', 'year');
-    for(let i = 0; i<12;i++) {
-        let monthCol = document.createElement('div');
-        monthCol.id = `month${i+1}`;
-        monthCol.classList.add('col-1');
+    yearDiv.id = `year${localYear}`;
+    yearDiv.classList.add('year');
 
+    let yearParagraph = document.createElement('p');
+    yearParagraph.textContent = `${localYear}`;
+    yearParagraph.classList.add('font-weight-bold');
+    yearDiv.appendChild(yearParagraph);
+
+    //первое полугодие
+    let firstHalfYearDiv = document.createElement('div');
+    firstHalfYearDiv.classList.add('row', 'pb-3', 'halfYear');
+    firstHalfYearDiv.id = `year${localYear}_1`;
+    for (let i = 0; i < 6; i++) {
+        const monthBlock = GenerateMonth(localYear, i + 1);
+        firstHalfYearDiv.appendChild(monthBlock);
     }
 
+    //второе полугодие
+    let secondHalfYearDiv = document.createElement('div');
+    secondHalfYearDiv.classList.add('row', 'pb-3', 'halfYear');
+    secondHalfYearDiv.id = `year${localYear}_2`;
+    for (let i = 6; i < 12; i++) {
+        const monthBlock = GenerateMonth(localYear, i+1);
+        secondHalfYearDiv.appendChild(monthBlock);
+    }
+
+    yearDiv.appendChild(firstHalfYearDiv);
+    yearDiv.appendChild(secondHalfYearDiv);
+    yearsContainer.appendChild(yearDiv);
 }
 
-function AddResource(year: number, month:number) {
+function GenerateMonth(localYear: number, monthNumber: number): Element {
+    const monthBlock = <Element>(document
+        .getElementById(`year${localYear - 1}Month${monthNumber}`)
+        .cloneNode(true));
+    monthBlock.id = `year${localYear}Month${monthNumber}`;
+    console.log(monthBlock);
+    let addRes = monthBlock.children[2];
+    addRes.id = `addResourceYear${localYear}Month${monthNumber}`;
+    while (addRes.childElementCount > 1) {
+        addRes.removeChild(addRes.children[addRes.childElementCount - 1])
+    }
+    //смена айди у селекта
+    let select = addRes.children[0].children[0].children[0];
+    select.id = `selectYear${localYear}Month${monthNumber}`;
+
+    let buttonBlock = monthBlock.children[monthBlock.childElementCount - 1];
+    while (buttonBlock.childElementCount > 0) {
+        buttonBlock.removeChild(buttonBlock.children[buttonBlock.childElementCount - 1]);
+    }
+
+    let addButton = document.createElement('button');
+    addButton.classList.add('btn', 'btn-sm', 'btn-outline-dark', 'w-100', 'p-1');
+    addButton.textContent = 'Добавить человека';
+    let removeButton = <HTMLInputElement>addButton.cloneNode(true);
+    removeButton.id = `RemoveButtonYear${localYear}Month${monthNumber}`;
+    removeButton.disabled = true;
+    removeButton.textContent = 'Удалить последнего человека';
+    addButton.addEventListener('click', function () {
+        AddResource(localYear, monthNumber);
+    }, false);
+    removeButton.addEventListener('click', function () {
+        RemoveResource(localYear, monthNumber);
+    }, false);
+
+    buttonBlock.appendChild(addButton);
+    buttonBlock.appendChild(removeButton);
+    return monthBlock;
+}
+
+function AddResource(year: number, month: number) {
     let deleteButton = <HTMLInputElement>document.getElementById(`RemoveButtonYear${year}Month${month}`);
     console.log(deleteButton);
     let monthElem = document.getElementById(`addResourceYear${year}Month${month}`);
-    let select =(<HTMLElement> monthElem.children[0]).cloneNode(true);
+    let select = (<HTMLElement>monthElem.children[0]).cloneNode(true);
     monthElem.appendChild(select);
     deleteButton.disabled = false;
 }
 
-function RemoveResource(year: number, month:number) {
+function RemoveResource(year: number, month: number) {
     let monthElem = document.getElementById(`addResourceYear${year}Month${month}`);
-    let select =(<HTMLElement> monthElem.children[monthElem.children.length-1]);
+    let select = (<HTMLElement>monthElem.children[monthElem.children.length - 1]);
     monthElem.removeChild(select);
-    if(monthElem.childElementCount===1){
+    if (monthElem.childElementCount === 1) {
         let deleteButton = <HTMLInputElement>document.getElementById(`RemoveButtonYear${year}Month${month}`);
         deleteButton.disabled = true;
     }
-    
+}
+
+function GetMonthName(number: number): string {
+    switch (number) {
+        case 1:
+            return "Январь";
+        case 2:
+            return "Февраль";
+        case 3:
+            return "Март";
+        case 4:
+            return "Апрель";
+        case 5:
+            return "Май";
+        case 6:
+            return "Июнь";
+        case 7:
+            return "Июль";
+        case 8:
+            return "Август";
+        case 9:
+            return "Сентябрь";
+        case 10:
+            return "Октябрь";
+        case 11:
+            return "Ноябрь";
+        case 12:
+            return "Декабрь";
+    }
 }

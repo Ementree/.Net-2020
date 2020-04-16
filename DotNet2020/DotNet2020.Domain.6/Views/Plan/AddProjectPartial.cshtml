@@ -16,22 +16,24 @@
     </div>
     <button class="btn btn-primary mt-2 mb-4" onclick="AddYear()">Добавить год</button>
     <div id="yearsContainer">
-        <p class="font-weight-bold">@(DateTime.Now.Year)</p>
-        <div class="row pb-3 halfYear" id="year@(DateTime.Now.Year)">
-            @for (int i = 0; i < 6; i++)
-            {
-                viewDictionary["i"] = i;
-                viewDictionary["monthName"] = months[i];
-                Html.RenderPartial("MonthPartial", null, viewDictionary);
-            }
-        </div>
-        <div class="row pb-5 halfYear" id="year@(DateTime.Now.Year)">
-            @for (int i = 6; i < 12; i++)
-            {
-                viewDictionary["i"] = i;
-                viewDictionary["monthName"] = months[i];
-                Html.RenderPartial("MonthPartial", null, viewDictionary);
-            }
+        <div class="year" id="@(DateTime.Now.Year)">
+            <p class="font-weight-bold">@(DateTime.Now.Year)</p>
+            <div class="row pb-3 halfYear" id="year@(DateTime.Now.Year)_1">
+                @for (int i = 0; i < 6; i++)
+                {
+                    viewDictionary["i"] = i;
+                    viewDictionary["monthName"] = months[i];
+                    Html.RenderPartial("MonthPartial", null, viewDictionary);
+                }
+            </div>
+            <div class="row pb-5 halfYear" id="year@(DateTime.Now.Year)_2">
+                @for (int i = 6; i < 12; i++)
+                {
+                    viewDictionary["i"] = i;
+                    viewDictionary["monthName"] = months[i];
+                    Html.RenderPartial("MonthPartial", null, viewDictionary);
+                }
+            </div>
         </div>
     </div>
 </div>
