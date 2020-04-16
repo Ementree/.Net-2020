@@ -2,15 +2,25 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <RootNamespace>DotNet2020.Domain._5</RootNamespace>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="Controllers" />
+    <Folder Include="Views" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="YouTrackSharp" Version="2020.1.0" />
   </ItemGroup>
-
+  
   <ItemGroup>
     <ProjectReference Include="..\DotNet2020.Domain.Core\DotNet2020.Domain.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <EmbeddedResource Include="Views\Report\Show.cshtml">
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\Report\Create.cshtml">
+    </EmbeddedResource>
+  </ItemGroup>
 </Project>

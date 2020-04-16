@@ -67,6 +67,7 @@ namespace DotNet2020
             var domain4Assembly = typeof(CalendarController).Assembly;
             var assembly = typeof(DemoController).Assembly;
             var domain6Assembly = typeof(PlanController).Assembly;
+            var reportAssembly = typeof(ReportController).Assembly;
 
             services.Configure<Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation.MvcRazorRuntimeCompilationOptions>(
                 options =>
@@ -80,12 +81,15 @@ namespace DotNet2020
 
 		                options.FileProviders.Add(
                         new EmbeddedFileProvider(attestationAssembly));
+                    options.FileProviders.Add(
+                        new EmbeddedFileProvider(reportAssembly));
                 });
 
             services
                 .AddMvc()
                 .AddApplicationPart(assembly)
 		            .AddApplicationPart(attestationAssembly)
+                    .AddApplicationPart(reportAssembly)
                 .AddRazorRuntimeCompilation();
         }
 

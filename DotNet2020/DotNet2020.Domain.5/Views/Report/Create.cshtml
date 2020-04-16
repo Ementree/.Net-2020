@@ -1,11 +1,10 @@
-﻿@model DotNet2020.Domain._5.Models.CreateReport
-
+﻿@model DotNet2020.Domain._5.Models.CreateReportModel
 <h2>Создать отчет</h2>
 <br>
 <br>
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="CreateReport">
+        <form asp-action="Show" method="post">
             <div class="form-group">
                 <label for="CreateReport">Название отчета:</label>
                 <input asp-for="ReportName" class="form-control" />
@@ -23,7 +22,7 @@
             </div>
             <br>
             <br>
-            <button type="button" class="btn btn-success btn-lg">Создать</button>
+            <button type="submit" class="btn btn-success btn-lg">Создать</button>
         </form>
     </div>
 </div>
