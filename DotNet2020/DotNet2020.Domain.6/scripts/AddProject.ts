@@ -1,11 +1,9 @@
 ﻿class Project {
-    Id: number;
     Name: string;
     Periods: Period[];
 }
 
 class Period {
-    Id: number;
     Date: Date;
     Resources: ResourceCapacity[];
 }
@@ -52,13 +50,24 @@ function AddYear() {
     secondHalfYearDiv.classList.add('row', 'pb-3', 'halfYear');
     secondHalfYearDiv.id = `year${localYear}_2`;
     for (let i = 6; i < 12; i++) {
-        const monthBlock = GenerateMonth(localYear, i+1);
+        const monthBlock = GenerateMonth(localYear, i + 1);
         secondHalfYearDiv.appendChild(monthBlock);
     }
 
     yearDiv.appendChild(firstHalfYearDiv);
     yearDiv.appendChild(secondHalfYearDiv);
     yearsContainer.appendChild(yearDiv);
+
+    (<HTMLInputElement>document.getElementById('removeYearButton')).disabled = false;
+}
+
+function RemoveLastYear() {
+    if (lastYear === new Date(Date.now()).getFullYear() + 1) {
+        (<HTMLInputElement>document.getElementById('removeYearButton')).disabled = true;
+    }
+    let lastYearDiv = document.getElementById(`year${lastYear}`);
+    document.getElementById('yearsContainer').removeChild(lastYearDiv);
+    lastYear--;
 }
 
 function GenerateMonth(localYear: number, monthNumber: number): Element {
@@ -146,4 +155,41 @@ function GetMonthName(number: number): string {
         case 12:
             return "Декабрь";
     }
+}
+
+function SendProject() {
+    let project = new Project();
+    let projectName = (<HTMLInputElement>document.getElementById('projectName')).value;
+    project.Name = projectName;
+    project.Periods = [];
+    let yearDivs = document.getElementById('yearsContainer').children;
+    for (let i = 0; i < yearDivs.length; i++) {
+        let yearDiv = yearDivs[i];
+        let year: number = parseInt(yearDiv.firstElementChild.textContent);
+        let halfYears = [yearDiv.children[1], yearDiv.children[2]];
+        //собираем первое полугодие
+        let firstHalfYear = halfYears[0];
+        let firstHalfMonths = firstHalfYear.children;
+        for (let j = 0; j < firstHalfMonths.length; j++) {
+            let monthBlock = firstHalfMonths[j];
+            let period = new Period();
+            let date = monthBlock.id.replace(/\D/g,'_').split('_').filter(d=>d!=='').map(d=>parseInt(d));
+            period.Date = new Date(date[0], date[1] - 1);
+            period.Resources = [];
+            let selects = monthBlock.children[2].children;
+            for (let rowNumber = 0; rowNumber < selects.length; rowNumber++) {
+                let selectValuePair = selects[rowNumber];
+                let select = <HTMLSelectElement>selectValuePair.firstElementChild.firstElementChild;
+                let resourceId = select.options[select.selectedIndex].value;
+                let resourceFullName = select.options[select.selectedIndex].text;
+                let value = parseInt(selectValuePair.lastElementChild.textContent);
+                if(resourceId.trim()!==""){
+                    period.Resources.push(new ResourceCapacity(parseInt(resourceId), resourceFullName, value));
+                }
+            }
+            //Todo: поговорить про пустые периоды
+            project.Periods.push(period);
+        }
+    }
+    console.log(project);
 }

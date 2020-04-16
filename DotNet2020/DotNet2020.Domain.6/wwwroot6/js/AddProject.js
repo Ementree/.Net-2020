@@ -46,6 +46,15 @@ function AddYear() {
     yearDiv.appendChild(firstHalfYearDiv);
     yearDiv.appendChild(secondHalfYearDiv);
     yearsContainer.appendChild(yearDiv);
+    document.getElementById('removeYearButton').disabled = false;
+}
+function RemoveLastYear() {
+    if (lastYear === new Date(Date.now()).getFullYear() + 1) {
+        document.getElementById('removeYearButton').disabled = true;
+    }
+    var lastYearDiv = document.getElementById("year" + lastYear);
+    document.getElementById('yearsContainer').removeChild(lastYearDiv);
+    lastYear--;
 }
 function GenerateMonth(localYear, monthNumber) {
     var monthBlock = (document
@@ -125,5 +134,39 @@ function GetMonthName(number) {
         case 12:
             return "Декабрь";
     }
+}
+function SendProject() {
+    var project = new Project();
+    var projectName = document.getElementById('projectName').value;
+    project.Name = projectName;
+    project.Periods = [];
+    var yearDivs = document.getElementById('yearsContainer').children;
+    for (var i = 0; i < yearDivs.length; i++) {
+        var yearDiv = yearDivs[i];
+        var year = parseInt(yearDiv.firstElementChild.textContent);
+        var halfYears = [yearDiv.children[1], yearDiv.children[2]];
+        var firstHalfYear = halfYears[0];
+        var firstHalfMonths = firstHalfYear.children;
+        for (var j = 0; j < firstHalfMonths.length; j++) {
+            var monthBlock = firstHalfMonths[j];
+            var period = new Period();
+            var date = monthBlock.id.replace(/\D/g, '_').split('_').filter(function (d) { return d !== ''; }).map(function (d) { return parseInt(d); });
+            period.Date = new Date(date[0], date[1]);
+            period.Resources = [];
+            var selects = monthBlock.children[2].children;
+            for (var rowNumber = 0; rowNumber < selects.length; rowNumber++) {
+                var selectValuePair = selects[rowNumber];
+                var select = selectValuePair.firstElementChild.firstElementChild;
+                var resourceId = select.options[select.selectedIndex].value;
+                var resourceFullName = select.options[select.selectedIndex].text;
+                var value = parseInt(selectValuePair.lastElementChild.textContent);
+                if (resourceId.trim() !== "") {
+                    period.Resources.push(new ResourceCapacity(parseInt(resourceId), resourceFullName, value));
+                }
+            }
+            project.Periods.push(period);
+        }
+    }
+    console.log(project);
 }
 //# sourceMappingURL=AddProject.js.map

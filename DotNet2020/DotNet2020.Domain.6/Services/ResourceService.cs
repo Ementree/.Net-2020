@@ -1,12 +1,19 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using DotNet2020.Domain._6.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace DotNet2020.Domain._6.Services
 {
     public class ResourceService
     {
-        public class ResourceToSelect
+        private readonly DbContext dbContext;
+
+        public ResourceService(DbContext context)
+        {
+            dbContext = context;
+        }
+        /*public class ResourceToSelect
         {
             public int Id { get; protected set; }
             public string FullName{ get; protected set; }
@@ -16,13 +23,11 @@ namespace DotNet2020.Domain._6.Services
                 Id = id;
                 FullName = fullName;
             }
-        }
+        }*/
 
-        public static List<ResourceToSelect> GetResources()
+        public List<Resource> GetResources()
         {
-            return Enumerable.Range(1, 7)
-                .Select(item => new ResourceToSelect(item, $"Name LastName {item}"))
-                .ToList();
+            return dbContext.Set<Resource>().OrderBy(resource => resource.LastName).ToList();
         }
     }
 }

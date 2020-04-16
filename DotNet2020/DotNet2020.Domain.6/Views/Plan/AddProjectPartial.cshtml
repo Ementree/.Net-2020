@@ -1,8 +1,10 @@
 ﻿@using DotNet2020.Domain._6.Services
+@using Microsoft.EntityFrameworkCore
+@inject DbContext DbContext
 <script src="~/wwwroot6/js/AddProject.js"></script>
 @{
     var months = MonthGeneratorService.GetMonthNames();
-    var resources = ResourceService.GetResources();
+    var resources = new ResourceService(DbContext).GetResources();
     var viewDictionary = new ViewDataDictionary(ViewData);
     viewDictionary.Add("resources", resources);
     viewDictionary.Add("i", 0);
@@ -15,8 +17,9 @@
         <input type="text" class="form-control w-75 ml-2" id="projectName" placeholder="Название проекта">
     </div>
     <button class="btn btn-primary mt-2 mb-4" onclick="AddYear()">Добавить год</button>
+    <button class="btn btn-primary mt-2 mb-4" id="removeYearButton" onclick="RemoveLastYear()" disabled="disabled">Удалить последний год</button>
     <div id="yearsContainer">
-        <div class="year" id="@(DateTime.Now.Year)">
+        <div class="year" id="year@(DateTime.Now.Year)">
             <p class="font-weight-bold">@(DateTime.Now.Year)</p>
             <div class="row pb-3 halfYear" id="year@(DateTime.Now.Year)_1">
                 @for (int i = 0; i < 6; i++)
