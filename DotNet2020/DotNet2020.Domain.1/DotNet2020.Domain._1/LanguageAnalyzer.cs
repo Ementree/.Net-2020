@@ -11,7 +11,7 @@ namespace DotNet2020.Domain._1
     /// Язык комментариев должен соответствовать договоренности на проекте:
     /// русский или английский
     /// </summary>
-    public class LanguageAnalyze
+    public class LanguageAnalyzer
     {
         private const string DiagnosticId = "LanguageAnalyze";
         private const string Title = "Language comment's problem";
