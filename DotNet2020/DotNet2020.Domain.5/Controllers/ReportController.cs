@@ -5,10 +5,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using DotNet2020.Domain._5.Entities;
 using DotNet2020.Domain._5.Models;
+using DotNet2020.Domain._5.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
-namespace DotNet2020.Controllers
+namespace DotNet2020.Domain._5.Controllers
 {
     public class ReportController : Controller
     {
@@ -28,24 +29,10 @@ namespace DotNet2020.Controllers
         [HttpPost]
         public IActionResult Show(CreateReportModel model)
         {
-            var reports = new List<IssueTimeInfo>
-                {
-                    new IssueTimeInfo(10,7),
-                    new IssueTimeInfo(11, 8),
-                    new IssueTimeInfo(15, 12),
-                    new IssueTimeInfo(20,19),
-                    new IssueTimeInfo(25, 7),
-                    new IssueTimeInfo(10, 17),
-                    new IssueTimeInfo(11, 18),
-                    new IssueTimeInfo(55, 52),
-                    new IssueTimeInfo(20,19),
-                    new IssueTimeInfo(35, 17),
-                    new IssueTimeInfo(10, 17),
-                    new IssueTimeInfo(11, 8),
-                    new IssueTimeInfo(15,12),
-                    new IssueTimeInfo(21,12),
-                    new IssueTimeInfo(25, 17)
-                };
+            var ytService = new YouTrackService();
+            var reports = ytService.GetIssues(model.Project, model.IssueFilter)
+                .Where(i => i.EstimatedTime.HasValue && i.SpentTime.HasValue)
+                .ToList();
             return View(reports);
         }
     }

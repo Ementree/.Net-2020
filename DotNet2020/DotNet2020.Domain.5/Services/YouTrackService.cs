@@ -21,7 +21,7 @@ namespace DotNet2020.Domain._5.Services
             var issues = issuesService.GetIssuesInProject(projectName, filter: issueFilter).Result;
             if (issues == null) return new IssueTimeInfo[0];
             return issues
-                .Select(i => new IssueTimeInfo(i.GetField("Estimate").AsInt32(), i.GetField("Spent time").AsInt32()))
+                .Select(i => new IssueTimeInfo(i.GetField("Estimate")?.AsInt32() / 60, i.GetField("Spent time")?.AsInt32() / 60))
                 .ToArray();
         }
     }
