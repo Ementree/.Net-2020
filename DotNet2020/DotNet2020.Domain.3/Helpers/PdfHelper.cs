@@ -95,6 +95,7 @@ namespace DotNet2020.Domain._3.Helpers
             var document = new Document(PageSize.A4, 75, 65, 75, 75);
             document.AddTitle("Результаты аттестации");
             document.AddCreationDate();
+            //MemoryStream
             PdfWriter writer =  PdfWriter.GetInstance(document, new FileStream("Files/attestation.pdf", FileMode.Create));
            
             System.Text.EncodingProvider encProvider = System.Text.CodePagesEncodingProvider.Instance;
