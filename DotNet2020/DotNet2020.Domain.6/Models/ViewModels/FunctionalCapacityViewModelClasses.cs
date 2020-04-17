@@ -2,7 +2,7 @@
 
 namespace DotNet2020.Domain._6.Models.ViewModels
 {
-    public class FCItem
+    public class FCPeriodWithBothCapacity
     {
         public Period Period { get; set; }
         public int CurrentCapacity { get; set; }
@@ -20,8 +20,8 @@ namespace DotNet2020.Domain._6.Models.ViewModels
     public class FCItemsGroup
     {
         public Resource Resource { get; set; }
-        public List<FCItem> Items { get; set; }
-        public Dictionary<int,List<FCItem>> YearItemsDict { get; set; }
+        public List<FCPeriodWithBothCapacity> Items { get; set; }
+        public Dictionary<int,List<FCPeriodWithBothCapacity>> YearItemsDict { get; set; }
     }
 }
 

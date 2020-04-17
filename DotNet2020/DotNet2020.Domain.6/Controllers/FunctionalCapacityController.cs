@@ -32,7 +32,7 @@ namespace DotNet2020.Domain._6.Controllers
                 .ToList()
                 .GroupBy(rc => rc.Resource)
                 .ToDictionary(rc => rc.Key, rc => rc
-                    .Select(g => new {capatiy = g.Capacity, period = g.Period })
+                    .Select(g => new {capaity = g.Capacity, period = g.Period })
                         .ToList());
 
             var plannedCapacityDict = _context.Set<FunctioningCapacityResource>()
@@ -56,7 +56,7 @@ namespace DotNet2020.Domain._6.Controllers
                     {
                         Resource = currentResource,
                         Period = val.period,
-                        currentCapacity = val.capatiy,
+                        currentCapacity = val.capaity,
                         plannedCapacity = 0
                     };
 
@@ -84,7 +84,7 @@ namespace DotNet2020.Domain._6.Controllers
                 .GroupBy(vm => vm.Resource)
                 .ToDictionary(vm => vm.Key, vm => vm
                    .Select(vm =>
-                       new FCItem
+                       new FCPeriodWithBothCapacity
                        {
                            Period = vm.Period,
                            PlannedCapacity = vm.plannedCapacity,
@@ -126,7 +126,7 @@ namespace DotNet2020.Domain._6.Controllers
             viewModel.Dict = ViewModelDict;
             viewModel.Periods = Periods;
 
-            FunctionalCapacityService.SortViewModelOnYears(viewModel);
+            FunctionalCapacityService.SortViewModelPeriodsInResourceOnYears(viewModel);
 
             return View(viewModel);
         }
