@@ -5,8 +5,6 @@ function handle(object) {
     inp.value = object.innerText.slice(0, -1);
     object.innerText = "";
     object.appendChild(inp);
-    var _event = object.onclick;
-    object.onclick = null;
     inp.onkeydown = function (e) {
         if (e.keyCode === 13) {
             if (inp.value === "")
@@ -26,7 +24,6 @@ function handle(object) {
             xhr.setRequestHeader('Content-type', 'application/json');
             xhr.send(JSON.stringify(object.id + ';' + inp.value));
             object.innerText = inp.value + '%';
-            object.onclick = _event;
             object.removeChild(inp);
         }
     };
