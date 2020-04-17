@@ -8,6 +8,8 @@
         console.log("Кто-то сменил год...");
         let value = selector.value;
         console.log(value);
-        window.location.href += ("?currentYear=" + value);
+        console.log(window.location.search);
+        window.location.search = ("?currentYear=" + value);
+        console.log(window.location.search);
     });
 });

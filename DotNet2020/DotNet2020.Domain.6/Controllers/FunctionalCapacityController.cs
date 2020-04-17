@@ -122,6 +122,11 @@ namespace DotNet2020.Domain._6.Controllers
                 ViewModelDict[groupName].Add(item);
             }
 
+            if (currentYear == -1)
+                viewModel.CurrentYear = DateTime.Now.Year;
+            else
+                viewModel.CurrentYear = currentYear;
+
             viewModel.Dict = ViewModelDict;
             viewModel.Periods = Periods;
 

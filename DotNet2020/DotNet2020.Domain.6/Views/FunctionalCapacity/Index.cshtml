@@ -23,6 +23,8 @@
                 }
             }
             <option value="-1">-1</option>
+            <option value="2007">2007</option>
+            <option value="2000">2000</option>
         </select>
     </form>
 <div class="fcwrapper">
@@ -78,7 +80,7 @@
                                 @(m.Resource.FirstName + " " + m.Resource.LastName)
                             </td>
 
-                            @foreach(var capacItem in m.YearItemsDict[Model.CurrentYear])
+                            @foreach(var capacItem in m.YearItemsDict[2020])
                             {
                                 <td class="right align-center h45">
                                     @capacItem.PlannedCapacity%
