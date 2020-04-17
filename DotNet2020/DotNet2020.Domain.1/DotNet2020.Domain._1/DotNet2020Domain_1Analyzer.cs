@@ -23,7 +23,9 @@ namespace DotNet2020.Domain._1
                     PropertyModifiersAnalyzer.Rule,
                     BooleanPropsNameAnalyzer.Rule,
                     MethodBodyAnalyze.Rule,
-                    OneFileOneClass.Rule);
+                    OneFileOneClass.Rule,
+                    LanguageAnalyzer.RussianRule,
+                    LanguageAnalyzer.EnglishRule);
             }
         }
 
@@ -44,6 +46,8 @@ namespace DotNet2020.Domain._1
             context.RegisterSyntaxNodeAction(BooleanPropsNameAnalyzer.Analyze, SyntaxKind.PropertyDeclaration);
             context.RegisterSyntaxNodeAction(SimpleInterfaceAnalizer.Analyze, SyntaxKind.InterfaceDeclaration);
             context.RegisterSyntaxNodeAction(MethodParamsAnalyzer.Analyze, SyntaxKind.MethodDeclaration);
+            context.RegisterSyntaxNodeAction(LanguageAnalyzer.AnalyzeXML, SyntaxKind.SingleLineDocumentationCommentTrivia);
+            context.RegisterSyntaxTreeAction(LanguageAnalyzer.Analyze);
         }
     }
 }
