@@ -20,7 +20,6 @@ var lastYear = new Date(Date.now()).getFullYear();
 function AddYear() {
     lastYear++;
     var localYear = lastYear;
-    console.log(localYear);
     var yearsContainer = document.getElementById('yearsContainer');
     var yearDiv = document.createElement('div');
     yearDiv.id = "year" + localYear;
@@ -61,7 +60,6 @@ function GenerateMonth(localYear, monthNumber) {
         .getElementById("year" + (localYear - 1) + "Month" + monthNumber)
         .cloneNode(true));
     monthBlock.id = "year" + localYear + "Month" + monthNumber;
-    console.log(monthBlock);
     var addRes = monthBlock.children[2];
     addRes.id = "addResourceYear" + localYear + "Month" + monthNumber;
     while (addRes.childElementCount > 1) {
@@ -135,7 +133,7 @@ function GetMonthName(number) {
             return "Декабрь";
     }
 }
-function SendProject() {
+function GetProjectInfo() {
     var project = new Project();
     var projectName = document.getElementById('projectName').value;
     project.Name = projectName;
@@ -149,24 +147,44 @@ function SendProject() {
         var firstHalfMonths = firstHalfYear.children;
         for (var j = 0; j < firstHalfMonths.length; j++) {
             var monthBlock = firstHalfMonths[j];
-            var period = new Period();
-            var date = monthBlock.id.replace(/\D/g, '_').split('_').filter(function (d) { return d !== ''; }).map(function (d) { return parseInt(d); });
-            period.Date = new Date(date[0], date[1]);
-            period.Resources = [];
-            var selects = monthBlock.children[2].children;
-            for (var rowNumber = 0; rowNumber < selects.length; rowNumber++) {
-                var selectValuePair = selects[rowNumber];
-                var select = selectValuePair.firstElementChild.firstElementChild;
-                var resourceId = select.options[select.selectedIndex].value;
-                var resourceFullName = select.options[select.selectedIndex].text;
-                var value = parseInt(selectValuePair.lastElementChild.textContent);
-                if (resourceId.trim() !== "") {
-                    period.Resources.push(new ResourceCapacity(parseInt(resourceId), resourceFullName, value));
-                }
-            }
+            var period = GetPeriodInfo(monthBlock);
+            project.Periods.push(period);
+        }
+        var secondHalfYear = halfYears[1];
+        var secondHalfMonths = secondHalfYear.children;
+        for (var j = 0; j < secondHalfMonths.length; j++) {
+            var monthBlock = secondHalfMonths[j];
+            var period = GetPeriodInfo(monthBlock);
             project.Periods.push(period);
         }
     }
     console.log(project);
+    return project;
+}
+function GetPeriodInfo(monthBlock) {
+    var period = new Period();
+    var date = monthBlock.id.replace(/\D/g, '_').split('_').filter(function (d) { return d !== ''; }).map(function (d) { return parseInt(d); });
+    period.Date = new Date(date[0], date[1]);
+    period.Resources = [];
+    var selects = monthBlock.children[2].children;
+    for (var rowNumber = 0; rowNumber < selects.length; rowNumber++) {
+        var selectValuePair = selects[rowNumber];
+        var select = selectValuePair.firstElementChild.firstElementChild;
+        var resourceId = select.options[select.selectedIndex].value;
+        var resourceFullName = select.options[select.selectedIndex].text;
+        var value = parseInt(selectValuePair.lastElementChild.textContent);
+        if (resourceId.trim() !== "") {
+            period.Resources.push(new ResourceCapacity(parseInt(resourceId), resourceFullName, value));
+        }
+    }
+    return period;
+}
+function SendProjectToDb() {
+    var project = GetProjectInfo();
+    var xhr = new XMLHttpRequest();
+    xhr.open('PUT', 'plan/addProject', false);
+    xhr.setRequestHeader('Content-type', 'application/json');
+    xhr.send(JSON.stringify(project));
+    var success = xhr.responseText;
 }
 //# sourceMappingURL=AddProject.js.map

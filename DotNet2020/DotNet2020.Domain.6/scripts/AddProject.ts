@@ -4,6 +4,7 @@
 }
 
 class Period {
+    
     Date: Date;
     Resources: ResourceCapacity[];
 }
@@ -25,7 +26,6 @@ let lastYear: number = new Date(Date.now()).getFullYear();
 function AddYear() {
     lastYear++;
     const localYear = lastYear;
-    console.log(localYear);
     let yearsContainer = document.getElementById('yearsContainer');
     let yearDiv: HTMLDivElement = document.createElement('div');
     yearDiv.id = `year${localYear}`;
@@ -75,7 +75,6 @@ function GenerateMonth(localYear: number, monthNumber: number): Element {
         .getElementById(`year${localYear - 1}Month${monthNumber}`)
         .cloneNode(true));
     monthBlock.id = `year${localYear}Month${monthNumber}`;
-    console.log(monthBlock);
     let addRes = monthBlock.children[2];
     addRes.id = `addResourceYear${localYear}Month${monthNumber}`;
     while (addRes.childElementCount > 1) {
@@ -157,7 +156,7 @@ function GetMonthName(number: number): string {
     }
 }
 
-function SendProject() {
+function GetProjectInfo(): Project {
     let project = new Project();
     let projectName = (<HTMLInputElement>document.getElementById('projectName')).value;
     project.Name = projectName;
@@ -172,24 +171,47 @@ function SendProject() {
         let firstHalfMonths = firstHalfYear.children;
         for (let j = 0; j < firstHalfMonths.length; j++) {
             let monthBlock = firstHalfMonths[j];
-            let period = new Period();
-            let date = monthBlock.id.replace(/\D/g,'_').split('_').filter(d=>d!=='').map(d=>parseInt(d));
-            period.Date = new Date(date[0], date[1] - 1);
-            period.Resources = [];
-            let selects = monthBlock.children[2].children;
-            for (let rowNumber = 0; rowNumber < selects.length; rowNumber++) {
-                let selectValuePair = selects[rowNumber];
-                let select = <HTMLSelectElement>selectValuePair.firstElementChild.firstElementChild;
-                let resourceId = select.options[select.selectedIndex].value;
-                let resourceFullName = select.options[select.selectedIndex].text;
-                let value = parseInt(selectValuePair.lastElementChild.textContent);
-                if(resourceId.trim()!==""){
-                    period.Resources.push(new ResourceCapacity(parseInt(resourceId), resourceFullName, value));
-                }
-            }
-            //Todo: поговорить про пустые периоды
+            let period = GetPeriodInfo(monthBlock);
+            project.Periods.push(period);
+        }
+        
+        //собираем второе полугодие
+        let secondHalfYear = halfYears[1];
+        let secondHalfMonths = secondHalfYear.children;
+        for (let j = 0; j < secondHalfMonths.length; j++) {
+            let monthBlock = secondHalfMonths[j];
+            let period = GetPeriodInfo(monthBlock);
             project.Periods.push(period);
         }
     }
     console.log(project);
+    return project;
+}
+
+function GetPeriodInfo(monthBlock: Element):Period {
+    let period = new Period();
+    let date = monthBlock.id.replace(/\D/g,'_').split('_').filter(d=>d!=='').map(d=>parseInt(d));
+    period.Date = new Date(date[0], date[1]);
+    period.Resources = [];
+    let selects = monthBlock.children[2].children;
+    for (let rowNumber = 0; rowNumber < selects.length; rowNumber++) {
+        let selectValuePair = selects[rowNumber];
+        let select = <HTMLSelectElement>selectValuePair.firstElementChild.firstElementChild;
+        let resourceId = select.options[select.selectedIndex].value;
+        let resourceFullName = select.options[select.selectedIndex].text;
+        let value = parseInt(selectValuePair.lastElementChild.textContent);
+        if(resourceId.trim()!==""){
+            period.Resources.push(new ResourceCapacity(parseInt(resourceId), resourceFullName, value));
+        }
+    }
+    return period;
+}
+
+function SendProjectToDb() {
+    let project = GetProjectInfo();
+    let xhr = new XMLHttpRequest();
+    xhr.open('PUT', 'plan/addProject', false);
+    xhr.setRequestHeader('Content-type', 'application/json');
+    xhr.send(JSON.stringify(project));
+    let success = xhr.responseText;
 }
