@@ -18,33 +18,22 @@ namespace DotNet2020.Domain._1
         const string Title = "line is too long";
         //static string mesFormat = $"line should be shorter than {MaxLength} symbols";
         const string MessageFormat = "line should be shorter than 80 symbols";
-        const string Category = "Formatting";
+        const string Category = "Stylistic";
         const string Description = "line should be shorter than 80 symbols";
         public static DiagnosticDescriptor Rule = new DiagnosticDescriptor(DiagnosticId, Title, MessageFormat, Category, DiagnosticSeverity.Warning, isEnabledByDefault: true, description: Description);
 
-        public static void Analyze(SyntaxNodeAnalysisContext context)
+        public static void AnalyzeTree(SyntaxTreeAnalysisContext context)
         {
-            var node = context.Node;
-            var trivia = node.GetTrailingTrivia().FirstOrDefault(t => t.IsKind(SyntaxKind.EndOfLineTrivia));
+            var root = context.Tree.GetRoot();
+            var tree = context.Tree;
 
-            if (trivia != null &&
-                (trivia.SpanStart - node.SpanStart) < MaxLength)
+            var lines = tree.GetText().Lines;
+            foreach (var l in lines)
             {
-                return;
+                var span = l.Span;
+                if (span.Length > MaxLength)
+                    context.ReportDiagnostic(Diagnostic.Create(Rule, Location.Create(tree, span), l.Text));
             }
-
-            context.ReportDiagnostic(
-                Diagnostic.Create(
-                    new DiagnosticDescriptor(
-                        DiagnosticId,
-                        Title,
-                        MessageFormat,
-                        Category,
-                        DiagnosticSeverity.Warning,
-                        true,
-                        description: Description),
-                    node.GetLocation(),
-                    node.GetText()));
         }
 
         public async Task<Solution> ChangeSolution()

@@ -37,12 +37,13 @@ namespace DotNet2020.Domain._1
                     kinds[i - 8793] = kind;
             }
 
-            context.RegisterSyntaxNodeAction(LineLengthAnalyzer.Analyze, kinds);
+            context.RegisterSyntaxTreeAction(LineLengthAnalyzer.AnalyzeTree);
             context.RegisterSyntaxNodeAction(FluentAnalyzer.Analyze, SyntaxKind.SimpleMemberAccessExpression);
             context.RegisterSyntaxNodeAction(PropertyModifiersAnalyzer.Analyze, SyntaxKind.PropertyDeclaration);
             context.RegisterSyntaxNodeAction(OneFileOneClass.Analyze, SyntaxKind.NamespaceDeclaration);
             context.RegisterSyntaxNodeAction(BooleanPropsNameAnalyzer.Analyze, SyntaxKind.PropertyDeclaration);
             context.RegisterSyntaxNodeAction(SimpleInterfaceAnalizer.Analyze, SyntaxKind.InterfaceDeclaration);
+            context.RegisterSyntaxNodeAction(MethodParamsAnalyzer.Analyze, SyntaxKind.MethodDeclaration);
         }
     }
 }
