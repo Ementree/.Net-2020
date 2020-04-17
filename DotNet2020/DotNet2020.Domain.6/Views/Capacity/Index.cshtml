@@ -43,17 +43,7 @@
 </style>
 
 <form asp-controller="Capacity" asp-action="Index">
-    <div class="btn-group dropleft" >
-        <a type="button" asp-route-year="@(year-1)" class="btn btn-secondary dropdown-toggle" onclick="this.form.submit()">
-            @(year - 1)
-        </a>
-    </div>
-    @ViewBag.Year
-    <div class="btn-group dropright">
-        <a type="button" asp-route-year="@(year+1)" class="btn btn-secondary dropdown-toggle" onclick="this.form.submit()">
-            @(year + 1)
-        </a>
-    </div>
+    <partial name="YearChangerPartial"/>
     <div class="wrapper">
         <div class="scroller2 scroller">
             <table class="scroll-table table bottom">
@@ -67,23 +57,22 @@
                     </th>
                     @for (var i = 0; i < 12; i++)
                     {
-                        @if (date.Month == i + 1 && ViewBag.Year== ViewBag.CurrentYear)
+                        @if (date.Month == i + 1 && ViewBag.Year == ViewBag.CurrentYear)
                         {
                             <th class="right" style="background-color: darkseagreen">
                                 @months[i]
-                            </th>                            
+                            </th>
                         }
                         else
                         {
                             <th class="right">
                                 @months[i]
-                            </th>                               
+                            </th>
                         }
-
                     }
                 </tr>
                 </thead>
-                
+
                 <tbody>
                 @foreach (var resources in Model)
                 {
@@ -92,12 +81,12 @@
                             @resources.Key
                         </th>
                         <td class="sticky-col2 h45" style="width: 10%; margin-left: 20%;">
-                            
+
                         </td>
                         @for (var i = 0; i < 12; i++)
                         {
                             <td class="right h45">
-                                
+
                             </td>
                         }
                     </tr>
@@ -121,7 +110,7 @@
                                 else
                                 {
                                     <td style="padding: 7px;" id="@(resource.ResourceId.ToString() + ';' + i.ToString() + ';' + year)" class="right h45 align-center" ondblclick="handle(this)">
-                                        
+
                                     </td>
                                 }
                             }

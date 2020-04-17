@@ -18,6 +18,7 @@ namespace DotNet2020.Domain._6.Controllers
         {
             context = _context;
         }
+
         public IActionResult Index(int year = 2020)
         {
             var resources = context.Set<Resource>()
@@ -45,10 +46,11 @@ namespace DotNet2020.Domain._6.Controllers
                 {
                     capacity = capacities[resource.Id];
                 }
+
                 viewModelList.Add(new ViewModelCapacity(
-                    resource.Id, 
-                    resource.FirstName + ' ' + resource.LastName, 
-                    resource.ResourceGroupType.Type, 
+                    resource.Id,
+                    resource.FirstName + ' ' + resource.LastName,
+                    resource.ResourceGroupType.Type,
                     resource.ResourceGroupType.Group,
                     capacity));
             }
@@ -65,23 +67,24 @@ namespace DotNet2020.Domain._6.Controllers
                     model.Add(viewModel.Group, new List<ViewModelCapacity>() {viewModel});
                 }
             }
+
             ViewBag.CurrentYear = DateTime.Now.Year;
             ViewBag.Year = year;
             ViewBag.Months = MonthGeneratorService.GetAllMonths(year);
-            
+
             return View(model);
         }
 
         [HttpPost("/changeCapacity")]
-        public void ChangeCapacity([FromBody]string data)
+        public void ChangeCapacity([FromBody] string data)
         {
             var dataArr = data.Split(';');
-            
+
             var resourceId = int.Parse(dataArr[0]);
             var month = int.Parse(dataArr[1]);
             var year = int.Parse(dataArr[2]);
             var capacity = int.Parse(dataArr[3]);
-            
+
             var resources = context.Set<Resource>()
                 .Include(x => x.ResourceGroupType)
                 .ToList();
@@ -119,5 +122,5 @@ namespace DotNet2020.Domain._6.Controllers
 
             context.SaveChanges();
         }
-}
+    }
 }
