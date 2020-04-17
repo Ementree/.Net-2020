@@ -21,6 +21,7 @@ namespace DotNet2020.Domain._6.Controllers
 
         public IActionResult Index(int year = 2020)
         {
+            //todo: капасити для проекта брать из бд
             ViewBag.Year = year;
             Dictionary<Project, Dictionary<Period, List<FunctioningCapacityResource>>> model;
             var functioningCapacityResources = context.Set<FunctioningCapacityResource>()
@@ -55,6 +56,7 @@ namespace DotNet2020.Domain._6.Controllers
         public bool AddProject([FromBody] ProjectViewModel viewModel)
         {
             var project = new Project(viewModel.Name, 5);
+            /*
             context.Set<Project>().Add(project);
             var periods = viewModel.Periods;
             var dbPeriods = context.Set<Period>();
@@ -71,14 +73,14 @@ namespace DotNet2020.Domain._6.Controllers
                     var saveChanges = context.SaveChanges();
                     var id = addRes.Entity.Id;
                 }
-/*
+
                 foreach (var resourceCapacityViewModel in period.Resources)
                 {
                     var fres = new FunctioningCapacityResource();
                 }
-                */
+                
             }
-
+*/
             return true;
         }
     }

@@ -4,9 +4,11 @@
 }
 
 class Period {
-    
+    Capacity: number;
     Date: Date;
     Resources: ResourceCapacity[];
+
+
 }
 
 class ResourceCapacity {
@@ -77,6 +79,10 @@ function GenerateMonth(localYear: number, monthNumber: number): Element {
     monthBlock.id = `year${localYear}Month${monthNumber}`;
     let addRes = monthBlock.children[2];
     addRes.id = `addResourceYear${localYear}Month${monthNumber}`;
+
+    let monthCapacity = monthBlock.children[0].children[1];
+    monthCapacity.id = `monthlyCapacityYear${localYear}Month${monthNumber}`;
+
     while (addRes.childElementCount > 1) {
         addRes.removeChild(addRes.children[addRes.childElementCount - 1])
     }
@@ -156,6 +162,36 @@ function GetMonthName(number: number): string {
     }
 }
 
+
+function GetPeriodInfo(monthBlock: Element): Period {
+    let period = new Period();
+    let date = monthBlock.id.replace(/\D/g, '_').split('_').filter(d => d !== '').map(d => parseInt(d));
+    period.Date = new Date(date[0], date[1]);
+    period.Resources = [];
+    let capacity = parseInt((<HTMLInputElement>monthBlock.firstElementChild.lastElementChild.firstElementChild).value);
+    if (isNaN(capacity)) {
+        capacity = -1;
+    }
+    console.log(capacity);
+    period.Capacity = capacity;
+    let selects = monthBlock.children[2].children;
+    for (let rowNumber = 0; rowNumber < selects.length; rowNumber++) {
+        let selectValuePair = selects[rowNumber];
+        let select = <HTMLSelectElement>selectValuePair.firstElementChild.firstElementChild;
+        let resourceId = select.options[select.selectedIndex].value;
+        let resourceFullName = select.options[select.selectedIndex].text;
+        let value = parseInt((<HTMLInputElement>selectValuePair.lastElementChild.firstElementChild).value);
+        if (isNaN(value)) {
+            value = -1;
+        }
+        if (resourceId.trim() !== "") {
+            period.Resources.push(new ResourceCapacity(parseInt(resourceId), resourceFullName, value));
+        }
+    }
+    return period;
+}
+
+
 function GetProjectInfo(): Project {
     let project = new Project();
     let projectName = (<HTMLInputElement>document.getElementById('projectName')).value;
@@ -174,7 +210,7 @@ function GetProjectInfo(): Project {
             let period = GetPeriodInfo(monthBlock);
             project.Periods.push(period);
         }
-        
+
         //собираем второе полугодие
         let secondHalfYear = halfYears[1];
         let secondHalfMonths = secondHalfYear.children;
@@ -186,25 +222,6 @@ function GetProjectInfo(): Project {
     }
     console.log(project);
     return project;
-}
-
-function GetPeriodInfo(monthBlock: Element):Period {
-    let period = new Period();
-    let date = monthBlock.id.replace(/\D/g,'_').split('_').filter(d=>d!=='').map(d=>parseInt(d));
-    period.Date = new Date(date[0], date[1]);
-    period.Resources = [];
-    let selects = monthBlock.children[2].children;
-    for (let rowNumber = 0; rowNumber < selects.length; rowNumber++) {
-        let selectValuePair = selects[rowNumber];
-        let select = <HTMLSelectElement>selectValuePair.firstElementChild.firstElementChild;
-        let resourceId = select.options[select.selectedIndex].value;
-        let resourceFullName = select.options[select.selectedIndex].text;
-        let value = parseInt(selectValuePair.lastElementChild.textContent);
-        if(resourceId.trim()!==""){
-            period.Resources.push(new ResourceCapacity(parseInt(resourceId), resourceFullName, value));
-        }
-    }
-    return period;
 }
 
 function SendProjectToDb() {
