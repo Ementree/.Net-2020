@@ -19,7 +19,7 @@ namespace DotNet2020.Domain._1
 
         private const string Title = "Property encapsulation problem";
         private const string MessageFormat = @"Property should have public get and protected set";
-        private const string Category = "Encapsulation";
+        private const string Category = "Entities and Aggregates";
         private const string Description = @"Property should have public get and protected set";
         public static DiagnosticDescriptor Rule = new DiagnosticDescriptor(DiagnosticId, Title, MessageFormat, Category, DiagnosticSeverity.Warning, isEnabledByDefault: true, description: Description);
 

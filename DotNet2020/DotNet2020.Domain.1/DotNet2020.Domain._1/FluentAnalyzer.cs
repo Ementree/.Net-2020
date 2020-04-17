@@ -18,7 +18,7 @@ namespace DotNet2020.Domain._1
         public const string CodeFixTitle = "Fluent warning";
         const string Title = "Fluent warning";
         const string MessageFormat = "Fluent warning";
-        const string Category = "Formatting";
+        const string Category = "Stylistic";
         const string Description = "Fluent warning";
         public static DiagnosticDescriptor Rule = new DiagnosticDescriptor(DiagnosticId, Title, MessageFormat, Category, DiagnosticSeverity.Warning, isEnabledByDefault: true, description: Description);
         

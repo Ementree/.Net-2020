@@ -28,7 +28,9 @@ namespace DotNet2020.Domain._1
                     PropertyModifiersAnalyzer.DiagnosticId,
                     BooleanPropsNameAnalyzer.DiagnosticId,
                     MethodBodyAnalyze.DiagnosticId,
-                    OneFileOneClass.DiagnosticId);
+                    OneFileOneClass.DiagnosticId,
+                    MethodParamsAnalyzer.DiagnosticId,
+                    LanguageAnalyzer.DiagnosticId);
             }
         }
 

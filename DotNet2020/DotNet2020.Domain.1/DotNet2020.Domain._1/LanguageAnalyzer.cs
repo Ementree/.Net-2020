@@ -13,7 +13,7 @@ namespace DotNet2020.Domain._1
     /// </summary>
     public class LanguageAnalyzer
     {
-        private const string DiagnosticId = "LanguageAnalyze";
+        public const string DiagnosticId = "LanguageAnalyze";
         private const string Title = "Language comment's problem";
         private const string RussianMessageFormat = "Language should be Russian";
         private const string EnglishMessageFormat = "Language should be English";

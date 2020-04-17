@@ -31,14 +31,6 @@ namespace DotNet2020.Domain._1
 
         public override void Initialize(AnalysisContext context)
         {
-            // all statements
-            var kinds = new SyntaxKind[29];
-            for (int i = 8793; i < 8822; i++)
-            {
-                if (Enum.TryParse(i.ToString(), out SyntaxKind kind))
-                    kinds[i - 8793] = kind;
-            }
-
             context.RegisterSyntaxTreeAction(LineLengthAnalyzer.AnalyzeTree);
             context.RegisterSyntaxNodeAction(FluentAnalyzer.Analyze, SyntaxKind.SimpleMemberAccessExpression);
             context.RegisterSyntaxNodeAction(PropertyModifiersAnalyzer.Analyze, SyntaxKind.PropertyDeclaration);
