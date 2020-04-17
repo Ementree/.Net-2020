@@ -5,7 +5,7 @@ using DotNet2020.Domain._6.Models.ViewModels;
 
 namespace DotNet2020.Domain._6.Services
 {
-    public class FunctionalCapacityService
+    public static class FunctionalCapacityService
     {
         static Tuple<int,int> GetYearRange(List<Period> periods)
         {
@@ -32,7 +32,7 @@ namespace DotNet2020.Domain._6.Services
             {
                 result.Add(new FCPeriodWithBothCapacity()
                 {
-                    Period = new Period(new DateTime(year, i + 1, 1), new DateTime()),
+                    Period = new Period(new DateTime(year, i + 1, 1), new DateTime(year,i + 1,28)),
                     CurrentCapacity = 0,
                     PlannedCapacity = 0
                 });
@@ -64,7 +64,7 @@ namespace DotNet2020.Domain._6.Services
             return false;
         }
 
-        static void AddItemsInDict(Dictionary<int,List<FCPeriodWithBothCapacity>> yearItemsDict,List<FCPeriodWithBothCapacity> items)
+        static void AddPeriodWithBothCapacityInDict(Dictionary<int,List<FCPeriodWithBothCapacity>> yearItemsDict,List<FCPeriodWithBothCapacity> items)
         {
             foreach(var i in items)
             {
@@ -77,7 +77,7 @@ namespace DotNet2020.Domain._6.Services
             }
         }
 
-        public static void SortViewModelPeriodsInResourceOnYears(FunctionalCapacityViewModel viewModel)
+        static List<Period> GetAllPeriods(FunctionalCapacityViewModel viewModel)
         {
             var allPeriods = new List<Period>();
 
@@ -92,9 +92,13 @@ namespace DotNet2020.Domain._6.Services
                 }
             }
 
-            var yearsRangeTuple = GetYearRange(allPeriods);
-            viewModel.YearsRange = yearsRangeTuple;
+            return allPeriods;
+        }
 
+        public static void SortViewModelPeriodsInResourceOnYears(FunctionalCapacityViewModel viewModel)
+        {
+            var allPeriods = GetAllPeriods(viewModel);
+            var yearsRangeTuple = GetYearRange(allPeriods);
 
             foreach(var pair in viewModel.Dict)
             {
@@ -102,11 +106,19 @@ namespace DotNet2020.Domain._6.Services
                 {
                     var dict = CreateDictWithDefoultList(yearsRangeTuple);
 
-                    AddItemsInDict(dict, resource.Items);
+                    AddPeriodWithBothCapacityInDict(dict, resource.Items);
 
                     resource.YearItemsDict = dict;
                 }
             }
+        }
+
+        public static void AddYearRange(FunctionalCapacityViewModel viewModel)
+        {
+            var allPeriods = GetAllPeriods(viewModel);
+
+            var yearsRangeTuple = GetYearRange(allPeriods);
+            viewModel.YearsRange = yearsRangeTuple;
         }
     }
 }

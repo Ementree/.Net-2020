@@ -1,4 +1,3 @@
-//using Microsoft.AspNetCore.Mvc;
 using DotNet2020.Domain._6.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
@@ -20,7 +19,7 @@ namespace DotNet2020.Domain._6.Controllers
         }
 
         // GET
-        public IActionResult Index()
+        public IActionResult Index(int currentYear = -1)
         {
             //System.InvalidOperationException: 'Client side GroupBy is not supported.' ��� ToList()
             //� EFCore3.0 �� ��������
@@ -126,7 +125,13 @@ namespace DotNet2020.Domain._6.Controllers
             viewModel.Dict = ViewModelDict;
             viewModel.Periods = Periods;
 
+            if (currentYear == -1)
+                viewModel.CurrentYear = DateTime.Now.Year;
+            else
+                viewModel.CurrentYear = currentYear;
+
             FunctionalCapacityService.SortViewModelPeriodsInResourceOnYears(viewModel);
+            FunctionalCapacityService.AddYearRange(viewModel);
 
             return View(viewModel);
         }

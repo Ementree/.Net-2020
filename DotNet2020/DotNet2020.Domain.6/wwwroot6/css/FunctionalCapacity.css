@@ -71,3 +71,43 @@
     overflow: hidden;
     border-right: 1px solid #dee2e6;
 }
+
+.scroller {
+    margin-left: 30%;
+}
+
+.year {
+    margin-bottom: 1vw;
+}
+
+.top {
+    border-top: 1px solid #dee2e6;
+}
+
+.left {
+    border-left: 1px solid #dee2e6;
+}
+
+.right {
+    border-right: 1px solid #dee2e6;
+}
+
+.bottom {
+    border-bottom: 1px solid #dee2e6;
+}
+
+.no-bottom {
+    border-bottom: none;
+}
+
+.no-top {
+    border-top: none;
+}
+
+.align-center {
+    text-align: center;
+}
+
+.h45 {
+    height: 45px;
+}
