@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using DotNet2020.Domain._4.Models;
-using DotNet2020.Domain._4_Models;
+using DotNet2020.Domain._4_.Models.ModelView;
 using DotNet2020.Domain.Filters;
 using DotNet2020.Domain.Models.ModelView;
 using Kendo.Mvc.Examples.Models.Scheduler;
@@ -84,65 +84,80 @@ namespace DotNet2020.Domain._4.Controllers
         [HttpGet]
         public IActionResult AddEvent()
         {
+
             return View();
         }
 
         #region Добавление Event в календарь
 
-        [HttpPost]
-        public IActionResult AddSickDay(EventViewModel eventVM)
+        [HttpGet]
+        public IActionResult AddSickDay()
         {
-            if (eventVM.From == DateTime.MinValue)
-            {
-                ModelState.AddModelError("DataError", "Введите дату");
-                return RedirectToAction("AddEvent");
-            }
+            return View();
+        }
 
-            var sickDay = new SickDay(eventVM.From, eventVM.From,
+        [HttpPost]
+        public IActionResult AddSickDay(SickDayViewModel viewModel)
+        {
+            if(viewModel.Day == DateTime.MinValue)
+            {
+                ModelState.AddModelError("Error1", "Введите дату");
+                return View();
+            }
+            var sickDay = new SickDay(viewModel.Day, viewModel.Day,
                 _dbContext.Users.FirstOrDefault(u => u.Email == HttpContext.User.Identity.Name));
             _dbContext.CalendarEntries.Add(sickDay);
             _dbContext.SaveChanges();
             return RedirectToAction("Index");
         }
 
-        [HttpPost]
-        public IActionResult AddVacation(EventViewModel eventVM)
+        [HttpGet]
+        public IActionResult AddVacation()
         {
-            if (eventVM.From == DateTime.MinValue && eventVM.To == DateTime.MinValue)
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult AddVacation(VacationViewModel viewModel)
+        {
+            if (viewModel.From == DateTime.MinValue && viewModel.From == DateTime.MinValue)
             {
-                ModelState.AddModelError("DataError", "Введите дату");
-                return RedirectToAction("AddEvent");
+                ModelState.AddModelError("Error1", "Введите даты");
+                return View();
+            }
+            if (viewModel.From >= viewModel.To)
+            {
+                ModelState.AddModelError("Error", "Дата начала больничного должна быть меньше даты конца");
+                return View(viewModel);
             }
 
-            if(eventVM.From >= eventVM.To)
-            {
-                ModelState.AddModelError("DataError", "Не корректно ведена дата");
-                return RedirectToAction("AddEvent");
-            }
-
-            var vacation = new Vacation(eventVM.From, eventVM.To,
+            var vacation = new Vacation(viewModel.From, viewModel.To,
                 _dbContext.Users.FirstOrDefault(u => u.Email == HttpContext.User.Identity.Name));
             _dbContext.CalendarEntries.Add(vacation);
             _dbContext.SaveChanges();
             return RedirectToAction("Index");
         }
 
-        [HttpPost]
-        public IActionResult AddIllness(EventViewModel eventVM)
+        [HttpGet]
+        public IActionResult AddIllness()
         {
-            if (eventVM.From == DateTime.MinValue && eventVM.To == DateTime.MinValue)
-            {
-                ModelState.AddModelError("DataError", "Введите дату");
-                return RedirectToAction("AddEvent");
-            }
+            return View();
+        }
 
-            if (eventVM.From >= eventVM.To)
+        [HttpPost]
+        public IActionResult AddIllness(VacationViewModel viewModel)
+        {
+            if (viewModel.From == DateTime.MinValue && viewModel.From == DateTime.MinValue)
             {
-                ModelState.AddModelError("DataError", "Не корректно ведена дата");
-                return RedirectToAction("AddEvent");
+                ModelState.AddModelError("Error1", "Введите даты");
+                return View();
             }
-
-            var illness = new Illness(eventVM.From, eventVM.To,
+            if (viewModel.From >= viewModel.To)
+            {
+                ModelState.AddModelError("Error", "Дата начала больничного должна быть меньше даты конца");
+                return View(viewModel);
+            }
+            var illness = new Illness(viewModel.From, viewModel.To,
                 _dbContext.Users.FirstOrDefault(u => u.Email == HttpContext.User.Identity.Name));
             _dbContext.CalendarEntries.Add(illness);
             _dbContext.SaveChanges();

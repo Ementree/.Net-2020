@@ -22,7 +22,7 @@ namespace DotNet2020.Data
         }
 
         // For EF Core only
-        protected AppIdentityUser()
+        public AppIdentityUser()
             : base()
         {
            

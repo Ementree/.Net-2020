@@ -6,10 +6,10 @@ namespace DotNet2020.Data.Migrations.CalendarEntry
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<string>(
-                name: "Test",
-                table: "AspNetUsers",
-                nullable: true);
+            //migrationBuilder.AddColumn<string>(
+            //    name: "Test",
+            //    table: "AspNetUsers",
+            //    nullable: true);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

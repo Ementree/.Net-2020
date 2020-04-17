@@ -1,0 +1,13 @@
+﻿@model DotNet2020.Domain._4_.Models.ModelView.VacationViewModel
+    <div class="text-danger">@Html.ValidationMessage("Error")</div>
+    <div class="text-danger">@Html.ValidationMessage("Error1")</div>
+<div>
+    @using (Html.BeginForm("AddIllness", "Calendar", FormMethod.Post))
+    {
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <p>Выберите интервал времени</p>
+        <p>От: <input asp-for="From" type="date" /></p>
+        <p>До: <input asp-for="To" type="date" /></p>
+        <p><input type="submit" value="Добавить" /></p>
+    }
+</div>
