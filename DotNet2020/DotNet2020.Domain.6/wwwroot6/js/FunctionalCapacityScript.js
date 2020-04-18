@@ -48,10 +48,13 @@ function AddYearChangeEvent() {
     selector.addEventListener("change", function () {
         var form = document.getElementById("changeYearForm");
         console.log("Кто-то сменил год...");
-        var value = selector.value;
-        console.log(value);
+        var newYear = selector.value;
+        var accuracyInput = document.getElementById("accuracy-input");
+        var newAccuracy = accuracyInput.value;
+        console.log(newAccuracy);
+        console.log(newYear);
         console.log(window.location.search);
-        window.location.search = ("?currentYear=" + value);
+        window.location.search = ("?currentYear=" + newYear + "&currentAccuracy=" + newAccuracy);
         console.log(window.location.search);
     });
 }
@@ -61,5 +64,6 @@ document.addEventListener("DOMContentLoaded", function () {
     console.log("doom загрузился");
     PaintCurrentMonthColumn();
     AddYearChangeEvent();
+    AddAccuracyChangeEvent();
 });
 //# sourceMappingURL=FunctionalCapacityScript.js.map

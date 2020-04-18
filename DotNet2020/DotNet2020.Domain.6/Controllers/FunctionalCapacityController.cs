@@ -19,7 +19,7 @@ namespace DotNet2020.Domain._6.Controllers
         }
 
         // GET
-        public IActionResult Index(int currentYear = -1)       
+        public IActionResult Index(int currentYear = -1,int currentAccuracy = 5)       
         {
             //System.InvalidOperationException: 'Client side GroupBy is not supported.' ��� ToList()
             //� EFCore3.0 �� ��������
@@ -129,6 +129,7 @@ namespace DotNet2020.Domain._6.Controllers
 
             viewModel.Dict = ViewModelDict;
             viewModel.Periods = Periods;
+            viewModel.CurrentAccuracy = currentAccuracy;
 
             if (currentYear == -1)
                 viewModel.CurrentYear = DateTime.Now.Year;

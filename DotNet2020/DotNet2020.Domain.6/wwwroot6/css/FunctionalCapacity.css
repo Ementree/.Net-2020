@@ -118,3 +118,16 @@
     background-color: #9CBAAA;
     color: #854B6A;
 }
+
+.form-width-control{
+    width: 15%;
+}
+
+input[type='number'] {
+    -moz-appearance: textfield;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+}

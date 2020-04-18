@@ -10,21 +10,35 @@
 @model FunctionalCapacityViewModel
     <script src="~/wwwroot6/js/FunctionalCapacityScript.js"></script>
 
-    <form id="changeYearForm" asp-action="Index" class="m-2 p-2">
-        Год -
-        <select id="changeYearSelector" name="year">
-            @for (int i = Model.YearsRange.Item1; i <= Model.YearsRange.Item2; i++)
-            {
-                if (i == Model.CurrentYear)
+    <form id="changeYearForm" asp-action="Index" class="form-width-control">
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <label class="input-group-text" for="inputGroupSelect01">Год -</label>
+            </div>
+            <select id="changeYearSelector" class="custom-select align-center" name="year">
+                @for (int i = Model.YearsRange.Item1; i <= Model.YearsRange.Item2; i++)
                 {
-                    <option value="@(i)" selected="selected">@(i)</option>
+                    if (i == Model.CurrentYear)
+                    {
+                        <option class="align-center" value="@(i)" selected="selected">@(i)</option>
+                    }
+                    else
+                    {
+                        <option class="align-center" value="@(i)">@(i)</option>
+                    }
+                    <option value="2020">2021</option>
                 }
-                else
-                {
-                    <option value="@(i)">@(i)</option>
-                }
-            }
-        </select>
+            </select>
+        </div>
+    </form>
+
+    <form id="" class="form-width-control">
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <span class="input-group-text" id="basic-addon1">Погрешность,%</span>
+            </div>
+            <input id="accuracy-input" type="number" class="form-control" value="@Model.CurrentAccuracy" size="2" aria-describedby="basic-addon1">
+        </div>
     </form>
 <div class="fcwrapper">
     <div class="fcscroller1">
