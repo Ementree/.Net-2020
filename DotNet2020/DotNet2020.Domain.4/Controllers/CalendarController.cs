@@ -24,7 +24,7 @@ namespace DotNet2020.Domain._4.Controllers
         public IActionResult Index()
         {
             ViewBag.Recommendation = _dbContext.Recommendations.FirstOrDefault();
-
+            ViewBag.User = _dbContext.Users.FirstOrDefault(u => u.UserName == HttpContext.User.Identity.Name);
             var allVacations = _dbContext.CalendarEntries
                 .Include(v => v.User)
                 .ToList()
@@ -39,7 +39,7 @@ namespace DotNet2020.Domain._4.Controllers
                             else color = "red";
                             break;
                         case AbsenceType.SickDay:
-                            color = "#6eb3fa";
+                            color = "#6eb3fa"; 
                             break;
                         case AbsenceType.Illness:
                             if ((m as Illness).IsApproved)
@@ -181,7 +181,13 @@ namespace DotNet2020.Domain._4.Controllers
         {
             var calendarEntry = _dbContext.CalendarEntries.Find(id);
             if (calendarEntry is Vacation vacation)
+            {
+                var user = _dbContext.Users.FirstOrDefault(u => u.UserName == HttpContext.User.Identity.Name);
+                if (user != null)
+                    user.Approve();
                 vacation.Approve();
+            }
+
             if (calendarEntry is Illness illness)
                 illness.Approve();
             _dbContext.SaveChanges();
@@ -191,6 +197,9 @@ namespace DotNet2020.Domain._4.Controllers
         [HttpPost]
         public IActionResult Reject(int id)
         {
+            var user = _dbContext.Users.FirstOrDefault(u => u.UserName == HttpContext.User.Identity.Name);
+            if (user != null)
+                user.Reject();
             var calendarEntry =  _dbContext.CalendarEntries.Find(id);
             _dbContext.CalendarEntries.Remove(calendarEntry);
             _dbContext.SaveChanges();
