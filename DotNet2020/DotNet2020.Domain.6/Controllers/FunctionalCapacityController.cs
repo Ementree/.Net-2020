@@ -19,7 +19,7 @@ namespace DotNet2020.Domain._6.Controllers
         }
 
         // GET
-        public IActionResult Index(int currentYear = -1)
+        public IActionResult Index(int currentYear = -1)       
         {
             //System.InvalidOperationException: 'Client side GroupBy is not supported.' ��� ToList()
             //� EFCore3.0 �� ��������

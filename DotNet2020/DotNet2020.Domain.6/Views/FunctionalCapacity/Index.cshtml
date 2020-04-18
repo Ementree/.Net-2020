@@ -3,6 +3,7 @@
 @{
     Layout = "~/Views/Shared/_Layout6.cshtml";
     List<string> months = MonthGeneratorService.GetAllMonths(DateTime.Now.Year);
+    List<int[]> CureentGroupCommonBothCapacityCount = new List<int[]>();
 }
 
 @model FunctionalCapacityViewModel
@@ -22,9 +23,6 @@
                     <option value="@(i)">@(i)</option>
                 }
             }
-            <option value="-1">-1</option>
-            <option value="2007">2007</option>
-            <option value="2000">2000</option>
         </select>
     </form>
 <div class="fcwrapper">
@@ -37,7 +35,7 @@
                     </td>
                     @foreach (var m in months)
                     {
-                        <th class="right" colspan="2">
+                        <th class="month-column-left-border month-column-right-border" colspan="2">
                             @m
                         </th>
                     }
@@ -48,49 +46,83 @@
                     </th>
                     @foreach (var m in months)
                     {
-                        <th class="right">
+                        <th class="right month-column-left-border">
                             план,%
                         </th>
-                        <th class="right">
+                        <th class="month-column-right-border">
                             мощность,%
                         </th>
                     }
                 </tr>
             </thead>
             <tbody>
-                @foreach(var pair in Model.Dict)
+                @foreach (var pair in Model.Dict)
                 {
-                    <tr>
-                        <td class="fcsticky-col1 left h45">
-                            <h6>@pair.Key</h6>
-                        </td>
 
-                        @for(int i = 0; i < 24; i++)
+                    CureentGroupCommonBothCapacityCount = new List<int[]>();
+
+                    for(int i = 0; i < 12;i++)
+                    {
+                        CureentGroupCommonBothCapacityCount.Add(new int[2]);
+                    }
+
+                <tr>
+                    <td class="fcsticky-col1 left h45">
+                        <h6>@pair.Key</h6>
+                    </td>
+
+                        @for (int i = 0; i < 12; i++)
                         {
-                            <td class="right h45">
-                                
+                            <td class="right h45 month-column-left-border">
+                            </td>
+                            <td class="month-column-right-border h45">
                             </td>
                         }
-                    </tr>
+                </tr>
 
-                    @foreach(var m in pair.Value)
+                    @foreach (var m in pair.Value)
                     {
                         <tr>
                             <td class="fcsticky-col1 left h45">
                                 @(m.Resource.FirstName + " " + m.Resource.LastName)
                             </td>
-
-                            @foreach(var capacItem in m.YearItemsDict[2020])
+                            @{ 
+                                int counter = 0;
+                            }
+                            @foreach (var capacItem in m.YearItemsDict[Model.CurrentYear])
                             {
-                                <td class="right align-center h45">
+
+                                <td class="right align-center h45 month-column-left-border">
                                     @capacItem.PlannedCapacity%
+                                    @{ 
+                                        CureentGroupCommonBothCapacityCount[counter][0] += capacItem.PlannedCapacity;
+                                    }
                                 </td>
-                                <td class="right align-center h45">
+                                <td class="month-column-right-border align-center h45">
                                     @capacItem.CurrentCapacity%
+                                    @{ 
+                                        CureentGroupCommonBothCapacityCount[counter][1] += capacItem.CurrentCapacity;
+                                        counter++;
+                                    }
                                 </td>
                             }
                         </tr>
                     }
+
+                    <tr class="total">
+                        <td class="fcsticky-col1 left h45 total">
+                            <h6>Всего(@(pair.Key))</h6>
+                        </td>
+                            @for(int i =0; i < 12; i++)
+                            {
+                                <td class="right align-center h45 total month-column-left-border">
+                                    @CureentGroupCommonBothCapacityCount[i][0]%
+                                </td>
+                                <td class="month-column-right-border align-center h45 total">
+                                    @CureentGroupCommonBothCapacityCount[i][1]%
+                                </td>
+                            }
+                    </tr>
                 }
             </tbody>
         </table>

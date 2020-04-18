@@ -49,16 +49,6 @@
     border-right: 1px solid #dee2e6;
 }
 
-.fcstricky-col1-header {
-    left: 0;
-    position: absolute;
-    top: auto;
-    width: 15%;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    overflow: hidden;
-    border-right: 1px solid #dee2e6;
-}
 
 .fcscroll-table .fcsticky-col2 {
     margin-left: 15%;
@@ -110,4 +100,16 @@
 
 .h45 {
     height: 45px;
+}
+
+.total {
+    background-color: #dee2e6;
+}
+
+.month-column-left-border {
+    border-left: 1px solid #092310;
+}
+
+.month-column-right-border {
+    border-right: 1px solid #092310;
 }
