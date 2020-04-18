@@ -7,7 +7,7 @@ namespace DotNet2020.Data
         public string FirstName { get; protected set; }
         public string LastName { get;protected set; }
         public string Position { get;protected set; }
-
+        public bool IsLastVacationApproved { get; protected set; }
         public string Test { get; protected set; }
 
         public int TotalDayOfVacation { get; set; }
@@ -29,6 +29,16 @@ namespace DotNet2020.Data
             : base()
         {
            
+        }
+
+        public void Approve()
+        {
+            IsLastVacationApproved = true;
+        }
+
+        public void Reject()
+        {
+            IsLastVacationApproved = false;
         }
     }
 }

@@ -23,46 +23,46 @@
     <div class="calendar">
         <h1>Календарь</h1>
         @(
-        Html.Kendo().Scheduler<Kendo.Mvc.Examples.Models.Scheduler.CalendarEventViewModel>()
-            .Name("calendar")
-            .Date(DateTime.Now)
-            .StartTime(new DateTime(DateTime.Now.Year, 1, 1))
-            .MajorTick(1440)
-            .Editable(false)
-            .Height(600)
-            .EventTemplateId("task-template")
-            .Views(views =>
+    Html.Kendo().Scheduler<Kendo.Mvc.Examples.Models.Scheduler.CalendarEventViewModel>()
+        .Name("calendar")
+        .Date(DateTime.Now)
+        .StartTime(new DateTime(DateTime.Now.Year, 1, 1))
+        .MajorTick(1440)
+        .Editable(false)
+        .Height(600)
+        .EventTemplateId("task-template")
+        .Views(views =>
+        {
+            views.TimelineMonthView(view => view.SlotTemplateId("my-holiday"));
+            views.TimelineWeekView(view => view.SlotTemplateId("my-holiday"));
+            //views.DayView();
+            views.AgendaView();
+        })
+        .BindTo(Model.Events)
+        .Group(group => group.Resources("Titles").Orientation(SchedulerGroupOrientation.Vertical))
+        .Resources(resource =>
+        {
+            resource.Add(m => m.UserEmail)
+                .Title("Title")
+                .Name("Titles")
+                .Multiple(true)
+                .DataTextField("Name")
+                .DataValueField("Email")
+                .DataColorField("Color")
+                .BindTo(Model.Users);
+        })
+        .DataSource(d => d
+            .Model(m =>
             {
-                views.TimelineMonthView(view => view.SlotTemplateId("my-holiday"));
-                views.TimelineWeekView(view => view.SlotTemplateId("my-holiday"));
-                //views.DayView();
-                views.AgendaView();
+                m.Id(f => f.Id);
+                m.Field(f => f.Title).DefaultValue("No title");
             })
-            .BindTo(Model.Events)
-            .Group(group => group.Resources("Titles").Orientation(SchedulerGroupOrientation.Vertical))
-            .Resources(resource =>
-            {
-                resource.Add(m => m.UserEmail)
-                    .Title("Title")
-                    .Name("Titles")
-                    .Multiple(true)
-                    .DataTextField("Name")
-                    .DataValueField("Email")
-                    .DataColorField("Color")
-                    .BindTo(Model.Users);
-            })
-            .DataSource(d => d
-                .Model(m =>
-                {
-                    m.Id(f => f.Id);
-                    m.Field(f => f.Title).DefaultValue("No title");
-                })
-            )
         )
+            )
     </div>
 
     <h2 style="        margin-top: 40px
-">Рекомендация для вас</h2>
+                                  ">Рекомендация для вас</h2>
     <div class="recommendations">
         <div class="block-rec">
             <div class="box">
@@ -80,7 +80,14 @@
         </form>
     </div>
     <div class="last-vacation">
-        <h1>Ваш последний отпуск был отклонен/согласован</h1>
+        @if (ViewBag.User != null && ViewBag.User.IsLastVacationApproved)
+        {
+            <h1>Ваш последний отпуск был согласован</h1>   
+        }
+        else if(ViewBag.User != null)
+        {
+            <h1>Ваш последний отпуск был отклонен</h1>
+        }
     </div>
 </div>
 
