@@ -8,17 +8,17 @@
     border-bottom: none;
 }
 
-    .fcscroll-table thead th {
-        color: #336B6B;
-        padding: 10px;
-        text-align: left;
-        white-space: nowrap;
-    }
+.fcscroll-table thead th {
+    color: #336B6B;
+    padding: 10px;
+    text-align: left;
+    white-space: nowrap;
+}
 
-    .fcscroll-table tbody td {
-        padding: 10px;
-        white-space: nowrap;
-    }
+.fcscroll-table tbody td {
+    padding: 10px;
+    white-space: nowrap;
+}
 
 .fcwrapper {
     position: relative;
@@ -112,4 +112,9 @@
 
 .month-column-right-border {
     border-right: 1px solid #092310;
+}
+
+.current-month {
+    background-color: #9CBAAA;
+    color: #854B6A;
 }

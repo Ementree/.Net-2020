@@ -1,5 +1,6 @@
 ﻿@using DotNet2020.Domain._6.Models.ViewModels
 @using DotNet2020.Domain._6.Services
+@using DotNet2020.Domain._6.ExtensionMethods
 @{
     Layout = "~/Views/Shared/_Layout6.cshtml";
     List<string> months = MonthGeneratorService.GetAllMonths(DateTime.Now.Year);
@@ -29,10 +30,11 @@
     <div class="fcscroller1">
         <table class="fcscroll-table table bottom">
             <thead>
-                <tr>
+                <tr id="monthRow">
                     <td class="fcsticky-col1 left">
                         &nbsp;
                     </td>
+
                     @foreach (var m in months)
                     {
                         <th class="month-column-left-border month-column-right-border" colspan="2">
