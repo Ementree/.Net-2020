@@ -74,7 +74,7 @@
         </div>
         <form asp-action="AddEvent" asp-controller="Calendar" method="get">
             <div class="vacation">
-                <h2>У вас осталось 20 дней отпуска</h2>
+                <h2>У вас осталось @ViewBag.TotalVacation дней отпуска</h2>
                 <button type="submit">Запросить новый отпуск</button>
             </div>
         </form>

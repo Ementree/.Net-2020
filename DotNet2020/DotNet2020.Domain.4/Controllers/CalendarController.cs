@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using DotNet2020.Domain._4.Models;
 using DotNet2020.Domain._4_.Models.ModelView;
 using DotNet2020.Domain.Filters;
@@ -23,6 +24,8 @@ namespace DotNet2020.Domain._4.Controllers
         [HttpGet]
         public IActionResult Index()
         {
+            var user = _dbContext.Users.FirstOrDefault(u => u.Id == User.FindFirstValue(ClaimTypes.NameIdentifier));
+            ViewBag.TotalVacation = user.TotalDayOfVacation;
             ViewBag.Recommendation = _dbContext.Recommendations.FirstOrDefault();
 
             var allVacations = _dbContext.CalendarEntries
@@ -120,6 +123,14 @@ namespace DotNet2020.Domain._4.Controllers
         [HttpPost]
         public IActionResult AddVacation(VacationViewModel viewModel)
         {
+            var user = _dbContext.Users.FirstOrDefault(u => u.Id == User.FindFirstValue(ClaimTypes.NameIdentifier));
+            var days = GetDatesFromInterval(viewModel.From, viewModel.To);
+            var hollidays = _dbContext.Holidays.Where(u => u.Date >= viewModel.From && u.Date <= viewModel.To).ToList();
+            if (user.TotalDayOfVacation < GetWorkDay(days, hollidays))
+            {
+                ModelState.AddModelError("Error2", "Количество запрашеваемых дней отпуска превышает количество доступных вам");
+                return View(viewModel);
+            }
             if (viewModel.From == DateTime.MinValue && viewModel.From == DateTime.MinValue)
             {
                 ModelState.AddModelError("Error1", "Введите даты");
@@ -165,6 +176,40 @@ namespace DotNet2020.Domain._4.Controllers
         }
 
         #endregion
+        public List<DateTime> GetDatesFromInterval(DateTime startDate, DateTime endDate)
+        {
+            List<DateTime> result = new List<DateTime>();
+            if (startDate > endDate) return result;
+            result.Add(startDate);
+            while (startDate < endDate)
+            {
+                DateTime d = startDate.AddDays(1);
+                result.Add(d);
+                startDate = d;
+            }
+            return result;
+        }
+
+        public int GetWorkDay(List<DateTime> days, List<Holiday> hollidays)
+        {
+            int total = 0;
+            foreach (var day in days)
+            {
+                bool flag = true;
+                if (day.DayOfWeek != DayOfWeek.Saturday && day.DayOfWeek != DayOfWeek.Sunday)
+                {
+                    foreach (var holliday in hollidays)
+                    {
+                        if (day == holliday.Date)
+                            flag = false;
+                        continue;
+                    }
+                    if (flag)
+                        total++;
+                }
+            }
+            return total;
+        }
 
         [HttpGet]
         public IActionResult Admin()
@@ -179,9 +224,16 @@ namespace DotNet2020.Domain._4.Controllers
         [HttpPost]
         public IActionResult Approve(int id)
         {
-            var calendarEntry = _dbContext.CalendarEntries.Find(id);
+            var calendarEntry = _dbContext.CalendarEntries.Find(id);            
             if (calendarEntry is Vacation vacation)
+            {
+                var user = _dbContext.Users.FirstOrDefault(u => u.Id == calendarEntry.UserId);
+                var hollidays = _dbContext.Holidays.Where(u => u.Date >= calendarEntry.From && u.Date <= calendarEntry.To).ToList();
+                var days = GetDatesFromInterval(calendarEntry.From, calendarEntry.To);
+                var total = GetWorkDay(days, hollidays);
+                user.TotalDayOfVacation = user.TotalDayOfVacation - total;
                 vacation.Approve();
+            }
             if (calendarEntry is Illness illness)
                 illness.Approve();
             _dbContext.SaveChanges();

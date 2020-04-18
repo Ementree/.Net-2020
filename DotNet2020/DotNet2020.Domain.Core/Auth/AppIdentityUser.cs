@@ -10,6 +10,8 @@ namespace DotNet2020.Data
 
         public string Test { get; protected set; }
 
+        public int TotalDayOfVacation { get; set; }
+
         public AppIdentityUser(string userName, string email, string firstName, string lastName, string position, string test)
             : base(userName)
         {
@@ -19,6 +21,7 @@ namespace DotNet2020.Data
             LastName = lastName;
             Position = position;
             Test = test;
+            TotalDayOfVacation = 28;
         }
 
         // For EF Core only
