@@ -59,9 +59,52 @@ function AddYearChangeEvent() {
     });
 }
 function AddAccuracyChangeEvent() {
+    var accuracyInput = document.getElementById("accuracy-input");
+    console.log("v accuracy event");
+    accuracyInput.addEventListener("change", function () {
+        var input = this.value;
+        console.log(input);
+        if (input.length > 0 && input[0] == "0" || input.length == 0 || input[0] == "-") {
+            this.value = "0";
+        }
+        else {
+            HilightCells();
+        }
+    });
+}
+function HilightCells() {
+    var cells = document.getElementsByClassName("for-js-selecor");
+    var accuracyInput = document.getElementById("accuracy-input");
+    var accuracy = parseFloat(accuracyInput.value);
+    for (var i = 0; i < cells.length; i += 2) {
+        console.log(cells[i].innerText);
+        cells[i].classList.remove("blue-hilight");
+        cells[i + 1].classList.remove("blue-hilight");
+        cells[i].classList.remove("red-hilight");
+        cells[i + 1].classList.remove("red-hilight");
+        var plannedCapacityCellText = cells[i].innerText;
+        var plannedCapacity = parseFloat(plannedCapacityCellText.substring(0, plannedCapacityCellText.length - 1));
+        var currentCapacityCellText = cells[i + 1].innerText;
+        var currentCapacity = parseFloat(currentCapacityCellText.substring(0, currentCapacityCellText.length - 1));
+        var difference = plannedCapacity - currentCapacity;
+        if (difference < 0)
+            difference = difference * -1;
+        if (difference <= accuracy) {
+        }
+        else if (currentCapacity > plannedCapacity) {
+            cells[i].classList.add("blue-hilight");
+            cells[i + 1].classList.add("blue-hilight");
+        }
+        else {
+            cells[i].classList.add("red-hilight");
+            cells[i + 1].classList.add("red-hilight");
+        }
+    }
 }
 document.addEventListener("DOMContentLoaded", function () {
     console.log("doom загрузился");
+    HilightCells();
+    AddAccuracyChangeEvent();
     PaintCurrentMonthColumn();
     AddYearChangeEvent();
     AddAccuracyChangeEvent();
