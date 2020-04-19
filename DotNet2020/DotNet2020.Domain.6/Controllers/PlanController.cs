@@ -21,7 +21,6 @@ namespace DotNet2020.Domain._6.Controllers
 
         public IActionResult Index(int year = 2020)
         {
-            //todo: капасити для проекта брать из бд
             ViewBag.Year = year;
             Dictionary<Project, Dictionary<Period, List<FunctioningCapacityResource>>> model;
             var functioningCapacityResources = context.Set<FunctioningCapacityResource>()

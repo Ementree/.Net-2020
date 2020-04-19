@@ -100,7 +100,6 @@
             </tr>
             </thead>
             <tbody>
-            <!-- todo: переделать на фор от 0 до 12 -->
             @foreach (var pair in Model)
             {
                 if (pair.Key.Id == 34)
@@ -119,12 +118,13 @@
                             project.ProjectId == pair.Key.Id);
                         var period = periods.Where(keyValuePair =>
                             keyValuePair.Key.Start.Month == i);
-                        <td>
+                        <td id="fcp;@i;@ViewBag.Year;@pair.Key.Id" class="resource_capacity_plan">
                             @(fcp != default ? fcp.FunctioningCapacity.ToString() : "")
                         </td>
-                        <td class="border-right">
+                        <td id="sum;@i;@ViewBag.Year;@pair.Key.Id" class="border-right resource_capacity_real">
                             @(period.Count() == 1 ?
-                                period.First().Value.Sum(fcres => fcres.FunctionCapacity).ToString() :
+                                period.First().Value.Sum(fcres =>
+                                    fcres.FunctionCapacity).ToString() :
                                 "")
                         </td>
                     }
@@ -147,8 +147,13 @@
                                 var fresList = keyValuePairs.First().Value;
                                 if (fresList.Count - 1 >= i)
                                 {
-                                    <td>@fresList[i].Resource.FirstName</td>
-                                    <td class="border-right">@fresList[i].FunctionCapacity</td>
+                                    <td id="name;@j;@ViewBag.Year;@pair.Key.Id;@fresList[i].ResourceId"
+                                        class="resource_name">@fresList[i].Resource.FirstName @fresList[i].Resource.LastName</td>
+                                    <td
+                                        id="capacity;@j;@ViewBag.Year;@pair.Key.Id;@fresList[i].ResourceId"
+                                        class="border-right resource_capacity">
+                                        @fresList[i].FunctionCapacity
+                                    </td>
                                 }
                                 else
                                 {
