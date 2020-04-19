@@ -81,11 +81,11 @@ namespace DotNet2020.Domain._6.Services
         {
             var allPeriods = new List<Period>();
 
-            foreach (var pair in viewModel.Dict)
+            foreach (var pair in viewModel.GroupedResources)
             {
                 foreach (var resource in pair.Value)
                 {
-                    foreach (var resourceItem in resource.Items)
+                    foreach (var resourceItem in resource.PeiodWithBothCapacityList)
                     {
                         allPeriods.Add(resourceItem.Period);
                     }
@@ -100,25 +100,42 @@ namespace DotNet2020.Domain._6.Services
             var allPeriods = GetAllPeriods(viewModel);
             var yearsRangeTuple = GetYearRange(allPeriods);
 
-            foreach(var pair in viewModel.Dict)
+            foreach(var pair in viewModel.GroupedResources)
             {
                 foreach(var resource in pair.Value)
                 {
                     var dict = CreateDictWithDefoultList(yearsRangeTuple);
 
-                    AddPeriodWithBothCapacityInDict(dict, resource.Items);
+                    AddPeriodWithBothCapacityInDict(dict, resource.PeiodWithBothCapacityList);
 
                     resource.YearItemsDict = dict;
                 }
             }
         }
 
-        public static void AddYearRange(FunctionalCapacityViewModel viewModel)
+        public static Tuple<int,int> GetViewModelYearRange(FunctionalCapacityViewModel viewModel)
         {
             var allPeriods = GetAllPeriods(viewModel);
 
             var yearsRangeTuple = GetYearRange(allPeriods);
-            viewModel.YearsRange = yearsRangeTuple;
+
+            return yearsRangeTuple;
+        }
+
+        public static int ValidateCurrentYear(FunctionalCapacityViewModel viewModel,int currentYear)
+        {
+            var range = GetViewModelYearRange(viewModel);
+            var validatedYear = currentYear;
+
+            if (currentYear < range.Item1 || currentYear > range.Item2)
+                validatedYear = DateTime.Now.Year;
+
+            return validatedYear;
+        }
+
+        public static int ValidateAccuracy(int currentAccuracy)
+        {
+            return currentAccuracy < 0 ? 0 : currentAccuracy;
         }
     }
 }

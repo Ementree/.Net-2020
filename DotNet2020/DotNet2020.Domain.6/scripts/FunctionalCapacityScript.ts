@@ -77,9 +77,9 @@ function AddAccuracyChangeEvent() {
 
         if (input.length > 0 && input[0] == "0" || input.length == 0 || input[0] == "-") {
             this.value = "0";
-        } else {
-            HilightCells();
         }
+
+        HilightCells();
     });
 }
 

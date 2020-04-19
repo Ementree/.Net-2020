@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using DotNet2020.Domain._6.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using DotNet2020.Domain._6.Services;
-using System;
 
 namespace DotNet2020.Domain._6.Controllers
 {
@@ -25,61 +24,64 @@ namespace DotNet2020.Domain._6.Controllers
             //� EFCore3.0 �� ��������
             var resourceType = _context.Set<ResourceGroupType>().ToList();
 
-            var currentCapacityDict = _context.Set<ResourceCapacity>()
-                .Include(rc => rc.Period)
-                .Include(rc => rc.Resource)
-                .ToList()
-                .GroupBy(rc => rc.Resource)
-                .ToDictionary(rc => rc.Key, rc => rc
-                    .Select(g => new {capaity = g.Capacity, period = g.Period })
-                        .ToList());
+            var resourceWithCurrentPeriodCapacityDict = GetDataFromResourceCapacityTable();
+            var resourcePeriodWithPlannedCapacityDict = GetDataFromFunctioningCapacityResourceTable();
 
-            var plannedCapacityDict = _context.Set<FunctioningCapacityResource>()
-                .Include(fcr => fcr.Resource)
-                .Include(fcr => fcr.Period)
-                .ToList()
-                .GroupBy(fcr => new { resource = fcr.Resource, period = fcr.Period })
-                .ToDictionary(group => group.Key, group => group
-                    .Select(fcr => fcr.FunctionCapacity)
-                        .Sum());
+            var tableLinePreformList = ComposeDataFromTables(resourceWithCurrentPeriodCapacityDict,resourcePeriodWithPlannedCapacityDict);
+            var resourceWithBothPeriodCapacityDict = GetResourceWithBithCapcacityListDict(tableLinePreformList);
 
-            var viewModelLineList = new List<FCLine>();
+            var viewModel = GetFCViewModel(resourceWithBothPeriodCapacityDict);
 
-            foreach(var p in currentCapacityDict)
+            FunctionalCapacityService.SortViewModelPeriodsInResourceOnYears(viewModel);
+            viewModel.YearsRange =  FunctionalCapacityService.GetViewModelYearRange(viewModel);
+            viewModel.CurrentYear = FunctionalCapacityService.ValidateCurrentYear(viewModel, currentYear);
+            viewModel.CurrentAccuracy = FunctionalCapacityService.ValidateAccuracy(currentAccuracy);
+            
+
+            return View(viewModel);
+        }
+
+        FunctionalCapacityViewModel GetFCViewModel(Dictionary<Resource, List<FCPeriodWithBothCapacity>> resourceWithBothPeriodCapacityDict)
+        {
+            var resourceWithTableDataListPreform = new List<FCResourceWithTableData>();
+            var viewModel = new FunctionalCapacityViewModel();
+
+            foreach (var resourceWithPeriodBothCapacityList in resourceWithBothPeriodCapacityDict)
             {
-                var currentResource = p.Key;
-
-                foreach(var val in p.Value)
+                resourceWithTableDataListPreform.Add(new FCResourceWithTableData()
                 {
-                    var newLineViewModel = new FCLine()
-                    {
-                        Resource = currentResource,
-                        Period = val.period,
-                        currentCapacity = val.capaity,
-                        plannedCapacity = 0
-                    };
-
-                    viewModelLineList.Add(newLineViewModel);
-                }
+                    Resource = resourceWithPeriodBothCapacityList.Key,
+                    PeiodWithBothCapacityList = resourceWithPeriodBothCapacityList.Value
+                });
             }
 
-            foreach(var p in plannedCapacityDict)
-            {
-                var currentResource = p.Key.resource;
-                var currentPeriod = p.Key.period;
-                var plannedCapacity = p.Value;
+            var GroupedResources = GetSortedOnGroupsResources(resourceWithTableDataListPreform);
 
-                foreach(var vm in viewModelLineList)
-                {
-                    if (vm.Resource.Id == currentResource.Id && vm.Period.Id == currentPeriod.Id)
-                    { 
-                        vm.plannedCapacity = plannedCapacity;
-                        break;
-                    }
-                }
+            viewModel.GroupedResources = GroupedResources;
+
+            return viewModel;
+        }
+
+        Dictionary<string,List<FCResourceWithTableData>> GetSortedOnGroupsResources(List<FCResourceWithTableData> resourceWithTableDataListPreform)
+        {
+            var groupedResources = new Dictionary<string, List<FCResourceWithTableData>>();
+
+            foreach (var resourceWithTD in resourceWithTableDataListPreform)
+            {
+                var groupName = resourceWithTD.Resource.ResourceGroupType.Group;
+
+                if (!groupedResources.ContainsKey(groupName))
+                    groupedResources[groupName] = new List<FCResourceWithTableData>();
+
+                groupedResources[groupName].Add(resourceWithTD);
             }
 
-            var itemsGroup = viewModelLineList
+            return groupedResources;
+        }
+
+        Dictionary<Resource,List<FCPeriodWithBothCapacity>> GetResourceWithBithCapcacityListDict(List<FCTableLinePreform> tableLinePreformList)
+        {
+            return tableLinePreformList
                 .GroupBy(vm => vm.Resource)
                 .ToDictionary(vm => vm.Key, vm => vm
                    .Select(vm =>
@@ -90,56 +92,72 @@ namespace DotNet2020.Domain._6.Controllers
                            CurrentCapacity = vm.currentCapacity
                        }).OrderBy(t => t.Period.Start)
                             .ToList());
-            var itemsGroupPreform = new List<FCItemsGroup>();
+        }
 
-            foreach(var itmesPair in itemsGroup)
+        Dictionary<Resource,List<CurrentPeriodCapacity>> GetDataFromResourceCapacityTable()
+        {
+            return _context.Set<ResourceCapacity>()
+                .Include(rc => rc.Period)
+                .Include(rc => rc.Resource)
+                .ToList()
+                .GroupBy(rc => rc.Resource)
+                .ToDictionary(rc => rc.Key, rc => rc
+                    .Select(g => new CurrentPeriodCapacity { Capacity = g.Capacity, Period = g.Period })
+                        .ToList());
+        }
+
+        Dictionary<ResourcePeriodKey,int> GetDataFromFunctioningCapacityResourceTable()
+        {
+            return _context.Set<FunctioningCapacityResource>()
+                .Include(fcr => fcr.Resource)
+                .Include(fcr => fcr.Period)
+                .ToList()
+                .GroupBy(fcr => new ResourcePeriodKey { Resource = fcr.Resource, Period = fcr.Period })
+                .ToDictionary(group => group.Key, group => group
+                    .Select(fcr => fcr.FunctionCapacity)
+                        .Sum());
+        }
+
+        List<FCTableLinePreform> ComposeDataFromTables(Dictionary<Resource, List<CurrentPeriodCapacity>> resourceWithCurrentPeriodCapacityDict,
+            Dictionary<ResourcePeriodKey, int> resourcePeriodWithPlannedCapacityDict)
+        {
+            var tableLinePreformList = new List<FCTableLinePreform>();
+
+            foreach (var resourceWithCurrentPeriodCapacityList in resourceWithCurrentPeriodCapacityDict)
             {
+                var currentResource = resourceWithCurrentPeriodCapacityList.Key;
 
-
-                itemsGroupPreform.Add(new FCItemsGroup()
+                foreach (var val in resourceWithCurrentPeriodCapacityList.Value)
                 {
-                    Resource = itmesPair.Key,
-                    Items = itmesPair.Value
-                });
+                    var newLineViewModel = new FCTableLinePreform()
+                    {
+                        Resource = currentResource,
+                        Period = val.Period,
+                        currentCapacity = val.Capacity,
+                        plannedCapacity = 0
+                    };
+
+                    tableLinePreformList.Add(newLineViewModel);
+                }
             }
 
-            var ViewModelDict = new Dictionary<string, List<FCItemsGroup>>();
-            var viewModel = new FunctionalCapacityViewModel();
-            var Periods = new List<Period>();
-
-            foreach(var item in itemsGroupPreform)
+            foreach (var p in resourcePeriodWithPlannedCapacityDict)
             {
-                var groupName = item.Resource.ResourceGroupType.Group;
+                var currentResource = p.Key.Resource;
+                var currentPeriod = p.Key.Period;
+                var plannedCapacity = p.Value;
 
-                if (!ViewModelDict.ContainsKey(groupName))
-                    ViewModelDict[groupName] = new List<FCItemsGroup>();
-
-                var periods = item.Items.Select(i => i.Period).ToList();
-
-                if (periods.Count > Periods.Count)
-                    Periods = periods;
-
-                ViewModelDict[groupName].Add(item);
+                foreach (var vm in tableLinePreformList)
+                {
+                    if (vm.Resource.Id == currentResource.Id && vm.Period.Id == currentPeriod.Id)
+                    {
+                        vm.plannedCapacity = plannedCapacity;
+                        break;
+                    }
+                }
             }
 
-            if (currentYear == -1)
-                viewModel.CurrentYear = DateTime.Now.Year;
-            else
-                viewModel.CurrentYear = currentYear;
-
-            viewModel.Dict = ViewModelDict;
-            viewModel.Periods = Periods;
-            viewModel.CurrentAccuracy = currentAccuracy;
-
-            if (currentYear == -1)
-                viewModel.CurrentYear = DateTime.Now.Year;
-            else
-                viewModel.CurrentYear = currentYear;
-
-            FunctionalCapacityService.SortViewModelPeriodsInResourceOnYears(viewModel);
-            FunctionalCapacityService.AddYearRange(viewModel);
-
-            return View(viewModel);
+            return tableLinePreformList;
         }
     }
 }
