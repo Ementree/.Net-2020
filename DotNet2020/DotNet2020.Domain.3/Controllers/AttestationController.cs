@@ -454,16 +454,14 @@ namespace DotNet2020.Domain._3.Controllers
         [HttpPost]
         public IActionResult Output(List<long> ids)
         {
-            var workers = GetLoadedWorkers();
-            PdfHelper.GetPdfofWorkers(ids, GetLoadedWorkers());
-            var stream = new FileStream(Path.Combine(_env.ContentRootPath, "Files", "workers.pdf"), FileMode.OpenOrCreate);
+            var stream = PdfHelper.GetPdfofWorkers(ids, GetLoadedWorkers());
             return File(stream, "application/pdf", "workers.pdf");
         }
 
         public IActionResult DownloadAttestation(long id)
         {
             PdfHelper.GetPdfOfAttestation(id, _context);
-            var stream = new FileStream(Path.Combine(_env.ContentRootPath, "Files", "attestation.pdf"), FileMode.OpenOrCreate);
+            var stream = PdfHelper.GetPdfOfAttestation(id, _context);
             return File(stream, "application/pdf", "attestation.pdf");
         }
 

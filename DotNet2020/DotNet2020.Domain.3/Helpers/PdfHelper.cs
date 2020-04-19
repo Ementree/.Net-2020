@@ -14,12 +14,14 @@ namespace DotNet2020.Domain._3.Helpers
 {
     public static class PdfHelper
     {
-        public static void GetPdfofWorkers(List<long> ids, List<SpecificWorkerModel> workers)
+        public static MemoryStream GetPdfofWorkers(List<long> ids, List<SpecificWorkerModel> workers)
         {
+            var memoryStream = new MemoryStream();
+
             var document = new Document(PageSize.A4, 75, 65, 75, 75);
             document.AddTitle("Выгрузка работников");
             document.AddCreationDate();
-            PdfWriter writer =  PdfWriter.GetInstance(document, new FileStream("Files/workers.pdf", FileMode.Create));
+            PdfWriter writer =  PdfWriter.GetInstance(document, memoryStream);
            
             System.Text.EncodingProvider encProvider = System.Text.CodePagesEncodingProvider.Instance;
             
@@ -87,16 +89,22 @@ namespace DotNet2020.Domain._3.Helpers
             document.Add(table);
             
             document.Close();
-            Thread.Sleep(100);
+
+            byte[] file = memoryStream.ToArray();
+            MemoryStream ms = new MemoryStream();
+            ms.Write(file, 0, file.Length);
+            ms.Position = 0;
+
+            return ms;
         }
         
-        public static void GetPdfOfAttestation(long id, AttestationContext context)
+        public static MemoryStream GetPdfOfAttestation(long id, AttestationContext context)
         {
+            var memoryStream = new MemoryStream();
             var document = new Document(PageSize.A4, 75, 65, 75, 75);
             document.AddTitle("Результаты аттестации");
             document.AddCreationDate();
-            //MemoryStream
-            PdfWriter writer =  PdfWriter.GetInstance(document, new FileStream("Files/attestation.pdf", FileMode.Create));
+            PdfWriter writer =  PdfWriter.GetInstance(document, memoryStream);
            
             System.Text.EncodingProvider encProvider = System.Text.CodePagesEncodingProvider.Instance;
             
@@ -215,7 +223,13 @@ namespace DotNet2020.Domain._3.Helpers
             }
             document.Add(table);
             document.Close();
-            Thread.Sleep(100);
+
+            byte[] file = memoryStream.ToArray();
+            MemoryStream ms = new MemoryStream();
+            ms.Write(file, 0, file.Length);
+            ms.Position = 0;
+
+            return ms;
         }
     }
 }
