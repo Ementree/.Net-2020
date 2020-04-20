@@ -25,7 +25,7 @@
   </ItemGroup>
   
   <ItemGroup>
-    <None Remove="scripts\FunctionalCapacityScript.ts" />
+    <None Remove="scripts\FunctionalCapacity.ts" />
     <None Remove="scripts\testScript.ts" />
     <None Remove="Views\_ViewImports.cshtml" />
   </ItemGroup>

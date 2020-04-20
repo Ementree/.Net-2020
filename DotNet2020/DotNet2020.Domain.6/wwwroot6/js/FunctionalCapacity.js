@@ -36,7 +36,7 @@ function PaintCurrentMonthColumn() {
         var cellText = monthCellsCollection[i].innerText;
         var monthName = cellText.split(' ')[0].toLowerCase();
         if (monthName == currentMonthName) {
-            monthCellsCollection[i].classList.add("current-month");
+            monthCellsCollection[i].classList.add("green-highlight");
             console.log("добвился класс :" + currentMonthName);
             return;
         }
@@ -76,10 +76,10 @@ function HilightCells() {
     var accuracy = parseFloat(accuracyInput.value);
     for (var i = 0; i < cells.length; i += 2) {
         console.log(cells[i].innerText);
-        cells[i].classList.remove("blue-hilight");
-        cells[i + 1].classList.remove("blue-hilight");
-        cells[i].classList.remove("red-hilight");
-        cells[i + 1].classList.remove("red-hilight");
+        cells[i].classList.remove("blue-highlight");
+        cells[i + 1].classList.remove("blue-highlight");
+        cells[i].classList.remove("red-highlight");
+        cells[i + 1].classList.remove("red-highlight");
         var plannedCapacityCellText = cells[i].innerText;
         var plannedCapacity = parseFloat(plannedCapacityCellText.substring(0, plannedCapacityCellText.length - 1));
         var currentCapacityCellText = cells[i + 1].innerText;
@@ -90,12 +90,12 @@ function HilightCells() {
         if (difference <= accuracy) {
         }
         else if (currentCapacity > plannedCapacity) {
-            cells[i].classList.add("blue-hilight");
-            cells[i + 1].classList.add("blue-hilight");
+            cells[i].classList.add("blue-highlight");
+            cells[i + 1].classList.add("blue-highlight");
         }
         else {
-            cells[i].classList.add("red-hilight");
-            cells[i + 1].classList.add("red-hilight");
+            cells[i].classList.add("red-highlight");
+            cells[i + 1].classList.add("red-highlight");
         }
     }
 }
@@ -107,4 +107,4 @@ document.addEventListener("DOMContentLoaded", function () {
     AddYearChangeEvent();
     AddAccuracyChangeEvent();
 });
-//# sourceMappingURL=FunctionalCapacityScript.js.map
+//# sourceMappingURL=FunctionalCapacity.js.map
