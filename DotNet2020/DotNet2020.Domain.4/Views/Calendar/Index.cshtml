@@ -36,7 +36,7 @@
             views.TimelineMonthView(view => view.SlotTemplateId("my-holiday"));
             views.TimelineWeekView(view => view.SlotTemplateId("my-holiday"));
             //views.DayView();
-            views.AgendaView();
+            // views.AgendaView();
         })
         .BindTo(Model.Events)
         .Group(group => group.Resources("Titles").Orientation(SchedulerGroupOrientation.Vertical))

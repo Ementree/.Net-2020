@@ -16,6 +16,7 @@ namespace DotNet2020.Domain._4.Models
             To = to;
             AbsenceType = AbsenceType.Vacation;
             User = user;
+            IsPaid = true;
         }
 
         public void Pay()

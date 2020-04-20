@@ -62,13 +62,17 @@ namespace DotNet2020.Domain._4.Controllers
                 }  
                 ).ToList();
 
-            var users = _dbContext.Users.Select(u =>
-                new UserViewModel()
-                {
-                    Name = $"{u.FirstName} {u.LastName}" == " "? u.Email : $"{u.FirstName} {u.LastName}",
-                    Email = u.Email,
-                    Color = "#6eb3fa"
-                }).ToList();
+            var users = _dbContext
+                .Users
+                .OrderBy(x => x.UserName)
+                .Select(u =>
+                    new UserViewModel()
+                    {
+                        Name = $"{u.FirstName} {u.LastName}" == " " ? u.Email : $"{u.FirstName} {u.LastName}",
+                        Email = u.Email,
+                        Color = "#6eb3fa"
+                    })
+                .ToList();
 
             var holidays = _dbContext.Holidays
                 .ToList()
