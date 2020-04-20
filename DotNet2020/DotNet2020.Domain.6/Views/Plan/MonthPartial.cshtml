@@ -1,0 +1,56 @@
+﻿@using DotNet2020.Domain._6.Models
+@{
+    int i = (int) ViewData["i"];
+    string monthName = ViewData["monthName"] as string;
+    List<Resource> resources = ViewData["resources"] as List<Resource>;
+}
+
+<div class="col-2" id="year@(DateTime.Now.Year)Month@(i + 1)">
+    <div class="row">
+        <div class="col-7 font-weight-bold pl-1 pr-1">@(monthName) - </div>
+        <div class="col-5 font-weight-bold pl-1 pr-1">
+            <input id="monthlyCapacityYear@(DateTime.Now.Year)Month@(i + 1)"
+                   type="number" min="0"
+                   class="w-100"
+                   placeholder="Загрузка">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-5 pl-1 pr-1 text-left">Ресурс</div>
+        <div class="col-7 p-0 text-right">Загрузка, %</div>
+    </div>
+    <div id="addResourceYear@(DateTime.Now.Year)Month@(i + 1)">
+        <div class="row mb-2 month">
+            <div class="col-9 p-0">
+                <select
+                    name="resourceSelect"
+                    id="selectYear@(DateTime.Now.Year)Month@(i + 1)"
+                    class="custom-select">
+                    <option value="" disabled="disabled" selected="">Выберите человека</option>
+                    @foreach (var res in resources)
+                    {
+                        <option value="@(res.Id)">@(res.FirstName) @(res.LastName)</option>
+                    }
+                </select>
+            </div>
+            @*<div class="col-3 p-0 text-center overflow-hidden" contenteditable="true">100</div>*@
+            <div class="col-3 p-0 text-center overflow-hidden">
+                <input type="number" min="0" class="w-100 h-100" placeholder="Загрузка">
+            </div>
+        </div>
+    </div>
+    <div class="row pl-1 pr-1">
+        <button
+            class="btn btn-sm btn-outline-dark w-100 p-1"
+            onclick="AddResource(@(DateTime.Now.Year),@(i + 1))">
+            Добавить человека
+        </button>
+        <button
+            id="RemoveButtonYear@(DateTime.Now.Year)Month@(i + 1)"
+            class="btn btn-sm btn-outline-dark w-100 p-1"
+            onclick="RemoveResource(@(DateTime.Now.Year),@(i + 1))"
+            disabled="disabled">
+            Удалить последнего человека
+        </button>
+    </div>
+</div>

@@ -17,5 +17,17 @@ namespace DotNet2020.Domain._6.Services
 
             return months;
         }
+
+        public static List<string> GetMonthNames()
+        {
+            var months = new List<string>();
+            for (var i = 0; i < 12; i++)
+            {
+                var date = new DateTime(2000, i + 1, 1);
+                months.Add(date.GetMonthName());
+            }
+
+            return months;
+        }
     }
 }
