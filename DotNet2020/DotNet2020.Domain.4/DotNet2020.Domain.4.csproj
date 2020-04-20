@@ -54,6 +54,10 @@
 	  <EmbeddedResource Include="wwwroot\css\calendar.css">
 	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </EmbeddedResource>
+	  <EmbeddedResource Include="Views\Calendar\Calendar.cshtml">
+	    <Generator>RazorTemplatePreprocessor</Generator>
+	    <LastGenOutput>Calendar.cs</LastGenOutput>
+	  </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Repositories\" />
@@ -76,5 +80,6 @@
     <None Remove="Views\Calendar\AddVacation.cshtml" />
     <None Remove="Views\Calendar\RemoveHoliday.cshtml" />
     <None Remove="wwwroot\css\calendar.css" />
+    <None Remove="Views\Calendar\Calendar.cshtml" />
   </ItemGroup>
 </Project>

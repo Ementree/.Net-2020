@@ -7,6 +7,7 @@ using DotNet2020.Domain._4_.Models.ModelView;
 using DotNet2020.Domain.Filters;
 using DotNet2020.Domain.Models.ModelView;
 using Kendo.Mvc.Examples.Models.Scheduler;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -22,69 +23,23 @@ namespace DotNet2020.Domain._4.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public IActionResult Index()
         {
             var user = _dbContext.Users.FirstOrDefault(u => u.Id == User.FindFirstValue(ClaimTypes.NameIdentifier));
             ViewBag.TotalVacation = user.TotalDayOfVacation;
             ViewBag.Recommendation = _dbContext.Recommendations.FirstOrDefault();
             ViewBag.User = _dbContext.Users.FirstOrDefault(u => u.UserName == HttpContext.User.Identity.Name);
-            var allVacations = _dbContext.CalendarEntries
-                .Include(v => v.User)
-                .ToList()
-                .Select(m =>
-                {
-                    var color = "brown";
-                    switch (m.AbsenceType)
-                    {
-                        case AbsenceType.Vacation:
-                            if ((m as Vacation).IsApproved)
-                                color = "green";
-                            else color = "red";
-                            break;
-                        case AbsenceType.SickDay:
-                            color = "#6eb3fa"; 
-                            break;
-                        case AbsenceType.Illness:
-                            if ((m as Illness).IsApproved)
-                                color = "violet";
-                            else color = "yellow";
-                            break;
-                    }
-                    return new CalendarEventViewModel()
-                    {
-                        Id = m.Id,
-                        Title = m.AbsenceType.ToString(),
-                        Start = m.From,
-                        End = m.To,
-                        UserEmail = m.User?.Email,
-                        ColorId = color
-                    };
-                }  
-                ).ToList();
 
-            var users = _dbContext.Users.Select(u =>
-                new UserViewModel()
-                {
-                    Name = $"{u.FirstName} {u.LastName}" == " "? u.Email : $"{u.FirstName} {u.LastName}",
-                    Email = u.Email,
-                    Color = "#6eb3fa"
-                }).ToList();
-
-            var holidays = _dbContext.Holidays
-                .ToList()
-                .Select(u =>
-                {
-                    var year = u.Date.Year.ToString();
-                    var month = u.Date.Month.ToString().StartsWith('0') ? u.Date.Month.ToString().Skip(1) : u.Date.Month.ToString();
-                    var day = u.Date.Day.ToString().StartsWith('0') ? u.Date.Day.ToString().Skip(1) : u.Date.Day.ToString();
-                    return $"{year}/{month}/{day}";
-                })
-                .ToList();
+            var allVacations = _dbContext.GetAllVacations();
+            var users = _dbContext.GetAllUsers();
+            var holidays = _dbContext.GetAllHolidays();
 
             return View(new IndexViewModel() { Events = allVacations, Users = users, Holidays=holidays });
         }
 
         [HttpGet]
+        [Authorize]
         public IActionResult AddEvent()
         {
 
@@ -94,12 +49,14 @@ namespace DotNet2020.Domain._4.Controllers
         #region Добавление Event в календарь
 
         [HttpGet]
+        [Authorize]
         public IActionResult AddSickDay()
         {
             return View();
         }
 
         [HttpPost]
+        [Authorize]
         public IActionResult AddSickDay(SickDayViewModel viewModel)
         {
             if(viewModel.Day == DateTime.MinValue)
@@ -115,12 +72,14 @@ namespace DotNet2020.Domain._4.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public IActionResult AddVacation()
         {
             return View();
         }
 
         [HttpPost]
+        [Authorize]
         public IActionResult AddVacation(VacationViewModel viewModel)
         {
             var user = _dbContext.Users.FirstOrDefault(u => u.Id == User.FindFirstValue(ClaimTypes.NameIdentifier));
@@ -131,7 +90,7 @@ namespace DotNet2020.Domain._4.Controllers
                 ModelState.AddModelError("Error2", "Количество запрашеваемых дней отпуска превышает количество доступных вам");
                 return View(viewModel);
             }
-            if (viewModel.From == DateTime.MinValue || viewModel.To == DateTime.MinValue)
+            if (viewModel.From == DateTime.MinValue && viewModel.From == DateTime.MinValue)
             {
                 ModelState.AddModelError("Error1", "Введите даты");
                 return View();
@@ -150,15 +109,17 @@ namespace DotNet2020.Domain._4.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public IActionResult AddIllness()
         {
             return View();
         }
 
         [HttpPost]
+        [Authorize]
         public IActionResult AddIllness(VacationViewModel viewModel)
         {
-            if (viewModel.From == DateTime.MinValue || viewModel.To == DateTime.MinValue)
+            if (viewModel.From == DateTime.MinValue && viewModel.From == DateTime.MinValue)
             {
                 ModelState.AddModelError("Error1", "Введите даты");
                 return View();
@@ -212,16 +173,24 @@ namespace DotNet2020.Domain._4.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public IActionResult Admin()
         {
             ViewBag.Recommendation = _dbContext.Recommendations.FirstOrDefault();
-            return View(_dbContext.CalendarEntries
+            ViewBag.Events = _dbContext.CalendarEntries
                 .Where(c => c.AbsenceType == AbsenceType.Illness || c.AbsenceType == AbsenceType.Vacation)
                 .Include(m => m.User)
-                .AsEnumerable());
+                .AsEnumerable();
+
+            var allVacations = _dbContext.GetAllVacations();
+            var users = _dbContext.GetAllUsers();
+            var holidays = _dbContext.GetAllHolidays();
+
+            return View(new IndexViewModel() { Events = allVacations, Users = users, Holidays = holidays });
         }
 
         [HttpPost]
+        [Authorize]
         public IActionResult Approve(int id)
         {
             var calendarEntry = _dbContext.CalendarEntries.Find(id);            
@@ -242,6 +211,7 @@ namespace DotNet2020.Domain._4.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public IActionResult Reject(int id)
         {
             var user = _dbContext.Users.FirstOrDefault(u => u.UserName == HttpContext.User.Identity.Name);
@@ -254,12 +224,14 @@ namespace DotNet2020.Domain._4.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public IActionResult AddHoliday()
         {
             return View();
         }
 
         [HttpPost]
+        [Authorize]
         [ValidationFilter]
         public IActionResult AddHoliday(Holiday holiday)
         {
@@ -267,6 +239,27 @@ namespace DotNet2020.Domain._4.Controllers
             _dbContext.SaveChanges();
             return RedirectToActionPermanent("Admin");
         }
+
+        [HttpGet]
+        [Authorize]
+        public IActionResult UpdateRecommendation()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [Authorize]
+        [ValidationFilter]
+        public IActionResult UpdateRecommendation(Recommendation recommendation)
+        {
+            var dbEntry = _dbContext.Recommendations.FirstOrDefault();
+            if (dbEntry == null)
+                _dbContext.Recommendations.Add(recommendation);
+            else dbEntry.RecommendationText = recommendation.RecommendationText;
+            _dbContext.SaveChanges();
+            return RedirectToActionPermanent("Admin");
+        }
+
 
         [HttpGet]
         public IActionResult RemoveHoliday()
@@ -282,29 +275,6 @@ namespace DotNet2020.Domain._4.Controllers
             _dbContext.Holidays.Remove(holiday);
             _dbContext.SaveChanges();
             return RedirectToActionPermanent("RemoveHoliday");
-        }
-
-        [HttpGet]
-        public IActionResult UpdateRecommendation()
-        {
-            return View();
-        }
-
-        [HttpPost]
-        [ValidationFilter]
-        public IActionResult UpdateRecommendation(Recommendation recommendation)
-        {
-            if (ModelState.IsValid)
-            {
-                var dbEntry = _dbContext.Recommendations.FirstOrDefault();
-                if (dbEntry == null)
-                    _dbContext.Recommendations.Add(recommendation);
-                else dbEntry.RecommendationText = recommendation.RecommendationText;
-                _dbContext.SaveChanges();
-                return RedirectToActionPermanent("Admin");
-            }
-
-            return RedirectToActionPermanent("UpdateRecommendation");
         }
 
         public ActionResult GetHolidays()

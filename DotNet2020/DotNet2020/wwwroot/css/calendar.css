@@ -18,12 +18,12 @@
     }
 
         .recommendations .block-rec .box {
-            border: 2px solid black;
+            border: 1px solid black;
             padding: 10px;
         }
 
 .frame {
-    border: 2px solid black;
+    border: 1px solid black;
     padding: 10px;
 }
 
@@ -35,7 +35,8 @@
 .vacation button {
     margin: 30px 0 0 0;
     padding: 15px 10px 15px 10px;
-    border: 2px solid black;
+    border: 1px solid black;
+    border-radius: 10px;
     box-shadow: 0;
     background: #fff;
     cursor: pointer;
@@ -44,7 +45,8 @@
 .adminrecomadd button {
     margin: 10px 0 0 0;
     padding: 15px 10px 15px 10px;
-    border: 2px solid black;
+    border: 1px solid black;
+    border-radius: 10px;
     box-shadow: 0;
     background: #fff;
     cursor: pointer;
@@ -61,7 +63,7 @@
     }
 
 .last-vacation h1 {
-    border-bottom: 2px solid black;
+    border-bottom: 1px solid black;
     width: max-content;
     padding-bottom: 15px;
 }
@@ -98,4 +100,25 @@
         margin: 50px 0px;
     }
 
+}
+
+.k-scheduler-table td {
+    border-width: 0 1px 1px 1px !important;
+}
+
+.k-scheduler-times {
+    border-bottom-color: #e0e0e0;
+}
+
+.approve-reject-buttons {
+    display: flex;
+    padding-bottom: 10px;
+}
+
+form.approve {
+    margin: auto;
+}
+
+form.reject {
+    margin: auto;
 }

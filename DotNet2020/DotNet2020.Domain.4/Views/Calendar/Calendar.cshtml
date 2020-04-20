@@ -1,0 +1,100 @@
+﻿@using Kendo.Mvc.UI
+@using DotNet2020.Domain.Models.ModelView
+@model IndexViewModel
+
+<script id="task-template" type="text/x-kendo-template">
+    <div style="background-color: #: kendo.toString(ColorId) #; height: 100%">
+        <div class="k-event-template k-event-time">12:00 AM - 12:00 AM</div>
+        <div class="k-event-template"> </div>
+    </div>
+</script>
+
+<script id="my-holiday" type="text/x-kendo-template">
+    <div style='background:#=getColorBasedOnHour(date)#; height: 100%;width: 100%;'></div>
+</script>
+
+
+@(Html.Kendo().Scheduler<Kendo.Mvc.Examples.Models.Scheduler.CalendarEventViewModel>()
+        .Name("calendar")
+        .Date(DateTime.Now)
+        .StartTime(new DateTime(DateTime.Now.Year, 1, 1))
+        .MajorTick(1440)
+        .Editable(false)
+        .Height(600)
+        .EventTemplateId("task-template")
+        .Views(views =>
+        {
+            views.TimelineMonthView(view => view.SlotTemplateId("my-holiday"));
+            views.TimelineWeekView(view => view.SlotTemplateId("my-holiday"));
+            //views.DayView();
+            // views.AgendaView();
+        })
+        .BindTo(Model.Events)
+        .Group(group => group.Resources("Titles").Orientation(SchedulerGroupOrientation.Vertical))
+        .Resources(resource =>
+        {
+            resource.Add(m => m.UserEmail)
+                .Title("Title")
+                .Name("Titles")
+                .Multiple(true)
+                .DataTextField("Name")
+                .DataValueField("Email")
+                .DataColorField("Color")
+                .BindTo(Model.Users);
+        })
+        .DataSource(d => d
+            .Model(m =>
+            {
+                m.Id(f => f.Id);
+                m.Field(f => f.Title).DefaultValue("No title");
+            })
+        )
+)
+
+
+<style>
+
+
+    .k-event, .k-task-complete {
+        color: #fff;
+        background: yellow;
+        border-color: #24c6db;
+    }
+
+    .k-scheduler-dayview .k-today.k-nonwork-hour, .k-scheduler-table .k-nonwork-hour, .k-scheduler-timelineview .k-today.k-nonwork-hour {
+        background-color: gray;
+        opacity: .3;
+    }
+
+    .k-scheduler-table td, .k-scheduler-table th {
+        padding: 0;
+        opacity: .5;
+    }
+</style>
+
+<script>
+
+    async function getData(ajaxurl) {
+        return await $.ajax({
+            url: ajaxurl,
+            type: 'GET',
+        });
+    };
+
+
+    function getColorBasedOnHour(date) {
+        const holidays = JSON.parse('@Html.Raw(Json.Serialize(@Model.Holidays))')
+
+        console.log(holidays)
+        var month = date.getUTCMonth() + 1;
+        var day = date.getUTCDate() + 1;
+        var year = date.getUTCFullYear();
+
+        newdate = year + "/" + month + "/" + day;
+        if (holidays.includes(newdate)) {
+            console.log('holiday')
+            console.log(newdate)
+            return "red";
+        }
+    }
+</script>
