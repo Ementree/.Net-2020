@@ -4,19 +4,20 @@
 @using DotNet2020.Domain._6.Models.ViewModels
 @model AbsencesViewModel
 <!DOCTYPE html>
-    <div class="container-fluid mb-3 d-inline-flex">
-        <form asp-action="Index" class="m-2 p-2">
+    <div class="container-fluid mb-2 d-inline-flex">
+        <form asp-action="Index" asp-controller="Absence">
+            <partial name="YearChangerPartial"/>
         </form>
     </div>
     <div class="wrapper">
-        <div class="scroller1">
-            <table class="scroll-table table">
+        <div class="scroller1 scroller">
+            <table class="scroll-table table bottom">
                 <thead>
                     <tr>
                         <th class="sticky-col1">  </th>
                         @foreach (var period in Model.Months)
                         {
-                            <td colspan="2">@period</td>
+                            <td colspan="1">@period</td>
                         }
                     </tr>
                 </thead>
@@ -29,11 +30,11 @@
                             {
                                 if (resource.Value.Item1[i])
                                 {
-                                    <td colspan="2" bgcolor="#FF0000">@resource.Value.Item2[i]</td>
+                                    <td colspan="1" bgcolor="#FF0000">@resource.Value.Item2[i]</td>
                                 }
                                 else
                                 {
-                                    <td colspan="2">@resource.Value.Item2[i]</td>
+                                    <td colspan="1">@resource.Value.Item2[i]</td>
                                 }
                             }
 

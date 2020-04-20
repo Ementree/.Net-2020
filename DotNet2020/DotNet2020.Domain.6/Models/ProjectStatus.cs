@@ -2,9 +2,8 @@
 {
     public class ProjectStatus
     {
-        public ProjectStatus(int id, string status)
+        public ProjectStatus(string status)
         {
-            Id = id;
             Status = status;
         }
         protected ProjectStatus() : base() { }
