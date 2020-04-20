@@ -2,23 +2,11 @@
     Layout = "~/Views/Shared/_Layout6.cshtml";
 }
 @using DotNet2020.Domain._6.Models.ViewModels
-@model Absences
+@model AbsencesViewModel
 <!DOCTYPE html>
     <div class="container-fluid mb-3 d-inline-flex">
-        <select name="year" onchange="this.form.submit()">
-            @for (int i = 0; i < 5; i++)
-            {
-                var year = DateTime.Now.Year + i;
-                if (ViewBag.Year == year)
-                {
-                    <option value="@(year)" selected="selected">@(year)</option>
-                }
-                else
-                {
-                    <option value="@(year)">@(year)</option>
-                }
-            }
-        </select>
+        <form asp-action="Index" class="m-2 p-2">
+        </form>
     </div>
     <div class="wrapper">
         <div class="scroller1">
@@ -26,9 +14,9 @@
                 <thead>
                     <tr>
                         <th class="sticky-col1">  </th>
-                        @foreach (var period in Model.Periods)
+                        @foreach (var period in Model.Months)
                         {
-                            <td>@period.Start.Day.@period.Start.Month.@period.Start.Year - @period.End.Day.@period.End.Month.@period.End.Year</td>
+                            <td colspan="2">@period</td>
                         }
                     </tr>
                 </thead>
@@ -37,10 +25,18 @@
                     {
                         <tr>
                             <td class="sticky-col1">@resource.Key</td>
-                            @foreach (var absence in resource.Value)
+                            @for (int i = 0; i < resource.Value.Item1.Count; i++)
                             {
-                                <td colspan="1">@absence</td>
+                                if (resource.Value.Item1[i])
+                                {
+                                    <td colspan="2" bgcolor="#FF0000">@resource.Value.Item2[i]</td>
+                                }
+                                else
+                                {
+                                    <td colspan="2">@resource.Value.Item2[i]</td>
+                                }
                             }
+
                         </tr>
                     }
                 </tbody>
