@@ -7,6 +7,7 @@ using DotNet2020.Domain._4_.Models.ModelView;
 using DotNet2020.Domain.Filters;
 using DotNet2020.Domain.Models.ModelView;
 using Kendo.Mvc.Examples.Models.Scheduler;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -22,6 +23,7 @@ namespace DotNet2020.Domain._4.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public IActionResult Index()
         {
             var user = _dbContext.Users.FirstOrDefault(u => u.Id == User.FindFirstValue(ClaimTypes.NameIdentifier));
@@ -89,6 +91,7 @@ namespace DotNet2020.Domain._4.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public IActionResult AddEvent()
         {
 
@@ -98,12 +101,14 @@ namespace DotNet2020.Domain._4.Controllers
         #region Добавление Event в календарь
 
         [HttpGet]
+        [Authorize]
         public IActionResult AddSickDay()
         {
             return View();
         }
 
         [HttpPost]
+        [Authorize]
         public IActionResult AddSickDay(SickDayViewModel viewModel)
         {
             if(viewModel.Day == DateTime.MinValue)
@@ -119,12 +124,14 @@ namespace DotNet2020.Domain._4.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public IActionResult AddVacation()
         {
             return View();
         }
 
         [HttpPost]
+        [Authorize]
         public IActionResult AddVacation(VacationViewModel viewModel)
         {
             var user = _dbContext.Users.FirstOrDefault(u => u.Id == User.FindFirstValue(ClaimTypes.NameIdentifier));
@@ -154,12 +161,14 @@ namespace DotNet2020.Domain._4.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public IActionResult AddIllness()
         {
             return View();
         }
 
         [HttpPost]
+        [Authorize]
         public IActionResult AddIllness(VacationViewModel viewModel)
         {
             if (viewModel.From == DateTime.MinValue && viewModel.From == DateTime.MinValue)
@@ -216,6 +225,7 @@ namespace DotNet2020.Domain._4.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public IActionResult Admin()
         {
             ViewBag.Recommendation = _dbContext.Recommendations.FirstOrDefault();
@@ -226,6 +236,7 @@ namespace DotNet2020.Domain._4.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public IActionResult Approve(int id)
         {
             var calendarEntry = _dbContext.CalendarEntries.Find(id);            
@@ -246,6 +257,7 @@ namespace DotNet2020.Domain._4.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public IActionResult Reject(int id)
         {
             var user = _dbContext.Users.FirstOrDefault(u => u.UserName == HttpContext.User.Identity.Name);
@@ -258,12 +270,14 @@ namespace DotNet2020.Domain._4.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public IActionResult AddHoliday()
         {
             return View();
         }
 
         [HttpPost]
+        [Authorize]
         [ValidationFilter]
         public IActionResult AddHoliday(Holiday holiday)
         {
@@ -273,26 +287,23 @@ namespace DotNet2020.Domain._4.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public IActionResult UpdateRecommendation()
         {
             return View();
         }
 
         [HttpPost]
+        [Authorize]
         [ValidationFilter]
         public IActionResult UpdateRecommendation(Recommendation recommendation)
         {
-            if (ModelState.IsValid)
-            {
-                var dbEntry = _dbContext.Recommendations.FirstOrDefault();
-                if (dbEntry == null)
-                    _dbContext.Recommendations.Add(recommendation);
-                else dbEntry.RecommendationText = recommendation.RecommendationText;
-                _dbContext.SaveChanges();
-                return RedirectToActionPermanent("Admin");
-            }
-
-            return RedirectToActionPermanent("UpdateRecommendation");
+            var dbEntry = _dbContext.Recommendations.FirstOrDefault();
+            if (dbEntry == null)
+                _dbContext.Recommendations.Add(recommendation);
+            else dbEntry.RecommendationText = recommendation.RecommendationText;
+            _dbContext.SaveChanges();
+            return RedirectToActionPermanent("Admin");
         }
 
         public ActionResult GetHolidays()
