@@ -1,3 +1,128 @@
 @{ 
     Layout = "~/Views/Shared/_Layout6.cshtml";
+    var months = ViewBag.Months;
 }
+@using DotNet2020.Domain._6.Models.ViewModels
+@model Dictionary<string, List<ViewModelCapacity>>
+
+<style>
+    .scroller{
+        margin-left: 30%;
+    }
+
+    .year{
+        margin-bottom: 1vw;
+    }
+    
+    .top{
+        border-top: 1px solid #dee2e6;
+    }
+    
+    .left{
+        border-left: 1px solid #dee2e6;
+    }
+    
+    .right{
+        border-right: 1px solid #dee2e6;
+    }
+    
+    .bottom{
+        border-bottom: 1px solid #dee2e6;
+    }
+    
+    .align-center{
+        text-align: center;
+    }
+    
+    .h45{
+        height: 45px;
+    }
+    
+</style>
+
+<form asp-controller="Capacity" asp-action="Index">
+    Год - 
+    <select name="year" onchange="this.form.submit()">
+    @for(int i = 0; i < 5; i++)
+    {
+        var year = DateTime.Now.Year + i;
+        if (ViewBag.Year == year)
+        {
+            <option value="@(year)" selected="selected">@(year)</option>
+        }
+        else
+        {
+            <option value="@(year)">@(year)</option>
+        }
+    }
+    </select>
+    
+    <div class="wrapper">
+        <div class="scroller2 scroller">
+            <table class="scroll-table table bottom">
+                <thead>
+                <tr>
+                    <th class="sticky-col1 left" style="width: 20%;">
+                        Ресурс
+                    </th>
+                    <th class="sticky-col2" style="width: 10%; margin-left: 20%;">
+                        Тип ресурса
+                    </th>
+                    @for (var i = 0; i < 12; i++)
+                    {
+                        <th class="right">
+                            @months[i]
+                        </th>
+                    }
+                </tr>
+                </thead>
+                
+                <tbody>
+                @foreach (var resources in Model)
+                {
+                    <tr>
+                        <th class="sticky-col1 left h45" style="width: 20%;">
+                            @resources.Key
+                        </th>
+                        <td class="sticky-col2 h45" style="width: 10%; margin-left: 20%;">
+                            
+                        </td>
+                        @for (var i = 0; i < 12; i++)
+                        {
+                            <td class="right h45">
+                                
+                            </td>
+                        }
+                    </tr>
+                    @foreach (var resource in resources.Value)
+                    {
+                        <tr>
+                            <td class="sticky-col1 left bottom" style="width: 20%;">
+                                @resource.Name
+                            </td>
+                            <td class="sticky-col2 bottom" style="width: 10%; margin-left: 20%;">
+                                @resource.Type
+                            </td>
+                            @for (int i = 1; i < 13; i++)
+                            {
+                                if (resource.Capacity.ContainsKey(i))
+                                {
+                                    <td class="right align-center h45">
+                                        @resource.Capacity[i]%
+                                    </td>
+                                }
+                                else
+                                {
+                                    <td class="right h45">
+                                        
+                                    </td>
+                                }
+                            }
+                        </tr>
+                    }
+                }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</form>

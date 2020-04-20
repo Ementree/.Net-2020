@@ -4,9 +4,8 @@ namespace DotNet2020.Domain._6.Models
 {
     public class Period
     {
-        public Period(int id, DateTime start, DateTime end)
+        public Period(DateTime start, DateTime end)
         {
-            Id = id;
             Start = start;
             End = end;
         }
