@@ -30,62 +30,10 @@ namespace DotNet2020.Domain._4.Controllers
             ViewBag.TotalVacation = user.TotalDayOfVacation;
             ViewBag.Recommendation = _dbContext.Recommendations.FirstOrDefault();
             ViewBag.User = _dbContext.Users.FirstOrDefault(u => u.UserName == HttpContext.User.Identity.Name);
-            var allVacations = _dbContext.CalendarEntries
-                .Include(v => v.User)
-                .ToList()
-                .Select(m =>
-                {
-                    var color = "brown";
-                    switch (m.AbsenceType)
-                    {
-                        case AbsenceType.Vacation:
-                            if ((m as Vacation).IsApproved)
-                                color = "green";
-                            else color = "red";
-                            break;
-                        case AbsenceType.SickDay:
-                            color = "#6eb3fa"; 
-                            break;
-                        case AbsenceType.Illness:
-                            if ((m as Illness).IsApproved)
-                                color = "violet";
-                            else color = "yellow";
-                            break;
-                    }
-                    return new CalendarEventViewModel()
-                    {
-                        Id = m.Id,
-                        Title = m.AbsenceType.ToString(),
-                        Start = m.From,
-                        End = m.To,
-                        UserEmail = m.User?.Email,
-                        ColorId = color
-                    };
-                }  
-                ).ToList();
 
-            var users = _dbContext
-                .Users
-                .OrderBy(x => x.UserName)
-                .Select(u =>
-                    new UserViewModel()
-                    {
-                        Name = $"{u.FirstName} {u.LastName}" == " " ? u.Email : $"{u.FirstName} {u.LastName}",
-                        Email = u.Email,
-                        Color = "#6eb3fa"
-                    })
-                .ToList();
-
-            var holidays = _dbContext.Holidays
-                .ToList()
-                .Select(u =>
-                {
-                    var year = u.Date.Year.ToString();
-                    var month = u.Date.Month.ToString().StartsWith('0') ? u.Date.Month.ToString().Skip(1) : u.Date.Month.ToString();
-                    var day = u.Date.Day.ToString().StartsWith('0') ? u.Date.Day.ToString().Skip(1) : u.Date.Day.ToString();
-                    return $"{year}/{month}/{day}";
-                })
-                .ToList();
+            var allVacations = _dbContext.GetAllVacations();
+            var users = _dbContext.GetAllUsers();
+            var holidays = _dbContext.GetAllHolidays();
 
             return View(new IndexViewModel() { Events = allVacations, Users = users, Holidays=holidays });
         }
@@ -229,10 +177,16 @@ namespace DotNet2020.Domain._4.Controllers
         public IActionResult Admin()
         {
             ViewBag.Recommendation = _dbContext.Recommendations.FirstOrDefault();
-            return View(_dbContext.CalendarEntries
+            ViewBag.Events = _dbContext.CalendarEntries
                 .Where(c => c.AbsenceType == AbsenceType.Illness || c.AbsenceType == AbsenceType.Vacation)
                 .Include(m => m.User)
-                .AsEnumerable());
+                .AsEnumerable();
+
+            var allVacations = _dbContext.GetAllVacations();
+            var users = _dbContext.GetAllUsers();
+            var holidays = _dbContext.GetAllHolidays();
+
+            return View(new IndexViewModel() { Events = allVacations, Users = users, Holidays = holidays });
         }
 
         [HttpPost]

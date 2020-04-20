@@ -2,10 +2,11 @@
     ViewData["Title"] = "Calendar";
 }
 @using DotNet2020.Domain._4.Models
-@model IEnumerable<DotNet2020.Domain._4.Models.AbstractCalendarEntry>
+@{ var events = ViewBag.Events as IEnumerable<DotNet2020.Domain._4.Models.AbstractCalendarEntry>;}
 <link rel="stylesheet" href="~/css/calendar.css">
-<div class="text-center">
-    <h1 class="display-4">Hello in calendar</h1>
+<div class="calendar">
+    <h1>Календарь</h1>
+    @Html.Partial("Calendar.cshtml")
 </div>
 <div class="container-fluid">
     <hr/>
@@ -18,7 +19,7 @@
         <div class="col-lg-12">
             <table border="1" class="w-100">
                 <tbody align="center">
-                @if (Model.Any())
+                @if (events.Any())
                 {
                     <tr>
                         <td>Пользователь</td>
@@ -27,7 +28,7 @@
                         <td></td>
                     </tr>
                 }
-                @foreach (var calendarEntry in Model)
+                @foreach (var calendarEntry in events)
                 {
                     @if (calendarEntry is Vacation vacation && !vacation.IsApproved)
                     {
