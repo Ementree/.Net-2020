@@ -26,6 +26,11 @@
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
+    <EmbeddedResource Include="Views\Calendar\RemoveHoliday.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </EmbeddedResource>
     <EmbeddedResource Include="Views\Calendar\UpdateRecommendation.cshtml">
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
@@ -69,6 +74,7 @@
     <None Remove="Views\Calendar\AddIllness.cshtml" />
     <None Remove="Views\Calendar\AddSickDay.cshtml" />
     <None Remove="Views\Calendar\AddVacation.cshtml" />
+    <None Remove="Views\Calendar\RemoveHoliday.cshtml" />
     <None Remove="wwwroot\css\calendar.css" />
   </ItemGroup>
 </Project>

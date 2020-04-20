@@ -131,7 +131,7 @@ namespace DotNet2020.Domain._4.Controllers
                 ModelState.AddModelError("Error2", "Количество запрашеваемых дней отпуска превышает количество доступных вам");
                 return View(viewModel);
             }
-            if (viewModel.From == DateTime.MinValue && viewModel.From == DateTime.MinValue)
+            if (viewModel.From == DateTime.MinValue || viewModel.To == DateTime.MinValue)
             {
                 ModelState.AddModelError("Error1", "Введите даты");
                 return View();
@@ -158,7 +158,7 @@ namespace DotNet2020.Domain._4.Controllers
         [HttpPost]
         public IActionResult AddIllness(VacationViewModel viewModel)
         {
-            if (viewModel.From == DateTime.MinValue && viewModel.From == DateTime.MinValue)
+            if (viewModel.From == DateTime.MinValue || viewModel.To == DateTime.MinValue)
             {
                 ModelState.AddModelError("Error1", "Введите даты");
                 return View();
@@ -266,6 +266,22 @@ namespace DotNet2020.Domain._4.Controllers
             _dbContext.Holidays.Add(holiday);
             _dbContext.SaveChanges();
             return RedirectToActionPermanent("Admin");
+        }
+
+        [HttpGet]
+        public IActionResult RemoveHoliday()
+        {
+            ViewBag.Holidays = _dbContext.Holidays.ToList();
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult RemoveHolidays(int id)
+        {
+            var holiday = _dbContext.Holidays.Where(u => u.Id == id).FirstOrDefault();
+            _dbContext.Holidays.Remove(holiday);
+            _dbContext.SaveChanges();
+            return RedirectToActionPermanent("RemoveHoliday");
         }
 
         [HttpGet]
