@@ -22,29 +22,15 @@
     maxResourceAmount = 0;
 }
 <link rel="stylesheet" href="~/wwwroot6/css/monthPartial.css"/>
-<div class="container-fluid mb-3 d-inline-flex">
-    <form asp-action="Index" class="m-2 p-2">
-        Год -
-        <select name="year" onchange="this.form.submit()">
-            @for (int i = 0; i < 5; i++)
-            {
-                var year = DateTime.Now.Year + i;
-                if (ViewBag.Year == year)
-                {
-                    <option value="@(year)" selected="selected">@(year)</option>
-                }
-                else
-                {
-                    <option value="@(year)">@(year)</option>
-                }
-            }
-        </select>
+<div class="container-fluid d-inline-flex mb-2">
+    <form asp-action="Index" class="mr-2">
+        <partial name="YearChangerPartial"></partial>
     </form>
-    <button type="button" class="btn btn-primary m-2" data-toggle="modal" data-target="#newProject">
+    <button type="button" class="btn btn-primary mr-2" data-toggle="modal" data-target="#newProject">
         Добавить проект
     </button>
-    <button type="button" class="btn btn-primary m-2">Редактировать проект</button>
-    <button type="button" class="btn btn-primary m-2">Перенести проект в завершенные</button>
+    <button type="button" class="btn btn-primary mr-2">Редактировать проект</button>
+    <button type="button" class="btn btn-primary mr-2">Перенести проект в завершенные</button>
     <div class="modal fade"
          id="newProject"
          tabindex="-1"
