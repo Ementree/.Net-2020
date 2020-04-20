@@ -7,6 +7,19 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DotNet2020.Domain._6.Services
 {
+    public class FunctionalCapacityViewModelBuilderOptions
+    {
+        public int currentYear { get; set; }
+        public int currentAccuracy { get; set; }
+
+        public FunctionalCapacityViewModelBuilderOptions()
+        {
+            currentYear = -1;
+            currentAccuracy = 5;
+        }
+    }
+
+
     public class FunctionalCapacityViewModelBuilder
     {
         readonly DbContext _context;
@@ -16,8 +29,11 @@ namespace DotNet2020.Domain._6.Services
             _context = context;
         }
 
-        public FunctionalCapacityViewModel Build(int year, int currentAccuracy)
+        public FunctionalCapacityViewModel Build(FunctionalCapacityViewModelBuilderOptions options)
         {
+            var year = options.currentYear;
+            var currentAccuracy = options.currentAccuracy;
+
             //Предварительно стягивание с бд ResourceGroupType позволяет избежать .Include() в нескольких запросах
             var resourceType = _context.Set<ResourceGroupType>().ToList();
 

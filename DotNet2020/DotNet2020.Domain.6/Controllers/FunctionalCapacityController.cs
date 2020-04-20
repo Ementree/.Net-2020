@@ -18,11 +18,14 @@ namespace DotNet2020.Domain._6.Controllers
         }
 
         // GET
-        public IActionResult Index(int year = -1,int currentAccuracy = 5)       
+        //int year = -1,int currentAccuracy = 5
+        public IActionResult Index(FunctionalCapacityViewModelBuilderOptions options)       
         {
-            //Предварительно стягивание с бд ResourceGroupType позволяет избежать .Include() в нескольких запросах
+            //if (options == null)
+            //    options = new FunctionalCapacityViewModelBuilderOptions();
+
             var builder = new FunctionalCapacityViewModelBuilder(_context);
-            var viewModel = builder.Build(year,currentAccuracy);
+            var viewModel = builder.Build(options);
 
             return View(viewModel);
         }
