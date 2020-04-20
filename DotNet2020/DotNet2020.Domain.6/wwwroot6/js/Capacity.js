@@ -15,8 +15,6 @@ function handle(object) {
             else {
                 inp.value = "0";
             }
-            if (parseInt(inp.value) > 100)
-                inp.value = "100";
             if (parseInt(inp.value) < 0)
                 inp.value = "0";
             var xhr = new XMLHttpRequest();
