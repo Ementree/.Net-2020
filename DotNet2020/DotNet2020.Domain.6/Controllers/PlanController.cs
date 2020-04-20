@@ -43,19 +43,18 @@ namespace DotNet2020.Domain._6.Controllers
                 {
                     var key = pair.Key;
                     var value = pair.Value.GroupBy(res => res.PeriodId)
-                        .ToDictionary(group => 
-                            group.ToList().FirstOrDefault().Period, 
-                            group => group.ToList())
-                        
+                            .ToDictionary(group =>
+                                    group.ToList().FirstOrDefault().Period,
+                                group => group.ToList())
                         ;
-                    
+
                     return KeyValuePair.Create(key, value);
                 })
                 .ToDictionary(pair => pair.Key, pair => pair.Value);
 
-            var funcCapacitiesProject = 
+            var funcCapacitiesProject =
                 context.Set<FunctioningCapacityProject>()
-                .ToList();
+                    .ToList();
             ViewBag.FunctioningCapacityProject = funcCapacitiesProject;
             return View(model: model);
         }
@@ -69,7 +68,6 @@ namespace DotNet2020.Domain._6.Controllers
             context.SaveChanges();
             var projectId = projectEntity.Entity.Id;
             var periods = viewModel.Periods;
-            var dbPeriods = context.Set<Period>();
             foreach (var period in periods)
             {
                 var periodDb = context.Set<Period>()
@@ -90,11 +88,12 @@ namespace DotNet2020.Domain._6.Controllers
                 }
 
                 var projectPeriodCapacity = period.Capacity == -1 ? 0 : period.Capacity;
-                var functioningCapacityProject = new FunctioningCapacityProject(projectId, periodId, projectPeriodCapacity);
+                var functioningCapacityProject =
+                    new FunctioningCapacityProject(projectId, periodId, projectPeriodCapacity);
                 var functioningCapacityResources = new List<FunctioningCapacityResource>();
                 foreach (var resourceCapacityViewModel in period.Resources)
                 {
-                    if(resourceCapacityViewModel.Capacity==-1)
+                    if (resourceCapacityViewModel.Capacity == -1)
                         continue;
                     var fres = new FunctioningCapacityResource(projectId,
                         resourceCapacityViewModel.Id,
@@ -118,7 +117,14 @@ namespace DotNet2020.Domain._6.Controllers
                     context.Set<FunctioningCapacityProject>().Add(functioningCapacityProject);
                 }
 
-                context.SaveChanges();
+                try
+                {
+                    context.SaveChanges();
+                }
+                catch (Exception)
+                {
+                    return false;
+                }
             }
 
             return true;
