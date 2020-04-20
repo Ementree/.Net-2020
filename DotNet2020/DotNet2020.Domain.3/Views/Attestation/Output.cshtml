@@ -12,7 +12,7 @@
 
 <body>
     <input type="checkbox" id="nav-toggle" hidden>
-    <nav class="nav">
+    <nav class="nav nav-slp">
         <label for="nav-toggle" class="nav-toggle" onclick></label>
         <ul>
             <li>@Html.ActionLink("Главная страница", "Index", "Attestation")
@@ -27,9 +27,8 @@
     <main role="main">
         @if (Model.Any())
         {
-        <div class="scrollTable">
             <form method="post">
-                <table class="table table-striped d">
+                <table class="table">
                     <thead class="thead-dark">
                         <tr>
                             <th>Выбрать</th>
@@ -67,7 +66,6 @@
                 <br />
                 <input type="submit" value="Выгрузить выбранных" />
             </form>
-        </div>
         }
         else
         {

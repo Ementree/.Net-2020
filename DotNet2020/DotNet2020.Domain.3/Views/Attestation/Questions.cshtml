@@ -12,7 +12,7 @@
 
 <body>
     <input type="checkbox" id="nav-toggle" hidden>
-    <nav class="nav">
+    <nav class="nav nav-slp">
         <label for="nav-toggle" class="nav-toggle" onclick></label>
         <ul>
             <li>@Html.ActionLink("Главная страница", "Index", "Attestation")
@@ -27,45 +27,43 @@
     <main role="main">
         @if (Model != null && Model.Any())
         {
-            <div class="scrollTable">
-                <table class="table table-striped d">
-                    <thead class="thead-dark">
+            <table class="table">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>Компетенция</th>
+                        <th>Вопросы</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var element in Model)
+                    {
                         <tr>
-                            <th>Компетенция</th>
-                            <th>Вопросы</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var element in Model)
-                        {
-                            <tr>
+                            <td>
+                                @element.Competence
+                                <form method="post">
+                                    <p>@Html.ActionLink($"Изменить", "QuestionsManage", "Attestation", new { id = element.Id }, null) </p>
+                                </form>
+                            </td>
+                            @if (element.Questions.Count == 0)
+                            {
+                                <td> Список вопросов пуст!</td>
+                            }
+                            else
+                            {
                                 <td>
-                                    @element.Competence
-                                    <form method="post">
-                                        <p>@Html.ActionLink($"Изменить", "QuestionsManage", "Attestation", new { id = element.Id }, null) </p>
-                                    </form>
+                                    @for (int i = 0; i < element.Questions.Count; i++)
+                                    {
+                                        @element.Questions[i]
+                                        <br />
+                                    }
                                 </td>
-                                @if (element.Questions.Count == 0)
-                                {
-                                    <td> Список вопросов пуст!</td>
-                                }
-                                else
-                                {
-                                    <td>
-                                        @for (int i = 0; i < element.Questions.Count; i++)
-                                        {
-                                            @element.Questions[i]
-                                            <br />
-                                        }
-                                    </td>
-                                }
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            </div>
-                }
-        </main>
+                            }
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </main>
 </body>
 </html>
 

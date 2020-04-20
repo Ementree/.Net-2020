@@ -12,7 +12,7 @@
 
 <body>
     <input type="checkbox" id="nav-toggle" hidden>
-    <nav class="nav">
+    <nav class="nav nav-slp">
         <label for="nav-toggle" class="nav-toggle" onclick></label>
         <ul>
             <li>@Html.ActionLink("Главная страница", "Index", "Attestation")
@@ -26,9 +26,9 @@
     </nav>
     <main role="main">
         <p>@Html.ActionLink("Добавить грейд", actionName: "GradesAdd", controllerName: "Attestation")</p>
-            @if (Model != null && Model.Any())
-            {
-            <table class="table d">
+        @if (Model != null && Model.Any())
+        {
+            <table class="table">
                 <thead class="thead-dark">
                     <tr>
                         <th>Грейд</th>
@@ -63,7 +63,7 @@
                     }
                 </tbody>
             </table>
-            }
+        }
     </main>
 </body>
 </html>

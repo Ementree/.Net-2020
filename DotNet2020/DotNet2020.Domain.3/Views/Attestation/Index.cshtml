@@ -11,7 +11,7 @@
 
 <body>
     <input type="checkbox" id="nav-toggle" hidden>
-    <nav class="nav">
+    <nav class="nav nav-slp">
         <label for="nav-toggle" class="nav-toggle" onclick></label>
         <ul>
             <li>@Html.ActionLink("Главная страница", "Index", "Attestation")
@@ -24,7 +24,22 @@
         </ul>
     </nav>
     <main role="main">
+        <ul class="nav nav-tabs">
+            <li class="nav-item">
+                <a class="nav-link active" data-toggle="tab" href="#workers">Работники</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="#functional">Грейды</a>
+            </li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane fade show active" id="workers">
+                
+            </div>
+            <div class="tab-pane fade" id="functional">
 
+            </div>
+        </div>
     </main>
 </body>
 </html>

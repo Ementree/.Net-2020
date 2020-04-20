@@ -2,25 +2,7 @@
 @import url(https://fonts.googleapis.com/css?family=Open+Sans:400,300&subset=latin,cyrillic);
 
 
-/**
- * Переключаемая боковая панель навигации
- * выдвигающаяся по клику слева
- */
-
-
-/*Фикс размера таблиц*/
-table.d {
-    table-layout: auto;
-    width: 100%;
-}
-
-.scrollTable {
-    overflow: scroll;
-    height:800px;
-    width: 120%;
-}
-
-.nav {
+.nav-slp {
     /*  ширна произвольная, не стесняйтесь экспериментировать */
     width: 320px;
     min-width: 320px;
