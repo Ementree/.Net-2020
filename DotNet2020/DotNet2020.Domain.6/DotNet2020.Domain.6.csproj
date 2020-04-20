@@ -57,6 +57,7 @@
 
   <ItemGroup>
     <TypeScriptCompile Include="scripts\PlanHighlight.ts" />
+    <TypeScriptCompile Include="scripts\Capacity.ts" />
   </ItemGroup>
 
 </Project>
