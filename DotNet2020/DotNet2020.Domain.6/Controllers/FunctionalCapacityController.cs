@@ -20,8 +20,7 @@ namespace DotNet2020.Domain._6.Controllers
         // GET
         public IActionResult Index(int currentYear = -1,int currentAccuracy = 5)       
         {
-            //System.InvalidOperationException: 'Client side GroupBy is not supported.' ��� ToList()
-            //� EFCore3.0 �� ��������
+            //Предварительно стягивание с бд ResourceGroupType позволяет избежать .Include() в нескольких запросах
             var resourceType = _context.Set<ResourceGroupType>().ToList();
 
             var resourceWithCurrentPeriodCapacityDict = GetDataFromResourceCapacityTable();
