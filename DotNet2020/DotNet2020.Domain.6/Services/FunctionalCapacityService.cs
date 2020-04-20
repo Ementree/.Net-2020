@@ -53,17 +53,6 @@ namespace DotNet2020.Domain._6.Services
             return yearsDict;
         }
 
-        static bool GetFirstOrNullItem(List<FCPeriodWithBothCapacity> items,DateTime date)
-        {
-            foreach(var i in items)
-            {
-                if (i.Period.Start.Year == date.Year && i.Period.Start.Month == date.Month)
-                    return true;
-            }
-
-            return false;
-        }
-
         static void AddPeriodWithBothCapacityInDict(Dictionary<int,List<FCPeriodWithBothCapacity>> yearItemsDict,List<FCPeriodWithBothCapacity> items)
         {
             foreach(var i in items)

@@ -18,7 +18,7 @@ namespace DotNet2020.Domain._6.Controllers
         }
 
         // GET
-        public IActionResult Index(int currentYear = -1,int currentAccuracy = 5)       
+        public IActionResult Index(int year = -1,int currentAccuracy = 5)       
         {
             //Предварительно стягивание с бд ResourceGroupType позволяет избежать .Include() в нескольких запросах
             var resourceType = _context.Set<ResourceGroupType>().ToList();
@@ -33,9 +33,8 @@ namespace DotNet2020.Domain._6.Controllers
 
             FunctionalCapacityService.SortViewModelPeriodsInResourceOnYears(viewModel);
             viewModel.YearsRange =  FunctionalCapacityService.GetViewModelYearRange(viewModel);
-            viewModel.CurrentYear = FunctionalCapacityService.ValidateCurrentYear(viewModel, currentYear);
+            viewModel.CurrentYear = FunctionalCapacityService.ValidateCurrentYear(viewModel, year);
             viewModel.CurrentAccuracy = FunctionalCapacityService.ValidateAccuracy(currentAccuracy);
-            
 
             return View(viewModel);
         }
