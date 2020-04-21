@@ -45,16 +45,16 @@ namespace DotNet2020.Domain._4.Models
                     {
                         case AbsenceType.Vacation:
                             if ((m as Vacation).IsApproved)
-                                color = "green";
-                            else color = "red";
+                                color = "#59d27c";
+                            else color = "#ff4242";
                             break;
                         case AbsenceType.SickDay:
-                            color = "#6eb3fa";
+                            color = "#95c8fd";
                             break;
                         case AbsenceType.Illness:
                             if ((m as Illness).IsApproved)
-                                color = "violet";
-                            else color = "yellow";
+                                color = "#6e84fe";
+                            else color = "#ffff92";
                             break;
                     }
                     return new CalendarEventViewModel()
