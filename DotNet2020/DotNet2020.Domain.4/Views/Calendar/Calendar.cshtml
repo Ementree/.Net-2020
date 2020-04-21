@@ -13,6 +13,14 @@
     <div style='background:#=getColorBasedOnHour(date)#; height: 100%;width: 100%;'></div>
 </script>
 
+<div class="legend">
+    <div class="color-box legend-item-holiday">Праздники</div>
+    <div class="color-box legend-item-vacation">Новый отпуск</div>
+    <div class="color-box legend-item-vacation-approved">Отпуск</div>
+    <div class="color-box legend-item-illness">Новый больничный</div>
+    <div class="color-box legend-item-illness-approved">Больничный</div>
+    <div class="color-box legend-item-sickday">Сикдэй</div>
+</div>
 
 @(Html.Kendo().Scheduler<Kendo.Mvc.Examples.Models.Scheduler.CalendarEventViewModel>()
         .Name("calendar")
