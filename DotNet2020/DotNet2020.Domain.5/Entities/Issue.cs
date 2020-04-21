@@ -36,17 +36,23 @@ namespace DotNet2020.Domain._5.Entities
         public string ProjectName { get; private set; }
 
         /// <summary>
+        /// Full link
+        /// </summary>
+        public string Link { get; private set; }
+
+        /// <summary>
         /// Work items
         /// </summary>
         public List<WorkItem> WorkItems { get; private set; }
 
         public Issue(string name, string title, IssueTimeInfo timeInfo, 
-            string creatorName, string assigneeName, string projectName, List<WorkItem> workItems = null)
+            string creatorName, string assigneeName, string projectName, string link, List<WorkItem> workItems = null)
         {
             CheckIsEmpty(name, "name");
             CheckIsEmpty(title, "title");
             CheckIsEmpty(creatorName, "creatorName");
             CheckIsEmpty(projectName, "projectName");
+            CheckIsEmpty(link, "link");
 
             if (workItems == null)
                 workItems = new List<WorkItem>();
@@ -57,6 +63,7 @@ namespace DotNet2020.Domain._5.Entities
             CreatorName = creatorName;
             AssigneeName = assigneeName;
             ProjectName = projectName;
+            Link = link;
             WorkItems = workItems;
         }
 
