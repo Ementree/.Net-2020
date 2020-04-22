@@ -26,6 +26,12 @@ namespace DotNet2020.Domain._5.Controllers
             return View();
         }
 
+        [HttpGet]
+        public IActionResult Edit()
+        {
+            return View();
+        }
+
         [HttpPost]
         public IActionResult Show(CreateReportModel model)
         {
