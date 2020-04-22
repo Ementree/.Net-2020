@@ -82,4 +82,12 @@
     <None Remove="wwwroot\css\calendar.css" />
     <None Remove="Views\Calendar\Calendar.cshtml" />
   </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="Views\Calendar\Calendar.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Views\Calendar\Calendar.cs">
+      <DependentUpon>Calendar.cshtml</DependentUpon>
+    </None>
+  </ItemGroup>
 </Project>

@@ -13,6 +13,44 @@
     <div style='background:#=getColorBasedOnHour(date)#; height: 100%;width: 100%;'></div>
 </script>
 
+<script>//Custom View
+    (function ($, undefined) {
+        var kendo = window.kendo,
+            ui = kendo.ui,
+            SchedulerTimelineView = ui.TimelineView,
+            extend = $.extend,
+            NS = ".kendoTimelineYearView";
+
+        var SchedulerTimelineYearView = SchedulerTimelineView.extend({
+            nextDate: function () {
+                var start = this.startDate();
+                return new Date(start.getFullYear() + 1, 0, 1);
+            },
+            previousDate: function () {
+                var start = this.startDate();
+                return new Date(start.getFullYear() - 1, 0, 1);
+            },
+            calculateDateRange: function () {
+                var selectedDate = this.options.date,
+                    start = new Date(selectedDate.getFullYear(), 0, 1),
+                    end = kendo.date.previousDay(new Date(selectedDate.getFullYear() + 1, 0, 1)),
+                    dates = [];
+
+                while (start <= end) {
+                    dates.push(start);
+                    start = kendo.date.nextDay(start);
+                }
+                this._render(dates);
+            }
+        })
+
+        //extend UI
+        extend(true, ui, {
+            SchedulerTimelineYearView: SchedulerTimelineYearView
+        });
+
+    })(window.kendo.jQuery);</script>
+
 <div class="legend">
     <div class="color-box legend-item-holiday">Праздники</div>
     <div class="color-box legend-item-vacation">Новый отпуск</div>
@@ -26,15 +64,21 @@
         .Name("calendar")
         .Date(DateTime.Now)
         .StartTime(new DateTime(DateTime.Now.Year, 1, 1))
-        .MajorTick(1440)
+        .MajorTick(2880)
         .Editable(false)
+        .Footer(false)
         .Height(600)
         .EventTemplateId("task-template")
         .Views(views =>
         {
-            views.TimelineMonthView(view => view.SlotTemplateId("my-holiday"));
-            views.TimelineWeekView(view => view.SlotTemplateId("my-holiday"));
-            //views.DayView();
+            views.TimelineView(view => view.SlotTemplateId("my-holiday")).ColumnWidth
+            views.TimelineMonthView(view => view.SlotTemplateId("my-holiday")).Title("Month").ColumnWidth(50);
+            views.TimelineWeekView(view => view.SlotTemplateId("my-holiday")).Title("Week");
+            views.CustomView("kendo.ui.SchedulerTimelineYearView", view => {
+                var timeline = (object)view as Kendo.Mvc.UI.Fluent.SchedulerTimelineViewBuilderBase<SchedulerTimelineView, Kendo.Mvc.UI.Fluent.SchedulerTimelineViewBuilder>;
+                timeline.Title("Year");
+                timeline.ColumnWidth(50);
+                });
             // views.AgendaView();
         })
         .BindTo(Model.Events)
