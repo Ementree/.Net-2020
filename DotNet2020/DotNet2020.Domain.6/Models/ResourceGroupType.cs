@@ -2,9 +2,8 @@
 {
     public class ResourceGroupType
     {
-        public ResourceGroupType(int id, string type,string group)
+        public ResourceGroupType(string type,string group)
         {
-            Id = id;
             Type = type;
             Group = group;
         }

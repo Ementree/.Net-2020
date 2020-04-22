@@ -1,3 +1,82 @@
+﻿@using DotNet2020.Domain._6.Models.ViewModels
+@using DotNet2020.Domain._6.ExtensionMethods
 @{ 
     Layout = "~/Views/Shared/_Layout6.cshtml";
 }
+
+@model FunctionalCapacityViewModel
+
+<div class="wrapper">
+    <div class="scroller2">
+        <table class="scroll-table table">
+            <thead>
+                <tr>
+                    <td class="sticky-col1" @*rowspan="2*@>
+                        &nbsp
+                    </td>
+                    <td class="sticky-col2" @*rowspan="2"*@>
+                        &nbsp
+                    </td>         
+                    @foreach(var p in Model.Periods)
+                    {
+                        <td colspan="2">
+                            @p.Start.ToShortDateString()
+                        </td>
+                    }
+                </tr>
+                <tr>
+                    <td class="sticky-col1">
+                        <p>Группа ресурса</p>
+                    </td>
+                    <td class="sticky-col2">
+                        <p>Ресурс</p>
+                    </td>
+                    @foreach(var p in Model.Periods)
+                    {
+                        <td>
+                            план,%
+                        </td>
+                        <td>
+                            мощность,%
+                        </td>
+                    }
+                </tr>
+            </thead>
+            <tbody>
+                @foreach(var val in Model.Dict)
+                {
+                    foreach(var m in val.Value)
+                    {
+                        <tr>
+                            @if (m == val.Value.First())
+                            {
+                                <td class="sticky-col1">
+                                    @val.Key
+                                </td>
+                            }
+                            else
+                            {
+                                <td class="sticky-col1 no-border">
+                                    &nbsp;
+                                </td>
+                            }
+                            <td class="sticky-col2">
+                                @(m.Resource.FirstName + " " + m.Resource.LastName)
+                            </td>
+                            
+                            @foreach(var i in m.Items)
+                            {
+                                <td>
+                                    @i.PlannedCapacity%
+                                </td>
+                                <td>
+                                    @i.CurrentCapacity%
+                                </td>
+                            }
+                        </tr>                  
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

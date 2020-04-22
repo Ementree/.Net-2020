@@ -2,12 +2,10 @@
 {
     public class Project
     {
-        public Project(int id, string name, int statusId, ProjectStatus projectStatus)
+        public Project(string name, int statusId)
         {
-            Id = id;
             Name = name;
             StatusId = statusId;
-            ProjectStatus = projectStatus;
         }
         protected Project() : base() { }
         public int Id { get; protected set; }
