@@ -59,30 +59,31 @@ WriteLiteral(" id=\"my-holiday\"");
 WriteLiteral(" type=\"text/x-kendo-template\"");
 
 WriteLiteral(">\r\n    <div style=\'background:#=getColorBasedOnHour(date)#; height: 100%;width: 1" +
-"00%;\'></div>\r\n</script>\r\n\r\n<script>\r\n    function onDataBound(e) {\n        var t" +
-"ables = $(\".k-scheduler-header-wrap .k-scheduler-table\");\n\n        // (Required)" +
-" Remove only the last table in dataBound when grouped.\n        tables = tables.f" +
-"irst();\n        tables.hide();\n\n        //var rows = tables.find(\"tr\");\n\n       " +
-" //rows.each(function () {\n        //    $(this).children(\"tr:1\").hide();\n      " +
-"  //});\r\n    }\r\n</script>\r\n\r\n<script>//Custom View\r\n    (function ($, undefined)" +
-" {\r\n        var kendo = window.kendo,\r\n            ui = kendo.ui,\r\n            S" +
-"chedulerTimelineView = ui.TimelineView,\r\n            extend = $.extend,\r\n       " +
-"     NS = \".kendoTimelineYearView\";\r\n\r\n        var SchedulerTimelineYearView = S" +
-"chedulerTimelineView.extend({\r\n            nextDate: function () {\r\n            " +
-"    var start = this.startDate();\r\n                return new Date(start.getFull" +
-"Year() + 1, 0, 1);\r\n            },\r\n            options: {\r\n                colu" +
-"mnWidth: 1,\n            },\r\n            previousDate: function () {\r\n           " +
-"     var start = this.startDate();\r\n                return new Date(start.getFul" +
-"lYear() - 1, 0, 1);\r\n            },\r\n            calculateDateRange: function ()" +
-" {\r\n                var selectedDate = this.options.date,\r\n                    s" +
-"tart = new Date(selectedDate.getFullYear(), 0, 1),\r\n                    end = ke" +
-"ndo.date.previousDay(new Date(selectedDate.getFullYear() + 1, 0, 1)),\r\n         " +
-"           dates = [];\r\n\r\n                while (start <= end) {\r\n              " +
-"      dates.push(start);\r\n                    start = kendo.date.nextDay(start);" +
-"\r\n                }\r\n                this._render(dates);\r\n            }\r\n      " +
-"  })\r\n\r\n        //extend UI\r\n        extend(true, ui, {\r\n            SchedulerTi" +
-"melineYearView: SchedulerTimelineYearView\r\n        });\r\n\r\n    })(window.kendo.jQ" +
-"uery);\r\n</script>\r\n\r\n<div");
+"00%;\'></div>\r\n</script>\r\n\r\n<script>\r\n    function onDataBound(e) {\n        var v" +
+"iew = this.view();\n        //view.times.hide();\n        view.timesHeader.hide();" +
+"\n        $(\".k-scheduler-header-wrap > table > tbody > tr:eq(1)\").hide();\r\n\r\n   " +
+"     var tables = $(\".k-scheduler-header-wrap .k-scheduler-table\");\r\n        tab" +
+"les = tables.first();\n        var cells = tables.find(\"th\");\r\n        cells.each" +
+"(function (e) {\r\n            var inner = $(this).text();\n            var day = i" +
+"nner.split(\" \")[1];\n            $(this).text(day)\n        })\r\n    }\r\n</script>\r\n" +
+"\r\n<script>//Custom View\r\n    (function ($, undefined) {\r\n        var kendo = win" +
+"dow.kendo,\r\n            ui = kendo.ui,\r\n            SchedulerTimelineView = ui.T" +
+"imelineView,\r\n            extend = $.extend,\r\n            NS = \".kendoTimelineYe" +
+"arView\";\r\n\r\n        var SchedulerTimelineYearView = SchedulerTimelineView.extend" +
+"({\r\n            nextDate: function () {\r\n                var start = this.startD" +
+"ate();\r\n                return new Date(start.getFullYear() + 1, 0, 1);\r\n       " +
+"     },\r\n            options: {\r\n                columnWidth: 1,\n            },\r" +
+"\n            previousDate: function () {\r\n                var start = this.start" +
+"Date();\r\n                return new Date(start.getFullYear() - 1, 0, 1);\r\n      " +
+"      },\r\n            calculateDateRange: function () {\r\n                var sel" +
+"ectedDate = this.options.date,\r\n                    start = new Date(selectedDat" +
+"e.getFullYear(), 0, 1),\r\n                    end = kendo.date.previousDay(new Da" +
+"te(selectedDate.getFullYear() + 1, 0, 1)),\r\n                    dates = [];\r\n\r\n " +
+"               while (start <= end) {\r\n                    dates.push(start);\r\n " +
+"                   start = kendo.date.nextDay(start);\r\n                }\r\n      " +
+"          this._render(dates);\r\n            }\r\n        })\r\n\r\n        //extend UI" +
+"\r\n        extend(true, ui, {\r\n            SchedulerTimelineYearView: SchedulerTi" +
+"melineYearView\r\n        });\r\n\r\n    })(window.kendo.jQuery);\r\n</script>\r\n\r\n<div");
 
 WriteLiteral(" class=\"legend\"");
 
@@ -113,7 +114,7 @@ WriteLiteral(" class=\"color-box legend-item-sickday\"");
 WriteLiteral(">Сикдэй</div>\r\n</div>\r\n\r\n");
 
 
-#line 83 "Calendar.cshtml"
+#line 85 "Calendar.cshtml"
 Write(Html.Kendo().Scheduler<Kendo.Mvc.Examples.Models.Scheduler.CalendarEventViewModel>()
         .Name("calendar")
         .Date(DateTime.Now)
@@ -196,7 +197,7 @@ WriteLiteral(@"
         const holidays = JSON.parse('");
 
 
-#line 157 "Calendar.cshtml"
+#line 159 "Calendar.cshtml"
                                 Write(Html.Raw(Json.Serialize(@Model.Holidays)));
 
 

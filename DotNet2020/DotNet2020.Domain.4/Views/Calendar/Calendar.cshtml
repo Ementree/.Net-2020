@@ -15,17 +15,19 @@
 
 <script>
     function onDataBound(e) {
+        var view = this.view();
+        //view.times.hide();
+        view.timesHeader.hide();
+        $(".k-scheduler-header-wrap > table > tbody > tr:eq(1)").hide();
+
         var tables = $(".k-scheduler-header-wrap .k-scheduler-table");
-
-        // (Required) Remove only the last table in dataBound when grouped.
         tables = tables.first();
-        tables.hide();
-
-        //var rows = tables.find("tr");
-
-        //rows.each(function () {
-        //    $(this).children("tr:1").hide();
-        //});
+        var cells = tables.find("th");
+        cells.each(function (e) {
+            var inner = $(this).text();
+            var day = inner.split(" ")[1];
+            $(this).text(day)
+        })
     }
 </script>
 
