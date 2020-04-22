@@ -13,6 +13,22 @@
     <div style='background:#=getColorBasedOnHour(date)#; height: 100%;width: 100%;'></div>
 </script>
 
+<script>
+    function onDataBound(e) {
+        var tables = $(".k-scheduler-header-wrap .k-scheduler-table");
+
+        // (Required) Remove only the last table in dataBound when grouped.
+        tables = tables.first();
+        tables.hide();
+
+        //var rows = tables.find("tr");
+
+        //rows.each(function () {
+        //    $(this).children("tr:1").hide();
+        //});
+    }
+</script>
+
 <script>//Custom View
     (function ($, undefined) {
         var kendo = window.kendo,
@@ -25,6 +41,9 @@
             nextDate: function () {
                 var start = this.startDate();
                 return new Date(start.getFullYear() + 1, 0, 1);
+            },
+            options: {
+                columnWidth: 1,
             },
             previousDate: function () {
                 var start = this.startDate();
@@ -49,7 +68,8 @@
             SchedulerTimelineYearView: SchedulerTimelineYearView
         });
 
-    })(window.kendo.jQuery);</script>
+    })(window.kendo.jQuery);
+</script>
 
 <div class="legend">
     <div class="color-box legend-item-holiday">Праздники</div>
@@ -69,15 +89,14 @@
         .Footer(false)
         .Height(600)
         .EventTemplateId("task-template")
+        .Events(e => e.DataBound("onDataBound"))
         .Views(views =>
         {
-            views.TimelineView(view => view.SlotTemplateId("my-holiday")).ColumnWidth
-            views.TimelineMonthView(view => view.SlotTemplateId("my-holiday")).Title("Month").ColumnWidth(50);
+            views.TimelineMonthView(view => view.SlotTemplateId("my-holiday")).Title("Month").ColumnWidth(20);
             views.TimelineWeekView(view => view.SlotTemplateId("my-holiday")).Title("Week");
             views.CustomView("kendo.ui.SchedulerTimelineYearView", view => {
-                var timeline = (object)view as Kendo.Mvc.UI.Fluent.SchedulerTimelineViewBuilderBase<SchedulerTimelineView, Kendo.Mvc.UI.Fluent.SchedulerTimelineViewBuilder>;
+                var timeline = view;
                 timeline.Title("Year");
-                timeline.ColumnWidth(50);
                 });
             // views.AgendaView();
         })
