@@ -19,7 +19,6 @@ namespace DotNet2020.Domain._6.Services
         }
     }
 
-
     public class FunctionalCapacityViewModelBuilder
     {
         readonly DbContext _context;

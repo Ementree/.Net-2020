@@ -36,7 +36,7 @@ function PaintCurrentMonthColumn() {
         var cellText = monthCellsCollection[i].innerText;
         var monthName = cellText.split(' ')[0].toLowerCase();
         if (monthName == currentMonthName) {
-            monthCellsCollection[i].classList.add("green-highlight");
+            monthCellsCollection[i].classList.add("month-highlight");
             console.log("добвился класс :" + currentMonthName);
             return;
         }

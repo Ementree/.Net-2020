@@ -21,9 +21,6 @@ namespace DotNet2020.Domain._6.Controllers
         //int year = -1,int currentAccuracy = 5
         public IActionResult Index(FunctionalCapacityViewModelBuilderOptions options)       
         {
-            //if (options == null)
-            //    options = new FunctionalCapacityViewModelBuilderOptions();
-
             var builder = new FunctionalCapacityViewModelBuilder(_context);
             var viewModel = builder.Build(options);
 

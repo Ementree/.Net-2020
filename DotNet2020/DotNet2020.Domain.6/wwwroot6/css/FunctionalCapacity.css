@@ -116,7 +116,6 @@
 
 .current-month {
     background-color: #9CBAAA;
-    color: #854B6A;
 }
 
 .form-width-control{
@@ -136,10 +135,18 @@ input::-webkit-inner-spin-button {
 
 }
 
-.red-hilight {
+/*.red-hilight {
     background-color: #A92525;
 }
 
 .blue-hilight {
     background-color: #25A9A9;
+}*/
+
+.blue-highlight {
+    background-color: #a4c2f4;
+}
+
+.red-highlight {
+    background-color: #f5b7b1;
 }

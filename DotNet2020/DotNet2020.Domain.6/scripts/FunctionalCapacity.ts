@@ -42,7 +42,7 @@ function PaintCurrentMonthColumn() {
 
         if (monthName == currentMonthName) {
 
-            monthCellsCollection[i].classList.add("green-highlight");
+            monthCellsCollection[i].classList.add("month-highlight");
             console.log("добвился класс :" + currentMonthName);
             return;
         }
@@ -95,6 +95,7 @@ function HilightCells() {
 
         cells[i].classList.remove("red-highlight");
         cells[i + 1].classList.remove("red-highlight");
+
 
 
         let plannedCapacityCellText = cells[i].innerText;
