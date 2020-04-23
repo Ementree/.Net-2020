@@ -38,7 +38,7 @@ namespace DotNet2020.Domain._1
                 .Where(t => t.IsKind(SyntaxKind.XmlTextLiteralToken))
                 .Select(t => new Comment(t));
 
-            var commentContext = new CommentContext(context);//
+            var commentContext = new CommentContext(context);
             Report(commentContext, comments);
         }
 
