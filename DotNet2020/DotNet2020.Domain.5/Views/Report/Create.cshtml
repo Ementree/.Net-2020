@@ -24,17 +24,11 @@
                 <div class="form-group">
                     <label for="CreateReport">Проект:</label>
                     <br>
-                    <select size="2" asp-for="Project">
-                        @*@foreach (var project in Model.Project)
+                    <select size="2" asp-for="Name">
+                        @foreach (var project in Model.CreateProject)
                         {
                             <option value="@project">@project</option>
-                        }*@
-                        <option value="1">Option 1</option>
-                        <option value="2">Option 2</option>
-                        <option value="3">Option 3</option>
-                        <option value="4">Option 4</option>
-                        <option value="5">Option 5</option>
-                        <option value="6">Option 6</option>
+                        }
                     </select>
                 </div>
                 <div class="form-group">

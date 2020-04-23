@@ -24,34 +24,22 @@
                 <div class="form-group">
                     <label for="EditReport">Проект:</label>
                     <br>
-                    <select size="2" asp-for="Project">
-                        @*@foreach (var project in Model.Project)
+                    <select size="2" asp-for="Name">
+                        @foreach (var project in Model.Project)
                         {
                             <option value="@project">@project</option>
-                        }*@
-                        <option value="1">Option 10930-58</option>
-                        <option value="2">Option 2</option>
-                        <option value="3">Option 3</option>
-                        <option value="4">Option 4</option>
-                        <option value="5">Option 5</option>
-                        <option value="6">Option 6</option>
+                        }
                     </select>
                 </div>
                 <div class="form-group">
                     <div class="button-group">
                         <label for="EditReport">Пользователи:</label>
-                        <button type="button" class="btn btn-default btn-sm dropdown-toggle" asp-for="UserFilter" data-toggle="dropdown"><span class="glyphicon glyphicon-cog"></span> <span class="caret"></span></button>
+                        <button type="button" class="btn btn-default btn-sm dropdown-toggle" asp-for="UserName" data-toggle="dropdown"><span class="glyphicon glyphicon-cog"></span> <span class="caret"></span></button>
                         <ul class="dropdown-menu">
-                            @*@foreach (var user in Model.UserFilter)
+                            @foreach (var user in Model.UserFilter)
                             {
                                 <li data-value="@user"><input type="checkbox" />&nbsp;@user</li>
-                            }*@
-                            <li data-value="option1"><input type="checkbox" checked />&nbsp;Option 1</li>
-                            <li data-value="option2"><input type="checkbox" />&nbsp;Option 2</li>
-                            <li data-value="option3"><input type="checkbox" />&nbsp;Option 3</li>
-                            <li data-value="option4"><input type="checkbox" />&nbsp;Option 4</li>
-                            <li data-value="option5"><input type="checkbox" />&nbsp;Option 5</li>
-                            <li data-value="option6"><input type="checkbox" />&nbsp;Option 6</li>
+                            }
                         </ul>
                     </div>
                     </div>
