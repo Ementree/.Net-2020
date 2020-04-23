@@ -36,8 +36,7 @@ namespace DotNet2020.Domain._5.Controllers
         {
             var model = new EditReportModel()
             {
-                Project = new string[]
-            {"option 1", "option 2", "option 3", "option 4",  "option 5", "option 6"},
+                ProjectName = "option 1",
                 UserFilter = new string[]
                 {"option 1", "option 2", "option 3", "option 4",  "option 5", "option 6"}
             };
