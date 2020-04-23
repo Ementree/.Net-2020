@@ -24,7 +24,9 @@ namespace DotNet2020.Domain._1
         public static DiagnosticDescriptor EnglishRule = new DiagnosticDescriptor(DiagnosticId, Title,
             EnglishMessageFormat, Category, DiagnosticSeverity.Warning, isEnabledByDefault: true);
 
-        //true - для русского языка, false - для английского
+        /// <summary>
+        /// true - для русского языка, false - для английского
+        /// </summary>
         public const bool IsRussian = true;
 
         public static void AnalyzeXML(SyntaxNodeAnalysisContext context)
@@ -36,7 +38,7 @@ namespace DotNet2020.Domain._1
                 .Where(t => t.IsKind(SyntaxKind.XmlTextLiteralToken))
                 .Select(t => new Comment(t));
 
-            var commentContext = new CommentContext(context);
+            var commentContext = new CommentContext(context);//
             Report(commentContext, comments);
         }
 

@@ -17,6 +17,7 @@ namespace DotNet2020.Domain._1
 
         internal static bool IsNotRussian(this string str)
         {
+            if (str == " ") return false;
             var russianSymbCount = str
                 .Where(c => c.IsRussian())
                 .Count();
