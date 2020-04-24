@@ -79,52 +79,66 @@ function AddAccuracyChangeEvent() {
             this.value = "0";
         }
 
-        HilightCells();
+        HighlightCells();
     });
 }
 
-function HilightCells() {
-    let cells = <HTMLCollectionOf<HTMLTableDataCellElement>>document.getElementsByClassName("for-js-selecor");
+function AddVlaueDifferenceHighlight(cell1: HTMLTableDataCellElement, cell2: HTMLTableDataCellElement) {
     let accuracyInput = <HTMLInputElement>document.getElementById("accuracy-input");
     let accuracy = parseFloat(accuracyInput.value);
 
+    cell1.classList.remove("blue-highlight");
+    cell2.classList.remove("blue-highlight");
+
+    cell1.classList.remove("red-highlight");
+    cell2.classList.remove("red-highlight");
+
+    let plannedCapacityCellText = cell1.innerText;
+    let plannedCapacity = parseFloat(plannedCapacityCellText.substring(0, plannedCapacityCellText.length - 1));
+
+    let currentCapacityCellText = cell2.innerText;
+    let currentCapacity = parseFloat(currentCapacityCellText.substring(0, currentCapacityCellText.length - 1));
+
+    let difference = plannedCapacity - currentCapacity;
+
+    if (difference < 0)
+        difference = difference * -1;
+
+    if (difference <= accuracy) {
+
+    } else if (currentCapacity > plannedCapacity) {
+        cell1.classList.add("blue-highlight");
+        cell2.classList.add("blue-highlight");
+    } else {
+        cell1.classList.add("red-highlight");
+        cell2.classList.add("red-highlight");
+    }
+}
+
+function AddTotalSumHighlight(cell1: HTMLTableDataCellElement, cell2: HTMLTableDataCellElement) {
+    cell1.classList.add("total-sum-highlight");
+    cell2.classList.add("total-sum-highlight");
+}
+
+function HighlightCells() {
+    let cells = <HTMLCollectionOf<HTMLTableDataCellElement>>document.getElementsByClassName("for-js-selecor");
+
+
     for (let i = 0; i < cells.length; i+=2) {
         console.log(cells[i].innerText);
-        cells[i].classList.remove("blue-highlight");
-        cells[i + 1].classList.remove("blue-highlight");
 
-        cells[i].classList.remove("red-highlight");
-        cells[i + 1].classList.remove("red-highlight");
-
-
-
-        let plannedCapacityCellText = cells[i].innerText;
-        let plannedCapacity = parseFloat(plannedCapacityCellText.substring(0, plannedCapacityCellText.length - 1));
-
-        let currentCapacityCellText = cells[i+1].innerText;
-        let currentCapacity = parseFloat(currentCapacityCellText.substring(0, currentCapacityCellText.length - 1));
-
-        let difference = plannedCapacity - currentCapacity;
-
-        if (difference < 0)
-            difference = difference * -1;
-
-        if (difference <= accuracy) {
-
-        } else if (currentCapacity > plannedCapacity) {
-            cells[i].classList.add("blue-highlight");
-            cells[i + 1].classList.add("blue-highlight");
-        } else {
-            cells[i].classList.add("red-highlight");
-            cells[i + 1].classList.add("red-highlight");
+        if (cells[i].classList.contains("total-sum-js") && !cells[i].classList.contains("total-sum-highlight")) {
+            AddTotalSumHighlight(cells[i], cells[i + 1]);
         }
+
+        AddVlaueDifferenceHighlight(cells[i], cells[i + 1]);
     }
 }
 
 
 document.addEventListener("DOMContentLoaded", function () {
     console.log("doom загрузился")
-    HilightCells();
+    HighlightCells();
     AddAccuracyChangeEvent();
     PaintCurrentMonthColumn();
     AddYearChangeEvent();

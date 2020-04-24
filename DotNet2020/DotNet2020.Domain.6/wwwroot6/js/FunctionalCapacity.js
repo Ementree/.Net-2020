@@ -67,41 +67,51 @@ function AddAccuracyChangeEvent() {
         if (input.length > 0 && input[0] == "0" || input.length == 0 || input[0] == "-") {
             this.value = "0";
         }
-        HilightCells();
+        HighlightCells();
     });
 }
-function HilightCells() {
-    var cells = document.getElementsByClassName("for-js-selecor");
+function AddVlaueDifferenceHighlight(cell1, cell2) {
     var accuracyInput = document.getElementById("accuracy-input");
     var accuracy = parseFloat(accuracyInput.value);
+    cell1.classList.remove("blue-highlight");
+    cell2.classList.remove("blue-highlight");
+    cell1.classList.remove("red-highlight");
+    cell2.classList.remove("red-highlight");
+    var plannedCapacityCellText = cell1.innerText;
+    var plannedCapacity = parseFloat(plannedCapacityCellText.substring(0, plannedCapacityCellText.length - 1));
+    var currentCapacityCellText = cell2.innerText;
+    var currentCapacity = parseFloat(currentCapacityCellText.substring(0, currentCapacityCellText.length - 1));
+    var difference = plannedCapacity - currentCapacity;
+    if (difference < 0)
+        difference = difference * -1;
+    if (difference <= accuracy) {
+    }
+    else if (currentCapacity > plannedCapacity) {
+        cell1.classList.add("blue-highlight");
+        cell2.classList.add("blue-highlight");
+    }
+    else {
+        cell1.classList.add("red-highlight");
+        cell2.classList.add("red-highlight");
+    }
+}
+function AddTotalSumHighlight(cell1, cell2) {
+    cell1.classList.add("total-sum-highlight");
+    cell2.classList.add("total-sum-highlight");
+}
+function HighlightCells() {
+    var cells = document.getElementsByClassName("for-js-selecor");
     for (var i = 0; i < cells.length; i += 2) {
         console.log(cells[i].innerText);
-        cells[i].classList.remove("blue-highlight");
-        cells[i + 1].classList.remove("blue-highlight");
-        cells[i].classList.remove("red-highlight");
-        cells[i + 1].classList.remove("red-highlight");
-        var plannedCapacityCellText = cells[i].innerText;
-        var plannedCapacity = parseFloat(plannedCapacityCellText.substring(0, plannedCapacityCellText.length - 1));
-        var currentCapacityCellText = cells[i + 1].innerText;
-        var currentCapacity = parseFloat(currentCapacityCellText.substring(0, currentCapacityCellText.length - 1));
-        var difference = plannedCapacity - currentCapacity;
-        if (difference < 0)
-            difference = difference * -1;
-        if (difference <= accuracy) {
+        if (cells[i].classList.contains("total-sum-js") && !cells[i].classList.contains("total-sum-highlight")) {
+            AddTotalSumHighlight(cells[i], cells[i + 1]);
         }
-        else if (currentCapacity > plannedCapacity) {
-            cells[i].classList.add("blue-highlight");
-            cells[i + 1].classList.add("blue-highlight");
-        }
-        else {
-            cells[i].classList.add("red-highlight");
-            cells[i + 1].classList.add("red-highlight");
-        }
+        AddVlaueDifferenceHighlight(cells[i], cells[i + 1]);
     }
 }
 document.addEventListener("DOMContentLoaded", function () {
     console.log("doom загрузился");
-    HilightCells();
+    HighlightCells();
     AddAccuracyChangeEvent();
     PaintCurrentMonthColumn();
     AddYearChangeEvent();
