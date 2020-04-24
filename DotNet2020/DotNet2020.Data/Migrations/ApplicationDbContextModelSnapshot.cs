@@ -204,10 +204,7 @@ namespace DotNet2020.Data.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("text");
 
-                    b.Property<int?>("ProjectStatusId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("StatusId")
+                    b.Property<int>("ProjectStatusId")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
@@ -446,7 +443,9 @@ namespace DotNet2020.Data.Migrations
                 {
                     b.HasOne("DotNet2020.Domain._6.Models.ProjectStatus", "ProjectStatus")
                         .WithMany()
-                        .HasForeignKey("ProjectStatusId");
+                        .HasForeignKey("ProjectStatusId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("DotNet2020.Domain._6.Models.Resource", b =>

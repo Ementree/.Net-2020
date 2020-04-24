@@ -52,17 +52,27 @@ namespace DotNet2020.Domain._6.Controllers
                 })
                 .ToDictionary(pair => pair.Key, pair => pair.Value);
 
+            var newModelBef = model.GroupBy(pair =>
+            {
+                var status = pair.Key.ProjectStatus.Status;
+                return status;
+            });
+            
+            var newModel = newModelBef.ToDictionary(pairs => pairs.Key,
+                pairs => pairs.ToDictionary(
+                    pair => pair.Key, pair => pair.Value));
+
             var funcCapacitiesProject =
                 context.Set<FunctioningCapacityProject>()
                     .ToList();
             ViewBag.FunctioningCapacityProject = funcCapacitiesProject;
-            return View(model: model);
+            return View(model: newModel);
         }
 
         [HttpPut]
         public bool AddProject([FromBody] ProjectViewModel viewModel)
         {
-            var project = new Project(viewModel.Name, 5);
+            var project = new Project(viewModel.Name, 2);
 
             var projectEntity = context.Set<Project>().Add(project);
             context.SaveChanges();

@@ -6,20 +6,22 @@
 }
 @using DotNet2020.Domain._6.Models;
 @using DotNet2020.Domain._6.ExtensionMethods;
-@using Microsoft.EntityFrameworkCore.Internal
-@model Dictionary<Project, Dictionary<Period, List<FunctioningCapacityResource>>>
-@foreach (var project in Model)
+@model Dictionary<string, Dictionary<Project, Dictionary<Period, List<FunctioningCapacityResource>>>>
+@foreach (var projects in Model.Values)
 {
-    var periods = project.Value;
-    foreach (var periodPair in periods)
+    foreach (var project  in projects)
     {
-        if (periodPair.Value.Count > maxResourceAmount)
+        var periods = project.Value;
+        foreach (var periodPair in periods)
         {
-            maxResourceAmount = periodPair.Value.Count;
+            if (periodPair.Value.Count > maxResourceAmount)
+            {
+                maxResourceAmount = periodPair.Value.Count;
+            }
         }
+        projectsCapacity.Add(project.Key.Id, maxResourceAmount);
+        maxResourceAmount = 0;
     }
-    projectsCapacity.Add(project.Key.Id, maxResourceAmount);
-    maxResourceAmount = 0;
 }
 <link rel="stylesheet" href="~/wwwroot6/css/monthPartial.css"/>
 <div class="container-fluid d-inline-flex mb-2">
@@ -62,6 +64,7 @@
     <div class="scroller1">
         <table class="scroll-table table">
             <thead>
+            <!-- хедер таблицы -->
             <tr>
                 <th class="sticky-col1">
                     Группа \ Проект \\ Месяц
@@ -74,9 +77,14 @@
                     </td>
                 }
             </tr>
+            <!-- конец хедера таблицы -->
+            </thead>
+            <tbody>
+            @foreach(var group in Model)
+            {
             <tr>
                 <th class="sticky-col1">
-                    Текущие обязательства
+                    @group.Key
                 </th>
                 @for (int i = 0; i < 12; i++)
                 {
@@ -84,14 +92,8 @@
                     <td class="border-right">Загрузка</td>
                 }
             </tr>
-            </thead>
-            <tbody>
-            @foreach (var pair in Model)
+            foreach (var pair in group.Value)
             {
-                if (pair.Key.Id == 34)
-                {
-                    var a = 1;
-                }
                 var periods = pair.Value;
                 <tr>
                     <td class="sticky-col1">
@@ -150,6 +152,7 @@
                         }
                     </tr>
                 }
+            }
             }
             </tbody>
         </table>
