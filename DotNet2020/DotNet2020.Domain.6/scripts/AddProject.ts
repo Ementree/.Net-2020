@@ -81,6 +81,7 @@ function GenerateMonth(localYear: number, monthNumber: number): Element {
 
     let monthCapacity = monthBlock.children[0].children[1];
     monthCapacity.id = `monthlyCapacityYear${localYear}Month${monthNumber}`;
+    monthCapacity.textContent = '';
 
     while (addRes.childElementCount > 1) {
         addRes.removeChild(addRes.children[addRes.childElementCount - 1])
@@ -88,7 +89,7 @@ function GenerateMonth(localYear: number, monthNumber: number): Element {
     //смена айди у селекта
     let select = addRes.children[0].children[0].children[0];
     select.id = `selectYear${localYear}Month${monthNumber}`;
-
+    (<HTMLInputElement>addRes.children[0].children[1].children[0]).value = '';
     let buttonBlock = monthBlock.children[monthBlock.childElementCount - 1];
     while (buttonBlock.childElementCount > 0) {
         buttonBlock.removeChild(buttonBlock.children[buttonBlock.childElementCount - 1]);
@@ -115,7 +116,6 @@ function GenerateMonth(localYear: number, monthNumber: number): Element {
 
 function AddResource(year: number, month: number) {
     let deleteButton = <HTMLInputElement>document.getElementById(`RemoveButtonYear${year}Month${month}`);
-    console.log(deleteButton);
     let monthElem = document.getElementById(`addResourceYear${year}Month${month}`);
     let select = (<HTMLElement>monthElem.children[0]).cloneNode(true);
     monthElem.appendChild(select);
@@ -223,7 +223,6 @@ function GetProjectInfo(): Project {
             project.Periods.push(period);
         }
     }
-    console.log(project);
     return project;
 }
 
@@ -235,7 +234,6 @@ function SendProjectToDb() {
         xhr.setRequestHeader('Content-type', 'application/json');
         xhr.send(JSON.stringify(project));
         let success = xhr.responseText;
-        console.log(typeof (success));
         if (success === 'true')
             location.reload();
     }

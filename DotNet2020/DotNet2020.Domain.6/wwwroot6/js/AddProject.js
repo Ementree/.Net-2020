@@ -64,11 +64,13 @@ function GenerateMonth(localYear, monthNumber) {
     addRes.id = "addResourceYear" + localYear + "Month" + monthNumber;
     var monthCapacity = monthBlock.children[0].children[1];
     monthCapacity.id = "monthlyCapacityYear" + localYear + "Month" + monthNumber;
+    monthCapacity.textContent = '';
     while (addRes.childElementCount > 1) {
         addRes.removeChild(addRes.children[addRes.childElementCount - 1]);
     }
     var select = addRes.children[0].children[0].children[0];
     select.id = "selectYear" + localYear + "Month" + monthNumber;
+    addRes.children[0].children[1].children[0].value = '';
     var buttonBlock = monthBlock.children[monthBlock.childElementCount - 1];
     while (buttonBlock.childElementCount > 0) {
         buttonBlock.removeChild(buttonBlock.children[buttonBlock.childElementCount - 1]);
@@ -92,7 +94,6 @@ function GenerateMonth(localYear, monthNumber) {
 }
 function AddResource(year, month) {
     var deleteButton = document.getElementById("RemoveButtonYear" + year + "Month" + month);
-    console.log(deleteButton);
     var monthElem = document.getElementById("addResourceYear" + year + "Month" + month);
     var select = monthElem.children[0].cloneNode(true);
     monthElem.appendChild(select);
@@ -190,7 +191,6 @@ function GetProjectInfo() {
             project.Periods.push(period);
         }
     }
-    console.log(project);
     return project;
 }
 function SendProjectToDb() {
@@ -201,12 +201,11 @@ function SendProjectToDb() {
         xhr.setRequestHeader('Content-type', 'application/json');
         xhr.send(JSON.stringify(project));
         var success = xhr.responseText;
-        console.log(typeof (success));
         if (success === 'true')
             location.reload();
     }
     else {
-        console.log(document.getElementById('errorHandler').style.display);
+        document.getElementById('errorHandler').style.display = 'block';
     }
 }
 function ValidateForm(project) {
