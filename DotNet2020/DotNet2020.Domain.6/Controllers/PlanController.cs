@@ -72,7 +72,7 @@ namespace DotNet2020.Domain._6.Controllers
         [HttpPut]
         public bool AddProject([FromBody] ProjectViewModel viewModel)
         {
-            var project = new Project(viewModel.Name, 5);
+            var project = new Project(viewModel.Name, 2);
 
             var projectEntity = context.Set<Project>().Add(project);
             context.SaveChanges();
