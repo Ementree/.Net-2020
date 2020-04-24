@@ -5,16 +5,23 @@
 @{
     var months = MonthGeneratorService.GetMonthNames();
     var resources = new ResourceService(DbContext).GetResources();
-    var viewDictionary = new ViewDataDictionary(ViewData);
-    viewDictionary.Add("resources", resources);
-    viewDictionary.Add("i", 0);
-    viewDictionary.Add("monthName", "");
+    var projectStatuses = new StatusesService(DbContext).GetProjectStatuses();
+    var viewDictionary = new ViewDataDictionary(ViewData) {{"resources", resources}, {"i", 0}, {"monthName", ""}};
 }
 <div class="container-fluid">
 
     <div class="form-inline">
-        <label for="projectName">Название проекта: </label>
+        <label for="projectName">Название проекта:</label>
         <input type="text" class="form-control w-75 ml-2" id="projectName" placeholder="Название проекта">
+    </div>
+    <div class="form-inline mt-2">
+        <label for="projectStatus">Статус проекта:</label>
+        <select name="projectStatus" class="custom-select ml-2" id="projectStatus">
+            @foreach (var projectStatus in projectStatuses)
+            {
+                <option value="@projectStatus.Id">@projectStatus.Status</option>
+            }
+        </select>
     </div>
     <button class="btn btn-primary mt-2 mb-4" onclick="AddYear()">Добавить год</button>
     <button class="btn btn-primary mt-2 mb-4" id="removeYearButton" onclick="RemoveLastYear()" disabled="disabled">Удалить последний год</button>

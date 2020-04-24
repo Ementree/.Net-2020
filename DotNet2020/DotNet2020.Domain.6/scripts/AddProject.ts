@@ -1,5 +1,6 @@
 ﻿class Project {
     Name: string;
+    StatusId: number;
     Periods: Period[];
 }
 
@@ -195,6 +196,11 @@ function GetPeriodInfo(monthBlock: Element): Period {
 function GetProjectInfo(): Project {
     let project = new Project();
     let projectName = (<HTMLInputElement>document.getElementById('projectName')).value;
+    
+    let projectStatusSelect = <HTMLSelectElement>document.getElementById('projectStatus');
+    let projectStatusId = parseInt(projectStatusSelect.options[projectStatusSelect.selectedIndex].value);
+    if(!isNaN(projectStatusId))
+        project.StatusId = projectStatusId;
     project.Name = projectName;
     project.Periods = [];
     let yearDivs = document.getElementById('yearsContainer').children;
@@ -231,4 +237,7 @@ function SendProjectToDb() {
     xhr.setRequestHeader('Content-type', 'application/json');
     xhr.send(JSON.stringify(project));
     let success = xhr.responseText;
+    console.log(typeof(success));
+    if (success === 'true')
+        location.reload();
 }

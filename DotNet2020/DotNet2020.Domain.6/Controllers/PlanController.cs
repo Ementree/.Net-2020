@@ -12,18 +12,17 @@ namespace DotNet2020.Domain._6.Controllers
 {
     public class PlanController : Controller
     {
-        private readonly DbContext context;
+        private readonly DbContext _dbContext;
 
-        public PlanController(DbContext dbContext)
+        public PlanController(DbContext dbDbContext)
         {
-            context = dbContext;
+            _dbContext = dbDbContext;
         }
 
         public IActionResult Index(int year = 2020)
         {
             ViewBag.Year = year;
-            Dictionary<Project, Dictionary<Period, List<FunctioningCapacityResource>>> model;
-            var functioningCapacityResources = context.Set<FunctioningCapacityResource>()
+            var functioningCapacityResources = _dbContext.Set<FunctioningCapacityResource>()
                 .Include(fres => fres.Period)
                 .Where(fres => fres.Period.Start.Year == year)
                 .Include(fres => fres.Project)
@@ -39,31 +38,26 @@ namespace DotNet2020.Domain._6.Controllers
                     group.ToList().FirstOrDefault().Project,
                 group => group.ToList());
 
-            model = dictionary.Select(pair =>
+            var model = dictionary.Select(pair =>
                 {
                     var key = pair.Key;
                     var value = pair.Value.GroupBy(res => res.PeriodId)
                             .ToDictionary(group =>
                                     group.ToList().FirstOrDefault().Period,
-                                group => group.ToList())
+                                group => @group.ToList())
                         ;
 
                     return KeyValuePair.Create(key, value);
                 })
                 .ToDictionary(pair => pair.Key, pair => pair.Value);
 
-            var newModelBef = model.GroupBy(pair =>
-            {
-                var status = pair.Key.ProjectStatus.Status;
-                return status;
-            });
-            
-            var newModel = newModelBef.ToDictionary(pairs => pairs.Key,
-                pairs => pairs.ToDictionary(
-                    pair => pair.Key, pair => pair.Value));
+            var newModel = model.GroupBy(pair => pair.Key.ProjectStatus.Status)
+                .ToDictionary(pairs => pairs.Key,
+                    pairs => pairs.ToDictionary(
+                        pair => pair.Key, pair => pair.Value));
 
             var funcCapacitiesProject =
-                context.Set<FunctioningCapacityProject>()
+                _dbContext.Set<FunctioningCapacityProject>()
                     .ToList();
             ViewBag.FunctioningCapacityProject = funcCapacitiesProject;
             return View(model: newModel);
@@ -72,15 +66,15 @@ namespace DotNet2020.Domain._6.Controllers
         [HttpPut]
         public bool AddProject([FromBody] ProjectViewModel viewModel)
         {
-            var project = new Project(viewModel.Name, 2);
+            var project = new Project(viewModel.Name, viewModel.StatusId);
 
-            var projectEntity = context.Set<Project>().Add(project);
-            context.SaveChanges();
+            var projectEntity = _dbContext.Set<Project>().Add(project);
+            _dbContext.SaveChanges();
             var projectId = projectEntity.Entity.Id;
             var periods = viewModel.Periods;
             foreach (var period in periods)
             {
-                var periodDb = context.Set<Period>()
+                var periodDb = _dbContext.Set<Period>()
                     .FirstOrDefault(p =>
                         (p.Start.Year == period.Date.Year && p.Start.Month == period.Date.Month));
                 int periodId;
@@ -88,8 +82,8 @@ namespace DotNet2020.Domain._6.Controllers
                 {
                     var newPeriod = new Period(new DateTime(period.Date.Year, period.Date.Month, 1),
                         new DateTime(period.Date.Year, period.Date.Month, 28));
-                    var addRes = context.Set<Period>().Add(newPeriod);
-                    context.SaveChanges();
+                    var addRes = _dbContext.Set<Period>().Add(newPeriod);
+                    _dbContext.SaveChanges();
                     periodId = addRes.Entity.Id;
                 }
                 else
@@ -119,17 +113,17 @@ namespace DotNet2020.Domain._6.Controllers
 
                 if (functioningCapacityResources.Count == 0 && functioningCapacityProject.FunctioningCapacity > 0)
                 {
-                    context.Set<FunctioningCapacityProject>().Add(functioningCapacityProject);
+                    _dbContext.Set<FunctioningCapacityProject>().Add(functioningCapacityProject);
                 }
                 else
                 {
-                    context.Set<FunctioningCapacityResource>().AddRange(functioningCapacityResources);
-                    context.Set<FunctioningCapacityProject>().Add(functioningCapacityProject);
+                    _dbContext.Set<FunctioningCapacityResource>().AddRange(functioningCapacityResources);
+                    _dbContext.Set<FunctioningCapacityProject>().Add(functioningCapacityProject);
                 }
 
                 try
                 {
-                    context.SaveChanges();
+                    _dbContext.SaveChanges();
                 }
                 catch (Exception)
                 {

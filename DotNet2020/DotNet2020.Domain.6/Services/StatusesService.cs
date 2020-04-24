@@ -5,18 +5,18 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DotNet2020.Domain._6.Services
 {
-    public class ResourceService
+    public class StatusesService
     {
         private readonly DbContext _dbContext;
 
-        public ResourceService(DbContext context)
+        public StatusesService(DbContext context)
         {
             _dbContext = context;
         }
 
-        public List<Resource> GetResources()
+        public List<ProjectStatus> GetProjectStatuses()
         {
-            return _dbContext.Set<Resource>().OrderBy(resource => resource.LastName).ToList();
+            return _dbContext.Set<ProjectStatus>().ToList();
         }
     }
 }

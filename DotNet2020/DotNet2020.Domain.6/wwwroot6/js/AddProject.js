@@ -165,6 +165,10 @@ function GetPeriodInfo(monthBlock) {
 function GetProjectInfo() {
     var project = new Project();
     var projectName = document.getElementById('projectName').value;
+    var projectStatusSelect = document.getElementById('projectStatus');
+    var projectStatusId = parseInt(projectStatusSelect.options[projectStatusSelect.selectedIndex].value);
+    if (!isNaN(projectStatusId))
+        project.StatusId = projectStatusId;
     project.Name = projectName;
     project.Periods = [];
     var yearDivs = document.getElementById('yearsContainer').children;
@@ -197,5 +201,8 @@ function SendProjectToDb() {
     xhr.setRequestHeader('Content-type', 'application/json');
     xhr.send(JSON.stringify(project));
     var success = xhr.responseText;
+    console.log(typeof (success));
+    if (success === 'true')
+        location.reload();
 }
 //# sourceMappingURL=AddProject.js.map

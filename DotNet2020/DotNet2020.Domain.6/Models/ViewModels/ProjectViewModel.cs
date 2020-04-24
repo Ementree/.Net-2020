@@ -18,6 +18,7 @@ namespace DotNet2020.Domain._6.Models.ViewModels
             public int Capacity { get; set; }
         }
         public string Name { get; set; }
+        public int StatusId { get; set; }
         public PeriodViewModel[] Periods { get; set; }
     }
 }
