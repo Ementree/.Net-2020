@@ -10,8 +10,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DotNet2020.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20200424131008_projectStatus")]
-    partial class projectStatus
+    [Migration("20200424143029_init2")]
+    partial class init2
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
