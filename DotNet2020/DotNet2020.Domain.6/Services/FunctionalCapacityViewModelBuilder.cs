@@ -9,13 +9,13 @@ namespace DotNet2020.Domain._6.Services
 {
     public class FunctionalCapacityViewModelBuilderOptions
     {
-        public int currentYear { get; set; }
-        public int currentAccuracy { get; set; }
+        public int Year { get; set; }
+        public int Accuracy { get; set; }
 
         public FunctionalCapacityViewModelBuilderOptions()
         {
-            currentYear = -1;
-            currentAccuracy = 5;
+            Year = -1;
+            Accuracy = 5;
         }
     }
 
@@ -30,8 +30,8 @@ namespace DotNet2020.Domain._6.Services
 
         public FunctionalCapacityViewModel Build(FunctionalCapacityViewModelBuilderOptions options)
         {
-            var year = options.currentYear;
-            var currentAccuracy = options.currentAccuracy;
+            var year = options.Year;
+            var currentAccuracy = options.Accuracy;
 
             //Предварительно стягивание с бд ResourceGroupType позволяет избежать .Include() в нескольких запросах
             var resourceType = _context.Set<ResourceGroupType>().ToList();
@@ -42,7 +42,7 @@ namespace DotNet2020.Domain._6.Services
             var tableLinePreformList = ComposeDataFromTables(resourceWithCurrentPeriodCapacityDict, resourcePeriodWithPlannedCapacityDict);
             var resourceWithBothPeriodCapacityDict = GetResourceWithBithCapcacityListDict(tableLinePreformList);
 
-            var viewModel = GetFCViewModel(resourceWithBothPeriodCapacityDict);
+            var viewModel = GetViewModel(resourceWithBothPeriodCapacityDict);
 
             SortViewModelPeriodsInResourceOnYears(viewModel);
             viewModel.YearsRange = GetViewModelYearRange(viewModel);
@@ -69,7 +69,7 @@ namespace DotNet2020.Domain._6.Services
             return Tuple.Create(minYear, maxYear);
         }
 
-        List<FCPeriodWithBothCapacity> InitMounthsList(int year)
+        List<FCPeriodWithBothCapacity> InitMonthsList(int year)
         {
             var result = new List<FCPeriodWithBothCapacity>();
 
@@ -86,13 +86,13 @@ namespace DotNet2020.Domain._6.Services
             return result;
         }
 
-        Dictionary<int,List<FCPeriodWithBothCapacity>> CreateDictWithDefoultList(Tuple<int,int> yearsRangeTuple)
+        Dictionary<int,List<FCPeriodWithBothCapacity>> CreateDictWithDefaultList(Tuple<int,int> yearsRangeTuple)
         {
             var yearsDict = new Dictionary<int, List<FCPeriodWithBothCapacity>>();
 
             for (int i = yearsRangeTuple.Item1; i <= yearsRangeTuple.Item2; i++)
             {
-                yearsDict[i] = InitMounthsList(i);
+                yearsDict[i] = InitMonthsList(i);
             }
 
             return yearsDict;
@@ -138,7 +138,7 @@ namespace DotNet2020.Domain._6.Services
             {
                 foreach(var resource in pair.Value)
                 {
-                    var dict = CreateDictWithDefoultList(yearsRangeTuple);
+                    var dict = CreateDictWithDefaultList(yearsRangeTuple);
 
                     AddPeriodWithBothCapacityInDict(dict, resource.PeiodWithBothCapacityList);
 
@@ -172,7 +172,7 @@ namespace DotNet2020.Domain._6.Services
             return currentAccuracy < 0 ? 0 : currentAccuracy;
         }
 
-        FunctionalCapacityViewModel GetFCViewModel(Dictionary<Resource, List<FCPeriodWithBothCapacity>> resourceWithBothPeriodCapacityDict)
+        FunctionalCapacityViewModel GetViewModel(Dictionary<Resource, List<FCPeriodWithBothCapacity>> resourceWithBothPeriodCapacityDict)
         {
             var resourceWithTableDataListPreform = new List<FCResourceWithTableData>();
             var viewModel = new FunctionalCapacityViewModel();
@@ -186,9 +186,9 @@ namespace DotNet2020.Domain._6.Services
                 });
             }
 
-            var GroupedResources = GetSortedOnGroupsResources(resourceWithTableDataListPreform);
+            var groupedResources = GetSortedOnGroupsResources(resourceWithTableDataListPreform);
 
-            viewModel.GroupedResources = GroupedResources;
+            viewModel.GroupedResources = groupedResources;
 
             return viewModel;
         }
@@ -197,14 +197,14 @@ namespace DotNet2020.Domain._6.Services
         {
             var groupedResources = new Dictionary<string, List<FCResourceWithTableData>>();
 
-            foreach (var resourceWithTD in resourceWithTableDataListPreform)
+            foreach (var resourceWithTd in resourceWithTableDataListPreform)
             {
-                var groupName = resourceWithTD.Resource.ResourceGroupType.Group;
+                var groupName = resourceWithTd.Resource.ResourceGroupType.Group;
 
                 if (!groupedResources.ContainsKey(groupName))
                     groupedResources[groupName] = new List<FCResourceWithTableData>();
 
-                groupedResources[groupName].Add(resourceWithTD);
+                groupedResources[groupName].Add(resourceWithTd);
             }
 
             return groupedResources;
@@ -214,7 +214,7 @@ namespace DotNet2020.Domain._6.Services
         {
             return tableLinePreformList
                 .GroupBy(vm => vm.Resource)
-                .ToDictionary(vm => vm.Key, vm => vm
+                .ToDictionary(gr => gr.Key, gr => gr
                    .Select(vm =>
                        new FCPeriodWithBothCapacity
                        {

@@ -54,7 +54,7 @@ function AddYearChangeEvent() {
         console.log(newAccuracy);
         console.log(newYear);
         console.log(window.location.search);
-        window.location.search = ("?currentYear=" + newYear + "&currentAccuracy=" + newAccuracy);
+        window.location.search = ("?Year=" + newYear + "&Accuracy=" + newAccuracy);
         console.log(window.location.search);
     });
 }
