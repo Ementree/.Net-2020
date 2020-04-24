@@ -8,41 +8,66 @@
     var projectStatuses = new StatusesService(DbContext).GetProjectStatuses();
     var viewDictionary = new ViewDataDictionary(ViewData) {{"resources", resources}, {"i", 0}, {"monthName", ""}};
 }
-<div class="container-fluid">
-
-    <div class="form-inline">
-        <label for="projectName">Название проекта:</label>
-        <input type="text" class="form-control w-75 ml-2" id="projectName" placeholder="Название проекта">
-    </div>
-    <div class="form-inline mt-2">
-        <label for="projectStatus">Статус проекта:</label>
-        <select name="projectStatus" class="custom-select ml-2" id="projectStatus">
-            @foreach (var projectStatus in projectStatuses)
-            {
-                <option value="@projectStatus.Id">@projectStatus.Status</option>
-            }
-        </select>
-    </div>
-    <button class="btn btn-primary mt-2 mb-4" onclick="AddYear()">Добавить год</button>
-    <button class="btn btn-primary mt-2 mb-4" id="removeYearButton" onclick="RemoveLastYear()" disabled="disabled">Удалить последний год</button>
-    <div id="yearsContainer">
-        <div class="year" id="year@(DateTime.Now.Year)">
-            <p class="font-weight-bold">@(DateTime.Now.Year)</p>
-            <div class="row pb-3 halfYear" id="year@(DateTime.Now.Year)_1">
-                @for (int i = 0; i < 6; i++)
-                {
-                    viewDictionary["i"] = i;
-                    viewDictionary["monthName"] = months[i];
-                    Html.RenderPartial("MonthPartial", null, viewDictionary);
-                }
+<div class="modal fade"
+     id="newProject"
+     tabindex="-1"
+     role="dialog"
+     aria-labelledby="exampleModalLabel"
+     aria-hidden="true"
+     data-keyboard="false"
+     data-backdrop="static">
+    <div class="modal-dialog modal-xl" style="max-width: 1600px" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Добавить проект</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
-            <div class="row pb-5 halfYear" id="year@(DateTime.Now.Year)_2">
-                @for (int i = 6; i < 12; i++)
-                {
-                    viewDictionary["i"] = i;
-                    viewDictionary["monthName"] = months[i];
-                    Html.RenderPartial("MonthPartial", null, viewDictionary);
-                }
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <div class="form-inline">
+                        <label for="projectName">Название проекта:</label>
+                        <input type="text" class="form-control w-75 ml-2" id="projectName" placeholder="Название проекта">
+                    </div>
+                    <div class="form-inline mt-2">
+                        <label for="projectStatus">Статус проекта:</label>
+                        <select name="projectStatus" class="custom-select ml-2" id="projectStatus">
+                            @foreach (var projectStatus in projectStatuses)
+                            {
+                                <option value="@projectStatus.Id">@projectStatus.Status</option>
+                            }
+                        </select>
+                    </div>
+                    <button class="btn btn-primary mt-2 mb-4" onclick="AddYear()">Добавить год</button>
+                    <button class="btn btn-primary mt-2 mb-4" id="removeYearButton" onclick="RemoveLastYear()" disabled="disabled">Удалить последний год</button>
+                    <div id="yearsContainer">
+                        <div class="year" id="year@(DateTime.Now.Year)">
+                            <p class="font-weight-bold">@(DateTime.Now.Year)</p>
+                            <div class="row pb-3 halfYear" id="year@(DateTime.Now.Year)_1">
+                                @for (int i = 0; i < 6; i++)
+                                {
+                                    viewDictionary["i"] = i;
+                                    viewDictionary["monthName"] = months[i];
+                                    Html.RenderPartial("MonthPartial", null, viewDictionary);
+                                }
+                            </div>
+                            <div class="row pb-5 halfYear" id="year@(DateTime.Now.Year)_2">
+                                @for (int i = 6; i < 12; i++)
+                                {
+                                    viewDictionary["i"] = i;
+                                    viewDictionary["monthName"] = months[i];
+                                    Html.RenderPartial("MonthPartial", null, viewDictionary);
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <label style="color:darkred" id="errorHandler">Исправьте выделенные ошибки.</label>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+                <button type="button" class="btn btn-primary" onclick="SendProjectToDb()">Сохранить проект</button>
             </div>
         </div>
     </div>

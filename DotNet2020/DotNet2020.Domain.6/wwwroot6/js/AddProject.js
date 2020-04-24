@@ -144,7 +144,6 @@ function GetPeriodInfo(monthBlock) {
     if (isNaN(capacity)) {
         capacity = -1;
     }
-    console.log(capacity);
     period.Capacity = capacity;
     var selects = monthBlock.children[2].children;
     for (var rowNumber = 0; rowNumber < selects.length; rowNumber++) {
@@ -196,13 +195,39 @@ function GetProjectInfo() {
 }
 function SendProjectToDb() {
     var project = GetProjectInfo();
-    var xhr = new XMLHttpRequest();
-    xhr.open('PUT', 'plan/addProject', false);
-    xhr.setRequestHeader('Content-type', 'application/json');
-    xhr.send(JSON.stringify(project));
-    var success = xhr.responseText;
-    console.log(typeof (success));
-    if (success === 'true')
-        location.reload();
+    if (ValidateForm(project)) {
+        var xhr = new XMLHttpRequest();
+        xhr.open('PUT', 'plan/addProject', false);
+        xhr.setRequestHeader('Content-type', 'application/json');
+        xhr.send(JSON.stringify(project));
+        var success = xhr.responseText;
+        console.log(typeof (success));
+        if (success === 'true')
+            location.reload();
+    }
+    else {
+        console.log(document.getElementById('errorHandler').style.display);
+    }
+}
+function ValidateForm(project) {
+    var flag = true;
+    project.Periods.forEach(function (elem) {
+        var length = elem.Resources.length;
+        var lengthDistinct = elem.Resources.map(function (res) { return res.Id; }).filter(function (value, index, self) {
+            return self.indexOf(value) === index;
+        }).length;
+        if (length > lengthDistinct) {
+            flag = false;
+            var addResBlock = document
+                .getElementById("addResourceYear" + elem.Date.getFullYear() + "Month" + elem.Date.getMonth());
+            var selects = addResBlock.children;
+            for (var i = 0; i < selects.length; i++) {
+                var elem_1 = selects[i];
+                elem_1.style.border = '0.5px solid red';
+                elem_1.style.padding = '1px';
+            }
+        }
+    });
+    return flag;
 }
 //# sourceMappingURL=AddProject.js.map

@@ -33,32 +33,8 @@
     </button>
     <button type="button" class="btn btn-primary mr-2">Редактировать проект</button>
     <button type="button" class="btn btn-primary mr-2">Перенести проект в завершенные</button>
-    <div class="modal fade"
-         id="newProject"
-         tabindex="-1"
-         role="dialog"
-         aria-labelledby="exampleModalLabel"
-         aria-hidden="true"
-         data-keyboard="false"
-         data-backdrop="static">
-        <div class="modal-dialog modal-xl" style="max-width: 1600px" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Добавить проект</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <partial name="AddProjectPartial"/>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
-                    <button type="button" class="btn btn-primary" onclick="SendProjectToDb()">Сохранить проект</button>
-                </div>
-            </div>
-        </div>
-    </div>
+
+    <partial name="AddProjectPartial"/>
 </div>
 <div class="wrapper">
     <div class="scroller1">
@@ -80,79 +56,81 @@
             <!-- конец хедера таблицы -->
             </thead>
             <tbody>
-            @foreach(var group in Model)
+            @foreach (var group in Model)
             {
-            <tr>
-                <th class="sticky-col1">
-                    @group.Key
-                </th>
-                @for (int i = 0; i < 12; i++)
-                {
-                    <td>Ресурс</td>
-                    <td class="border-right">Загрузка</td>
-                }
-            </tr>
-            foreach (var pair in group.Value)
-            {
-                var periods = pair.Value;
                 <tr>
-                    <td class="sticky-col1">
-                        <b>@(pair.Key.Name)</b>
-                    </td>
-                    @for (int i = 1; i <= 12; i++)
+                    <th class="sticky-col1">
+                        @group.Key
+                    </th>
+                    @for (int i = 0; i < 12; i++)
                     {
-                        var fcp = functioningCapacityProject.FirstOrDefault(project =>
-                            project.PeriodId == i &&
-                            project.ProjectId == pair.Key.Id);
-                        var period = periods.Where(keyValuePair =>
-                            keyValuePair.Key.Start.Month == i);
-                        <td id="fcp;@i;@ViewBag.Year;@pair.Key.Id" class="resource_capacity_plan">
-                            @(fcp != default ? fcp.FunctioningCapacity.ToString() : "")
-                        </td>
-                        <td id="sum;@i;@ViewBag.Year;@pair.Key.Id" class="border-right resource_capacity_real">
-                            @(period.Count() == 1 ?
-                                period.First().Value.Sum(fcres =>
-                                    fcres.FunctionCapacity).ToString() :
-                                "")
-                        </td>
+                        <td>Ресурс</td>
+                        <td class="border-right">Загрузка</td>
                     }
                 </tr>
-                for (int i = 0; i < projectsCapacity[pair.Key.Id]; i++)
+                foreach (var pair in group.Value)
                 {
+                    var periods = pair.Value;
                     <tr>
-                        <td class="sticky-col1">@(pair.Key.Name)</td>
-                        @for (int j = 1; j <= 12; j++)
+                        <td class="sticky-col1">
+                            <b>@(pair.Key.Name)</b>
+                        </td>
+                        @for (int i = 1; i <= 12; i++)
                         {
-                            var keyValuePairs = periods
-                                .Where(keyValuePair => keyValuePair.Key.Start.Month == j);
-                            if (keyValuePairs.Count() == 0)
+                            var fcp = functioningCapacityProject.FirstOrDefault(project =>
+                                project.PeriodId == i &&
+                                project.ProjectId == pair.Key.Id);
+                            var period = periods.Where(keyValuePair =>
+                                keyValuePair.Key.Start.Month == i);
+                            <td id="fcp;@i;@ViewBag.Year;@pair.Key.Id" class="resource_capacity_plan">
+                                @(fcp != default ? fcp.FunctioningCapacity.ToString() : "")
+                            </td>
+                            <td id="sum;@i;@ViewBag.Year;@pair.Key.Id" class="border-right resource_capacity_real">
+                                @(period.Count() == 1 ?
+                                    period.First().Value.Sum(fcres =>
+                                        fcres.FunctionCapacity).ToString() :
+                                    "")
+                            </td>
+                        }
+                    </tr>
+                    for (int i = 0; i < projectsCapacity[pair.Key.Id]; i++)
+                    {
+                        <tr>
+                            <td class="sticky-col1">@(pair.Key.Name)</td>
+                            @for (int j = 1; j <= 12; j++)
                             {
-                                <td></td>
-                                <td class="border-right"></td>
-                            }
-                            else
-                            {
-                                var fresList = keyValuePairs.First().Value;
-                                if (fresList.Count - 1 >= i)
-                                {
-                                    <td id="name;@j;@ViewBag.Year;@pair.Key.Id;@fresList[i].ResourceId"
-                                        class="resource_name">@fresList[i].Resource.FirstName @fresList[i].Resource.LastName</td>
-                                    <td
-                                        id="capacity;@j;@ViewBag.Year;@pair.Key.Id;@fresList[i].ResourceId"
-                                        class="border-right resource_capacity">
-                                        @fresList[i].FunctionCapacity
-                                    </td>
-                                }
-                                else
+                                var keyValuePairs = periods
+                                    .Where(keyValuePair => keyValuePair.Key.Start.Month == j);
+                                if (keyValuePairs.Count() == 0)
                                 {
                                     <td></td>
                                     <td class="border-right"></td>
                                 }
+                                else
+                                {
+                                    var fresList = keyValuePairs.First().Value;
+                                    if (fresList.Count - 1 >= i)
+                                    {
+                                        <td id="name;@j;@ViewBag.Year;@pair.Key.Id;@fresList[i].ResourceId"
+                                            class="resource_name">
+                                            @fresList[i].Resource.FirstName @fresList[i].Resource.LastName
+                                        </td>
+                                        <td
+                                            id="capacity;@j;@ViewBag.Year;@pair.Key.Id;@fresList[i].ResourceId"
+                                            class="border-right resource_capacity">
+                                            @fresList[i].FunctionCapacity
+                                        </td>
+                                    }
+                                    else
+                                    {
+                                        <td></td>
+                                        <td class="border-right"></td>
+                                    }
+                                }
                             }
-                        }
-                    </tr>
+                        </tr>
+                    }
                 }
-            }
             }
             </tbody>
         </table>

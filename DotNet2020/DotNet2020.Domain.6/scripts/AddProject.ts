@@ -8,8 +8,6 @@ class Period {
     Capacity: number;
     Date: Date;
     Resources: ResourceCapacity[];
-
-
 }
 
 class ResourceCapacity {
@@ -173,7 +171,6 @@ function GetPeriodInfo(monthBlock: Element): Period {
     if (isNaN(capacity)) {
         capacity = -1;
     }
-    console.log(capacity);
     period.Capacity = capacity;
     let selects = monthBlock.children[2].children;
     for (let rowNumber = 0; rowNumber < selects.length; rowNumber++) {
@@ -196,10 +193,10 @@ function GetPeriodInfo(monthBlock: Element): Period {
 function GetProjectInfo(): Project {
     let project = new Project();
     let projectName = (<HTMLInputElement>document.getElementById('projectName')).value;
-    
+
     let projectStatusSelect = <HTMLSelectElement>document.getElementById('projectStatus');
     let projectStatusId = parseInt(projectStatusSelect.options[projectStatusSelect.selectedIndex].value);
-    if(!isNaN(projectStatusId))
+    if (!isNaN(projectStatusId))
         project.StatusId = projectStatusId;
     project.Name = projectName;
     project.Periods = [];
@@ -232,12 +229,39 @@ function GetProjectInfo(): Project {
 
 function SendProjectToDb() {
     let project = GetProjectInfo();
-    let xhr = new XMLHttpRequest();
-    xhr.open('PUT', 'plan/addProject', false);
-    xhr.setRequestHeader('Content-type', 'application/json');
-    xhr.send(JSON.stringify(project));
-    let success = xhr.responseText;
-    console.log(typeof(success));
-    if (success === 'true')
-        location.reload();
+    if (ValidateForm(project)) {
+        let xhr = new XMLHttpRequest();
+        xhr.open('PUT', 'plan/addProject', false);
+        xhr.setRequestHeader('Content-type', 'application/json');
+        xhr.send(JSON.stringify(project));
+        let success = xhr.responseText;
+        console.log(typeof (success));
+        if (success === 'true')
+            location.reload();
+    }
+    else{
+        document.getElementById('errorHandler').style.display = 'block';
+    }
+}
+
+function ValidateForm(project: Project): boolean {
+    let flag = true;
+    project.Periods.forEach(elem => {
+        let length = elem.Resources.length;
+        let lengthDistinct = elem.Resources.map(res => res.Id).filter((value, index, self) => {
+            return self.indexOf(value) === index;
+        }).length;
+        if (length > lengthDistinct) {
+            flag = false;
+            let addResBlock = document
+                .getElementById(`addResourceYear${elem.Date.getFullYear()}Month${elem.Date.getMonth()}`);
+            let selects = addResBlock.children;
+            for(let i = 0; i<selects.length;i++){
+                let elem = <HTMLDivElement>selects[i];
+                elem.style.border = '0.5px solid red';
+                elem.style.padding = '1px';
+            }
+        }
+    })
+    return flag;
 }
