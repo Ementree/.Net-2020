@@ -4,9 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using DotNet2020.Domain._6.Models.ViewModels;
-using Newtonsoft.Json;
 
 namespace DotNet2020.Domain._6.Controllers
 {
@@ -19,8 +17,10 @@ namespace DotNet2020.Domain._6.Controllers
             _dbContext = dbDbContext;
         }
 
-        public IActionResult Index(int year = 2020)
+        public IActionResult Index(int year = 0)
         {
+            if (year == 0)
+                year = DateTime.Now.Year;
             ViewBag.Year = year;
             var functioningCapacityResources = _dbContext.Set<FunctioningCapacityResource>()
                 .Include(fres => fres.Period)
@@ -35,7 +35,7 @@ namespace DotNet2020.Domain._6.Controllers
             var groupBy = functioningCapacityResources.GroupBy(f => f.ProjectId);
 
             var dictionary = groupBy.ToDictionary(group =>
-                    group.ToList().FirstOrDefault().Project,
+                    group.ToList().FirstOrDefault()?.Project,
                 group => group.ToList());
 
             var model = dictionary.Select(pair =>
@@ -43,7 +43,7 @@ namespace DotNet2020.Domain._6.Controllers
                     var key = pair.Key;
                     var value = pair.Value.GroupBy(res => res.PeriodId)
                             .ToDictionary(group =>
-                                    group.ToList().FirstOrDefault().Period,
+                                    group.ToList().FirstOrDefault()?.Period,
                                 group => @group.ToList())
                         ;
 
@@ -66,72 +66,75 @@ namespace DotNet2020.Domain._6.Controllers
         [HttpPut]
         public bool AddProject([FromBody] ProjectViewModel viewModel)
         {
-            var project = new Project(viewModel.Name, viewModel.StatusId);
-
-            var projectEntity = _dbContext.Set<Project>().Add(project);
-            _dbContext.SaveChanges();
-            var projectId = projectEntity.Entity.Id;
-            var periods = viewModel.Periods;
-            foreach (var period in periods)
+            using (var transaction = _dbContext.Database.BeginTransaction())
             {
-                var periodDb = _dbContext.Set<Period>()
-                    .FirstOrDefault(p =>
-                        (p.Start.Year == period.Date.Year && p.Start.Month == period.Date.Month));
-                int periodId;
-                if (periodDb == default)
+                var project = new Project(viewModel.Name, viewModel.StatusId);
+                var projectEntity = _dbContext.Set<Project>().Add(project);
+                _dbContext.SaveChanges();
+                var projectId = projectEntity.Entity.Id;
+                var periods = viewModel.Periods;
+                foreach (var period in periods)
                 {
-                    var newPeriod = new Period(new DateTime(period.Date.Year, period.Date.Month, 1),
-                        new DateTime(period.Date.Year, period.Date.Month, 28));
-                    var addRes = _dbContext.Set<Period>().Add(newPeriod);
-                    _dbContext.SaveChanges();
-                    periodId = addRes.Entity.Id;
-                }
-                else
-                {
-                    periodId = periodDb.Id;
-                }
+                    var periodDb = _dbContext.Set<Period>()
+                        .FirstOrDefault(p =>
+                            (p.Start.Year == period.Date.Year && p.Start.Month == period.Date.Month));
+                    int periodId;
+                    if (periodDb == default)
+                    {
+                        var newPeriod = new Period(new DateTime(period.Date.Year, period.Date.Month, 1),
+                            new DateTime(period.Date.Year, period.Date.Month, 28));
+                        var addRes = _dbContext.Set<Period>().Add(newPeriod);
+                        _dbContext.SaveChanges();
+                        periodId = addRes.Entity.Id;
+                    }
+                    else
+                    {
+                        periodId = periodDb.Id;
+                    }
 
-                var projectPeriodCapacity = period.Capacity == -1 ? 0 : period.Capacity;
-                var functioningCapacityProject =
-                    new FunctioningCapacityProject(projectId, periodId, projectPeriodCapacity);
-                var functioningCapacityResources = new List<FunctioningCapacityResource>();
-                foreach (var resourceCapacityViewModel in period.Resources)
-                {
-                    if (resourceCapacityViewModel.Capacity == -1)
+                    var projectPeriodCapacity = period.Capacity == -1 ? 0 : period.Capacity;
+                    var functioningCapacityProject =
+                        new FunctioningCapacityProject(projectId, periodId, projectPeriodCapacity);
+                    var functioningCapacityResources = new List<FunctioningCapacityResource>();
+                    foreach (var resourceCapacityViewModel in period.Resources)
+                    {
+                        if (resourceCapacityViewModel.Capacity == -1)
+                            continue;
+                        var fres = new FunctioningCapacityResource(projectId,
+                            resourceCapacityViewModel.Id,
+                            resourceCapacityViewModel.Capacity,
+                            periodId);
+                        functioningCapacityResources.Add(fres);
+                    }
+
+                    if (functioningCapacityResources.Count == 0 && functioningCapacityProject.FunctioningCapacity == 0)
+                    {
                         continue;
-                    var fres = new FunctioningCapacityResource(projectId,
-                        resourceCapacityViewModel.Id,
-                        resourceCapacityViewModel.Capacity,
-                        periodId);
-                    functioningCapacityResources.Add(fres);
-                }
+                    }
 
-                if (functioningCapacityResources.Count == 0 && functioningCapacityProject.FunctioningCapacity == 0)
-                {
-                    continue;
-                }
+                    if (functioningCapacityResources.Count == 0 && functioningCapacityProject.FunctioningCapacity > 0)
+                    {
+                        _dbContext.Set<FunctioningCapacityProject>().Add(functioningCapacityProject);
+                    }
+                    else
+                    {
+                        _dbContext.Set<FunctioningCapacityResource>().AddRange(functioningCapacityResources);
+                        _dbContext.Set<FunctioningCapacityProject>().Add(functioningCapacityProject);
+                    }
 
-                if (functioningCapacityResources.Count == 0 && functioningCapacityProject.FunctioningCapacity > 0)
-                {
-                    _dbContext.Set<FunctioningCapacityProject>().Add(functioningCapacityProject);
+                    try
+                    {
+                        _dbContext.SaveChanges();
+                    }
+                    catch (Exception)
+                    {
+                        transaction.Rollback();
+                        return false;
+                    }
                 }
-                else
-                {
-                    _dbContext.Set<FunctioningCapacityResource>().AddRange(functioningCapacityResources);
-                    _dbContext.Set<FunctioningCapacityProject>().Add(functioningCapacityProject);
-                }
-
-                try
-                {
-                    _dbContext.SaveChanges();
-                }
-                catch (Exception)
-                {
-                    return false;
-                }
+                transaction.Commit();
+                return true;
             }
-
-            return true;
         }
     }
 }

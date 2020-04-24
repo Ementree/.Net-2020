@@ -26,7 +26,6 @@
   
   <ItemGroup>
     <None Remove="scripts\FunctionalCapacityScript.ts" />
-    <None Remove="scripts\testScript.ts" />
     <None Remove="Views\_ViewImports.cshtml" />
   </ItemGroup>
   
@@ -54,11 +53,6 @@
   <ItemGroup>
     <ProjectReference Include="..\DotNet2020.Domain.4\DotNet2020.Domain.4.csproj" />
     <ProjectReference Include="..\DotNet2020.Domain.Core\DotNet2020.Domain.Core.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <TypeScriptCompile Include="scripts\PlanHighlight.ts" />
-    <TypeScriptCompile Include="scripts\Capacity.ts" />
   </ItemGroup>
 
 </Project>
