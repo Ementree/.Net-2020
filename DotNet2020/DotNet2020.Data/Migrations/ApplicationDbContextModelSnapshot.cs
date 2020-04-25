@@ -121,6 +121,27 @@ namespace DotNet2020.Data.Migrations
                     b.ToTable("AspNetUsers");
                 });
 
+            modelBuilder.Entity("DotNet2020.Domain._6.Models.CalendarEntry", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<DateTime>("From")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<DateTime>("To")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("UserName")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("CalendarEntries");
+                });
+
             modelBuilder.Entity("DotNet2020.Domain._6.Models.FunctioningCapacityProject", b =>
                 {
                     b.Property<int>("Id")
