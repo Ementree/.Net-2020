@@ -8,7 +8,7 @@
 }
 @using DotNet2020.Domain._6.Models;
 @using DotNet2020.Domain._6.ExtensionMethods;
-@using DotNet2020.Domain._6.Services
+@using DotNet2020.Domain._6.Models.ViewModels
 @model Dictionary<string, Dictionary<Project, Dictionary<Period, List<FunctioningCapacityResource>>>>
 @foreach (var projects in Model.Values)
 {
@@ -51,7 +51,8 @@
                 @for (int i = 1; i <= 12; i++)
                 {
                     var period = new DateTime(ViewBag.Year, i, 1);
-                    <th colspan="2" class="border-right">
+                    var color = (i == ViewBag.CurrentDate.Month && ViewBag.Year == ViewBag.CurrentDate.Year)?"month-highlight":"";
+                    <th colspan="2" class="border-right @color">
                         @($"{period.GetMonthName()} {period.Year}")
                     </th>
                 }

@@ -2,32 +2,33 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using DotNet2020.Domain._6.Models;
+using DotNet2020.Domain._6.Models.ViewModels;
 
 namespace DotNet2020.Domain._6.Services
 {
     public class PlanHighlightService
     {
-        private List<ResourceCapacity> capacity;
-        private List<FunctioningCapacityProject> funcCapacityProject;
-        private List<FunctioningCapacityResource> funcCapacityResource;
+        private readonly List<ResourceCapacity> _capacity;
+        private readonly List<FunctioningCapacityProject> _funcCapacityProject;
+        private readonly List<FunctioningCapacityResource> _funcCapacityResource;
         
         public PlanHighlightService(
             List<ResourceCapacity> capacity, 
             List<FunctioningCapacityProject> funcCapacityProject, 
             List<FunctioningCapacityResource> funcCapacityResource)
         {
-            this.capacity = capacity;
-            this.funcCapacityProject = funcCapacityProject;
-            this.funcCapacityResource = funcCapacityResource;
+            _capacity = capacity;
+            _funcCapacityProject = funcCapacityProject;
+            _funcCapacityResource = funcCapacityResource;
         }
 
         public List<FuncCapacityProjHighlight> GetFuncCapacityProjHighlight()
         {
             var funcCapacityProjHighlight = new List<FuncCapacityProjHighlight>();
-            foreach (var fcp in funcCapacityProject)
+            foreach (var fcp in _funcCapacityProject)
             {
                 var sum = 0;
-                foreach (var fcr in funcCapacityResource)
+                foreach (var fcr in _funcCapacityResource)
                 {
                     if (fcr.PeriodId == fcp.PeriodId && fcr.ProjectId == fcp.ProjectId)
                         sum += fcr.FunctionCapacity;
@@ -44,11 +45,11 @@ namespace DotNet2020.Domain._6.Services
         public List<FuncCapacityResourceHighlight> GetFuncCapacityResourceHighlight()
         {
             var funcCapacityResourceHighlight = new List<FuncCapacityResourceHighlight>();
-            foreach (var fcr in funcCapacityResource)
+            foreach (var fcr in _funcCapacityResource)
             {
-                var resCapacity = capacity.FirstOrDefault(cap => cap.PeriodId == fcr.PeriodId && cap.ResourceId == fcr.ResourceId);
+                var resCapacity = _capacity.FirstOrDefault(cap => cap.PeriodId == fcr.PeriodId && cap.ResourceId == fcr.ResourceId);
                 var sum = 0;
-                var fcrInPeriod = funcCapacityResource.Where(fcres => fcres.PeriodId == fcr.PeriodId);
+                var fcrInPeriod = _funcCapacityResource.Where(fcres => fcres.PeriodId == fcr.PeriodId);
                 foreach (var value in fcrInPeriod)
                 {
                     if (value.ResourceId == fcr.ResourceId)
@@ -72,21 +73,5 @@ namespace DotNet2020.Domain._6.Services
             
             return funcCapacityResourceHighlight;
         }
-    }
-
-    public class FuncCapacityResourceHighlight
-    {
-        public int ResourceId { get; set; }
-        public int ProjectId { get; set; }
-        public int Month { get; set; }
-        public int Year { get; set; }
-        public string Color { get; set; }
-    }
-
-    public class FuncCapacityProjHighlight
-    {
-        public int PeriodId { get; set; }
-        public int ProjectId { get; set; }
-        public string Color { get; set; }
     }
 }

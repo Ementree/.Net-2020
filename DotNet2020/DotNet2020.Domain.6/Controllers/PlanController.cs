@@ -66,6 +66,7 @@ namespace DotNet2020.Domain._6.Controllers
             var highlightService = new PlanHighlightService(resourceCapacity, funcCapacitiesProject, functioningCapacityResources);
             ViewBag.FuncCapacityProjHighlight = highlightService.GetFuncCapacityProjHighlight();
             ViewBag.FuncCapacityResourceHighlight = highlightService.GetFuncCapacityResourceHighlight();
+            ViewBag.CurrentDate = DateTime.Now;
             return View(model: newModel);
         }
 
