@@ -286,9 +286,25 @@ namespace DotNet2020.Domain._6.Services
                         break;
                     }
                 }
+
+
             }
 
             return tableLinePreformList;
+        }
+
+        public bool ContainsInPreformList(List<FCTableLinePreform> preformList,ResourcePeriodKey resourcePeriodKey)
+        {
+            foreach(var preform in preformList)
+            {
+                if(preform.Resource.Id == resourcePeriodKey.Resource.Id 
+                    && preform.Period.Id == resourcePeriodKey.Period.Id)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
     }
 }
