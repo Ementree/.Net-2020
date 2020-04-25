@@ -5,7 +5,7 @@ using YouTrackSharp;
 
 namespace DotNet2020.Domain._5.Services
 {
-    public class YouTrackService : ITimeTrackingService
+    public class YouTrackService
     {
         private readonly BearerTokenConnection connection;
 
