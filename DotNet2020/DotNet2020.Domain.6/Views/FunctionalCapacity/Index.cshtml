@@ -8,7 +8,7 @@
 }
 
 @model FunctionalCapacityViewModel
-    <script src="~/wwwroot6/js/FunctionalCapacityScript.js"></script>
+    <script src="~/wwwroot6/js/FunctionalCapacity.js"></script>
     <link rel="stylesheet" href="~/wwwroot6/css/FunctionalCapacity.css" />
 
     <form id="changeYearForm" asp-action="Index" class="form-width-control">
@@ -130,15 +130,15 @@
                     }
 
                     <tr class="total">
-                        <td class="fcsticky-col1 left h45 total">
+                        <td class="fcsticky-col1 left h45 total-highlight">
                             <h6>Всего(@(pair.Key))</h6>
                         </td>
                             @for(int i =0; i < 12; i++)
                             {
-                                <td class="right align-center h45 total month-column-left-border for-js-selecor">
+                                <td class="right align-center h45 total-sum-js month-column-left-border for-js-selecor">
                                     @CureentGroupCommonBothCapacityCount[i][0]%
                                 </td>
-                                <td class="month-column-right-border align-center h45 total for-js-selecor">
+                                <td class="month-column-right-border align-center h45 total-sum-js for-js-selecor">
                                     @CureentGroupCommonBothCapacityCount[i][1]%
                                 </td>
                             }
