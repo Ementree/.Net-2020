@@ -1,0 +1,45 @@
+﻿@using DotNet2020.Domain._6.Services
+@using Microsoft.EntityFrameworkCore
+@inject DbContext DbContext
+<script src="~/wwwroot6/js/EditProject.js"></script>
+@{
+    var projects = new ProjectService(DbContext).GetProjectsViewModels();
+}
+<div class="modal fade"
+     id="editProject"
+     tabindex="-1"
+     role="dialog"
+     aria-labelledby="exampleModalLabel"
+     aria-hidden="true"
+     data-keyboard="false"
+     data-backdrop="static">
+    <div class="modal-dialog modal-xl" style="max-width: 1600px" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Добавить проект</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <div class="form-inline">
+                        <label for="projectSelector" class="mr-2">Проект:</label>
+                        <select name="projectSelector" id="projectSelector">
+                            @foreach (var project in projects)
+                            {
+                                <option value="@project.Id">@project.Name</option>
+                            }
+                        </select>
+                        <button class="btn btn-primary" onclick="selectProject()">Редактировать</button>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <label style="color:darkred; display: none;" id="errorHandler">Исправьте выделенные ошибки.</label>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+                <button type="button" class="btn btn-primary" disabled="disabled" onclick="">Сохранить проект</button>
+            </div>
+        </div>
+    </div>
+</div>

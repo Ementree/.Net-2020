@@ -5,16 +5,18 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using DotNet2020.Domain._6.Models.ViewModels;
+using DotNet2020.Domain._6.Services;
 
 namespace DotNet2020.Domain._6.Controllers
 {
     public class PlanController : Controller
     {
         private readonly DbContext _dbContext;
-
+        private readonly ProjectService _projectService;
         public PlanController(DbContext dbDbContext)
         {
             _dbContext = dbDbContext;
+            _projectService = new ProjectService(dbDbContext);
         }
 
         public IActionResult Index(int year = 0)
@@ -135,6 +137,13 @@ namespace DotNet2020.Domain._6.Controllers
                 transaction.Commit();
                 return true;
             }
+        }
+
+        [HttpGet("getProjectPlanById/{id}")]
+        public int GetProjectPlanById(int id)
+        {
+            _projectService.GetProjectViewModelById(id);
+            return id;
         }
     }
 }
