@@ -13,6 +13,352 @@
     <div style='background:#=getColorBasedOnHour(date)#; height: 100%;width: 100%;'></div>
 </script>
 
+<script>
+    function onDataBound(e) {
+        var view = this.view();
+        if (view.title !== "Year") {
+            //view.times.hide();
+            view.timesHeader.hide();
+            $(".k-scheduler-header-wrap > table > tbody > tr:eq(1)").hide();
+
+            var tables = $(".k-scheduler-header-wrap .k-scheduler-table");
+            tables = tables.first();
+            var cells = tables.find("th");
+
+            cells.each(function (e) {
+                var inner = $(this).text();
+                var day = inner.split(" ")[1];
+                $(this).text(day)
+            })
+        }
+    }
+</script>
+
+<script>////Custom View
+//    (function ($, undefined) {
+//        var kendo = window.kendo,
+//            ui = kendo.ui,
+//            SchedulerTimelineView = ui.TimelineView,
+//            extend = $.extend,
+//            NS = ".kendoTimelineYearView";
+
+//        var SchedulerTimelineYearView = SchedulerTimelineView.extend({
+//            nextDate: function () {
+//                var start = this.startDate();
+//                return new Date(start.getFullYear() + 1, 0, 1);
+//            },
+//            options: {
+//                columnWidth: 1,
+//            },
+//            previousDate: function () {
+//                var start = this.startDate();
+//                return new Date(start.getFullYear() - 1, 0, 1);
+//            },
+//            calculateDateRange: function () {
+//                var selectedDate = this.options.date,
+//                    start = new Date(selectedDate.getFullYear(), 0, 1),
+//                    end = kendo.date.previousDay(new Date(selectedDate.getFullYear() + 1, 0, 1)),
+//                    dates = [];
+
+//                while (start <= end) {
+//                    dates.push(start);
+//                    start = kendo.date.nextDay(start);
+//                }
+//                this._render(dates);
+//            },
+//        })
+
+//        //extend UI
+//        extend(true, ui, {
+//            SchedulerTimelineYearView: SchedulerTimelineYearView
+//        });
+
+//    })(window.kendo.jQuery);
+
+
+    var WeeksTimelineGroupedView = kendo.ui.scheduler.TimelineGroupedView.extend({
+        _addContent: function (dates, columnCount, groupsCount, rowCount, start, end, slotTemplate, isVerticalGrouped) {
+            //      console.log('_addContent');
+
+            var view = this._view;
+            var html = '';
+
+            for (var rowIdx = 0; rowIdx < rowCount; rowIdx++) {
+                html += '<tr>';
+                for (var groupIdx = 0; groupIdx < groupsCount; groupIdx++) {
+                    for (idx = 0; idx < dates.length; idx += 7) {
+                        html += '<td> </td>';
+                    }
+                }
+                html += '</tr>';
+            }
+            return html;
+        },
+        _addTimeSlotsCollections: function (groupCount, tableRows) {
+            //      console.log("_addTimeSlotsCollections");
+
+            var view = this._view;
+
+            for (var groupIndex = 0; groupIndex < groupCount; groupIndex++) {
+                var cells = tableRows[groupIndex].children;
+                var day = view._startDate;
+                var ci = 0;
+                var collection = view.groups[groupIndex].getTimeSlotCollection(0);
+
+                while (day < view._endDate) {
+                    cells[ci].setAttribute('role', 'gridcell');
+                    cells[ci].setAttribute('aria-selected', false);
+
+                    collection.addTimeSlot(cells[ci], day, kendo.date.addDays(day, 7), true);
+                    day = kendo.date.addDays(day, 7);
+                    ci++;
+                }
+            }
+        },
+        // don't hide headers
+        _hideHeaders: function () {
+                  var view = this._view;
+                  view.timesHeader.find('table tr:last').hide();
+                  view.datesHeader.find('table tr:last').hide();
+        }
+    });
+
+    // weeknumber function from https://stackoverflow.com/questions/6117814/get-week-of-year-in-javascript-like-in-php
+    // because kendo.date.weekInYear is returning invalid results
+    function getWeekInfo(d) {
+        // Copy date so don't modify original
+        d = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+        // Set to nearest Thursday: current date + 4 - current day number
+        // Make Sunday's day number 7
+
+        var thurs = d.getUTCDate() + 4 - (d.getUTCDay() || 7)
+        d.setUTCDate(thurs);
+
+        // Get first day of year
+
+        var yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+        // Calculate full weeks to nearest Thursday
+        var weekNo = Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
+
+        // Return week number, month and year
+        return {
+            week: weekNo,
+            month: d.getMonth(),
+            year: d.getUTCFullYear()
+        };
+    };
+
+    var WeekYearView = kendo.ui.TimelineView.extend({
+        _getGroupedView: function () {
+            //      console.log('_getGroupedView');
+
+            return new WeeksTimelineGroupedView(this);
+        },
+
+        name: "Year",
+
+        options: {
+            columnWidth: 15,
+            currentTimeMarker: true,
+            height: 700
+        },
+
+        previousDate: function () {
+            var s = this.startDate();
+            return kendo.date.dayOfWeek(kendo.date.addDays(s, -30), 1, -1);
+        },
+
+        // advance by.... one month?
+        nextDate: function () {
+            var s = this.startDate();
+            return kendo.date.dayOfWeek(kendo.date.addDays(s, 30), 1, -1);
+        },
+
+        // make it one year, from the monday starting with selected date
+
+        calculateDateRange: function () {
+             var selectedDate = this.options.date,
+                    start = new Date(selectedDate.getFullYear(), 0, 1),
+                    end = kendo.date.previousDay(new Date(selectedDate.getFullYear() + 1, 0, 1)),
+                    dates = [];
+
+                while (start <= end) {
+                    dates.push(start);
+                    start = kendo.date.nextDay(start);
+                }
+                this._render(dates);
+        },
+
+        // make proper slots
+        _calculateSlotRanges: function () {
+            //      console.log('_calculateSlotRanges');
+
+            var dates = this._dates;
+            var slotStartTime = this.startTime();
+            var slotEndTime = this.endTime();
+
+            slotEndTime = kendo.date.getMilliseconds(slotEndTime);
+            slotStartTime = kendo.date.getMilliseconds(slotStartTime);
+
+            if (slotEndTime === slotStartTime) {
+                slotEndTime += kendo.date.MS_PER_DAY - 1;
+            } else if (slotEndTime < slotStartTime) {
+                slotEndTime += kendo.date.MS_PER_DAY;
+            }
+
+            var slotRanges = [];
+
+            // week long slots?
+            for (var i = 0; i < dates.length; i += 7) {
+                var rangeStart = kendo.date.getDate(dates[i]);
+                kendo.date.setTime(rangeStart, slotStartTime);
+                var rangeEnd = kendo.date.getDate(dates[i]);
+                kendo.date.setTime(rangeEnd, slotEndTime);
+
+                slotRanges.push({
+                    start: kendo.date.toUtcTime(rangeStart),
+                    end: kendo.date.toUtcTime(rangeEnd)
+                });
+            }
+
+            this._slotRanges = slotRanges;
+        },
+
+        _layout: function (dates) {
+            //      console.log('_layout');
+
+            var columns = [];
+            var that = this;
+            var rows = [{ text: that.options.messages.defaultRowText }];
+            var groupedView = that._groupedView;
+
+            /*      var weekNumTemplate = kendo.template('<span class=\'k-link k-nav-day\'>#=kendo.date.weekInYear(date)#</span>');
+            var monthNumTemplate = kendo.template('<span class=\'k-link k-nav-day\'>#=kendo.format(\'{0:MMM}\', date)#</span>');
+            var yearNumTemplate = kendo.template('<span class=\'k-link k-nav-day\'>#=kendo.format(\'{0:yyyy}\', date)#</span>');
+            var weekNumTemplate = kendo.template('<span class=\'k-link k-nav-day\'>#=getWeekInfo(date).week#</span>');
+            var monthNumTemplate = kendo.template('<span class=\'k-link k-nav-day\'>#=getWeekInfo(date).month#</span>');
+            var yearNumTemplate = kendo.template('<span class=\'k-link k-nav-day\'>#=getWeekInfo(date).year#</span>');*/
+
+            // loop months over weeks
+            for (var idx = 0; idx < dates.length; idx++) {
+                var info = getWeekInfo(dates[idx]);
+
+                // has year column already?
+                for (var yIdx = 0; yIdx < columns.length; yIdx++) {
+                    if (columns[yIdx].yearNum == info.year) break;
+                }
+
+                if (yIdx >= columns.length) {
+                    var yr = {
+                        //                  text: yearNumTemplate({ date: dates[idx] }),
+                        text: info.year,
+                        className: 'k-slot-cell',
+                        columns: [],
+                        weeks: [],
+                        yearNum: info.year,
+                        colspan: 1
+                    };
+
+                    columns.push(yr);
+                    yIdx = columns.length - 1;
+                } else {
+                    columns[yIdx].colspan++;
+                }
+
+                // has month column already?
+                for (var mIdx = 0; mIdx < columns[yIdx].columns.length; mIdx++) {
+                    if (columns[yIdx].columns[mIdx].monthNum == info.month) break;
+                }
+
+                if (mIdx >= columns[yIdx].columns.length) {
+                    var mn = {
+                        //get some localization here please
+                        text: new Date(2018, info.month, 1).toLocaleString("en-us", { month: "short" }),
+                        className: 'k-slot-cell',
+                        columns: [],
+                        monthNum: info.month,
+                        colspan: 1
+                    };
+
+                    columns[yIdx].columns.push(mn);
+                    mIdx = columns[yIdx].columns.length - 1;
+                } else {
+                    columns[yIdx].columns[mIdx].colspan++;
+                }
+
+                // has timeslot already?
+                for (var wIdx = 0; wIdx < columns[yIdx].weeks.length; wIdx++) {
+                    if (columns[yIdx].weeks[wIdx] == info.week) break;
+                }
+
+                if (wIdx >= columns[yIdx].weeks.length) {
+                    var ts = {
+                        //text: weekNumTemplate({ date: dates[idx] }),
+                        text: info.week,
+                        className: 'k-slot-cell',
+                        colspan: 1,
+                        weekNum: info.week
+                    }
+
+                    columns[yIdx].weeks.push(info.week);
+                    columns[yIdx].columns[mIdx].columns.push(ts);
+                    weekColumn = ts;
+                } else {
+                    weekColumn.colspan++;
+                }
+            }
+
+            var resources = this.groupedResources;
+
+            if (resources.length) {
+                if (this._groupOrientation() === 'vertical') {
+                    rows = groupedView._createRowsLayout(resources, null, this.groupHeaderTemplate, columns);
+                    columns = groupedView._createVerticalColumnsLayout(resources, null, this.groupHeaderTemplate, columns);
+                } else {
+                    columns = groupedView._createColumnsLayout(resources, columns, this.groupHeaderTemplate, columns);
+                }
+            }
+            return {
+                columns: columns,
+                rows: rows
+            };
+        },
+        _groups: function () {
+            //      console.log('_groups');
+
+            var groupCount = this._groupCount();
+            var dates = this._dates;
+            this.groups = [];
+
+            for (var idx = 0; idx < groupCount; idx++) {
+                var view = this._addResourceView(idx);
+                var start = dates[0];
+                var end = dates[dates.length - 1 || 0];
+                var startTime = kendo.date.getMilliseconds(this.startTime());
+                var endTime = kendo.date.getMilliseconds(this.endTime());
+
+                if (startTime !== 0 && endTime <= startTime) {
+                    start = kendo.date.getDate(start);
+                    kendo.date.setTime(start, startTime);
+                    end = kendo.date.getDate(end);
+                    kendo.date.setTime(end, endTime);
+                }
+
+                view.addTimeSlotCollection(start, kendo.date.addDays(end, 1));
+            }
+
+            this._timeSlotGroups(groupCount);
+        },
+        _timeSlotGroups: function (groupCount) {
+            //      console.log('_timeSlotGroups');
+
+            var tableRows = this.content.find('tr');
+            tableRows.attr('role', 'row');
+            this._groupedView._addTimeSlotsCollections(groupCount, tableRows);
+        }
+    });
+</script>
+
 <div class="legend">
     <div class="color-box legend-item-holiday">Праздники</div>
     <div class="color-box legend-item-vacation">Новый отпуск</div>
@@ -26,16 +372,22 @@
         .Name("calendar")
         .Date(DateTime.Now)
         .StartTime(new DateTime(DateTime.Now.Year, 1, 1))
-        .MajorTick(1440)
+        .MajorTick(2880)
         .Editable(false)
+        .Footer(false)
         .Height(600)
         .EventTemplateId("task-template")
+        .Events(e => e.DataBound("onDataBound"))
         .Views(views =>
         {
-            views.TimelineMonthView(view => view.SlotTemplateId("my-holiday"));
-            views.TimelineWeekView(view => view.SlotTemplateId("my-holiday"));
-            //views.DayView();
+            views.TimelineMonthView(view => view.SlotTemplateId("my-holiday")).Title("Month").ColumnWidth(20);
+            views.TimelineWeekView(view => view.SlotTemplateId("my-holiday")).Title("Week");
+            //views.CustomView("kendo.ui.SchedulerTimelineYearView", view => {
+            //    var timeline = view;
+            //    timeline.Title("Year");
+            //    });
             // views.AgendaView();
+            views.CustomView("WeekYearView", mv => mv.Selected(true).Title("Year"));
         })
         .BindTo(Model.Events)
         .Group(group => group.Resources("Titles").Orientation(SchedulerGroupOrientation.Vertical))
