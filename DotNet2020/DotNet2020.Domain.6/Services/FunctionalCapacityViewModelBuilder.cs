@@ -279,14 +279,6 @@ namespace DotNet2020.Domain._6.Services
                 var plannedCapacity = p.Value;
                 int index;
 
-                //foreach (var vm in tableLinePreformList)
-                //{
-                //    if (vm.Resource.Id == currentResource.Id && vm.Period.Id == currentPeriod.Id)
-                //    {
-                //        vm.plannedCapacity = plannedCapacity;
-                //        break;
-                //    }
-                //}
                 if(ContainsInPreformList(tableLinePreformList,p.Key,out index))
                 {
                     tableLinePreformList[index].plannedCapacity = plannedCapacity;
@@ -303,9 +295,6 @@ namespace DotNet2020.Domain._6.Services
 
                     tableLinePreformList.Add(lineViewModel);
                 }
-
-
-
             }
 
             return tableLinePreformList;
