@@ -60,30 +60,170 @@ WriteLiteral(" type=\"text/x-kendo-template\"");
 
 WriteLiteral(">\r\n    <div style=\'background:#=getColorBasedOnHour(date)#; height: 100%;width: 1" +
 "00%;\'></div>\r\n</script>\r\n\r\n<script>\r\n    function onDataBound(e) {\n        var v" +
-"iew = this.view();\n        //view.times.hide();\n        view.timesHeader.hide();" +
-"\n        $(\".k-scheduler-header-wrap > table > tbody > tr:eq(1)\").hide();\r\n\r\n   " +
-"     var tables = $(\".k-scheduler-header-wrap .k-scheduler-table\");\r\n        tab" +
-"les = tables.first();\n        var cells = tables.find(\"th\");\r\n        cells.each" +
-"(function (e) {\r\n            var inner = $(this).text();\n            var day = i" +
-"nner.split(\" \")[1];\n            $(this).text(day)\n        })\r\n    }\r\n</script>\r\n" +
-"\r\n<script>//Custom View\r\n    (function ($, undefined) {\r\n        var kendo = win" +
-"dow.kendo,\r\n            ui = kendo.ui,\r\n            SchedulerTimelineView = ui.T" +
-"imelineView,\r\n            extend = $.extend,\r\n            NS = \".kendoTimelineYe" +
-"arView\";\r\n\r\n        var SchedulerTimelineYearView = SchedulerTimelineView.extend" +
-"({\r\n            nextDate: function () {\r\n                var start = this.startD" +
-"ate();\r\n                return new Date(start.getFullYear() + 1, 0, 1);\r\n       " +
-"     },\r\n            options: {\r\n                columnWidth: 1,\n            },\r" +
-"\n            previousDate: function () {\r\n                var start = this.start" +
-"Date();\r\n                return new Date(start.getFullYear() - 1, 0, 1);\r\n      " +
-"      },\r\n            calculateDateRange: function () {\r\n                var sel" +
-"ectedDate = this.options.date,\r\n                    start = new Date(selectedDat" +
-"e.getFullYear(), 0, 1),\r\n                    end = kendo.date.previousDay(new Da" +
-"te(selectedDate.getFullYear() + 1, 0, 1)),\r\n                    dates = [];\r\n\r\n " +
-"               while (start <= end) {\r\n                    dates.push(start);\r\n " +
-"                   start = kendo.date.nextDay(start);\r\n                }\r\n      " +
-"          this._render(dates);\r\n            }\r\n        })\r\n\r\n        //extend UI" +
-"\r\n        extend(true, ui, {\r\n            SchedulerTimelineYearView: SchedulerTi" +
-"melineYearView\r\n        });\r\n\r\n    })(window.kendo.jQuery);\r\n</script>\r\n\r\n<div");
+"iew = this.view();\n        if (view.title !== \"Year\") {\n            //view.times" +
+".hide();\n            view.timesHeader.hide();\n            $(\".k-scheduler-header" +
+"-wrap > table > tbody > tr:eq(1)\").hide();\r\n\r\n            var tables = $(\".k-sch" +
+"eduler-header-wrap .k-scheduler-table\");\r\n            tables = tables.first();\n " +
+"           var cells = tables.find(\"th\");\r\n\r\n            cells.each(function (e)" +
+" {\r\n                var inner = $(this).text();\n                var day = inner." +
+"split(\" \")[1];\n                $(this).text(day)\n            })\n        }\r\n    }" +
+"\r\n</script>\r\n\r\n<script>////Custom View\r\n//    (function ($, undefined) {\r\n//    " +
+"    var kendo = window.kendo,\r\n//            ui = kendo.ui,\r\n//            Sched" +
+"ulerTimelineView = ui.TimelineView,\r\n//            extend = $.extend,\r\n//       " +
+"     NS = \".kendoTimelineYearView\";\r\n\r\n//        var SchedulerTimelineYearView =" +
+" SchedulerTimelineView.extend({\r\n//            nextDate: function () {\r\n//      " +
+"          var start = this.startDate();\r\n//                return new Date(start" +
+".getFullYear() + 1, 0, 1);\r\n//            },\r\n//            options: {\r\n//      " +
+"          columnWidth: 1,\n//            },\r\n//            previousDate: function" +
+" () {\r\n//                var start = this.startDate();\r\n//                return" +
+" new Date(start.getFullYear() - 1, 0, 1);\r\n//            },\r\n//            calcu" +
+"lateDateRange: function () {\r\n//                var selectedDate = this.options." +
+"date,\r\n//                    start = new Date(selectedDate.getFullYear(), 0, 1)," +
+"\r\n//                    end = kendo.date.previousDay(new Date(selectedDate.getFu" +
+"llYear() + 1, 0, 1)),\r\n//                    dates = [];\r\n\r\n//                wh" +
+"ile (start <= end) {\r\n//                    dates.push(start);\r\n//              " +
+"      start = kendo.date.nextDay(start);\r\n//                }\r\n//               " +
+" this._render(dates);\r\n//            },\r\n//        })\r\n\r\n//        //extend UI\r\n" +
+"//        extend(true, ui, {\r\n//            SchedulerTimelineYearView: Scheduler" +
+"TimelineYearView\r\n//        });\r\n\r\n//    })(window.kendo.jQuery);\r\n\r\n\r\n    var W" +
+"eeksTimelineGroupedView = kendo.ui.scheduler.TimelineGroupedView.extend({\n      " +
+"  _addContent: function (dates, columnCount, groupsCount, rowCount, start, end, " +
+"slotTemplate, isVerticalGrouped) {\n            //      console.log(\'_addContent\'" +
+");\n\n            var view = this._view;\n            var html = \'\';\n\n            f" +
+"or (var rowIdx = 0; rowIdx < rowCount; rowIdx++) {\n                html += \'<tr>" +
+"\';\n                for (var groupIdx = 0; groupIdx < groupsCount; groupIdx++) {\n" +
+"                    for (idx = 0; idx < dates.length; idx += 7) {\n              " +
+"          html += \'<td> </td>\';\n                    }\n                }\n        " +
+"        html += \'</tr>\';\n            }\n            return html;\n        },\n     " +
+"   _addTimeSlotsCollections: function (groupCount, tableRows) {\n            //  " +
+"    console.log(\"_addTimeSlotsCollections\");\n\n            var view = this._view;" +
+"\n\n            for (var groupIndex = 0; groupIndex < groupCount; groupIndex++) {\n" +
+"                var cells = tableRows[groupIndex].children;\n                var " +
+"day = view._startDate;\n                var ci = 0;\n                var collectio" +
+"n = view.groups[groupIndex].getTimeSlotCollection(0);\n\n                while (da" +
+"y < view._endDate) {\n                    cells[ci].setAttribute(\'role\', \'gridcel" +
+"l\');\n                    cells[ci].setAttribute(\'aria-selected\', false);\n\n      " +
+"              collection.addTimeSlot(cells[ci], day, kendo.date.addDays(day, 7)," +
+" true);\n                    day = kendo.date.addDays(day, 7);\n                  " +
+"  ci++;\n                }\n            }\n        },\n        // don\'t hide headers" +
+"\n        _hideHeaders: function () {\n                  var view = this._view;\n  " +
+"                view.timesHeader.find(\'table tr:last\').hide();\n                 " +
+" view.datesHeader.find(\'table tr:last\').hide();\n        }\n    });\n\n    // weeknu" +
+"mber function from https://stackoverflow.com/questions/6117814/get-week-of-year-" +
+"in-javascript-like-in-php\n    // because kendo.date.weekInYear is returning inva" +
+"lid results\n    function getWeekInfo(d) {\n        // Copy date so don\'t modify o" +
+"riginal\n        d = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()" +
+"));\n        // Set to nearest Thursday: current date + 4 - current day number\n  " +
+"      // Make Sunday\'s day number 7\n\n        var thurs = d.getUTCDate() + 4 - (d" +
+".getUTCDay() || 7)\n        d.setUTCDate(thurs);\n\n        // Get first day of yea" +
+"r\n\n        var yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));\n       " +
+" // Calculate full weeks to nearest Thursday\n        var weekNo = Math.ceil((((d" +
+" - yearStart) / 86400000) + 1) / 7);\n\n        // Return week number, month and y" +
+"ear\n        return {\n            week: weekNo,\n            month: d.getMonth(),\n" +
+"            year: d.getUTCFullYear()\n        };\n    };\n\n    var WeekYearView = k" +
+"endo.ui.TimelineView.extend({\n        _getGroupedView: function () {\n           " +
+" //      console.log(\'_getGroupedView\');\n\n            return new WeeksTimelineGr" +
+"oupedView(this);\n        },\n\n        name: \"Year\",\n\n        options: {\n         " +
+"   columnWidth: 15,\n            currentTimeMarker: true,\n            height: 700" +
+"\n        },\n\n        previousDate: function () {\n            var s = this.startD" +
+"ate();\n            return kendo.date.dayOfWeek(kendo.date.addDays(s, -30), 1, -1" +
+");\n        },\n\n        // advance by.... one month?\n        nextDate: function (" +
+") {\n            var s = this.startDate();\n            return kendo.date.dayOfWee" +
+"k(kendo.date.addDays(s, 30), 1, -1);\n        },\n\n        // make it one year, fr" +
+"om the monday starting with selected date\n\n        calculateDateRange: function " +
+"() {\n             var selectedDate = this.options.date,\r\n                    sta" +
+"rt = new Date(selectedDate.getFullYear(), 0, 1),\r\n                    end = kend" +
+"o.date.previousDay(new Date(selectedDate.getFullYear() + 1, 0, 1)),\r\n           " +
+"         dates = [];\r\n\r\n                while (start <= end) {\r\n                " +
+"    dates.push(start);\r\n                    start = kendo.date.nextDay(start);\r\n" +
+"                }\r\n                this._render(dates);\n        },\n\n        // m" +
+"ake proper slots\n        _calculateSlotRanges: function () {\n            //     " +
+" console.log(\'_calculateSlotRanges\');\n\n            var dates = this._dates;\n    " +
+"        var slotStartTime = this.startTime();\n            var slotEndTime = this" +
+".endTime();\n\n            slotEndTime = kendo.date.getMilliseconds(slotEndTime);\n" +
+"            slotStartTime = kendo.date.getMilliseconds(slotStartTime);\n\n        " +
+"    if (slotEndTime === slotStartTime) {\n                slotEndTime += kendo.da" +
+"te.MS_PER_DAY - 1;\n            } else if (slotEndTime < slotStartTime) {\n       " +
+"         slotEndTime += kendo.date.MS_PER_DAY;\n            }\n\n            var sl" +
+"otRanges = [];\n\n            // week long slots?\n            for (var i = 0; i < " +
+"dates.length; i += 7) {\n                var rangeStart = kendo.date.getDate(date" +
+"s[i]);\n                kendo.date.setTime(rangeStart, slotStartTime);\n          " +
+"      var rangeEnd = kendo.date.getDate(dates[i]);\n                kendo.date.se" +
+"tTime(rangeEnd, slotEndTime);\n\n                slotRanges.push({\n               " +
+"     start: kendo.date.toUtcTime(rangeStart),\n                    end: kendo.dat" +
+"e.toUtcTime(rangeEnd)\n                });\n            }\n\n            this._slotR" +
+"anges = slotRanges;\n        },\n\n        _layout: function (dates) {\n            " +
+"//      console.log(\'_layout\');\n\n            var columns = [];\n            var t" +
+"hat = this;\n            var rows = [{ text: that.options.messages.defaultRowText" +
+" }];\n            var groupedView = that._groupedView;\n\n            /*      var w" +
+"eekNumTemplate = kendo.template(\'<span class=\\\'k-link k-nav-day\\\'>#=kendo.date.w" +
+"eekInYear(date)#</span>\');\n            var monthNumTemplate = kendo.template(\'<s" +
+"pan class=\\\'k-link k-nav-day\\\'>#=kendo.format(\\\'{0:MMM}\\\', date)#</span>\');\n    " +
+"        var yearNumTemplate = kendo.template(\'<span class=\\\'k-link k-nav-day\\\'>#" +
+"=kendo.format(\\\'{0:yyyy}\\\', date)#</span>\');\n            var weekNumTemplate = k" +
+"endo.template(\'<span class=\\\'k-link k-nav-day\\\'>#=getWeekInfo(date).week#</span>" +
+"\');\n            var monthNumTemplate = kendo.template(\'<span class=\\\'k-link k-na" +
+"v-day\\\'>#=getWeekInfo(date).month#</span>\');\n            var yearNumTemplate = k" +
+"endo.template(\'<span class=\\\'k-link k-nav-day\\\'>#=getWeekInfo(date).year#</span>" +
+"\');*/\n\n            // loop months over weeks\n            for (var idx = 0; idx <" +
+" dates.length; idx++) {\n                var info = getWeekInfo(dates[idx]);\n\n   " +
+"             // has year column already?\n                for (var yIdx = 0; yIdx" +
+" < columns.length; yIdx++) {\n                    if (columns[yIdx].yearNum == in" +
+"fo.year) break;\n                }\n\n                if (yIdx >= columns.length) {" +
+"\n                    var yr = {\n                        //                  text" +
+": yearNumTemplate({ date: dates[idx] }),\n                        text: info.year" +
+",\n                        className: \'k-slot-cell\',\n                        colu" +
+"mns: [],\n                        weeks: [],\n                        yearNum: inf" +
+"o.year,\n                        colspan: 1\n                    };\n\n             " +
+"       columns.push(yr);\n                    yIdx = columns.length - 1;\n        " +
+"        } else {\n                    columns[yIdx].colspan++;\n                }\n" +
+"\n                // has month column already?\n                for (var mIdx = 0;" +
+" mIdx < columns[yIdx].columns.length; mIdx++) {\n                    if (columns[" +
+"yIdx].columns[mIdx].monthNum == info.month) break;\n                }\n\n          " +
+"      if (mIdx >= columns[yIdx].columns.length) {\n                    var mn = {" +
+"\n                        //get some localization here please\n                   " +
+"     text: new Date(2018, info.month, 1).toLocaleString(\"en-us\", { month: \"short" +
+"\" }),\n                        className: \'k-slot-cell\',\n                        " +
+"columns: [],\n                        monthNum: info.month,\n                     " +
+"   colspan: 1\n                    };\n\n                    columns[yIdx].columns." +
+"push(mn);\n                    mIdx = columns[yIdx].columns.length - 1;\n         " +
+"       } else {\n                    columns[yIdx].columns[mIdx].colspan++;\n     " +
+"           }\n\n                // has timeslot already?\n                for (var " +
+"wIdx = 0; wIdx < columns[yIdx].weeks.length; wIdx++) {\n                    if (c" +
+"olumns[yIdx].weeks[wIdx] == info.week) break;\n                }\n\n               " +
+" if (wIdx >= columns[yIdx].weeks.length) {\n                    var ts = {\n      " +
+"                  //text: weekNumTemplate({ date: dates[idx] }),\n               " +
+"         text: info.week,\n                        className: \'k-slot-cell\',\n    " +
+"                    colspan: 1,\n                        weekNum: info.week\n     " +
+"               }\n\n                    columns[yIdx].weeks.push(info.week);\n     " +
+"               columns[yIdx].columns[mIdx].columns.push(ts);\n                   " +
+" weekColumn = ts;\n                } else {\n                    weekColumn.colspa" +
+"n++;\n                }\n            }\n\n            var resources = this.groupedRe" +
+"sources;\n\n            if (resources.length) {\n                if (this._groupOri" +
+"entation() === \'vertical\') {\n                    rows = groupedView._createRowsL" +
+"ayout(resources, null, this.groupHeaderTemplate, columns);\n                    c" +
+"olumns = groupedView._createVerticalColumnsLayout(resources, null, this.groupHea" +
+"derTemplate, columns);\n                } else {\n                    columns = gr" +
+"oupedView._createColumnsLayout(resources, columns, this.groupHeaderTemplate, col" +
+"umns);\n                }\n            }\n            return {\n                colu" +
+"mns: columns,\n                rows: rows\n            };\n        },\n        _grou" +
+"ps: function () {\n            //      console.log(\'_groups\');\n\n            var g" +
+"roupCount = this._groupCount();\n            var dates = this._dates;\n           " +
+" this.groups = [];\n\n            for (var idx = 0; idx < groupCount; idx++) {\n   " +
+"             var view = this._addResourceView(idx);\n                var start = " +
+"dates[0];\n                var end = dates[dates.length - 1 || 0];\n              " +
+"  var startTime = kendo.date.getMilliseconds(this.startTime());\n                " +
+"var endTime = kendo.date.getMilliseconds(this.endTime());\n\n                if (s" +
+"tartTime !== 0 && endTime <= startTime) {\n                    start = kendo.date" +
+".getDate(start);\n                    kendo.date.setTime(start, startTime);\n     " +
+"               end = kendo.date.getDate(end);\n                    kendo.date.set" +
+"Time(end, endTime);\n                }\n\n                view.addTimeSlotCollectio" +
+"n(start, kendo.date.addDays(end, 1));\n            }\n\n            this._timeSlotG" +
+"roups(groupCount);\n        },\n        _timeSlotGroups: function (groupCount) {\n " +
+"           //      console.log(\'_timeSlotGroups\');\n\n            var tableRows = " +
+"this.content.find(\'tr\');\n            tableRows.attr(\'role\', \'row\');\n            " +
+"this._groupedView._addTimeSlotsCollections(groupCount, tableRows);\n        }\n   " +
+" });\r\n</script>\r\n\r\n<div");
 
 WriteLiteral(" class=\"legend\"");
 
@@ -114,7 +254,7 @@ WriteLiteral(" class=\"color-box legend-item-sickday\"");
 WriteLiteral(">Сикдэй</div>\r\n</div>\r\n\r\n");
 
 
-#line 85 "Calendar.cshtml"
+#line 371 "Calendar.cshtml"
 Write(Html.Kendo().Scheduler<Kendo.Mvc.Examples.Models.Scheduler.CalendarEventViewModel>()
         .Name("calendar")
         .Date(DateTime.Now)
@@ -129,11 +269,12 @@ Write(Html.Kendo().Scheduler<Kendo.Mvc.Examples.Models.Scheduler.CalendarEventVi
         {
             views.TimelineMonthView(view => view.SlotTemplateId("my-holiday")).Title("Month").ColumnWidth(20);
             views.TimelineWeekView(view => view.SlotTemplateId("my-holiday")).Title("Week");
-            views.CustomView("kendo.ui.SchedulerTimelineYearView", view => {
-                var timeline = view;
-                timeline.Title("Year");
-                });
+            //views.CustomView("kendo.ui.SchedulerTimelineYearView", view => {
+            //    var timeline = view;
+            //    timeline.Title("Year");
+            //    });
             // views.AgendaView();
+            views.CustomView("WeekYearView", mv => mv.Selected(true).Title("Year"));
         })
         .BindTo(Model.Events)
         .Group(group => group.Resources("Titles").Orientation(SchedulerGroupOrientation.Vertical))
@@ -197,7 +338,7 @@ WriteLiteral(@"
         const holidays = JSON.parse('");
 
 
-#line 159 "Calendar.cshtml"
+#line 446 "Calendar.cshtml"
                                 Write(Html.Raw(Json.Serialize(@Model.Holidays)));
 
 
