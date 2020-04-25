@@ -1,0 +1,23 @@
+.left{
+    border-left: 1px solid #dee2e6;
+}
+
+.right{
+    border-right: 1px solid #dee2e6;
+}
+
+.bottom{
+    border-bottom: 1px solid #dee2e6;
+}
+
+.align-center{
+    text-align: center;
+}
+
+.h45{
+    height: 45px;
+}
+
+.scroller{
+    margin-left: 30%;
+}
