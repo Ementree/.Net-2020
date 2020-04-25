@@ -3,9 +3,12 @@
     int maxResourceAmount = 0;
     Dictionary<int, int> projectsCapacity = new Dictionary<int, int>();
     var functioningCapacityProject = ViewBag.FunctioningCapacityProject as List<FunctioningCapacityProject>;
+    List<FuncCapacityProjHighlight> funcCapacityProjHighlight = ViewBag.FuncCapacityProjHighlight;
+    List<FuncCapacityResourceHighlight> funcCapacityResourceHighlight = ViewBag.FuncCapacityResourceHighlight;
 }
 @using DotNet2020.Domain._6.Models;
 @using DotNet2020.Domain._6.ExtensionMethods;
+@using DotNet2020.Domain._6.Services
 @model Dictionary<string, Dictionary<Project, Dictionary<Period, List<FunctioningCapacityResource>>>>
 @foreach (var projects in Model.Values)
 {
@@ -48,9 +51,9 @@
                 @for (int i = 1; i <= 12; i++)
                 {
                     var period = new DateTime(ViewBag.Year, i, 1);
-                    <td colspan="2" class="border-right">
+                    <th colspan="2" class="border-right">
                         @($"{period.GetMonthName()} {period.Year}")
-                    </td>
+                    </th>
                 }
             </tr>
             <!-- конец хедера таблицы -->
@@ -59,38 +62,41 @@
             @foreach (var group in Model)
             {
                 <tr>
-                    <th class="sticky-col1">
+                    <th class="sticky-col1 gray"> 
                         @group.Key
                     </th>
                     @for (int i = 0; i < 12; i++)
                     {
-                        <td>Ресурс</td>
-                        <td class="border-right">Загрузка</td>
+                        <th class="gray">Ресурс</th>
+                        <th class="border-right gray">Загрузка</th>
                     }
                 </tr>
                 foreach (var pair in group.Value)
                 {
                     var periods = pair.Value;
                     <tr>
-                        <td class="sticky-col1">
-                            <b>@(pair.Key.Name)</b>
-                        </td>
-                        @for (int i = 1; i <= 12; i++)
+                        <th class="sticky-col1 total-sum-highlight">
+                            @(pair.Key.Name)
+                        </th>
+                        @for (int i = 1; i <= 12; i++) // загрузка + сумма
                         {
-                            var fcp = functioningCapacityProject.FirstOrDefault(project =>
+                            var fcp = functioningCapacityProject.FirstOrDefault(project => // отсюда можно вытащить период и проект
                                 project.PeriodId == i &&
                                 project.ProjectId == pair.Key.Id);
                             var period = periods.Where(keyValuePair =>
                                 keyValuePair.Key.Start.Month == i);
-                            <td id="fcp;@i;@ViewBag.Year;@pair.Key.Id" class="resource_capacity_plan">
+                            var highlight = funcCapacityProjHighlight.FirstOrDefault(fcproj =>
+                                fcproj.PeriodId == i && fcproj.ProjectId == pair.Key.Id);
+                            var color = highlight != default ? highlight.Color : "total-sum-highlight";
+                            <th id="fcp;@i;@ViewBag.Year;@pair.Key.Id" class="resource_capacity_plan @color">
                                 @(fcp != default ? fcp.FunctioningCapacity.ToString() : "")
-                            </td>
-                            <td id="sum;@i;@ViewBag.Year;@pair.Key.Id" class="border-right resource_capacity_real">
+                            </th>
+                            <th id="sum;@i;@ViewBag.Year;@pair.Key.Id" class="border-right resource_capacity_real @color">
                                 @(period.Count() == 1 ?
                                     period.First().Value.Sum(fcres =>
                                         fcres.FunctionCapacity).ToString() :
                                     "")
-                            </td>
+                            </th>
                         }
                     </tr>
                     for (int i = 0; i < projectsCapacity[pair.Key.Id]; i++)
@@ -109,15 +115,18 @@
                                 else
                                 {
                                     var fresList = keyValuePairs.First().Value;
-                                    if (fresList.Count - 1 >= i)
+                                    if (fresList.Count - 1 >= i) //ресурс + загрузка j - месяц, fresList[i].ResourceId, 
                                     {
+                                        var highlight = funcCapacityResourceHighlight. FirstOrDefault(fcr => 
+                                            fcr.Month == j && fcr.Year == ViewBag.Year && fcr.ProjectId == fresList[i].ProjectId && fcr.ResourceId == fresList[i].ResourceId);
+                                        var color = highlight == default ? "" : highlight.Color;
                                         <td id="name;@j;@ViewBag.Year;@pair.Key.Id;@fresList[i].ResourceId"
-                                            class="resource_name">
+                                            class="resource_name @color">
                                             @fresList[i].Resource.FirstName @fresList[i].Resource.LastName
                                         </td>
                                         <td
                                             id="capacity;@j;@ViewBag.Year;@pair.Key.Id;@fresList[i].ResourceId"
-                                            class="border-right resource_capacity">
+                                            class="border-right resource_capacity @color">
                                             @fresList[i].FunctionCapacity
                                         </td>
                                     }
