@@ -1,7 +1,6 @@
 ﻿@using DotNet2020.Domain._6.Services
 @using Microsoft.EntityFrameworkCore
 @inject DbContext DbContext
-<script src="~/wwwroot6/js/AddProject.js"></script>
 @{
     var months = MonthGeneratorService.GetMonthNames();
     var resources = new ResourceService(DbContext).GetResources();

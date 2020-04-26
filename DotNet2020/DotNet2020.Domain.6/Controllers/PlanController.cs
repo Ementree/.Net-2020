@@ -46,7 +46,7 @@ namespace DotNet2020.Domain._6.Controllers
                     var value = pair.Value.GroupBy(res => res.PeriodId)
                             .ToDictionary(group =>
                                     group.ToList().FirstOrDefault()?.Period,
-                                group => @group.ToList())
+                                group => group.ToList())
                         ;
 
                     return KeyValuePair.Create(key, value);
@@ -145,11 +145,29 @@ namespace DotNet2020.Domain._6.Controllers
             }
         }
 
-        [HttpGet("getProjectPlanById/{id}")]
-        public int GetProjectPlanById(int id)
+        [HttpGet("[controller]/getProjectPlanById/{id}")]
+        public ProjectViewModel GetProjectPlanById(int id)
         {
-            _projectService.GetProjectViewModelById(id);
-            return id;
+            return _projectService.GetProjectViewModelById(id);
+        }
+        
+        [HttpGet("[controller]/getProjectStatuses")]
+        public IEnumerable<ProjectStatus> GetProjectStatuses()
+        {
+            var projectStatuses = new StatusesService(_dbContext).GetProjectStatuses();
+            return projectStatuses;
+        }
+        
+        [HttpGet("[controller]/getResources")]
+        public IEnumerable<ProjectViewModel.ResourceCapacityViewModel> GetResources()
+        {
+            var projectStatuses = new ResourceService(_dbContext).GetResources()
+                .Select(res=>new ProjectViewModel.ResourceCapacityViewModel()
+                {
+                    Id = res.Id,
+                    Name = $"{res.FirstName} {res.LastName}"
+                });
+            return projectStatuses;
         }
     }
 }

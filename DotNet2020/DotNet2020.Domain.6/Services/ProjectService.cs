@@ -25,19 +25,39 @@ namespace DotNet2020.Domain._6.Services
         public ProjectViewModel GetProjectViewModelById(int id)
         {
             var a = _dbContext.Set<FunctioningCapacityResource>()
-                .Where(resource => resource.ProjectId == id);
-
-            var b = a.Include(resource => resource.Project)
+                .Where(resource => resource.ProjectId == id)
+                .Include(resource => resource.Project)
                 .ThenInclude(project => project.ProjectStatus)
                 .Include(resource => resource.Resource)
                 .Include(resource => resource.Period)
-                .ToList();
-            var c = b
-                .GroupBy(resource => resource.Period);
-            var d = c
-                .ToDictionary(grouping => grouping.Key.Start, grouping => grouping.ToList());
+                .OrderBy(resource => resource.Period.Start)
+                .ToList()
+                .GroupBy(resource => resource.Period)
+                .ToDictionary(grouping => grouping.Key, grouping => grouping.ToList());
 
-            return null;
+            var project = _dbContext.Set<Project>().Find(id);
+            var periodsCapacity = _dbContext.Set<FunctioningCapacityProject>()
+                .Where(capacityProject => capacityProject.ProjectId == id)
+                .Include(capacityProject => capacityProject.Period)
+                .ToList();
+            var periods2 = periodsCapacity.Select(periodCap =>
+            {
+                var fresArr = new ProjectViewModel.ResourceCapacityViewModel[0];
+                if (a.ContainsKey(periodCap.Period))
+                {
+                    fresArr = a[periodCap.Period]
+                        .Select(resource =>
+                            new ProjectViewModel.ResourceCapacityViewModel(resource.Id,
+                                $"{resource.Resource.FirstName} {resource.Resource.LastName}",
+                                resource.FunctionCapacity))
+                        .ToArray();
+                }
+                var capacity = periodCap.FunctioningCapacity;
+                var period = new ProjectViewModel.PeriodViewModel(capacity, periodCap.Period.Start, fresArr);
+                return period;
+            }).ToArray();
+            var projectViewModel = new ProjectViewModel(id, project.Name, project.ProjectStatusId, periods2);
+            return projectViewModel;
         }
     }
 }
