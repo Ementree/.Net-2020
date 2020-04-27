@@ -118,7 +118,7 @@ function generateMonth(period: Period) {
     monthCapacity.classList.add('col-5', 'font-weight-bold', 'pl-1', 'pr-1');
 
     let monthCapacityInput = <HTMLInputElement>document.createElement('input');
-    monthCapacityInput.value = String(period.capacity);
+    monthCapacityInput.value = String(isNaN(period.capacity)? '': period.capacity);
     monthCapacityInput.id = `editMonthCapacity` + idBase;
     monthCapacityInput.type = 'number';
     monthCapacityInput.min = String(0);
@@ -213,8 +213,10 @@ function generateResourceSelectorWithValue(period: Period): HTMLDivElement {
         emptyOption.selected = true;
         emptyOption.text = 'Выберите человека';
         for (let i = 0; i < selectResource.options.length; i++) {
-            if (String(value.id) === selectResource.options[i].value)
+            console.log(value.id, value.name, ' - ', selectResource.options[i].value,selectResource.options[i].text);
+            if (String(value.id) === selectResource.options[i].value) {
                 selectResource.selectedIndex = i;
+            }
         }
 
         resContainer.appendChild(row);
@@ -255,14 +257,40 @@ function generateEditYear(periods: Period[]): HTMLDivElement {
 }
 
 function generateYearsContainer(periods: Period[]) {
+    let periodsLocal = periods.slice();
     let yearsContainer = <HTMLDivElement>document.createElement('div');
     yearsContainer.id = 'yearsContainer';
-    let yearsCount = periods.length / 12;
+    let years = periodsLocal.map(period => period.date.getFullYear()).filter((value, index, self) => {
+        return self.indexOf(value) === index;
+    });
+    console.log('count', years);
+    console.log('pers', periodsLocal);
+    for (let i = 0; i < years.length; i++) {
+        for(let monthNumber = 0; monthNumber<12;monthNumber++) {
+            let currentYear = years[i];
+            let arr = periodsLocal.filter(value =>
+                (value.date.getFullYear() === currentYear) && (value.date.getMonth()===monthNumber));
+
+            //console.log('loop', String(currentYear), monthNumber,arr);
+            if(arr.length===0) {
+                let period = new Period();
+                period.date = new Date(currentYear, monthNumber);
+                period.resources=[];
+                period.capacity=Number.NaN;
+                periodsLocal.push(period);
+            }
+        }
+    }
+    console.log('pers after ddd', periodsLocal);
+    periodsLocal.sort((per1, per2)=>{
+        return per1.date > per2.date ? 1 : -1;
+    })
+    console.log('pers after', periodsLocal);
     let sliceStart = 0;
     let sliceEnd = 12;
     //todo: делать что-то если не хватает периодов
-    for (let i = 0; i < yearsCount; i++) {
-        yearsContainer.appendChild(generateEditYear(periods.slice(sliceStart, sliceEnd)));
+    for (let i = 0; i < years.length; i++) {
+        yearsContainer.appendChild(generateEditYear(periodsLocal.slice(sliceStart, sliceEnd)));
         sliceStart = sliceEnd;
         sliceEnd = sliceEnd + 12;
     }

@@ -168,7 +168,7 @@ namespace DotNet2020.Domain._6.Controllers
                 .Select(res=>new ProjectViewModel.ResourceCapacityViewModel()
                 {
                     Id = res.Id,
-                    Name = $"{res.FirstName} {res.LastName}"
+                    Name = $"{res.AppIdentityUser.FirstName} {res.AppIdentityUser.LastName}"
                 });
             return projectStatuses;
         }
