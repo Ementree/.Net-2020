@@ -16,7 +16,9 @@ namespace DotNet2020.Domain._6.Services
 
         public List<Resource> GetResources()
         {
-            return _dbContext.Set<Resource>().OrderBy(resource => resource.LastName).ToList();
+            return _dbContext.Set<Resource>()
+                .Include(res => res.AppIdentityUser)
+                .OrderBy(resource => resource.AppIdentityUser.LastName).ToList();
         }
     }
 }

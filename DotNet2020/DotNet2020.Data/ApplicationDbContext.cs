@@ -14,6 +14,7 @@ namespace DotNet2020.Data
         public virtual DbSet<Resource> Resources { get; set; }
         public virtual DbSet<ResourceCapacity> ResourceCapacities { get; set; }
         public virtual DbSet<ResourceGroupType> ResourceGroupsTypes { get; set; }
+        public virtual DbSet<CalendarEntry> CalendarEntries { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)

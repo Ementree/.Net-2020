@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using DotNet2020.Domain._6.Models.ViewModels;
+using DotNet2020.Domain._6.Services;
 
 namespace DotNet2020.Domain._6.Controllers
 {
@@ -29,7 +30,10 @@ namespace DotNet2020.Domain._6.Controllers
                 .ThenInclude(proj => proj.ProjectStatus)
                 .Include(fres => fres.Resource)
                 .ThenInclude(resource => resource.ResourceGroupType)
+                .Include(fres => fres.Resource)
+                .ThenInclude(res => res.AppIdentityUser)
                 .ToList();
+            
 
 
             var groupBy = functioningCapacityResources.GroupBy(f => f.ProjectId);
@@ -59,7 +63,13 @@ namespace DotNet2020.Domain._6.Controllers
             var funcCapacitiesProject =
                 _dbContext.Set<FunctioningCapacityProject>()
                     .ToList();
+            var resourceCapacity = _dbContext.Set<ResourceCapacity>().ToList();
+            
             ViewBag.FunctioningCapacityProject = funcCapacitiesProject;
+            var highlightService = new PlanHighlightService(resourceCapacity, funcCapacitiesProject, functioningCapacityResources);
+            ViewBag.FuncCapacityProjHighlight = highlightService.GetFuncCapacityProjHighlight();
+            ViewBag.FuncCapacityResourceHighlight = highlightService.GetFuncCapacityResourceHighlight();
+            ViewBag.CurrentDate = DateTime.Now;
             return View(model: newModel);
         }
 
