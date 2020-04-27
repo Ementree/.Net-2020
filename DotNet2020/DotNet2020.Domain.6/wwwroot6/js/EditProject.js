@@ -1,5 +1,6 @@
 var projectStatuses = getProjectStatuses();
 var resources = [];
+var currentYear;
 function selectProject() {
     var select = document.getElementById('projectSelector');
     var projectId = parseInt(select.options[select.selectedIndex].value);
@@ -11,6 +12,12 @@ function selectProject() {
     catch (e) {
         console.log(e);
     }
+    var years = project.periods
+        .map(function (period) { return period.date.getFullYear(); })
+        .filter(function (value, index, self) {
+        return self.indexOf(value) === index;
+    });
+    currentYear = years[years.length - 1];
     var projectDOM = generateProjectDOM(project);
     mainContainer.appendChild(projectDOM);
 }
@@ -88,6 +95,22 @@ function generateButtonsBlock() {
     removeYearButton.classList.add('btn', 'btn-primary');
     removeYearButton.textContent = 'Удалить последний год';
     removeYearButton.disabled = true;
+    removeYearButton.id = 'editRemoveYearButton';
+    addYearButton.addEventListener('click', function () {
+        var newYearPeriods = [];
+        var year = ++currentYear;
+        for (var i = 0; i < 12; i++)
+            newYearPeriods.push(new Period(Number.NaN, new Date(year, i), []));
+        document.getElementById('yearsContainerEdit').appendChild(generateEditYear(newYearPeriods));
+        document.getElementById('editRemoveYearButton').disabled = false;
+    });
+    removeYearButton.addEventListener('dblclick', function () {
+        var removedYear = --currentYear;
+        var container = document.getElementById('yearsContainerEdit');
+        container.removeChild(container.lastChild);
+        if (container.childElementCount === 1)
+            document.getElementById('editRemoveYearButton').disabled = true;
+    });
     buttonBlock.append(addYearButton, removeYearButton);
     return buttonBlock;
 }
@@ -148,8 +171,9 @@ function generateResourceSelectorWithValue(period) {
             resources.push(value);
         });
     }
+    var baseId = "Year" + period.date.getFullYear() + "Month" + period.date.getMonth();
     var resContainer = document.createElement('div');
-    resContainer.id = "editAddResourceYear" + period.date.getFullYear() + "Month" + period.date.getMonth();
+    resContainer.id = "editAddResource" + baseId;
     period.resources.forEach(function (value) {
         var row = document.createElement('div');
         row.classList.add('row', 'mb-2');
@@ -198,7 +222,7 @@ function generateEditYear(periods) {
     }
     var yearContainer = document.createElement('div');
     console.log(periods[1]);
-    yearContainer.id = "year" + periods[1].date.getFullYear();
+    yearContainer.id = "editYear" + periods[1].date.getFullYear();
     yearContainer.classList.add('year');
     var yearName = document.createElement('p');
     yearName.textContent = String(periods[1].date.getFullYear());
@@ -220,21 +244,19 @@ function generateEditYear(periods) {
 function generateYearsContainer(periods) {
     var periodsLocal = periods.slice();
     var yearsContainer = document.createElement('div');
-    yearsContainer.id = 'yearsContainer';
+    yearsContainer.id = 'yearsContainerEdit';
     var years = periodsLocal.map(function (period) { return period.date.getFullYear(); }).filter(function (value, index, self) {
         return self.indexOf(value) === index;
     });
-    console.log('count', years);
-    console.log('pers', periodsLocal);
     for (var i = 0; i < years.length; i++) {
         var _loop_1 = function (monthNumber) {
-            var currentYear = years[i];
+            var currentYear_1 = years[i];
             var arr = periodsLocal.filter(function (value) {
-                return (value.date.getFullYear() === currentYear) && (value.date.getMonth() === monthNumber);
+                return (value.date.getFullYear() === currentYear_1) && (value.date.getMonth() === monthNumber);
             });
             if (arr.length === 0) {
                 var period = new Period();
-                period.date = new Date(currentYear, monthNumber);
+                period.date = new Date(currentYear_1, monthNumber);
                 period.resources = [];
                 period.capacity = Number.NaN;
                 periodsLocal.push(period);
@@ -244,11 +266,9 @@ function generateYearsContainer(periods) {
             _loop_1(monthNumber);
         }
     }
-    console.log('pers after ddd', periodsLocal);
     periodsLocal.sort(function (per1, per2) {
         return per1.date > per2.date ? 1 : -1;
     });
-    console.log('pers after', periodsLocal);
     var sliceStart = 0;
     var sliceEnd = 12;
     for (var i = 0; i < years.length; i++) {

@@ -1,6 +1,6 @@
 ﻿const projectStatuses: ProjectStatus[] = getProjectStatuses();
 const resources: ResourceCapacity[] = [];
-
+let currentYear: number;
 function selectProject() {
     let select = <HTMLSelectElement>document.getElementById('projectSelector');
     let projectId = parseInt(select.options[select.selectedIndex].value);
@@ -11,6 +11,12 @@ function selectProject() {
     } catch (e) {
         console.log(e);
     }
+    let years = project.periods
+        .map(period => period.date.getFullYear())
+        .filter((value, index, self) => {
+        return self.indexOf(value) === index;
+    });
+    currentYear = years[years.length-1];
     let projectDOM = generateProjectDOM(project);
     mainContainer.appendChild(projectDOM);
 }
@@ -94,9 +100,22 @@ function generateButtonsBlock(): HTMLDivElement {
     removeYearButton.classList.add('btn', 'btn-primary');
     removeYearButton.textContent = 'Удалить последний год';
     removeYearButton.disabled = true;
-    //todo: eventlistener
-    //addYearButton.addEventListener()
-    //removeYearButton.addEventListener()
+    removeYearButton.id='editRemoveYearButton';
+    addYearButton.addEventListener('click',function () {
+        let newYearPeriods = [];
+        let year = ++currentYear;
+        for(let i =0;i<12;i++)
+            newYearPeriods.push(new Period(Number.NaN, new Date(year, i), []));
+        document.getElementById('yearsContainerEdit').appendChild(generateEditYear(newYearPeriods));
+        (<HTMLButtonElement>document.getElementById('editRemoveYearButton')).disabled = false;
+    });
+    removeYearButton.addEventListener('dblclick', function () {
+        let removedYear = --currentYear;
+        let container = document.getElementById('yearsContainerEdit');
+        container.removeChild(container.lastChild);
+        if(container.childElementCount === 1)
+            (<HTMLButtonElement>document.getElementById('editRemoveYearButton')).disabled = true; 
+    })
     buttonBlock.append(addYearButton, removeYearButton);
     return buttonBlock;
 }
@@ -172,9 +191,9 @@ function generateResourceSelectorWithValue(period: Period): HTMLDivElement {
             resources.push(value);
         })
     }
-
+    let baseId = `Year${period.date.getFullYear()}Month${period.date.getMonth()}`;
     let resContainer = <HTMLDivElement>document.createElement('div');
-    resContainer.id = `editAddResourceYear${period.date.getFullYear()}Month${period.date.getMonth()}`;
+    resContainer.id = `editAddResource`+baseId;
 
     period.resources.forEach(value => {
         let row = <HTMLDivElement>document.createElement('div');
@@ -231,7 +250,7 @@ function generateEditYear(periods: Period[]): HTMLDivElement {
     }
     let yearContainer = <HTMLDivElement>document.createElement('div');
     console.log(periods[1]);
-    yearContainer.id = `year${periods[1].date.getFullYear()}`;
+    yearContainer.id = `editYear${periods[1].date.getFullYear()}`;
     yearContainer.classList.add('year');
     let yearName = document.createElement('p');
     yearName.textContent = String(periods[1].date.getFullYear());
@@ -259,19 +278,15 @@ function generateEditYear(periods: Period[]): HTMLDivElement {
 function generateYearsContainer(periods: Period[]) {
     let periodsLocal = periods.slice();
     let yearsContainer = <HTMLDivElement>document.createElement('div');
-    yearsContainer.id = 'yearsContainer';
+    yearsContainer.id = 'yearsContainerEdit';
     let years = periodsLocal.map(period => period.date.getFullYear()).filter((value, index, self) => {
         return self.indexOf(value) === index;
     });
-    console.log('count', years);
-    console.log('pers', periodsLocal);
     for (let i = 0; i < years.length; i++) {
         for(let monthNumber = 0; monthNumber<12;monthNumber++) {
             let currentYear = years[i];
             let arr = periodsLocal.filter(value =>
                 (value.date.getFullYear() === currentYear) && (value.date.getMonth()===monthNumber));
-
-            //console.log('loop', String(currentYear), monthNumber,arr);
             if(arr.length===0) {
                 let period = new Period();
                 period.date = new Date(currentYear, monthNumber);
@@ -281,14 +296,11 @@ function generateYearsContainer(periods: Period[]) {
             }
         }
     }
-    console.log('pers after ddd', periodsLocal);
     periodsLocal.sort((per1, per2)=>{
         return per1.date > per2.date ? 1 : -1;
     })
-    console.log('pers after', periodsLocal);
     let sliceStart = 0;
     let sliceEnd = 12;
-    //todo: делать что-то если не хватает периодов
     for (let i = 0; i < years.length; i++) {
         yearsContainer.appendChild(generateEditYear(periodsLocal.slice(sliceStart, sliceEnd)));
         sliceStart = sliceEnd;

@@ -4,7 +4,10 @@ var Project = (function () {
     return Project;
 }());
 var Period = (function () {
-    function Period() {
+    function Period(capacity, date, resources) {
+        this.capacity = capacity;
+        this.date = date;
+        this.resources = resources;
     }
     return Period;
 }());

@@ -9,6 +9,12 @@ class Period {
     capacity: number;
     date: Date;
     resources: ResourceCapacity[];
+
+    constructor(capacity?: number, date?: Date, resources?: ResourceCapacity[]) {
+        this.capacity = capacity;
+        this.date = date;
+        this.resources = resources;
+    }
 }
 
 class ResourceCapacity {
