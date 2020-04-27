@@ -22,6 +22,7 @@ namespace DotNet2020.Domain._6.Controllers
         public IActionResult Index(int year = 2020)
         {
             var resources = _context.Set<Resource>()
+                .Include(res => res.AppIdentityUser)
                 .Include(x => x.ResourceGroupType)
                 .ToList();
 

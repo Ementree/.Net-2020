@@ -21,70 +21,52 @@ namespace DotNet2020.Domain._6.Controllers
             ViewBag.Year = year;
             var viewAbsences = new AbsencesViewModel();
 
-            var absences = new List<CalendarEntry>
-            {
-                new CalendarEntry()
-                {
-                    UserName = "N4LN4",
-                    From = new System.DateTime(2020, 1, 08),
-                    To = new System.DateTime(2020, 1, 15)
-                },
-                new CalendarEntry()
-                {
-                    UserName = "N5LN5",
-                    From = new System.DateTime(2020, 1, 05),
-                    To = new System.DateTime(2020, 2, 15)
-                },
-                new CalendarEntry()
-                {
-                    UserName = "N6LN6",
-                    From = new System.DateTime(2020, 2, 05),
-                    To = new System.DateTime(2020, 3, 15)
-                },
-                new CalendarEntry()
-                {
-                    UserName = "N7LN7",
-                    From = new System.DateTime(2020, 2, 06),
-                    To = new System.DateTime(2020, 2, 17)
-                },
-                new CalendarEntry()
-                {
-                    UserName = "N8LN8",
-                    From = new System.DateTime(2020, 3, 02),
-                    To = new System.DateTime(2020, 5, 15)
-                }
-            };
+            var absences = context.Set<CalendarEntry>().ToList();
 
-            var resourcesCapacity = context.Set<ResourceCapacity>().ToList();
-            var functioningCapacityResources = context.Set<FunctioningCapacityResource>().Include("Resource").ToList();
-            var resources = context.Set<Resource>().Select(res => res.FirstName + res.LastName);
-            var periods = context.Set<Period>().Where(per=>per.Start.Year == year).OrderBy(per=>per.Start).ToList();
+            var resourcesCapacity = context.Set<ResourceCapacity>()
+                .Include(res => res.Resource)
+                .ThenInclude(res => res.AppIdentityUser)
+                .ToList();
+            var functioningCapacityResources = context.Set<FunctioningCapacityResource>()
+                .Include(res => res.Resource)
+                .ThenInclude(res => res.AppIdentityUser).ToList();
+            var resources = context.Set<Resource>()
+                .Include(res => res.AppIdentityUser)
+                .Select(res => res.AppIdentityUser.FirstName + " " + res.AppIdentityUser.LastName).ToList();
+            var periods = context.Set<Period>().Where(per => per.Start.Year == year).OrderBy(per => per.Start).ToList();
             viewAbsences.Months = MonthGeneratorService.GetAllMonths(year);
+            var resourceAbsences = GetAbsencesVM(absences, resourcesCapacity, functioningCapacityResources, resources, periods);
 
-            var resourceAbsences = new Dictionary<string,(List<bool>, List<int>)>();
+            viewAbsences.ResourceAbsences = resourceAbsences;
+            return View(viewAbsences);
+        }
 
-            foreach(var res in resources)
+        private Dictionary<string, (List<bool>, List<int>)> GetAbsencesVM(List<CalendarEntry> absences, List<ResourceCapacity> resourcesCapacity, List<FunctioningCapacityResource> functioningCapacityResources, List<string> resources, List<Period> periods)
+        {
+            var resourceAbsences = new Dictionary<string, (List<bool>, List<int>)>();
+
+            foreach (var res in resources)
             {
-                resourceAbsences.Add(res,(new List<bool>(){false,false,false,false,false,false,false,false,false,false,false,false}, new List<int>() { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }));
+                resourceAbsences.Add(res, (new List<bool>() { false, false, false, false, false, false, false, false, false, false, false, false }, new List<int>() { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }));
             }
 
             for (var i = 0; i < periods.Count; i++)
             {
                 var period = periods[i];
-                foreach (var res in resources)
+                foreach (var resource in resources)
                 {
-                    var sumFunctioningCapacityResource = functioningCapacityResources.Where(fc => fc.Period == period && fc.Resource.FirstName + fc.Resource.LastName == res).Sum(fc => fc.FunctionCapacity);
+                    var sumFunctioningCapacityResource = functioningCapacityResources.Where(fc => fc.Period == period && fc.Resource.AppIdentityUser.FirstName + " " + fc.Resource.AppIdentityUser.LastName == resource).Sum(fc => fc.FunctionCapacity);
 
-                    var resourceCapacity = resourcesCapacity.FirstOrDefault(x => x.Resource.FirstName + x.Resource.LastName == res);
+                    var resourceCapacity = resourcesCapacity.FirstOrDefault(x => x.Resource.AppIdentityUser.FirstName + " " + x.Resource.AppIdentityUser.LastName == resource);
 
                     if (resourceCapacity != null && sumFunctioningCapacityResource > resourceCapacity.Capacity)
                     {
-                        resourceAbsences[res].Item1[i] = true;
+                        resourceAbsences[resource].Item1[i] = true;
                     }
                 }
             }
 
-            for (var i = 0; i < periods.Count;i++)
+            for (var i = 0; i < periods.Count; i++)
             {
                 var period = periods[i];
                 foreach (var absence in absences)
@@ -96,8 +78,7 @@ namespace DotNet2020.Domain._6.Controllers
                 }
             }
 
-            viewAbsences.ResourceAbsences = resourceAbsences;
-            return View(viewAbsences);
+            return resourceAbsences;
         }
 
         private int CalculateAbsences(Period period,CalendarEntry entry)

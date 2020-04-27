@@ -8,12 +8,14 @@
 @model Dictionary<string, List<ViewModelCapacity>>
 
 <link rel="stylesheet" href="~/wwwroot6/css/Capacity.css"/>
-
-<form asp-controller="Capacity" asp-action="Index">
-    <div class="mb-2">
-        <partial name="YearChangerPartial"/>
-    </div>
-</form>
+<div class="form-inline">
+    <form asp-controller="Capacity" asp-action="Index">
+        <div class="mb-2">
+            <partial name="YearChangerPartial"/>
+        </div>
+    </form> 
+    <button class="btn btn-primary mb-2 ml-2">Без учета отсутствий</button>
+</div>
 
 <div class="wrapper">
     <div class="scroller2 scroller">

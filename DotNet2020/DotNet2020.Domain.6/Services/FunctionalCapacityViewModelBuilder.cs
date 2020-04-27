@@ -230,6 +230,7 @@ namespace DotNet2020.Domain._6.Services
             return _context.Set<ResourceCapacity>()
                 .Include(rc => rc.Period)
                 .Include(rc => rc.Resource)
+                .ThenInclude(res => res.AppIdentityUser)
                 .ToList()
                 .GroupBy(rc => rc.Resource)
                 .ToDictionary(rc => rc.Key, rc => rc
@@ -277,29 +278,38 @@ namespace DotNet2020.Domain._6.Services
                 var currentResource = p.Key.Resource;
                 var currentPeriod = p.Key.Period;
                 var plannedCapacity = p.Value;
+                int index;
 
-                foreach (var vm in tableLinePreformList)
+                if(ContainsInPreformList(tableLinePreformList,p.Key,out index))
                 {
-                    if (vm.Resource.Id == currentResource.Id && vm.Period.Id == currentPeriod.Id)
-                    {
-                        vm.plannedCapacity = plannedCapacity;
-                        break;
-                    }
+                    tableLinePreformList[index].plannedCapacity = plannedCapacity;
                 }
+                else
+                {
+                    var lineViewModel = new FCTableLinePreform()
+                    {
+                        Resource = currentResource,
+                        Period = currentPeriod,
+                        currentCapacity = 0,
+                        plannedCapacity = plannedCapacity
+                    };
 
-
+                    tableLinePreformList.Add(lineViewModel);
+                }
             }
 
             return tableLinePreformList;
         }
 
-        public bool ContainsInPreformList(List<FCTableLinePreform> preformList,ResourcePeriodKey resourcePeriodKey)
+        public bool ContainsInPreformList(List<FCTableLinePreform> preformList,ResourcePeriodKey resourcePeriodKey,out int index)
         {
-            foreach(var preform in preformList)
-            {
-                if(preform.Resource.Id == resourcePeriodKey.Resource.Id 
-                    && preform.Period.Id == resourcePeriodKey.Period.Id)
+            index = -1;
+            for(int i = 0; i < preformList.Count(); i++) 
+            { 
+                if(preformList[i].Resource.Id == resourcePeriodKey.Resource.Id 
+                    && preformList[i].Period.Id == resourcePeriodKey.Period.Id)
                 {
+                    index = i;
                     return true;
                 }
             }
