@@ -23,11 +23,16 @@ namespace DotNet2020.Domain._6.Controllers
 
             var absences = context.Set<CalendarEntry>().ToList();
 
-            var resourcesCapacity = context.Set<ResourceCapacity>().ToList();
+            var resourcesCapacity = context.Set<ResourceCapacity>()
+                .Include(res => res.Resource)
+                .ThenInclude(res => res.AppIdentityUser)
+                .ToList();
             var functioningCapacityResources = context.Set<FunctioningCapacityResource>()
                 .Include(res => res.Resource)
                 .ThenInclude(res => res.AppIdentityUser).ToList();
-            var resources = context.Set<Resource>().Select(res => res.AppIdentityUser.FirstName + " " + res.AppIdentityUser.LastName).ToList();
+            var resources = context.Set<Resource>()
+                .Include(res => res.AppIdentityUser)
+                .Select(res => res.AppIdentityUser.FirstName + " " + res.AppIdentityUser.LastName).ToList();
             var periods = context.Set<Period>().Where(per => per.Start.Year == year).OrderBy(per => per.Start).ToList();
             viewAbsences.Months = MonthGeneratorService.GetAllMonths(year);
             var resourceAbsences = GetAbsencesVM(absences, resourcesCapacity, functioningCapacityResources, resources, periods);
