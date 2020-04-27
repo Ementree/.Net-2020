@@ -156,7 +156,51 @@ function generateMonth(period) {
     addResBtn.textContent = 'Добавить человека';
     removeResBtn.textContent = 'Удалить последнего человека';
     removeResBtn.id = "editRemoveResourceButton" + idBase;
-    removeResBtn.disabled = period.resources.length <= 1;
+    removeResBtn.disabled = period.resources.length === 0;
+    addResBtn.addEventListener('click', function () {
+        var baseId = idBase;
+        var container = document.getElementById('editAddResource' + baseId);
+        var row = document.createElement('div');
+        row.classList.add('row', 'mb-2');
+        container.appendChild(row);
+        var selectContainer = document.createElement('div');
+        selectContainer.classList.add('col-9', 'p-0');
+        var capacityContainer = document.createElement('div');
+        capacityContainer.classList.add('col-3', 'p-0', 'text-center', 'overflow-hidden');
+        container.append(selectContainer, capacityContainer);
+        row.append(selectContainer, capacityContainer);
+        var select = document.createElement('select');
+        selectContainer.append(select);
+        select.classList.add('custom-select');
+        select.id = "editSelectResourceYear" + baseId;
+        var capacityInput = document.createElement('input');
+        capacityInput.classList.add('w-100', 'h-100');
+        capacityInput.min = '0';
+        capacityInput.placeholder = 'Загрузка';
+        capacityInput.type = 'number';
+        capacityInput.value = '';
+        capacityContainer.appendChild(capacityInput);
+        var emptyOption = document.createElement('option');
+        emptyOption.disabled = true;
+        emptyOption.selected = true;
+        emptyOption.text = 'Выберите человека';
+        select.options.add(emptyOption);
+        resources.forEach(function (res) {
+            var option = document.createElement('option');
+            option.value = String(res.id);
+            option.text = res.name;
+            select.options.add(option);
+        });
+        document.getElementById('editRemoveResourceButton' + baseId).disabled = false;
+    });
+    removeResBtn.addEventListener('dblclick', function () {
+        var baseId = idBase;
+        var container = document.getElementById('editAddResource' + baseId);
+        console.log(container);
+        container.removeChild(container.lastChild);
+        if (container.childElementCount === 0)
+            document.getElementById('editRemoveResourceButton' + baseId).disabled = true;
+    });
     btnContainer.append(addResBtn, removeResBtn);
     return container;
 }
@@ -201,10 +245,6 @@ function generateResourceSelectorWithValue(period) {
                 option.selected = true;
             selectResource.options.add(option);
         });
-        var emptyOption = document.createElement('option');
-        emptyOption.disabled = true;
-        emptyOption.selected = true;
-        emptyOption.text = 'Выберите человека';
         for (var i = 0; i < selectResource.options.length; i++) {
             console.log(value.id, value.name, ' - ', selectResource.options[i].value, selectResource.options[i].text);
             if (String(value.id) === selectResource.options[i].value) {

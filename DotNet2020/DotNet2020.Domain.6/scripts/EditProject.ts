@@ -1,6 +1,7 @@
 ﻿const projectStatuses: ProjectStatus[] = getProjectStatuses();
 const resources: ResourceCapacity[] = [];
 let currentYear: number;
+
 function selectProject() {
     let select = <HTMLSelectElement>document.getElementById('projectSelector');
     let projectId = parseInt(select.options[select.selectedIndex].value);
@@ -14,9 +15,9 @@ function selectProject() {
     let years = project.periods
         .map(period => period.date.getFullYear())
         .filter((value, index, self) => {
-        return self.indexOf(value) === index;
-    });
-    currentYear = years[years.length-1];
+            return self.indexOf(value) === index;
+        });
+    currentYear = years[years.length - 1];
     let projectDOM = generateProjectDOM(project);
     mainContainer.appendChild(projectDOM);
 }
@@ -100,11 +101,11 @@ function generateButtonsBlock(): HTMLDivElement {
     removeYearButton.classList.add('btn', 'btn-primary');
     removeYearButton.textContent = 'Удалить последний год';
     removeYearButton.disabled = true;
-    removeYearButton.id='editRemoveYearButton';
-    addYearButton.addEventListener('click',function () {
+    removeYearButton.id = 'editRemoveYearButton';
+    addYearButton.addEventListener('click', function () {
         let newYearPeriods = [];
         let year = ++currentYear;
-        for(let i =0;i<12;i++)
+        for (let i = 0; i < 12; i++)
             newYearPeriods.push(new Period(Number.NaN, new Date(year, i), []));
         document.getElementById('yearsContainerEdit').appendChild(generateEditYear(newYearPeriods));
         (<HTMLButtonElement>document.getElementById('editRemoveYearButton')).disabled = false;
@@ -113,8 +114,8 @@ function generateButtonsBlock(): HTMLDivElement {
         let removedYear = --currentYear;
         let container = document.getElementById('yearsContainerEdit');
         container.removeChild(container.lastChild);
-        if(container.childElementCount === 1)
-            (<HTMLButtonElement>document.getElementById('editRemoveYearButton')).disabled = true; 
+        if (container.childElementCount === 1)
+            (<HTMLButtonElement>document.getElementById('editRemoveYearButton')).disabled = true;
     })
     buttonBlock.append(addYearButton, removeYearButton);
     return buttonBlock;
@@ -137,7 +138,7 @@ function generateMonth(period: Period) {
     monthCapacity.classList.add('col-5', 'font-weight-bold', 'pl-1', 'pr-1');
 
     let monthCapacityInput = <HTMLInputElement>document.createElement('input');
-    monthCapacityInput.value = String(isNaN(period.capacity)? '': period.capacity);
+    monthCapacityInput.value = String(isNaN(period.capacity) ? '' : period.capacity);
     monthCapacityInput.id = `editMonthCapacity` + idBase;
     monthCapacityInput.type = 'number';
     monthCapacityInput.min = String(0);
@@ -166,7 +167,6 @@ function generateMonth(period: Period) {
     container.appendChild(btnContainer);
     btnContainer.classList.add('row', 'pl-1', 'pr-1');
 
-    //todo: eventlistener
     let addResBtn = <HTMLButtonElement>document.createElement('button');
     addResBtn.classList.add('btn', 'btn-sm', 'btn-outline-dark', 'w-100', 'p-1');
     let removeResBtn = <HTMLButtonElement>addResBtn.cloneNode();
@@ -174,7 +174,54 @@ function generateMonth(period: Period) {
     addResBtn.textContent = 'Добавить человека';
     removeResBtn.textContent = 'Удалить последнего человека';
     removeResBtn.id = `editRemoveResourceButton` + idBase;
-    removeResBtn.disabled = period.resources.length <= 1;
+    removeResBtn.disabled = period.resources.length === 0;
+
+    addResBtn.addEventListener('click', function () {
+        let baseId = idBase;
+        let container = document.getElementById('editAddResource' + baseId);
+        let row = document.createElement('div');
+        row.classList.add('row', 'mb-2');
+        container.appendChild(row);
+        let selectContainer = <HTMLDivElement>document.createElement('div');
+        selectContainer.classList.add('col-9', 'p-0');
+        let capacityContainer = <HTMLDivElement>document.createElement('div');
+        capacityContainer.classList.add('col-3', 'p-0', 'text-center', 'overflow-hidden');
+        container.append(selectContainer, capacityContainer);
+        row.append(selectContainer, capacityContainer);
+        let select = <HTMLSelectElement>document.createElement('select');
+        selectContainer.append(select);
+        select.classList.add('custom-select');
+        select.id = `editSelectResourceYear` + baseId;
+        let capacityInput = <HTMLInputElement>document.createElement('input');
+        capacityInput.classList.add('w-100', 'h-100');
+        capacityInput.min = '0';
+        capacityInput.placeholder = 'Загрузка';
+        capacityInput.type = 'number';
+        capacityInput.value = '';
+        capacityContainer.appendChild(capacityInput);
+
+
+        let emptyOption = <HTMLOptionElement>document.createElement('option');
+        emptyOption.disabled = true;
+        emptyOption.selected = true;
+        emptyOption.text = 'Выберите человека';
+        select.options.add(emptyOption);
+        resources.forEach(res => {
+            let option = <HTMLOptionElement>document.createElement('option');
+            option.value = String(res.id);
+            option.text = res.name;
+            select.options.add(option);
+        });
+        (<HTMLButtonElement>document.getElementById('editRemoveResourceButton' + baseId)).disabled = false;
+    })
+
+    removeResBtn.addEventListener('dblclick', function () {
+        let baseId = idBase;
+        let container = document.getElementById('editAddResource' + baseId);
+        container.removeChild(container.lastChild);
+        if (container.childElementCount === 0)
+            (<HTMLButtonElement>document.getElementById('editRemoveResourceButton' + baseId)).disabled = true;
+    })
     btnContainer.append(addResBtn, removeResBtn);
 
     return container;
@@ -193,7 +240,7 @@ function generateResourceSelectorWithValue(period: Period): HTMLDivElement {
     }
     let baseId = `Year${period.date.getFullYear()}Month${period.date.getMonth()}`;
     let resContainer = <HTMLDivElement>document.createElement('div');
-    resContainer.id = `editAddResource`+baseId;
+    resContainer.id = `editAddResource` + baseId;
 
     period.resources.forEach(value => {
         let row = <HTMLDivElement>document.createElement('div');
@@ -226,13 +273,9 @@ function generateResourceSelectorWithValue(period: Period): HTMLDivElement {
             if (value.id === res.id)
                 option.selected = true;
             selectResource.options.add(option);
-        })
-        let emptyOption = <HTMLOptionElement>document.createElement('option');
-        emptyOption.disabled = true;
-        emptyOption.selected = true;
-        emptyOption.text = 'Выберите человека';
+        });
         for (let i = 0; i < selectResource.options.length; i++) {
-            console.log(value.id, value.name, ' - ', selectResource.options[i].value,selectResource.options[i].text);
+            console.log(value.id, value.name, ' - ', selectResource.options[i].value, selectResource.options[i].text);
             if (String(value.id) === selectResource.options[i].value) {
                 selectResource.selectedIndex = i;
             }
@@ -283,20 +326,20 @@ function generateYearsContainer(periods: Period[]) {
         return self.indexOf(value) === index;
     });
     for (let i = 0; i < years.length; i++) {
-        for(let monthNumber = 0; monthNumber<12;monthNumber++) {
+        for (let monthNumber = 0; monthNumber < 12; monthNumber++) {
             let currentYear = years[i];
             let arr = periodsLocal.filter(value =>
-                (value.date.getFullYear() === currentYear) && (value.date.getMonth()===monthNumber));
-            if(arr.length===0) {
+                (value.date.getFullYear() === currentYear) && (value.date.getMonth() === monthNumber));
+            if (arr.length === 0) {
                 let period = new Period();
                 period.date = new Date(currentYear, monthNumber);
-                period.resources=[];
-                period.capacity=Number.NaN;
+                period.resources = [];
+                period.capacity = Number.NaN;
                 periodsLocal.push(period);
             }
         }
     }
-    periodsLocal.sort((per1, per2)=>{
+    periodsLocal.sort((per1, per2) => {
         return per1.date > per2.date ? 1 : -1;
     })
     let sliceStart = 0;
