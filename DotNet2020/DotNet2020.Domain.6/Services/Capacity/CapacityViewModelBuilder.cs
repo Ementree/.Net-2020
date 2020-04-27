@@ -38,7 +38,7 @@ namespace DotNet2020.Domain._6.Services
 
                 viewModelList.Add(new ViewModelCapacity(
                     resource.Id,
-                    resource.FirstName + ' ' + resource.LastName,
+                    resource.AppIdentityUser.FirstName + ' ' + resource.AppIdentityUser.LastName,
                     resource.ResourceGroupType.Type,
                     resource.ResourceGroupType.Group,
                     capacity));

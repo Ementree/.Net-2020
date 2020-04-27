@@ -79,9 +79,9 @@
                         <th class="sticky-col1 total-sum-highlight">
                             @(pair.Key.Name)
                         </th>
-                        @for (int i = 1; i <= 12; i++) // загрузка + сумма
+                        @for (int i = 1; i <= 12; i++) 
                         {
-                            var fcp = functioningCapacityProject.FirstOrDefault(project => // отсюда можно вытащить период и проект
+                            var fcp = functioningCapacityProject.FirstOrDefault(project =>
                                 project.PeriodId == i &&
                                 project.ProjectId == pair.Key.Id);
                             var period = periods.Where(keyValuePair =>
@@ -116,14 +116,14 @@
                                 else
                                 {
                                     var fresList = keyValuePairs.First().Value;
-                                    if (fresList.Count - 1 >= i) //ресурс + загрузка j - месяц, fresList[i].ResourceId, 
+                                    if (fresList.Count - 1 >= i)
                                     {
                                         var highlight = funcCapacityResourceHighlight. FirstOrDefault(fcr => 
                                             fcr.Month == j && fcr.Year == ViewBag.Year && fcr.ProjectId == fresList[i].ProjectId && fcr.ResourceId == fresList[i].ResourceId);
                                         var color = highlight == default ? "" : highlight.Color;
                                         <td id="name;@j;@ViewBag.Year;@pair.Key.Id;@fresList[i].ResourceId"
                                             class="resource_name @color">
-                                            @fresList[i].Resource.FirstName @fresList[i].Resource.LastName
+                                            @(fresList[i].Resource.AppIdentityUser.FirstName) @(fresList[i].Resource.AppIdentityUser.LastName)
                                         </td>
                                         <td
                                             id="capacity;@j;@ViewBag.Year;@pair.Key.Id;@fresList[i].ResourceId"

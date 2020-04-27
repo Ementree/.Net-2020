@@ -30,7 +30,10 @@ namespace DotNet2020.Domain._6.Controllers
                 .ThenInclude(proj => proj.ProjectStatus)
                 .Include(fres => fres.Resource)
                 .ThenInclude(resource => resource.ResourceGroupType)
+                .Include(fres => fres.Resource)
+                .ThenInclude(res => res.AppIdentityUser)
                 .ToList();
+            
 
 
             var groupBy = functioningCapacityResources.GroupBy(f => f.ProjectId);
