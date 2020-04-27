@@ -30,7 +30,7 @@ function getProject(id: number): Project {
     xhr.send();
     let projectWithOutPeriods = JSON.parse(xhr.responseText);
     projectWithOutPeriods.periods.forEach(value => {
-        value.date =new Date(Date.parse(value.date));
+        value.date = new Date(Date.parse(value.date));
     })
     let project = <Project>projectWithOutPeriods;
     return project;
@@ -112,7 +112,7 @@ function generateMonth(period: Period) {
 
     let monthName = <HTMLDivElement>document.createElement('div');
     monthName.classList.add('col-7', 'font-weight-bold', 'pl-1', 'pr-1');
-    monthName.textContent = `${GetMonthName(period.date.getMonth()+1)} - `;
+    monthName.textContent = `${GetMonthName(period.date.getMonth() + 1)} - `;
 
     let monthCapacity = <HTMLDivElement>document.createElement('div');
     monthCapacity.classList.add('col-5', 'font-weight-bold', 'pl-1', 'pr-1');
@@ -223,8 +223,10 @@ function generateResourceSelectorWithValue(period: Period): HTMLDivElement {
 }
 
 function generateEditYear(periods: Period[]): HTMLDivElement {
-    if (periods.length != 12)
+    console.log(periods);
+    if (periods.length != 12) {
         throw 'exception in periods length';
+    }
     let yearContainer = <HTMLDivElement>document.createElement('div');
     console.log(periods[1]);
     yearContainer.id = `year${periods[1].date.getFullYear()}`;
@@ -233,7 +235,7 @@ function generateEditYear(periods: Period[]): HTMLDivElement {
     yearName.textContent = String(periods[1].date.getFullYear());
     let firstHalfYear = <HTMLDivElement>document.createElement('div');
     let secondHalfYear = <HTMLDivElement>document.createElement('div');
-    yearContainer.append(yearName,firstHalfYear, secondHalfYear);
+    yearContainer.append(yearName, firstHalfYear, secondHalfYear);
 
     //first half
     firstHalfYear.id = `year${periods[1].date.getFullYear()}_1`;
@@ -258,6 +260,7 @@ function generateYearsContainer(periods: Period[]) {
     let yearsCount = periods.length / 12;
     let sliceStart = 0;
     let sliceEnd = 12;
+    //todo: делать что-то если не хватает периодов
     for (let i = 0; i < yearsCount; i++) {
         yearsContainer.appendChild(generateEditYear(periods.slice(sliceStart, sliceEnd)));
         sliceStart = sliceEnd;

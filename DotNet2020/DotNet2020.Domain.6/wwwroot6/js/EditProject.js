@@ -190,8 +190,10 @@ function generateResourceSelectorWithValue(period) {
     return resContainer;
 }
 function generateEditYear(periods) {
-    if (periods.length != 12)
+    console.log(periods);
+    if (periods.length != 12) {
         throw 'exception in periods length';
+    }
     var yearContainer = document.createElement('div');
     console.log(periods[1]);
     yearContainer.id = "year" + periods[1].date.getFullYear();
