@@ -14,6 +14,7 @@ namespace DotNet2020.Domain._4.Models
         public AppIdentityUser User { get; set; }
 
 
+        #warning Если есть этот метод, то From и To нужно сделать приватные setter'ы
         public void ChangeDate(DateTime from, DateTime to)
         {
             if (to < from) throw new ArgumentException("You are trying set incorrect data period!" +

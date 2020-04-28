@@ -1,4 +1,4 @@
-@{
+﻿@{
     ViewData["Title"] = "Calendar";
 }
 @using DotNet2020.Domain._4.Models
@@ -92,12 +92,12 @@
                 </div>
             </form>
             <br />
-            <form asp-action="AddHoliday" asp-controller="Calendar" method="get">
+            <form asp-action="Add" asp-controller="Holiday" method="get">
                 <div class="adminrecomadd">
                     <button type="submit">Добавить праздничный день</button>
                 </div>
             </form>
-            <form asp-action="RemoveHoliday" asp-controller="Calendar" method="get">
+            <form asp-action="Remove" asp-controller="Holiday" method="get">
                 <div class="adminrecomadd">
                     <button type="submit">Удалить праздничный день</button>
                 </div>

@@ -3,7 +3,7 @@
     <div class="text-danger">@Html.ValidationMessage("Error1")</div>
     <div class="text-danger">@Html.ValidationMessage("Error2")</div>
 <div>
-    @using (Html.BeginForm("AddVacation", "Calendar", FormMethod.Post))
+    @using (Html.BeginForm("Add", "Vacation", FormMethod.Post))
     {
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
         <p>Выберите интервал времени</p>

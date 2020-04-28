@@ -2,7 +2,7 @@
     <div class="text-danger">@Html.ValidationMessage("Error")</div>
     <div class="text-danger">@Html.ValidationMessage("Error1")</div>
 <div>
-    @using (Html.BeginForm("AddSickDay", "Calendar", FormMethod.Post))
+    @using (Html.BeginForm("Add", "SickDay", FormMethod.Post))
     {
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
         <p>Выберите день болезни</p>
