@@ -1,0 +1,75 @@
+﻿@model DotNet2020.Domain._5.Models.ShowIssuesModel
+<style>
+    a {
+        color: inherit; /* blue colors for links too */
+        text-decoration: inherit; /* no underline */
+    }
+
+    .issues {
+        margin: 10px 0 0 10px;
+        position: center;
+    }
+
+    .issuediv {
+        height: 65px;
+        background-color: #cfe2ff;
+        border-radius: 9px 9px;
+    }
+
+    .textblock {
+        margin: 10px 0 10px 10px;
+        height: 80px;
+    }
+
+    .td {
+        border-right: 1px solid #c4c4c4;
+        border-bottom: 1px solid #c4c4c4;
+    }
+
+    .tdlast {
+        border-bottom: 1px solid #c4c4c4;
+    }
+
+    .tditem {
+        margin: 8px 10px 5px 10px;
+    }
+
+    .tdboldtext {
+        margin: 15px 10px 5px 10px;
+        font-weight: 700;
+    }
+
+    .tdtext {
+        margin: 15px 10px 5px 10px;
+    }
+</style>
+<div class="issues">
+    <div class="textblock">
+        <table>
+            <tr>
+                <td class="td"><p class="tditem">Создал</p></td>
+                <td class="td"><p class="tditem">Исполнитель</p></td>
+                <td class="td"><p class="tditem">Расчетное время</p></td>
+                <td class="tdlast"><p class="tditem">Затраченное время</p></td>
+            </tr>
+            <tr><td><p style="height:20px"></p></td></tr>
+            @foreach (var issue in Model.Issues)
+            {
+                <tr>
+                    <td colspan="10">
+                        <a>
+                            <p style="display:inline" class="tdboldtext">@issue.Name</p>
+                            <p style="display:inline" class="tdtext">@issue.Title</p>
+                        </a>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="td"><p class="tditem">@issue.CreatorName</p></td>
+                    <td class="td"><p class="tditem">@issue.AssigneeName</p></td>
+                    <td class="td"><p class="tditem">@(issue.TimeInfo.SpentTime.HasValue ? issue.TimeInfo.SpentTime.Value + "h" : "?")</p></td>
+                    <td class="tdlast"><p class="tditem">@(issue.TimeInfo.EstimatedTime.HasValue ? issue.TimeInfo.EstimatedTime.Value + "h" : "?")</p></td>
+                </tr>
+            }
+        </table>
+    </div>
+</div>

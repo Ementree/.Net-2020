@@ -22,5 +22,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Report\Create.cshtml">
     </EmbeddedResource>
+    <EmbeddedResource Include="Views\Issues\Show.cshtml">
+    </EmbeddedResource>
   </ItemGroup>
 </Project>
