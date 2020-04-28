@@ -4,7 +4,7 @@ namespace DotNet2020.Domain.Core.Models
 {
     public class HasNameBase: HasIdBase
     {
-        [Required, StringLength(255)]
+        [Required, StringLength(Strings.DefaultLength)]
         public string Name { get; set; }
     }
 }
