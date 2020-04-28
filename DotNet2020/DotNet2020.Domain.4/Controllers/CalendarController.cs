@@ -29,7 +29,7 @@ namespace DotNet2020.Domain._4.Controllers
             var user = _dbContext.Users.FirstOrDefault(u => u.Id == User.FindFirstValue(ClaimTypes.NameIdentifier));
             ViewBag.TotalVacation = user.TotalDayOfVacation;
             ViewBag.Recommendation = _dbContext.Recommendations.FirstOrDefault();
-            ViewBag.User = _dbContext.Users.FirstOrDefault(u => u.UserName == HttpContext.User.Identity.Name);
+            ViewBag.User = user;
 
             var allVacations = _dbContext.GetAllVacations();
             var users = _dbContext.GetAllUsers();

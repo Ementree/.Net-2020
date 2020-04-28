@@ -34,51 +34,9 @@
     }
 </script>
 
-<script>////Custom View
-//    (function ($, undefined) {
-//        var kendo = window.kendo,
-//            ui = kendo.ui,
-//            SchedulerTimelineView = ui.TimelineView,
-//            extend = $.extend,
-//            NS = ".kendoTimelineYearView";
-
-//        var SchedulerTimelineYearView = SchedulerTimelineView.extend({
-//            nextDate: function () {
-//                var start = this.startDate();
-//                return new Date(start.getFullYear() + 1, 0, 1);
-//            },
-//            options: {
-//                columnWidth: 1,
-//            },
-//            previousDate: function () {
-//                var start = this.startDate();
-//                return new Date(start.getFullYear() - 1, 0, 1);
-//            },
-//            calculateDateRange: function () {
-//                var selectedDate = this.options.date,
-//                    start = new Date(selectedDate.getFullYear(), 0, 1),
-//                    end = kendo.date.previousDay(new Date(selectedDate.getFullYear() + 1, 0, 1)),
-//                    dates = [];
-
-//                while (start <= end) {
-//                    dates.push(start);
-//                    start = kendo.date.nextDay(start);
-//                }
-//                this._render(dates);
-//            },
-//        })
-
-//        //extend UI
-//        extend(true, ui, {
-//            SchedulerTimelineYearView: SchedulerTimelineYearView
-//        });
-
-//    })(window.kendo.jQuery);
-
-
+<script>
     var WeeksTimelineGroupedView = kendo.ui.scheduler.TimelineGroupedView.extend({
         _addContent: function (dates, columnCount, groupsCount, rowCount, start, end, slotTemplate, isVerticalGrouped) {
-            //      console.log('_addContent');
 
             var view = this._view;
             var html = '';
@@ -95,7 +53,6 @@
             return html;
         },
         _addTimeSlotsCollections: function (groupCount, tableRows) {
-            //      console.log("_addTimeSlotsCollections");
 
             var view = this._view;
 
@@ -150,7 +107,6 @@
 
     var WeekYearView = kendo.ui.TimelineView.extend({
         _getGroupedView: function () {
-            //      console.log('_getGroupedView');
 
             return new WeeksTimelineGroupedView(this);
         },
@@ -191,7 +147,6 @@
 
         // make proper slots
         _calculateSlotRanges: function () {
-            //      console.log('_calculateSlotRanges');
 
             var dates = this._dates;
             var slotStartTime = this.startTime();
@@ -225,19 +180,11 @@
         },
 
         _layout: function (dates) {
-            //      console.log('_layout');
 
             var columns = [];
             var that = this;
             var rows = [{ text: that.options.messages.defaultRowText }];
             var groupedView = that._groupedView;
-
-            /*      var weekNumTemplate = kendo.template('<span class=\'k-link k-nav-day\'>#=kendo.date.weekInYear(date)#</span>');
-            var monthNumTemplate = kendo.template('<span class=\'k-link k-nav-day\'>#=kendo.format(\'{0:MMM}\', date)#</span>');
-            var yearNumTemplate = kendo.template('<span class=\'k-link k-nav-day\'>#=kendo.format(\'{0:yyyy}\', date)#</span>');
-            var weekNumTemplate = kendo.template('<span class=\'k-link k-nav-day\'>#=getWeekInfo(date).week#</span>');
-            var monthNumTemplate = kendo.template('<span class=\'k-link k-nav-day\'>#=getWeekInfo(date).month#</span>');
-            var yearNumTemplate = kendo.template('<span class=\'k-link k-nav-day\'>#=getWeekInfo(date).year#</span>');*/
 
             // loop months over weeks
             for (var idx = 0; idx < dates.length; idx++) {
@@ -250,7 +197,6 @@
 
                 if (yIdx >= columns.length) {
                     var yr = {
-                        //                  text: yearNumTemplate({ date: dates[idx] }),
                         text: info.year,
                         className: 'k-slot-cell',
                         columns: [],
@@ -293,7 +239,6 @@
 
                 if (wIdx >= columns[yIdx].weeks.length) {
                     var ts = {
-                        //text: weekNumTemplate({ date: dates[idx] }),
                         text: info.week,
                         className: 'k-slot-cell',
                         colspan: 1,
@@ -324,7 +269,6 @@
             };
         },
         _groups: function () {
-            //      console.log('_groups');
 
             var groupCount = this._groupCount();
             var dates = this._dates;
@@ -350,7 +294,6 @@
             this._timeSlotGroups(groupCount);
         },
         _timeSlotGroups: function (groupCount) {
-            //      console.log('_timeSlotGroups');
 
             var tableRows = this.content.find('tr');
             tableRows.attr('role', 'row');
@@ -382,12 +325,7 @@
         {
             views.TimelineMonthView(view => view.SlotTemplateId("my-holiday")).Title("Month").ColumnWidth(20);
             views.TimelineWeekView(view => view.SlotTemplateId("my-holiday")).Title("Week");
-            //views.CustomView("kendo.ui.SchedulerTimelineYearView", view => {
-            //    var timeline = view;
-            //    timeline.Title("Year");
-            //    });
-            // views.AgendaView();
-            views.CustomView("WeekYearView", mv => mv.Selected(true).Title("Year"));
+            views.CustomView("WeekYearView", view => view.Selected(true).Title("Year"));
         })
         .BindTo(Model.Events)
         .Group(group => group.Resources("Titles").Orientation(SchedulerGroupOrientation.Vertical))
@@ -413,8 +351,6 @@
 
 
 <style>
-
-
     .k-event, .k-task-complete {
         color: #fff;
         background: yellow;
@@ -433,27 +369,15 @@
 </style>
 
 <script>
-
-    async function getData(ajaxurl) {
-        return await $.ajax({
-            url: ajaxurl,
-            type: 'GET',
-        });
-    };
-
-
     function getColorBasedOnHour(date) {
         const holidays = JSON.parse('@Html.Raw(Json.Serialize(@Model.Holidays))')
 
-        console.log(holidays)
         var month = date.getUTCMonth() + 1;
         var day = date.getUTCDate() + 1;
         var year = date.getUTCFullYear();
 
         newdate = year + "/" + month + "/" + day;
         if (holidays.includes(newdate)) {
-            console.log('holiday')
-            console.log(newdate)
             return "red";
         }
     }
