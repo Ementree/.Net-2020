@@ -1,14 +1,17 @@
-﻿using DotNet2020.Domain._4.Models;
+﻿using System;
+using DotNet2020.Domain._4.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace DotNet2020.Domain._4.Models
 {
+    [Obsolete("Используйте ApplicationDbContext",true)]
     public class CalendarEntryContext : DbContext
     {
         public CalendarEntryContext(DbContextOptions<CalendarEntryContext> options) : base(options)
         {
         }
 
+        [Obsolete("Перенесите в метод OnModelCreating4, вызовите этот метод в OnModelCreating в ApplicationDbContext",true)]
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<AbstractCalendarEntry>()
