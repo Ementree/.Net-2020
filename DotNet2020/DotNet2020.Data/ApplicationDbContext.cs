@@ -1,6 +1,6 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using DotNet2020.Domain._6.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using DotNet2020.Domain._6.Models;
 
 namespace DotNet2020.Data
 {
@@ -14,6 +14,7 @@ namespace DotNet2020.Data
         public virtual DbSet<Resource> Resources { get; set; }
         public virtual DbSet<ResourceCapacity> ResourceCapacities { get; set; }
         public virtual DbSet<ResourceGroupType> ResourceGroupsTypes { get; set; }
+        public virtual DbSet<CalendarEntry> CalendarEntries { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
