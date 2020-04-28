@@ -42,12 +42,11 @@ namespace DotNet2020.Domain._4.Controllers
         [Authorize]
         public IActionResult AddEvent()
         {
-
             return View();
         }
 
         #region Добавление Event в календарь
-
+        #warning Выделить в отдельные контроллеры
         [HttpGet]
         [Authorize]
         public IActionResult AddSickDay()
@@ -59,7 +58,8 @@ namespace DotNet2020.Domain._4.Controllers
         [Authorize]
         public IActionResult AddSickDay(SickDayViewModel viewModel)
         {
-            if(viewModel.Day == DateTime.MinValue)
+            #warning Используйте DataAnnotations аттрибуты
+            if (viewModel.Day == DateTime.MinValue)
             {
                 ModelState.AddModelError("Error1", "Введите дату");
                 return View();
@@ -90,6 +90,7 @@ namespace DotNet2020.Domain._4.Controllers
                 ModelState.AddModelError("Error2", "Количество запрашеваемых дней отпуска превышает количество доступных вам");
                 return View(viewModel);
             }
+            #warning Используйте DataAnnotations аттрибуты
             if (viewModel.From == DateTime.MinValue && viewModel.From == DateTime.MinValue)
             {
                 ModelState.AddModelError("Error1", "Введите даты");
@@ -119,6 +120,7 @@ namespace DotNet2020.Domain._4.Controllers
         [Authorize]
         public IActionResult AddIllness(VacationViewModel viewModel)
         {
+            #warning Используйте DataAnnotations аттрибуты
             if (viewModel.From == DateTime.MinValue && viewModel.From == DateTime.MinValue)
             {
                 ModelState.AddModelError("Error1", "Введите даты");
@@ -135,8 +137,8 @@ namespace DotNet2020.Domain._4.Controllers
             _dbContext.SaveChanges();
             return RedirectToAction("Index");
         }
-
         #endregion
+
         public List<DateTime> GetDatesFromInterval(DateTime startDate, DateTime endDate)
         {
             List<DateTime> result = new List<DateTime>();
@@ -193,6 +195,7 @@ namespace DotNet2020.Domain._4.Controllers
         [Authorize]
         public IActionResult Approve(int id)
         {
+            #warning Добавить интерфейс, заменить на полиморфизм
             var calendarEntry = _dbContext.CalendarEntries.Find(id);            
             if (calendarEntry is Vacation vacation)
             {
@@ -201,6 +204,7 @@ namespace DotNet2020.Domain._4.Controllers
                 var days = GetDatesFromInterval(calendarEntry.From, calendarEntry.To);
                 var total = GetWorkDay(days, hollidays);
                 user.TotalDayOfVacation = user.TotalDayOfVacation - total;
+                #warning Добавить User в качестве согласующего
                 vacation.Approve();
                 user.Approve();
             }
@@ -223,6 +227,8 @@ namespace DotNet2020.Domain._4.Controllers
             return RedirectToActionPermanent("Admin");
         }
 
+        #region Holiday
+        #warning выделить в отдельный контроллер
         [HttpGet]
         [Authorize]
         public IActionResult AddHoliday()
@@ -239,27 +245,6 @@ namespace DotNet2020.Domain._4.Controllers
             _dbContext.SaveChanges();
             return RedirectToActionPermanent("Admin");
         }
-
-        [HttpGet]
-        [Authorize]
-        public IActionResult UpdateRecommendation()
-        {
-            return View();
-        }
-
-        [HttpPost]
-        [Authorize]
-        [ValidationFilter]
-        public IActionResult UpdateRecommendation(Recommendation recommendation)
-        {
-            var dbEntry = _dbContext.Recommendations.FirstOrDefault();
-            if (dbEntry == null)
-                _dbContext.Recommendations.Add(recommendation);
-            else dbEntry.RecommendationText = recommendation.RecommendationText;
-            _dbContext.SaveChanges();
-            return RedirectToActionPermanent("Admin");
-        }
-
 
         [HttpGet]
         public IActionResult RemoveHoliday()
@@ -294,5 +279,29 @@ namespace DotNet2020.Domain._4.Controllers
 
             return Json(result);
         }
+        #endregion
+
+        #region Recomendation
+        #warning выделить в отдельный контроллер
+        [HttpGet]
+        [Authorize]
+        public IActionResult UpdateRecommendation()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [Authorize]
+        [ValidationFilter]
+        public IActionResult UpdateRecommendation(Recommendation recommendation)
+        {
+            var dbEntry = _dbContext.Recommendations.FirstOrDefault();
+            if (dbEntry == null)
+                _dbContext.Recommendations.Add(recommendation);
+            else dbEntry.RecommendationText = recommendation.RecommendationText;
+            _dbContext.SaveChanges();
+            return RedirectToActionPermanent("Admin");
+        }
+        #endregion
     }
 }
