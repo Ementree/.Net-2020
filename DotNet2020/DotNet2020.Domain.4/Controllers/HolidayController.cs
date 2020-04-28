@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using DotNet2020.Domain._4.Models;
 using DotNet2020.Domain.Filters;
@@ -30,7 +31,7 @@ namespace DotNet2020.Domain._4.Controllers
         {
             _dbContext.Holidays.Add(holiday);
             _dbContext.SaveChanges();
-            return RedirectToActionPermanent("Admin", "Calendar");
+            return RedirectToActionPermanent("Index", "AdminCalendar");
         }
 
         [HttpGet]
@@ -41,30 +42,12 @@ namespace DotNet2020.Domain._4.Controllers
         }
 
         [HttpPost]
-        public IActionResult RemoveHolidays(int id)
+        public IActionResult Remove(int id)
         {
             var holiday = _dbContext.Holidays.FirstOrDefault(u => u.Id == id);
-            _dbContext.Holidays.Remove(holiday);
+            _dbContext.Holidays.Remove(holiday ?? throw new NullReferenceException());
             _dbContext.SaveChanges();
             return RedirectToActionPermanent("Remove");
-        }
-
-        public ActionResult GetHolidays()
-        {
-            // logic
-            // Edit you don't need to serialize it just return the object
-            var result = _dbContext.Holidays
-                .ToList()
-                .Select(u =>
-                {
-                    var year = u.Date.Year.ToString();
-                    var month = u.Date.Month.ToString().StartsWith('0') ? u.Date.Month.ToString().Skip(1) : u.Date.Month.ToString();
-                    var day = u.Date.Day.ToString().StartsWith('0') ? u.Date.Day.ToString().Skip(1) : u.Date.Day.ToString();
-                    return $"{year}/{month}/{day}";
-                })
-                .ToList();
-
-            return Json(result);
         }
     }
 }

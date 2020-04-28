@@ -33,7 +33,7 @@ namespace DotNet2020.Domain._4.Controllers
                 _dbContext.Recommendations.Add(recommendation);
             else dbEntry.RecommendationText = recommendation.RecommendationText;
             _dbContext.SaveChanges();
-            return RedirectToActionPermanent("Admin", "Calendar");
+            return RedirectToActionPermanent("Index", "AdminCalendar");
         }
     }
 }

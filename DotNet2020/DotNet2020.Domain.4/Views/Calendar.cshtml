@@ -88,7 +88,7 @@
         // Set to nearest Thursday: current date + 4 - current day number
         // Make Sunday's day number 7
 
-        var thurs = d.getUTCDate() + 4 - (d.getUTCDay() || 7)
+        var thurs = d.getUTCDate() + 4 - (d.getUTCDay() || 7);
         d.setUTCDate(thurs);
 
         // Get first day of year
@@ -103,7 +103,7 @@
             month: d.getMonth(),
             year: d.getUTCFullYear()
         };
-    };
+    }
 
     var WeekYearView = kendo.ui.TimelineView.extend({
         _getGroupedView: function () {
@@ -243,7 +243,7 @@
                         className: 'k-slot-cell',
                         colspan: 1,
                         weekNum: info.week
-                    }
+                    };
 
                     columns[yIdx].weeks.push(info.week);
                     columns[yIdx].columns[mIdx].columns.push(ts);
@@ -370,7 +370,7 @@
 
 <script>
     function getColorBasedOnHour(date) {
-        const holidays = JSON.parse('@Html.Raw(Json.Serialize(@Model.Holidays))')
+        const holidays = JSON.parse('@Html.Raw(Json.Serialize(@Model.Holidays))');
 
         var month = date.getUTCMonth() + 1;
         var day = date.getUTCDate() + 1;

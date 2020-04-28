@@ -17,7 +17,7 @@
                     <td>@holiday.Name</td>
                     <td>@holiday.Date.Day/@holiday.Date.Month/@holiday.Date.Year</td>
                     <td>
-                        <form asp-controller="Calendar" asp-action="RemoveHolidays" asp-route-id="@holiday.Id" method="post">
+                        <form asp-controller="Holiday" asp-action="Remove" asp-route-id="@holiday.Id" method="post">
                             <button type="submit">&#10008;</button>
                         </form>
                     </td>
@@ -26,7 +26,7 @@
         </tbody>        
     </table>
     <br />
-    <form asp-action="Admin" asp-controller="Calendar" method="get">
+    <form asp-action="Index" asp-controller="AdminCalendar" method="get">
         <div class="adminrecomadd">
             <button type="submit">Назад</button>
         </div>

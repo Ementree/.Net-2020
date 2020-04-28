@@ -19,7 +19,7 @@ namespace DotNet2020.Domain._4.Controllers
         
         [HttpGet]
         [Authorize]
-        public IActionResult Admin()
+        public IActionResult Index()
         {
             ViewBag.Recommendation = _dbContext.Recommendations.FirstOrDefault();
             ViewBag.Events = _dbContext.CalendarEntries
@@ -54,7 +54,7 @@ namespace DotNet2020.Domain._4.Controllers
             if (calendarEntry is Illness illness)
                 illness.Approve();
             _dbContext.SaveChanges();
-            return RedirectToActionPermanent("Admin");
+            return RedirectToActionPermanent("Index");
         }
 
         [HttpPost]
@@ -67,7 +67,7 @@ namespace DotNet2020.Domain._4.Controllers
             var calendarEntry =  _dbContext.CalendarEntries.Find(id);
             _dbContext.CalendarEntries.Remove(calendarEntry);
             _dbContext.SaveChanges();
-            return RedirectToActionPermanent("Admin");
+            return RedirectToActionPermanent("Index");
         }
     }
 }
