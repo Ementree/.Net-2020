@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
-using DotNet2020.Domain._5.Entities;
-using DotNet2020.Domain._5.Models;
+﻿using DotNet2020.Domain._5.Models;
 using DotNet2020.Domain._5.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using System.Linq;
 
 namespace DotNet2020.Domain._5.Controllers
 {
