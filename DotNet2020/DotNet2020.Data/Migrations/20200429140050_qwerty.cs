@@ -3,12 +3,29 @@ using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
-namespace DotNet2020.Data.Migrations.Attestation
+namespace DotNet2020.Data.Migrations
 {
-    public partial class AddAttestation : Migration
+    public partial class qwerty : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropColumn(
+                name: "FirstName",
+                table: "AspNetUsers");
+
+            migrationBuilder.DropColumn(
+                name: "LastName",
+                table: "AspNetUsers");
+
+            migrationBuilder.DropColumn(
+                name: "Position",
+                table: "AspNetUsers");
+
+            migrationBuilder.AddColumn<int>(
+                name: "EmployeeId",
+                table: "AspNetUsers",
+                nullable: true);
+
             migrationBuilder.CreateTable(
                 name: "Answers",
                 columns: table => new
@@ -18,7 +35,8 @@ namespace DotNet2020.Data.Migrations.Attestation
                     NumberOfAsk = table.Column<int>(nullable: false),
                     IsSkipped = table.Column<bool>(nullable: false),
                     IsRight = table.Column<bool>(nullable: false),
-                    Commentary = table.Column<string>(nullable: true)
+                    Commentary = table.Column<string>(nullable: true),
+                    Question = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -31,12 +49,13 @@ namespace DotNet2020.Data.Migrations.Attestation
                 {
                     Id = table.Column<long>(nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    WorkerId = table.Column<long>(nullable: true),
-                    CompetencesId = table.Column<List<long>>(nullable: true),
+                    WorkerId = table.Column<long>(nullable: false),
+                    GotCompetences = table.Column<List<long>>(nullable: true),
                     Problems = table.Column<string>(nullable: true),
                     NextMoves = table.Column<string>(nullable: true),
                     Feedback = table.Column<string>(nullable: true),
-                    Date = table.Column<DateTime>(nullable: false)
+                    Date = table.Column<DateTime>(nullable: false),
+                    IdsTestedCompetences = table.Column<List<long>>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -50,8 +69,8 @@ namespace DotNet2020.Data.Migrations.Attestation
                     Id = table.Column<long>(nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Competence = table.Column<string>(nullable: true),
-                    Content = table.Column<string[]>(nullable: true),
-                    Questions = table.Column<string[]>(nullable: true)
+                    Content = table.Column<List<string>>(nullable: true),
+                    Questions = table.Column<List<string>>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -72,22 +91,16 @@ namespace DotNet2020.Data.Migrations.Attestation
                 });
 
             migrationBuilder.CreateTable(
-                name: "Workers",
+                name: "Position",
                 columns: table => new
                 {
-                    Id = table.Column<long>(nullable: false)
+                    Id = table.Column<int>(nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Name = table.Column<string>(nullable: true),
-                    Position = table.Column<string>(nullable: true),
-                    Salary = table.Column<double>(nullable: false),
-                    Bonus = table.Column<double>(nullable: false),
-                    Commentary = table.Column<string>(nullable: true),
-                    PreviousWorkPlaces = table.Column<string>(nullable: true),
-                    Experience = table.Column<string>(nullable: true)
+                    Name = table.Column<string>(maxLength: 255, nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Workers", x => x.Id);
+                    table.PrimaryKey("PK_Position", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -139,11 +152,40 @@ namespace DotNet2020.Data.Migrations.Attestation
                 });
 
             migrationBuilder.CreateTable(
+                name: "Employee",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    FirstName = table.Column<string>(maxLength: 255, nullable: false),
+                    LastName = table.Column<string>(maxLength: 255, nullable: false),
+                    MiddleName = table.Column<string>(maxLength: 255, nullable: true),
+                    PositionId = table.Column<int>(nullable: true),
+                    Discriminator = table.Column<string>(nullable: false),
+                    Salary = table.Column<double>(nullable: true),
+                    Bonus = table.Column<double>(nullable: true),
+                    Commentary = table.Column<string>(nullable: true),
+                    PreviousWorkPlaces = table.Column<string>(nullable: true),
+                    Experience = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Employee", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Employee_Position_PositionId",
+                        column: x => x.PositionId,
+                        principalTable: "Position",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "SpecificWorkerCompetences",
                 columns: table => new
                 {
                     WorkerId = table.Column<long>(nullable: false),
-                    CompetenceId = table.Column<long>(nullable: false)
+                    CompetenceId = table.Column<long>(nullable: false),
+                    WorkerId1 = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -155,17 +197,27 @@ namespace DotNet2020.Data.Migrations.Attestation
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_SpecificWorkerCompetences_Workers_WorkerId",
-                        column: x => x.WorkerId,
-                        principalTable: "Workers",
+                        name: "FK_SpecificWorkerCompetences_Employee_WorkerId1",
+                        column: x => x.WorkerId1,
+                        principalTable: "Employee",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_AspNetUsers_EmployeeId",
+                table: "AspNetUsers",
+                column: "EmployeeId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_AttestationAnswer_AnswerId",
                 table: "AttestationAnswer",
                 column: "AnswerId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Employee_PositionId",
+                table: "Employee",
+                column: "PositionId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_GradeCompetences_CompetenceId",
@@ -176,10 +228,27 @@ namespace DotNet2020.Data.Migrations.Attestation
                 name: "IX_SpecificWorkerCompetences_CompetenceId",
                 table: "SpecificWorkerCompetences",
                 column: "CompetenceId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SpecificWorkerCompetences_WorkerId1",
+                table: "SpecificWorkerCompetences",
+                column: "WorkerId1");
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_AspNetUsers_Employee_EmployeeId",
+                table: "AspNetUsers",
+                column: "EmployeeId",
+                principalTable: "Employee",
+                principalColumn: "Id",
+                onDelete: ReferentialAction.Restrict);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropForeignKey(
+                name: "FK_AspNetUsers_Employee_EmployeeId",
+                table: "AspNetUsers");
+
             migrationBuilder.DropTable(
                 name: "AttestationAnswer");
 
@@ -202,7 +271,36 @@ namespace DotNet2020.Data.Migrations.Attestation
                 name: "Competences");
 
             migrationBuilder.DropTable(
-                name: "Workers");
+                name: "Employee");
+
+            migrationBuilder.DropTable(
+                name: "Position");
+
+            migrationBuilder.DropIndex(
+                name: "IX_AspNetUsers_EmployeeId",
+                table: "AspNetUsers");
+
+            migrationBuilder.DropColumn(
+                name: "EmployeeId",
+                table: "AspNetUsers");
+
+            migrationBuilder.AddColumn<string>(
+                name: "FirstName",
+                table: "AspNetUsers",
+                type: "text",
+                nullable: true);
+
+            migrationBuilder.AddColumn<string>(
+                name: "LastName",
+                table: "AspNetUsers",
+                type: "text",
+                nullable: true);
+
+            migrationBuilder.AddColumn<string>(
+                name: "Position",
+                table: "AspNetUsers",
+                type: "text",
+                nullable: true);
         }
     }
 }

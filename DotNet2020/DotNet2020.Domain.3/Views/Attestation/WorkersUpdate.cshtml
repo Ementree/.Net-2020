@@ -28,17 +28,18 @@
     <main role="main">
         <form method="post">
             <p>Фамилия</p>
-            <input type="text" required name="Worker.Surname" value="@Model.Worker.Surname" />
+            <input type="text" required name="Worker.LastName" value="@Model.Worker.LastName" />
             <p>Имя</p>
-            <input type="text" required name="Worker.Name" value="@Model.Worker.Name" />
+            <input type="text" required name="Worker.FirstName" value="@Model.Worker.FirstName" />
             <p>Отчество</p>
-            <input type="text" required name="Worker.Patronymic" value="@Model.Worker.Patronymic" />
+            <input type="text" required name="Worker.MiddleName" value="@Model.Worker.MiddleName" />
             <p>Должность</p>
-            <input type="text" required name="Worker.Position" value="@Model.Worker.Position" />
+            <input type="text" required name="Worker.Position.Name" value="@Model.Worker.Position.Name" />
             <p>Оклад</p>
             <input type="number" required name="Worker.Salary" step="0.01" value="@Model.Worker.Salary" />
             <p>Премия</p>
             <input type="number" required name="Worker.Bonus" step="0.01" value="@Model.Worker.Bonus" />
+            <input type="number" hidden value="@Model.Worker.Position.Id" name="Worker.Position.Id" />
             <p>Компетенции</p>
 
             @foreach (var element in Model.Competences)

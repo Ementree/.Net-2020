@@ -8,7 +8,7 @@ using DotNet2020.Domain.Core.Models;
 
 namespace DotNet2020.Domain._3.Models
 {
-    public class SpecificWorkerModel : WorkerModel
+    public class SpecificWorkerModel : Employee
     {
         public double Salary { get; set; }
         public double Bonus { get; set; }
@@ -16,7 +16,7 @@ namespace DotNet2020.Domain._3.Models
         public string PreviousWorkPlaces { get; set; }
         public string Experience { get; set; }
         [NotMapped]
-        public string FullName => Surname + " " + Name + " " + Patronymic;
+        public string FullName => LastName + " " + FirstName + " " + MiddleName;
 
         public List<SpecificWorkerCompetencesModel> SpecificWorkerCompetencesModels { get; set; } = new List<SpecificWorkerCompetencesModel>();
     }

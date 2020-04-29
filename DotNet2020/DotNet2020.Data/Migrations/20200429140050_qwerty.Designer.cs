@@ -4,15 +4,17 @@ using System.Collections.Generic;
 using DotNet2020.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace DotNet2020.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200429140050_qwerty")]
+    partial class qwerty
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -300,15 +302,20 @@ namespace DotNet2020.Data.Migrations
 
             modelBuilder.Entity("DotNet2020.Domain._3.Models.SpecificWorkerCompetencesModel", b =>
                 {
-                    b.Property<int>("WorkerId")
-                        .HasColumnType("integer");
+                    b.Property<long>("WorkerId")
+                        .HasColumnType("bigint");
 
                     b.Property<long>("CompetenceId")
                         .HasColumnType("bigint");
 
+                    b.Property<int?>("WorkerId1")
+                        .HasColumnType("integer");
+
                     b.HasKey("WorkerId", "CompetenceId");
 
                     b.HasIndex("CompetenceId");
+
+                    b.HasIndex("WorkerId1");
 
                     b.ToTable("SpecificWorkerCompetences");
                 });
@@ -674,9 +681,8 @@ namespace DotNet2020.Data.Migrations
 
                     b.HasOne("DotNet2020.Domain._3.Models.SpecificWorkerModel", "Worker")
                         .WithMany("SpecificWorkerCompetencesModels")
-                        .HasForeignKey("WorkerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("WorkerId1")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("DotNet2020.Domain._6.Models.FunctioningCapacityProject", b =>

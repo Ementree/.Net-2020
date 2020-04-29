@@ -2,9 +2,9 @@
 
 namespace DotNet2020.Domain._3.Models.Contexts
 {
-    public class AttestationContext:DbContext
+    public class AttestationContext123:DbContext
     {
-        public AttestationContext(DbContextOptions<AttestationContext> options):base(options) { }
+        public AttestationContext123(DbContextOptions<AttestationContext123> options):base(options) { }
 
         public DbSet<AttestationModel> Attestations { get; set; }
         public DbSet<AnswerModel> Answers { get; set; }
@@ -14,8 +14,9 @@ namespace DotNet2020.Domain._3.Models.Contexts
         public DbSet<GradeCompetencesModel> GradeCompetences { get; set; }
         public DbSet<SpecificWorkerModel> Workers { get; set; }
         public DbSet<SpecificWorkerCompetencesModel> SpecificWorkerCompetences { get; set; }
+
         
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        public void OnModelCreating3(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<SpecificWorkerCompetencesModel>()
                 .HasKey(e => new { e.WorkerId, e.CompetenceId });

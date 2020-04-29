@@ -44,18 +44,14 @@ namespace DotNet2020
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseNpgsql(
                     Configuration.GetConnectionString("DefaultConnection")));
+
             services.AddDefaultIdentity<AppIdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
+
             services.AddControllersWithViews();
             services.AddRazorPages();
             services.AddScoped<DbContext, ApplicationDbContext>();
 
-
-            #region qwertyRegion
-            services.AddDbContext<AttestationContext>(options =>
-                    options.UseNpgsql(
-                        Configuration.GetConnectionString("DefaultConnection"), b => b.MigrationsAssembly("DotNet2020.Data")));
-            #endregion
             #region MAYAK
             services.AddDbContext<CalendarEntryContext>(options =>
                 options.UseNpgsql(

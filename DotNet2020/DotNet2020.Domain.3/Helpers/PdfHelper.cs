@@ -98,7 +98,7 @@ namespace DotNet2020.Domain._3.Helpers
             return ms;
         }
         
-        public static MemoryStream GetPdfOfAttestation(long id, AttestationContext context)
+        public static MemoryStream GetPdfOfAttestation(long id, DbContext context)
         {
             var memoryStream = new MemoryStream();
             var document = new Document(PageSize.A4, 75, 65, 75, 75);
@@ -117,13 +117,13 @@ namespace DotNet2020.Domain._3.Helpers
             Font boldBody=new Font(baseFont, 10, Font.BOLD, BaseColor.BLACK);
             Font head=new Font(baseFont, 16, Font.NORMAL, BaseColor.BLACK);
 
-            var attestation = context.Attestations.First(x => x.Id == id);
+            var attestation = context.Set<AttestationModel>().First(x => x.Id == id);
 
             context.Entry(attestation).Collection(x => x.AttestationAnswer).Load();
 
             foreach (var attestationAnswer in attestation.AttestationAnswer)
             {
-                attestationAnswer.Answer = context.Answers.Find(attestationAnswer.AnswerId);
+                attestationAnswer.Answer = context.Set<AnswerModel>().Find(attestationAnswer.AnswerId);
             }
 
             attestation.AttestationAnswer = attestation.AttestationAnswer.Where(x => x.Answer.IsSkipped == false).OrderBy(x=>x.Answer.NumberOfAsk).ToList();
@@ -137,10 +137,10 @@ namespace DotNet2020.Domain._3.Helpers
 
             foreach (var testedCompetence in testedCompetences)
             {
-                competencesModels.Add(context.Competences.Find(testedCompetence));
+                competencesModels.Add(context.Set<CompetencesModel>().Find(testedCompetence));
             }
             
-            var worker = context.Workers.Find(attestation.WorkerId);
+            var worker = context.Set<SpecificWorkerModel>().Find(attestation.WorkerId);
             
             document.Open();
             if (worker == null)

@@ -9,16 +9,19 @@ using DotNet2020.Domain._3.Models;
 using DotNet2020.Domain._3.Models.Contexts;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using DotNet2020.Data;
+using Microsoft.EntityFrameworkCore;
+using DotNet2020.Domain.Core.Models;
 
 namespace DotNet2020.Domain._3.Controllers
 {
     public class AttestationController : Controller
     {
-        private readonly AttestationContext _context;
+        private readonly DbContext _context;
         private readonly IWebHostEnvironment _env;
-        public AttestationController(AttestationContext attestationContext, IWebHostEnvironment env)
+        public AttestationController(DbContext context, IWebHostEnvironment env)
         {
-            _context = attestationContext;
+            _context = context;
             _env = env;
         }
         public IActionResult Index()
@@ -35,33 +38,44 @@ namespace DotNet2020.Domain._3.Controllers
             return View(workers);
         }
 
-        public IActionResult WorkersUpdate(long id)
+        public IActionResult WorkersUpdate(int id)
         {
-            var worker = _context.Workers.Find(id);
+            var worker = _context.Set<SpecificWorkerModel>().Find(id);
+
+            var positionId=_context.Entry(worker).Member("PositionId").CurrentValue;
+
+            var position = _context.Set<Position>().Find(positionId);
+
+            worker.Position = position;
 
             _context.Entry(worker).Collection(x => x.SpecificWorkerCompetencesModels).Load();
 
+            var competences = _context.Set<CompetencesModel>();
+
             foreach (var specificWorkerCompetence in worker.SpecificWorkerCompetencesModels)
             {
-                specificWorkerCompetence.Competence = _context.Competences.Find(specificWorkerCompetence.CompetenceId);
+                specificWorkerCompetence.Competence = competences.Find(specificWorkerCompetence.CompetenceId);
             }
 
-            WorkerUpdateModel workerUpdateModel = new WorkerUpdateModel { Worker = worker, Competences = _context.Competences.ToList() };
+            WorkerUpdateModel workerUpdateModel = new WorkerUpdateModel { Worker = worker, Competences = competences.ToList() };
 
             return View(workerUpdateModel);
         }
 
         [HttpPost]
-        public IActionResult WorkersUpdate(long id, WorkerUpdateModel workerUpdateModel)
+        public IActionResult WorkersUpdate(int id, WorkerUpdateModel workerUpdateModel)
         {
             workerUpdateModel.Worker.Id = id;
+            
+            var specificWorkerCompetences = _context.Set<SpecificWorkerCompetencesModel>();
+            var competences = _context.Set<CompetencesModel>();
 
-            var oldSpecificWorkerCompetencesModels = _context.SpecificWorkerCompetences.Where(x => x.WorkerId == id);
-            _context.SpecificWorkerCompetences.RemoveRange(oldSpecificWorkerCompetencesModels);
+            var oldSpecificWorkerCompetencesModels = specificWorkerCompetences.Where(x => x.WorkerId == id);
+            specificWorkerCompetences.RemoveRange(oldSpecificWorkerCompetencesModels);
 
             foreach (var competenceId in workerUpdateModel.NewCompetencesIds)
             {
-                var competence = _context.Competences.Find(competenceId);
+                var competence = competences.Find(competenceId);
 
                 var workerCompetences = new SpecificWorkerCompetencesModel();
 
@@ -69,9 +83,10 @@ namespace DotNet2020.Domain._3.Controllers
                 workerCompetences.Worker = workerUpdateModel.Worker;
 
                 workerUpdateModel.Worker.SpecificWorkerCompetencesModels.Add(workerCompetences);
-                _context.SpecificWorkerCompetences.Add(workerCompetences);
+                specificWorkerCompetences.Add(workerCompetences);
             }
 
+            _context.Entry(workerUpdateModel.Worker.Position).State = EntityState.Modified;
             _context.Entry(workerUpdateModel.Worker).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
             _context.SaveChanges();
             return RedirectToAction("Workers");
@@ -79,18 +94,18 @@ namespace DotNet2020.Domain._3.Controllers
 
         public IActionResult WorkersAdd()
         {
-            ViewBag.Competences = _context.Competences; //для вывода всех компетенций
+            ViewBag.Competences = _context.Set<CompetencesModel>().ToList(); //для вывода всех компетенций
             return View();
         }
 
         [HttpPost]
         public IActionResult WorkersAdd(SpecificWorkerModel workerModel, List<long> competences)
         {
-            ViewBag.Competences = _context.Competences; //для вывода всех компетенций
+            ViewBag.Competences = _context.Set<CompetencesModel>().ToList(); //для вывода всех компетенций
 
             foreach (var competenceId in competences)
             {
-                var competence = _context.Competences.Find(competenceId);
+                var competence = _context.Set<CompetencesModel>().Find(competenceId);
 
                 var workerCompetences = new SpecificWorkerCompetencesModel();
 
@@ -100,7 +115,7 @@ namespace DotNet2020.Domain._3.Controllers
                 workerModel.SpecificWorkerCompetencesModels.Add(workerCompetences);
             }
 
-            _context.Workers.Add(workerModel);
+            _context.Set<SpecificWorkerModel>().Add(workerModel);
             _context.SaveChanges();
 
             return RedirectToAction("Workers");
@@ -108,9 +123,9 @@ namespace DotNet2020.Domain._3.Controllers
 
         public IActionResult WorkersRemove(long id)
         {
-            var item = _context.Workers.Find(id);
+            var item = _context.Set<SpecificWorkerModel>().Find(id);
             if (item != null)
-                _context.Workers.Remove(item);
+                _context.Set<SpecificWorkerModel>().Remove(item);
             _context.SaveChanges();
             return RedirectToAction("Workers");
         }
@@ -119,7 +134,7 @@ namespace DotNet2020.Domain._3.Controllers
 
         public IActionResult Competences()
         {
-            var competences = _context.Competences;
+            var competences = _context.Set<CompetencesModel>();
             return View(competences);
         }
 
@@ -131,14 +146,14 @@ namespace DotNet2020.Domain._3.Controllers
         [HttpPost]
         public IActionResult CompetencesAdd(CompetencesModel competenceModel)
         {
-            _context.Competences.Add(competenceModel);
+            _context.Set<CompetencesModel>().Add(competenceModel);
             _context.SaveChanges();
             return RedirectToAction("CompetencesManage", new { id = competenceModel.Id });
         }
 
         public IActionResult CompetencesManage(long id)
         {
-            var competence = _context.Competences.Find(id);
+            var competence = _context.Set<CompetencesModel>().Find(id);
             var competenceUpdateModel = new CompetenceUpdateModel { Competence = competence };
             return View(competenceUpdateModel);
         }
@@ -146,7 +161,7 @@ namespace DotNet2020.Domain._3.Controllers
         [HttpPost]
         public IActionResult CompetencesManage(long id, CompetenceUpdateModel competenceUpdateModel)
         {
-            var competence = _context.Competences.Find(id);
+            var competence = _context.Set<CompetencesModel>().Find(id);
             switch (competenceUpdateModel.Action)
             {
                 case Models.CompetenceActions.AddContent:
@@ -154,7 +169,7 @@ namespace DotNet2020.Domain._3.Controllers
                     break;
 
                 case Models.CompetenceActions.RemoveCompetence:
-                    _context.Competences.Remove(competence);
+                    _context.Set<CompetencesModel>().Remove(competence);
                     _context.SaveChanges();
                     return RedirectToAction("Competences");
 
@@ -180,14 +195,14 @@ namespace DotNet2020.Domain._3.Controllers
 
         public IActionResult Grades()
         {
-            var grades = _context.Grades.ToList();
+            var grades = _context.Set<GradesModel>().ToList();
 
             foreach (var grade in grades)
             {
                 _context.Entry(grade).Collection(x => x.GradesCompetences).Load();
                 foreach (var gradeCompetences in grade.GradesCompetences)
                 {
-                    gradeCompetences.Competence = _context.Competences.Find(gradeCompetences.CompetenceId);
+                    gradeCompetences.Competence = _context.Set<CompetencesModel>().Find(gradeCompetences.CompetenceId);
                 }
             }
 
@@ -202,52 +217,53 @@ namespace DotNet2020.Domain._3.Controllers
         [HttpPost]
         public IActionResult GradesAdd(GradesModel gradeModel)
         {
-            _context.Grades.Add(gradeModel);
+            _context.Set<GradesModel>().Add(gradeModel);
             _context.SaveChanges();
             return RedirectToAction("GradesManage", new { id = gradeModel.Id });
         }
 
         public IActionResult GradesManage(long id)
         {
-            var grade = _context.Grades.Find(id);
+            var grade = _context.Set<GradesModel>().Find(id);
             _context.Entry(grade).Collection(x => x.GradesCompetences).Load();
-            var gradeUpdateModel = new GradeUpdateModel { GradeModel = grade, Competences = _context.Competences.ToList() };
+            var gradeUpdateModel = new GradeUpdateModel { GradeModel = grade, Competences = _context.Set<CompetencesModel>().ToList() };
             return View(gradeUpdateModel);
         }
 
         [HttpPost]
         public IActionResult GradesManage(long id, GradeUpdateModel gradeUpdateModel)
         {
-            var grade = _context.Grades.Find(id);
+            var grade = _context.Set<GradesModel>().Find(id);
+
             switch (gradeUpdateModel.Action)
             {
                 case GradeActions.SetCompetences:
-                    var oldGradesCompetences = _context.GradeCompetences.Where(x => x.GradeId == id);
-                    _context.GradeCompetences.RemoveRange(oldGradesCompetences);
+                    var oldGradesCompetences = _context.Set<GradeCompetencesModel>().Where(x => x.GradeId == id);
+                    _context.Set<GradeCompetencesModel>().RemoveRange(oldGradesCompetences);
 
                     foreach (var competenceId in gradeUpdateModel.NewCompetencesIds)
                     {
                         var gradeCompetence = new GradeCompetencesModel();
 
-                        gradeCompetence.Competence = _context.Competences.Find(competenceId);
+                        gradeCompetence.Competence = _context.Set<CompetencesModel>().Find(competenceId);
                         gradeCompetence.Grade = grade;
 
                         grade.GradesCompetences.Add(gradeCompetence);
 
-                        _context.GradeCompetences.Add(gradeCompetence);
+                        _context.Set<GradeCompetencesModel>().Add(gradeCompetence);
                     }
                     _context.SaveChanges();
 
                     break;
                 case GradeActions.RemoveGrade:
-                    _context.Grades.Remove(grade);
+                    _context.Set<GradesModel>().Remove(grade);
                     _context.SaveChanges();
                     return RedirectToAction("Grades");
             }
 
             _context.Entry(grade).Collection(x => x.GradesCompetences).Load();
             gradeUpdateModel.GradeModel = grade;
-            gradeUpdateModel.Competences = _context.Competences.ToList();
+            gradeUpdateModel.Competences = _context.Set<CompetencesModel>().ToList();
             return View(gradeUpdateModel);
         }
 
@@ -255,13 +271,13 @@ namespace DotNet2020.Domain._3.Controllers
         #region Questions
         public IActionResult Questions()
         {
-            var competences = _context.Competences;
+            var competences = _context.Set<CompetencesModel>();
             return View(competences);
         }
 
         public IActionResult QuestionsManage(long id)
         {
-            var questions = _context.Competences.Find(id).Questions;
+            var questions = _context.Set<CompetencesModel>().Find(id).Questions;
             var questionUpdateModel = new QuestionUpdateModel { Questions = questions };
             return View(questionUpdateModel);
         }
@@ -269,7 +285,7 @@ namespace DotNet2020.Domain._3.Controllers
         [HttpPost]
         public IActionResult QuestionsManage(long id, QuestionUpdateModel questionUpdateModel)
         {
-            var competence = _context.Competences.Find(id);
+            var competence = _context.Set<CompetencesModel>().Find(id);
             switch (questionUpdateModel.Action)
             {
                 case QuestionActions.RemoveQuestions:
@@ -295,7 +311,7 @@ namespace DotNet2020.Domain._3.Controllers
 
             attestation.Workers = GetLoadedWorkers();
             attestation.Grades = GetLoadedGrades();
-            attestation.Competences = _context.Competences.ToList();
+            attestation.Competences = _context.Set<CompetencesModel>().ToList();
 
             if (attestation.Competences.Count == 0)
             {
@@ -326,13 +342,13 @@ namespace DotNet2020.Domain._3.Controllers
 
                 case AttestationAction.CompetencesChose: //вывести таблицу компетенций и работников
                     model.Workers = GetLoadedWorkers();
-                    model.Competences = _context.Competences.ToList();
+                    model.Competences = _context.Set<CompetencesModel>().ToList();
                     model.Grades = GetLoadedGrades();
                     break;
 
                 case AttestationAction.GradeChose: //вывести таблицу грейдов и работников
                     model.Workers = GetLoadedWorkers();
-                    model.Competences = _context.Competences.ToList();
+                    model.Competences = _context.Set<CompetencesModel>().ToList();
                     model.Grades = GetLoadedGrades();
                     break;
 
@@ -341,7 +357,7 @@ namespace DotNet2020.Domain._3.Controllers
                     var testedCompetences = new List<CompetencesModel>();
                     foreach (var competenceId in model.IdsTestedCompetences)
                     {
-                        var competence = _context.Competences.Find(competenceId);
+                        var competence = _context.Set<CompetencesModel>().Find(competenceId);
                         testedCompetences.Add(competence);
                         questions = questions.Union(competence.Questions).ToList();
                     }
@@ -354,13 +370,13 @@ namespace DotNet2020.Domain._3.Controllers
                     var questionsForGrade = new List<string>();
                     var gradeId = model.GradeId.Value;
 
-                    var testedGradeCompetences = _context.GradeCompetences.Where(x => x.GradeId == gradeId).ToList();
+                    var testedGradeCompetences = _context.Set<GradeCompetencesModel>().Where(x => x.GradeId == gradeId).ToList();
 
                     var idsOfTestedCompetences = new List<CompetencesModel>();
 
                     foreach (var testedGradeCompetence in testedGradeCompetences)
                     {
-                        var competence = _context.Competences.Find(testedGradeCompetence.CompetenceId);
+                        var competence = _context.Set<CompetencesModel>().Find(testedGradeCompetence.CompetenceId);
                         questionsForGrade = questionsForGrade.Union(competence.Questions).ToList();
                         idsOfTestedCompetences.Add(competence);
                     }
@@ -388,7 +404,7 @@ namespace DotNet2020.Domain._3.Controllers
 
                     foreach (var newCompetence in newCompetences)
                     {
-                        _context.SpecificWorkerCompetences.Add(newCompetence);
+                        _context.Set<SpecificWorkerCompetencesModel>().Add(newCompetence);
                         gotCompetences.Add(newCompetence.CompetenceId);
                     }
 
@@ -406,27 +422,30 @@ namespace DotNet2020.Domain._3.Controllers
         #endregion
         private List<SpecificWorkerModel> GetLoadedWorkers()
         {
-            var workers = _context.Workers.ToList();
+            var workers = _context.Set<SpecificWorkerModel>().ToList();
             foreach (var worker in workers)
             {
                 _context.Entry(worker).Collection(x => x.SpecificWorkerCompetencesModels).Load();
                 foreach (var specificWorkerCompetence in worker.SpecificWorkerCompetencesModels)
                 {
-                    specificWorkerCompetence.Competence = _context.Competences.Find(specificWorkerCompetence.CompetenceId);
+                    specificWorkerCompetence.Competence = _context.Set<CompetencesModel>().Find(specificWorkerCompetence.CompetenceId);
                 }
+                var positionId=_context.Entry(worker).Member("PositionId").CurrentValue;
+                var position=_context.Set<Position>().Find((int)positionId);
+                worker.Position = position;
             }
             return workers;
         }
 
         private List<GradesModel> GetLoadedGrades()
         {
-            var grades = _context.Grades.ToList();
+            var grades = _context.Set<GradesModel>().ToList();
             foreach (var grade in grades)
             {
                 _context.Entry(grade).Collection(x => x.GradesCompetences).Load();
                 foreach (var gradeCompetences in grade.GradesCompetences)
                 {
-                    gradeCompetences.Competence = _context.Competences.Find(gradeCompetences.CompetenceId);
+                    gradeCompetences.Competence = _context.Set<CompetencesModel>().Find(gradeCompetences.CompetenceId);
                 }
             }
             return grades;
@@ -435,11 +454,11 @@ namespace DotNet2020.Domain._3.Controllers
         public IActionResult AttestationList()
         {
             List<AttestationListModel> attestationListModels = new List<AttestationListModel>();
-            foreach (var element in _context.Attestations.ToList())
+            foreach (var element in _context.Set<AttestationModel>().ToList())
             {
                 var attestationListModel = new AttestationListModel(element);
-                attestationListModel.Worker = _context.Workers.Find(element.WorkerId);
-                attestationListModel.Competences = element.GotCompetences.Select(x => _context.Competences.Find(x)).ToList();
+                attestationListModel.Worker = _context.Set<SpecificWorkerModel>().Find(element.WorkerId);
+                attestationListModel.Competences = element.GotCompetences.Select(x => _context.Set<CompetencesModel>().Find(x)).ToList();
                 attestationListModels.Add(attestationListModel);
             }
             return View(attestationListModels);
@@ -496,12 +515,12 @@ namespace DotNet2020.Domain._3.Controllers
 
         private List<SpecificWorkerCompetencesModel> GetNewCompetences(AttestationModel model)
         {
-            var specificWorkerModel = _context.SpecificWorkerCompetences.Where(x => x.WorkerId == model.WorkerId).ToList();
+            var specificWorkerModel = _context.Set<SpecificWorkerCompetencesModel>().Where(x => x.WorkerId == model.WorkerId).ToList();
             var newSpecificWorkerCompetences = new List<SpecificWorkerCompetencesModel>();
 
             foreach (var competence in model.GotCompetences)
             {
-                newSpecificWorkerCompetences.Add(new SpecificWorkerCompetencesModel { CompetenceId = competence, WorkerId = model.WorkerId });
+                newSpecificWorkerCompetences.Add(new SpecificWorkerCompetencesModel { CompetenceId = competence, WorkerId = (int)model.WorkerId });
             }
 
             newSpecificWorkerCompetences = newSpecificWorkerCompetences.Union(specificWorkerModel).Distinct(new SpecificWorkerCompetencesComparer()).ToList();
