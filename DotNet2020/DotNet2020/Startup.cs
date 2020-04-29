@@ -48,15 +48,15 @@ namespace DotNet2020
 
             #endregion
 
-            #region MAYAK
-
-            services.AddDbContext<CalendarEntryContext>(options =>
-                options.UseNpgsql(
-                    Configuration.GetConnectionString("DefaultConnection"),
-                    b => b.MigrationsAssembly("DotNet2020.Data")));
+            // #region MAYAK
+            //
+            // services.AddDbContext<CalendarEntryContext>(options =>
+            //     options.UseNpgsql(
+            //         Configuration.GetConnectionString("DefaultConnection"),
+            //         b => b.MigrationsAssembly("DotNet2020.Data")));
             services.AddKendo();
-
-            #endregion
+            //
+            // #endregion
 
             var attestationAssembly = typeof(AttestationController).Assembly;
             var domain4Assembly = typeof(CalendarController).Assembly;

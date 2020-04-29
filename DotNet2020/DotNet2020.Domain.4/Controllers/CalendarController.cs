@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
+using DotNet2020.Data;
 using DotNet2020.Domain._4.Domain;
 using DotNet2020.Domain._4.Models;
 using DotNet2020.Domain._4_.Models.ModelView;
@@ -16,9 +17,9 @@ namespace DotNet2020.Domain._4.Controllers
 {
     public class CalendarController : Controller
     {
-        private readonly CalendarEntryContext _dbContext;
+        private readonly DbContext _dbContext;
 
-        public CalendarController(CalendarEntryContext dbContext)
+        public CalendarController(DbContext dbContext)
         {
             _dbContext = dbContext;
         }
@@ -27,9 +28,9 @@ namespace DotNet2020.Domain._4.Controllers
         [Authorize]
         public IActionResult Index()
         {
-            var user = _dbContext.Users.FirstOrDefault(u => u.Id == User.FindFirstValue(ClaimTypes.NameIdentifier));
+            var user = _dbContext.Set<AppIdentityUser>().FirstOrDefault(u => u.Id == User.FindFirstValue(ClaimTypes.NameIdentifier));
             ViewBag.TotalVacation = user?.TotalDayOfVacation;
-            ViewBag.Recommendation = _dbContext.Recommendations.FirstOrDefault();
+            ViewBag.Recommendation = _dbContext.Set<Recommendation>().FirstOrDefault();
             ViewBag.User = user;
 
             var allVacations = _dbContext.GetAllVacations();
