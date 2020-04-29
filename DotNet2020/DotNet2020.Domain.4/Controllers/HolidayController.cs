@@ -17,7 +17,6 @@ namespace DotNet2020.Domain._4.Controllers
             _dbContext = dbContext;
         }
         
-        #warning выделить в отдельный контроллер
         [HttpGet]
         [Authorize]
         public IActionResult Add()
@@ -38,8 +37,7 @@ namespace DotNet2020.Domain._4.Controllers
         [HttpGet]
         public IActionResult Remove()
         {
-            ViewBag.Holidays = _dbContext.Set<Holiday>().ToList();
-            return View();
+            return View(_dbContext.Set<Holiday>().ToList());
         }
 
         [HttpPost]

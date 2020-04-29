@@ -1,4 +1,5 @@
-﻿@{
+﻿@model List<DotNet2020.Domain._4.Models.Holiday>
+@{
     ViewData["Title"] = "Calendar";
 }
     <link rel="stylesheet" href="~/css/calendar.css">
@@ -11,7 +12,7 @@
             </tr>
         </thead>
         <tbody>
-            @foreach (var holiday in ViewBag.Holidays)
+            @foreach (var holiday in Model)
             {
                 <tr>
                     <td>@holiday.Name</td>
