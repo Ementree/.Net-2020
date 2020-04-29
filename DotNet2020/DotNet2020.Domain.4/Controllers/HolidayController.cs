@@ -4,14 +4,15 @@ using DotNet2020.Domain._4.Models;
 using DotNet2020.Domain.Filters;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace DotNet2020.Domain._4.Controllers
 {
     public class HolidayController : Controller
     {
-        private readonly CalendarEntryContext _dbContext;
+        private readonly DbContext _dbContext;
 
-        public HolidayController(CalendarEntryContext dbContext)
+        public HolidayController(DbContext dbContext)
         {
             _dbContext = dbContext;
         }
@@ -29,7 +30,7 @@ namespace DotNet2020.Domain._4.Controllers
         [ValidationFilter]
         public IActionResult Add(Holiday holiday)
         {
-            _dbContext.Holidays.Add(holiday);
+            _dbContext.Set<Holiday>().Add(holiday);
             _dbContext.SaveChanges();
             return RedirectToActionPermanent("Index", "AdminCalendar");
         }
@@ -37,15 +38,15 @@ namespace DotNet2020.Domain._4.Controllers
         [HttpGet]
         public IActionResult Remove()
         {
-            ViewBag.Holidays = _dbContext.Holidays.ToList();
+            ViewBag.Holidays = _dbContext.Set<Holiday>().ToList();
             return View();
         }
 
         [HttpPost]
         public IActionResult Remove(int id)
         {
-            var holiday = _dbContext.Holidays.FirstOrDefault(u => u.Id == id);
-            _dbContext.Holidays.Remove(holiday ?? throw new NullReferenceException());
+            var holiday = _dbContext.Set<Holiday>().FirstOrDefault(u => u.Id == id);
+            _dbContext.Set<Holiday>().Remove(holiday ?? throw new NullReferenceException());
             _dbContext.SaveChanges();
             return RedirectToActionPermanent("Remove");
         }
