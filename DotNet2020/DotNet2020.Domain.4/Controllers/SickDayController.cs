@@ -31,12 +31,6 @@ namespace DotNet2020.Domain._4.Controllers
         [ValidationFilter]
         public IActionResult Add(SickDayViewModel viewModel)
         {
-            // #warning Используйте DataAnnotations аттрибуты
-            // if (viewModel.Day == DateTime.MinValue)
-            // {
-            //     ModelState.AddModelError("Error1", "Введите дату");
-            //     return View();
-            // }
             var sickDay = new SickDay(
                 viewModel.Day ?? throw new NullReferenceException(),
                 viewModel.Day ?? throw new NullReferenceException(),
