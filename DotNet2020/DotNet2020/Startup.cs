@@ -54,7 +54,7 @@ namespace DotNet2020
             //     options.UseNpgsql(
             //         Configuration.GetConnectionString("DefaultConnection"),
             //         b => b.MigrationsAssembly("DotNet2020.Data")));
-            // services.AddKendo();
+            services.AddKendo();
             //
             // #endregion
 
