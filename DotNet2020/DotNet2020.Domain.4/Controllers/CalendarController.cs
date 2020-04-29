@@ -28,7 +28,8 @@ namespace DotNet2020.Domain._4.Controllers
         [Authorize]
         public IActionResult Index()
         {
-            var user = _dbContext.Set<AppIdentityUser>().FirstOrDefault(u => u.Id == User.FindFirstValue(ClaimTypes.NameIdentifier));
+            var user = _dbContext.Set<AppIdentityUser>()
+                .FirstOrDefault(u => u.Id == User.FindFirstValue(ClaimTypes.NameIdentifier));
             ViewBag.TotalVacation = user?.TotalDayOfVacation;
             ViewBag.Recommendation = _dbContext.Set<Recommendation>().FirstOrDefault();
             ViewBag.User = user;
@@ -46,7 +47,5 @@ namespace DotNet2020.Domain._4.Controllers
         {
             return View();
         }
-
-        
     }
 }
