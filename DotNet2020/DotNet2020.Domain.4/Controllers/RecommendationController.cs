@@ -16,7 +16,6 @@ namespace DotNet2020.Domain._4.Controllers
             _dbContext = dbContext;
         }
         
-        #warning выделить в отдельный контроллер
         [HttpGet]
         [Authorize]
         public IActionResult Update()
@@ -30,11 +29,16 @@ namespace DotNet2020.Domain._4.Controllers
         public IActionResult Update(Recommendation recommendation)
         {
             var dbEntry = _dbContext.Set<Recommendation>().FirstOrDefault();
+            SetRecommendation(recommendation, dbEntry);
+            _dbContext.SaveChanges();
+            return RedirectToActionPermanent("Index", "AdminCalendar");
+        }
+
+        private void SetRecommendation(Recommendation recommendation, Recommendation dbEntry)
+        {
             if (dbEntry == null)
                 _dbContext.Set<Recommendation>().Add(recommendation);
             else dbEntry.RecommendationText = recommendation.RecommendationText;
-            _dbContext.SaveChanges();
-            return RedirectToActionPermanent("Index", "AdminCalendar");
         }
     }
 }
