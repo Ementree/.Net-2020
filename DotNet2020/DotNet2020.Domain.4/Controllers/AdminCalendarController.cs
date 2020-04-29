@@ -51,10 +51,9 @@ namespace DotNet2020.Domain._4.Controllers
         [Authorize]
         public IActionResult Reject(int id)
         {
-            var user = _dbContext.Set<AppIdentityUser>().FirstOrDefault(u => u.UserName == HttpContext.User.Identity.Name);
-            if (user != null)
-                user.Reject();
             var calendarEntry =  _dbContext.Set<AbstractCalendarEntry>().Find(id);
+            var user = _dbContext.Set<AppIdentityUser>().FirstOrDefault(u => u.Id == calendarEntry.UserId);
+            user?.Reject();
             _dbContext.Set<AbstractCalendarEntry>().Remove(calendarEntry);
             _dbContext.SaveChanges();
             return RedirectToActionPermanent("Index");
