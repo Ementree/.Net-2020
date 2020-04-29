@@ -15,7 +15,7 @@ namespace DotNet2020.Domain.Filters
         private readonly ValidationResult _result;
 
         public ValidationFilterAttribute(ValidationResult result
-            = ValidationResult.Json)
+            = ValidationResult.View)
         {
             _result = result;
         }

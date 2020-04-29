@@ -8,9 +8,9 @@ namespace DotNet2020.Domain._4_.Models.ModelView
     public class VacationViewModel
     {
         [Required(ErrorMessage = "Введите дату")]
-        public DateTime From { get; set; }
+        public DateTime? From { get; set; }
 
         [Required(ErrorMessage = "Введите дату")]
-        public DateTime To { get; set; }
+        public DateTime? To { get; set; }
     }
 }

@@ -32,7 +32,9 @@ namespace DotNet2020.Domain._4.Controllers
         public IActionResult Add(VacationViewModel viewModel)
         {
             var user = _dbContext.Set<AppIdentityUser>().FirstOrDefault(u => u.Id == User.FindFirstValue(ClaimTypes.NameIdentifier));
-            var days = DomainLogic.GetDatesFromInterval(viewModel.From, viewModel.To);
+            var days = DomainLogic.GetDatesFromInterval(
+                viewModel.From ?? throw new NullReferenceException(), 
+                viewModel.To ?? throw new NullReferenceException());
             var hollidays = _dbContext.Set<Holiday>().Where(u => u.Date >= viewModel.From && u.Date <= viewModel.To).ToList();
             if (user.TotalDayOfVacation < DomainLogic.GetWorkDay(days, hollidays))
             {
@@ -51,7 +53,9 @@ namespace DotNet2020.Domain._4.Controllers
                 return View(viewModel);
             }
 
-            var vacation = new Vacation(viewModel.From, viewModel.To,
+            var vacation = new Vacation(
+                viewModel.From ?? throw new NullReferenceException(), 
+                viewModel.To ?? throw new NullReferenceException(),
                 _dbContext.Set<AppIdentityUser>().FirstOrDefault(u => u.Email == HttpContext.User.Identity.Name));
             _dbContext.Set<AbstractCalendarEntry>().Add(vacation);
             _dbContext.SaveChanges();
