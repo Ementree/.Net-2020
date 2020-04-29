@@ -1,6 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using DotNet2020.Data;
 using DotNet2020.Domain._4.Models;
+using DotNet2020.Domain.Models.ModelView;
+using Kendo.Mvc.Examples.Models.Scheduler;
+using Microsoft.EntityFrameworkCore;
 
 namespace DotNet2020.Domain._4.Domain
 {
@@ -40,6 +45,74 @@ namespace DotNet2020.Domain._4.Domain
                 }
             }
             return total;
+        }
+        
+        public static List<CalendarEventViewModel> GetAllVacations(this DbContext context)
+        {
+            var allVacations = context.Set<AbstractCalendarEntry>()
+                .Include(v => v.User)
+                .ToList()
+                .Select(m =>
+                    {
+                        var color = "brown";
+                        switch (m.AbsenceType)
+                        {
+                            case AbsenceType.Vacation:
+                                if ((m as Vacation).IsApproved)
+                                    color = "#59d27c";
+                                else color = "#ff4242";
+                                break;
+                            case AbsenceType.SickDay:
+                                color = "#95c8fd";
+                                break;
+                            case AbsenceType.Illness:
+                                if ((m as Illness).IsApproved)
+                                    color = "#6e84fe";
+                                else color = "#ffff92";
+                                break;
+                        }
+                        return new CalendarEventViewModel()
+                        {
+                            Id = m.Id,
+                            Title = m.AbsenceType.ToString(),
+                            Start = m.From,
+                            End = m.To,
+                            UserEmail = m.User?.Email,
+                            ColorId = color
+                        };
+                    }
+                ).ToList();
+            return allVacations;
+        }
+        
+        public static List<UserViewModel> GetAllUsers(this DbContext context)
+        {
+            var users = context.Set<AppIdentityUser>()
+                .OrderBy(x => x.UserName)
+                .Select(u =>
+                    new UserViewModel()
+                    {
+                        Name = $"{u.FirstName} {u.LastName}" == " " ? u.Email : $"{u.FirstName} {u.LastName}",
+                        Email = u.Email,
+                        Color = "#6eb3fa"
+                    })
+                .ToList();
+            return users;
+        }
+        
+        public static List<string> GetAllHolidays(this DbContext context)
+        {
+            var holidays = context.Set<Holiday>()
+                .ToList()
+                .Select(u =>
+                {
+                    var year = u.Date.Year.ToString();
+                    var month = u.Date.Month.ToString().StartsWith('0') ? u.Date.Month.ToString().Skip(1) : u.Date.Month.ToString();
+                    var day = u.Date.Day.ToString().StartsWith('0') ? u.Date.Day.ToString().Skip(1) : u.Date.Day.ToString();
+                    return $"{year}/{month}/{day}";
+                })
+                .ToList();
+            return holidays;
         }
     }
 }
