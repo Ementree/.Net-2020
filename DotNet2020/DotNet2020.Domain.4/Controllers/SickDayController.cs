@@ -1,17 +1,19 @@
 using System;
 using System.Linq;
+using DotNet2020.Data;
 using DotNet2020.Domain._4.Models;
 using DotNet2020.Domain._4_.Models.ModelView;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace DotNet2020.Domain._4.Controllers
 {
     public class SickDayController : Controller
     {
-        private readonly CalendarEntryContext _dbContext;
+        private readonly DbContext _dbContext;
 
-        public SickDayController(CalendarEntryContext dbContext)
+        public SickDayController(DbContext dbContext)
         {
             _dbContext = dbContext;
         }
@@ -34,8 +36,8 @@ namespace DotNet2020.Domain._4.Controllers
                 return View();
             }
             var sickDay = new SickDay(viewModel.Day, viewModel.Day,
-                _dbContext.Users.FirstOrDefault(u => u.Email == HttpContext.User.Identity.Name));
-            _dbContext.CalendarEntries.Add(sickDay);
+                _dbContext.Set<AppIdentityUser>().FirstOrDefault(u => u.Email == HttpContext.User.Identity.Name));
+            _dbContext.Set<AbstractCalendarEntry>().Add(sickDay);
             _dbContext.SaveChanges();
             return RedirectToAction("Index", "Calendar");
         }
