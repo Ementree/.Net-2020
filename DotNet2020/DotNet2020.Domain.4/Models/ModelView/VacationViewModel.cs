@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Text;
+using DotNet2020.Domain._4.Attributes;
 
 namespace DotNet2020.Domain._4_.Models.ModelView
 {

@@ -31,17 +31,11 @@ namespace DotNet2020.Domain._4.Controllers
         [ValidationFilter]
         public IActionResult Add(VacationViewModel viewModel)
         {
-            // #warning Используйте DataAnnotations аттрибуты
-            // if (viewModel.From == DateTime.MinValue && viewModel.From == DateTime.MinValue)
-            // {
-            //     ModelState.AddModelError("Error1", "Введите даты");
-            //     return View();
-            // }
-            // if (viewModel.From >= viewModel.To)
-            // {
-            //     ModelState.AddModelError("Error", "Дата начала больничного должна быть меньше даты конца");
-            //     return View(viewModel);
-            // }
+            if (viewModel.From >= viewModel.To)
+            {
+                ModelState.AddModelError("Error", "Дата начала больничного должна быть меньше даты конца");
+                return View(viewModel);
+            }
             var illness = new Illness(
                 viewModel.From ?? throw new NullReferenceException(), 
                 viewModel.To ?? throw new NullReferenceException(), 
