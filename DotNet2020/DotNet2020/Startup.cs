@@ -1,7 +1,6 @@
 using System.IO;
 using DotNet2020.Data;
 using DotNet2020.Domain._3.Controllers;
-using DotNet2020.Domain._3.Models.Contexts;
 using DotNet2020.Domain._4.Controllers;
 using DotNet2020.Domain._4.Models;
 using DotNet2020.Domain._6.Controllers;
@@ -32,26 +31,14 @@ namespace DotNet2020
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseNpgsql(
                     Configuration.GetConnectionString("DefaultConnection")));
+
             services.AddDefaultIdentity<AppIdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
+
             services.AddControllersWithViews();
             services.AddRazorPages();
             services.AddScoped<DbContext, ApplicationDbContext>();
-
-
-
-            #region qwertyRegion
-
-            services.AddDbContext<AttestationContext>(options =>
-                options.UseNpgsql(
-                    Configuration.GetConnectionString("DefaultConnection"),
-                    b => b.MigrationsAssembly("DotNet2020.Data")));
-
-            #endregion
-
-            #region MAYAK
             services.AddKendo();
-            #endregion
 
             var attestationAssembly = typeof(AttestationController).Assembly;
             var domain4Assembly = typeof(CalendarController).Assembly;

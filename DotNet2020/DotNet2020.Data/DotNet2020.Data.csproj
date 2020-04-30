@@ -13,6 +13,8 @@
     <Compile Remove="Migrations\20200319141954_Domain6Init.Designer.cs" />
     <Compile Remove="Migrations\20200402113302_ResourceGroupType.cs" />
     <Compile Remove="Migrations\20200402113302_ResourceGroupType.Designer.cs" />
+    <Compile Remove="Migrations\20200430202512_SnapShot1.cs" />
+    <Compile Remove="Migrations\20200430202512_SnapShot1.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
