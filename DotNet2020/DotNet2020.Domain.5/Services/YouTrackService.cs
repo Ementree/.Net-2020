@@ -24,11 +24,6 @@ namespace DotNet2020.Domain._5.Services
             projectService = connection.CreateProjectsService();
         }
 
-        public Issue[] FilterIssues(Issue[] issues, string issueFilter)
-        {
-            throw new System.NotImplementedException();
-        }
-
         public string[] GetAllProjects()
         {
             var projects = projectService.GetAccessibleProjects().Result;
