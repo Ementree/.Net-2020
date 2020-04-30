@@ -21,7 +21,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.Extensions.FileProviders;
 using DotNet2020.Domain._3.Controllers;
-using DotNet2020.Domain._3.Models.Contexts;
 using DotNet2020.Domain._4.Controllers;
 using DotNet2020.Domain._4.Models;
 using DotNet2020.Domain._6.Controllers;

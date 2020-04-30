@@ -5,7 +5,6 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using DotNet2020.Domain._3.Models;
-using DotNet2020.Domain._3.Models.Contexts;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
 using Microsoft.EntityFrameworkCore;
