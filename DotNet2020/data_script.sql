@@ -1,19 +1,32 @@
-INSERT INTO "Workers" as W
+INSERT INTO "Position" as p
 VALUES
-       (1, 'Дмитрий', 'Фронтендер', 76547, 3000, 'Хорошо верстает', 'Нет', 'Нет', 'Николаевич', 'Чемкин'),
-       (2, 'Дмитрий', 'Бэкендер', 56437, 3000, 'Не верстает', 'Нет', 'Нет', 'Павлович', 'Орлов'),
-       (3, 'Игорь', 'Бэкендер', 76747, 3000, 'Не верстает', 'Нет', 'Нет', 'Константинович', 'Квасников')
+       (1,'Фронтенд'),
+       (2,'Бэкенд'),
+       (3,'Миддленд')
+       ON CONFLICT ("Id") DO UPDATE
+SET
+    "Name"=excluded."Name";
+SELECT setval('"Position_Id_seq"',(SELECT Max("Position"."Id") FROM "Position"));
+
+
+INSERT INTO "Employee" ("Id", "FirstName", "LastName", "MiddleName", "PositionId", "Salary", "Bonus", "Commentary", "PreviousWorkPlaces", "Experience", "Discriminator")
+VALUES
+       (1, 'Дмитрий', 'Чемкин', 'Николаевич',1, 1, 76547, 'Хорошо верстает', 'Нет', 'Нет', 'SpecificWorkerModel'),
+       (2, 'Дмитрий', 'Орлов', 'Павлович',2,2, 56437, 'Не верстает', 'Нет', 'Нет', 'SpecificWorkerModel'),
+       (3, 'Игорь', 'Квасников', 'Константинович',3, 3, 76747, 'Не верстает', 'Нет', 'Нет', 'SpecificWorkerModel')
 ON CONFLICT ("Id") DO UPDATE
 SET
-    "Name" = excluded."Name",
-    "Position" = excluded."Position",
+    "FirstName" = excluded."FirstName",
+    "PositionId" = excluded."PositionId",
     "Salary" = excluded."Salary",
     "Bonus" = excluded."Bonus",
     "Commentary" = excluded."Commentary",
     "PreviousWorkPlaces" = excluded."PreviousWorkPlaces",
     "Experience" = excluded."Experience",
-    "Patronymic" = excluded."Patronymic",
-    "Surname" = excluded."Surname";
+    "MiddleName" = excluded."MiddleName",
+    "LastName" = excluded."LastName";
+SELECT setval('"Employee_Id_seq"', (SELECT Max("Employee"."Id") FROM "Employee"));
+
 
 INSERT INTO "Competences" as W
 VALUES
@@ -28,6 +41,8 @@ ON CONFLICT ("Id") DO UPDATE
 SET "Competence" = excluded."Competence",
     "Content" = excluded."Content",
     "Questions" = excluded."Questions";
+SELECT setval('"Competences_Id_seq"', (SELECT Max("Competences"."Id") FROM "Competences"));
+
 
 INSERT INTO "Grades" as W
 VALUES
@@ -37,7 +52,9 @@ VALUES
        (4, 'D3(FULL-STACK)'),
        (5, 'TL(TEAM-LEAD)')
 ON CONFLICT ("Id") DO UPDATE
-SET "Grade"= excluded."Grade"
+SET "Grade"= excluded."Grade";
+SELECT setval('"Grades_Id_seq"', (SELECT Max("Grades"."Id") FROM "Grades"));
+
 
 INSERT INTO "GradeCompetences" as W
 VALUES
