@@ -11,12 +11,7 @@ namespace DotNet2020.Domain._4.Models
         protected Illness() { }
 
         public Illness(DateTime from, DateTime to, AppIdentityUser user)
-        {
-            From = from;
-            To = to;
-            AbsenceType = AbsenceType.Illness;
-            User = user;
-        }
+        : base(from, to, user, AbsenceType.Illness) {}
 
         #warning добавить согласующего
         public void Approve(DbContext context)
