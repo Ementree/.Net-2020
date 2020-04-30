@@ -2,8 +2,8 @@
 
 namespace DotNet2020.Domain.Core.Models
 {
-    public class Employee : HasIdBase
-    {
+    public class Employee: HasIdBase
+    { 
         [Required, StringLength(Strings.DefaultLength)]
         public string FirstName { get; set; }
 
