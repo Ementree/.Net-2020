@@ -25,7 +25,6 @@ function getProjectStatuses() {
     var xhr = new XMLHttpRequest();
     xhr.open('GET', "/plan/getProjectStatuses", false);
     xhr.send();
-    console.log(xhr.responseText);
     var statuses = JSON.parse(xhr.responseText);
     return statuses;
 }
@@ -72,6 +71,7 @@ function generateProjectStatusSelect(projectStatusId) {
     selectLabel.htmlFor = 'projectStatusEdit';
     selectLabel.classList.add('mr-2');
     var selector = document.createElement('select');
+    selector.id = 'projectStatusEdit';
     projectStatuses.forEach(function (value) {
         var option = document.createElement('option');
         option.value = String(value.id);
@@ -196,7 +196,6 @@ function generateMonth(period) {
     removeResBtn.addEventListener('dblclick', function () {
         var baseId = idBase;
         var container = document.getElementById('editAddResource' + baseId);
-        console.log(container);
         container.removeChild(container.lastChild);
         if (container.childElementCount === 0)
             document.getElementById('editRemoveResourceButton' + baseId).disabled = true;
@@ -209,7 +208,6 @@ function generateResourceSelectorWithValue(period) {
         var xhr = new XMLHttpRequest();
         xhr.open('GET', '/plan/getResources', false);
         xhr.send();
-        console.log(xhr.responseText);
         var response = JSON.parse(xhr.responseText);
         response.forEach(function (value) {
             resources.push(value);
@@ -246,7 +244,6 @@ function generateResourceSelectorWithValue(period) {
             selectResource.options.add(option);
         });
         for (var i = 0; i < selectResource.options.length; i++) {
-            console.log(value.id, value.name, ' - ', selectResource.options[i].value, selectResource.options[i].text);
             if (String(value.id) === selectResource.options[i].value) {
                 selectResource.selectedIndex = i;
             }
@@ -256,12 +253,10 @@ function generateResourceSelectorWithValue(period) {
     return resContainer;
 }
 function generateEditYear(periods) {
-    console.log(periods);
     if (periods.length != 12) {
         throw 'exception in periods length';
     }
     var yearContainer = document.createElement('div');
-    console.log(periods[1]);
     yearContainer.id = "editYear" + periods[1].date.getFullYear();
     yearContainer.classList.add('year');
     var yearName = document.createElement('p');
@@ -317,5 +312,83 @@ function generateYearsContainer(periods) {
         sliceEnd = sliceEnd + 12;
     }
     return yearsContainer;
+}
+function getProjectEditedInfo() {
+    var project = new Project();
+    var projectIdSelect = document.getElementById('projectSelector');
+    var projectId = parseInt(projectIdSelect.options[projectIdSelect.selectedIndex].value);
+    project.id = projectId;
+    var projectName = document.getElementById('projectNameEdit').value;
+    var projectStatusSelect = document.getElementById('projectStatusEdit');
+    var projectStatusId = parseInt(projectStatusSelect.options[projectStatusSelect.selectedIndex].value);
+    if (!isNaN(projectStatusId))
+        project.statusId = projectStatusId;
+    project.name = projectName;
+    project.periods = [];
+    var yearDivs = document.getElementById('yearsContainerEdit').children;
+    for (var i = 0; i < yearDivs.length; i++) {
+        var yearDiv = yearDivs[i];
+        var year = parseInt(yearDiv.firstElementChild.textContent);
+        var halfYears = [yearDiv.children[1], yearDiv.children[2]];
+        var firstHalfYear = halfYears[0];
+        var firstHalfMonths = firstHalfYear.children;
+        for (var j = 0; j < firstHalfMonths.length; j++) {
+            var monthBlock = firstHalfMonths[j];
+            var period = getEditedPeriodInfo(monthBlock);
+            project.periods.push(period);
+        }
+        var secondHalfYear = halfYears[1];
+        var secondHalfMonths = secondHalfYear.children;
+        for (var j = 0; j < secondHalfMonths.length; j++) {
+            var monthBlock = secondHalfMonths[j];
+            var period = getEditedPeriodInfo(monthBlock);
+            project.periods.push(period);
+        }
+    }
+    return project;
+}
+function getEditedPeriodInfo(monthBlock) {
+    var period = new Period();
+    var date = monthBlock.id.replace(/\D/g, '_').split('_').filter(function (d) { return d !== ''; }).map(function (d) { return parseInt(d); });
+    period.date = new Date(date[0], date[1] + 1);
+    period.resources = [];
+    var capacity = parseInt(document
+        .getElementById("editMonthCapacityYear" + date[0] + "Month" + date[1])
+        .value);
+    if (isNaN(capacity)) {
+        capacity = -1;
+    }
+    period.capacity = capacity;
+    var selects = document.getElementById("editAddResourceYear" + date[0] + "Month" + date[1]).children;
+    for (var rowNumber = 0; rowNumber < selects.length; rowNumber++) {
+        var selectValuePair = selects[rowNumber];
+        var select = selectValuePair.firstElementChild.firstElementChild;
+        var resourceId = select.options[select.selectedIndex].value;
+        var resourceFullName = select.options[select.selectedIndex].text;
+        var value = parseInt(selectValuePair.lastElementChild.firstElementChild.value);
+        if (isNaN(value)) {
+            value = -1;
+        }
+        if (resourceId.trim() !== "") {
+            period.resources.push(new ResourceCapacity(parseInt(resourceId), resourceFullName, value));
+        }
+    }
+    return period;
+}
+function sendEditedProject() {
+    var project = getProjectEditedInfo();
+    if (ValidateForm(project, 'edit')) {
+        var xhr = new XMLHttpRequest();
+        xhr.open('PUT', 'plan/editProject', false);
+        xhr.setRequestHeader('Content-type', 'application/json');
+        console.log(project);
+        xhr.send(JSON.stringify(project));
+        var success = xhr.responseText;
+        if (success === 'true')
+            location.reload();
+    }
+    else {
+        document.getElementById('editErrorHandler').style.display = 'block';
+    }
 }
 //# sourceMappingURL=EditProject.js.map

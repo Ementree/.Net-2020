@@ -184,6 +184,7 @@ function SendProjectToDb() {
         var xhr = new XMLHttpRequest();
         xhr.open('PUT', 'plan/addProject', false);
         xhr.setRequestHeader('Content-type', 'application/json');
+        console.log(project);
         xhr.send(JSON.stringify(project));
         var success = xhr.responseText;
         if (success === 'true')
@@ -193,7 +194,8 @@ function SendProjectToDb() {
         document.getElementById('errorHandler').style.display = 'block';
     }
 }
-function ValidateForm(project) {
+function ValidateForm(project, additionalPrefix) {
+    if (additionalPrefix === void 0) { additionalPrefix = ''; }
     var flag = true;
     project.periods.forEach(function (elem) {
         var length = elem.resources.length;
@@ -203,7 +205,7 @@ function ValidateForm(project) {
         if (length > lengthDistinct) {
             flag = false;
             var addResBlock = document
-                .getElementById("addResourceYear" + elem.date.getFullYear() + "Month" + elem.date.getMonth());
+                .getElementById(additionalPrefix + "addResourceYear" + elem.date.getFullYear() + "Month" + elem.date.getMonth());
             var selects = addResBlock.children;
             for (var i = 0; i < selects.length; i++) {
                 var elem_1 = selects[i];

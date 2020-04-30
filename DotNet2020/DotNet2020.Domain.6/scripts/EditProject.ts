@@ -26,7 +26,6 @@ function getProjectStatuses() {
     let xhr = new XMLHttpRequest();
     xhr.open('GET', `/plan/getProjectStatuses`, false);
     xhr.send();
-    console.log(xhr.responseText);
     let statuses: ProjectStatus[] = <ProjectStatus[]>JSON.parse(xhr.responseText);
     return statuses;
 }
@@ -77,6 +76,7 @@ function generateProjectStatusSelect(projectStatusId: number): HTMLDivElement {
     selectLabel.htmlFor = 'projectStatusEdit';
     selectLabel.classList.add('mr-2');
     let selector = <HTMLSelectElement>document.createElement('select');
+    selector.id='projectStatusEdit';
     projectStatuses.forEach(value => {
         let option = <HTMLOptionElement>document.createElement('option');
         option.value = String(value.id);
@@ -232,7 +232,6 @@ function generateResourceSelectorWithValue(period: Period): HTMLDivElement {
         let xhr = new XMLHttpRequest();
         xhr.open('GET', '/plan/getResources', false);
         xhr.send();
-        console.log(xhr.responseText);
         let response: ResourceCapacity[] = <ResourceCapacity[]>JSON.parse(xhr.responseText);
         response.forEach(value => {
             resources.push(value);
@@ -275,7 +274,6 @@ function generateResourceSelectorWithValue(period: Period): HTMLDivElement {
             selectResource.options.add(option);
         });
         for (let i = 0; i < selectResource.options.length; i++) {
-            console.log(value.id, value.name, ' - ', selectResource.options[i].value, selectResource.options[i].text);
             if (String(value.id) === selectResource.options[i].value) {
                 selectResource.selectedIndex = i;
             }
@@ -287,12 +285,10 @@ function generateResourceSelectorWithValue(period: Period): HTMLDivElement {
 }
 
 function generateEditYear(periods: Period[]): HTMLDivElement {
-    console.log(periods);
     if (periods.length != 12) {
         throw 'exception in periods length';
     }
     let yearContainer = <HTMLDivElement>document.createElement('div');
-    console.log(periods[1]);
     yearContainer.id = `editYear${periods[1].date.getFullYear()}`;
     yearContainer.classList.add('year');
     let yearName = document.createElement('p');
@@ -350,4 +346,90 @@ function generateYearsContainer(periods: Period[]) {
         sliceEnd = sliceEnd + 12;
     }
     return yearsContainer;
+}
+
+function getProjectEditedInfo():Project {
+    let project = new Project();
+    let projectIdSelect = <HTMLSelectElement>document.getElementById('projectSelector');
+    let projectId = parseInt(projectIdSelect.options[projectIdSelect.selectedIndex].value);
+    project.id=projectId;
+    
+    let projectName = (<HTMLInputElement>document.getElementById('projectNameEdit')).value;
+
+    let projectStatusSelect = <HTMLSelectElement>document.getElementById('projectStatusEdit');
+    let projectStatusId = parseInt(projectStatusSelect.options[projectStatusSelect.selectedIndex].value);
+    if (!isNaN(projectStatusId))
+        project.statusId = projectStatusId;
+    project.name = projectName;
+    project.periods = [];
+    let yearDivs = document.getElementById('yearsContainerEdit').children;
+    for (let i = 0; i < yearDivs.length; i++) {
+        let yearDiv = yearDivs[i];
+        let year: number = parseInt(yearDiv.firstElementChild.textContent);
+        let halfYears = [yearDiv.children[1], yearDiv.children[2]];
+        //собираем первое полугодие
+        let firstHalfYear = halfYears[0];
+        let firstHalfMonths = firstHalfYear.children;
+        for (let j = 0; j < firstHalfMonths.length; j++) {
+            let monthBlock = firstHalfMonths[j];
+            let period = getEditedPeriodInfo(monthBlock);
+            project.periods.push(period);
+        }
+
+        //собираем второе полугодие
+        let secondHalfYear = halfYears[1];
+        let secondHalfMonths = secondHalfYear.children;
+        for (let j = 0; j < secondHalfMonths.length; j++) {
+            let monthBlock = secondHalfMonths[j];
+            let period = getEditedPeriodInfo(monthBlock);
+            project.periods.push(period);
+        }
+    }
+    return project;
+}
+
+function getEditedPeriodInfo(monthBlock: Element): Period {
+    let period = new Period();
+    let date = monthBlock.id.replace(/\D/g, '_').split('_').filter(d => d !== '').map(d => parseInt(d));
+    period.date = new Date(date[0], date[1]+1);
+    period.resources = [];
+    let capacity = parseInt((<HTMLInputElement>document
+        .getElementById(`editMonthCapacityYear${date[0]}Month${date[1]}`))
+        .value);
+    //let capacity = parseInt((<HTMLInputElement>monthBlock.firstElementChild.lastElementChild.firstElementChild).value);
+    if (isNaN(capacity)) {
+        capacity = -1;
+    }
+    period.capacity = capacity;
+    let selects = (<HTMLDivElement>document.getElementById(`editAddResourceYear${date[0]}Month${date[1]}`)).children;
+    for (let rowNumber = 0; rowNumber < selects.length; rowNumber++) {
+        let selectValuePair = selects[rowNumber];
+        let select = <HTMLSelectElement>selectValuePair.firstElementChild.firstElementChild;
+        let resourceId = select.options[select.selectedIndex].value;
+        let resourceFullName = select.options[select.selectedIndex].text;
+        let value = parseInt((<HTMLInputElement>selectValuePair.lastElementChild.firstElementChild).value);
+        if (isNaN(value)) {
+            value = -1;
+        }
+        if (resourceId.trim() !== "") {
+            period.resources.push(new ResourceCapacity(parseInt(resourceId), resourceFullName, value));
+        }
+    }
+    return period;
+}
+
+function sendEditedProject() {
+    let project = getProjectEditedInfo();
+    if(ValidateForm(project, 'edit')){
+        let xhr = new XMLHttpRequest();
+        xhr.open('PUT', 'plan/editProject', false);
+        xhr.setRequestHeader('Content-type', 'application/json');
+        xhr.send(JSON.stringify(project));
+        let success = xhr.responseText;
+        if (success === 'true')
+            location.reload();
+    }
+    else{
+        document.getElementById('editErrorHandler').style.display = 'block';
+    }
 }

@@ -48,11 +48,9 @@ function RemoveLastYear() {
 }
 
 function generateMonthForNewYear(localYear: number, monthNumber: number): Element {
-    console.log(document.getElementById(`year${localYear - 1}Month${monthNumber}`));
     const monthBlock = <Element>(document
         .getElementById(`year${localYear - 1}Month${monthNumber}`)
         .cloneNode(true));
-    console.log(monthBlock);
     monthBlock.id = `year${localYear}Month${monthNumber}`;
     let addRes = monthBlock.children[2];
     addRes.id = `addResourceYear${localYear}Month${monthNumber}`;
@@ -145,7 +143,6 @@ function GetPeriodInfo(monthBlock: Element): Period {
     let date = monthBlock.id.replace(/\D/g, '_').split('_').filter(d => d !== '').map(d => parseInt(d));
     period.date = new Date(date[0], date[1]);
     period.resources = [];
-    console.log(monthBlock.id);
     let capacity = parseInt((<HTMLInputElement>monthBlock.firstElementChild.lastElementChild.firstElementChild).value);
     if (isNaN(capacity)) {
         capacity = -1;
@@ -221,7 +218,7 @@ function SendProjectToDb() {
     }
 }
 
-function ValidateForm(project: Project): boolean {
+function ValidateForm(project: Project, additionalPrefix = ''): boolean {
     let flag = true;
     project.periods.forEach(elem => {
         let length = elem.resources.length;
@@ -231,7 +228,7 @@ function ValidateForm(project: Project): boolean {
         if (length > lengthDistinct) {
             flag = false;
             let addResBlock = document
-                .getElementById(`addResourceYear${elem.date.getFullYear()}Month${elem.date.getMonth()}`);
+                .getElementById(`${additionalPrefix}addResourceYear${elem.date.getFullYear()}Month${elem.date.getMonth()}`);
             let selects = addResBlock.children;
             for(let i = 0; i<selects.length;i++){
                 let elem = <HTMLDivElement>selects[i];

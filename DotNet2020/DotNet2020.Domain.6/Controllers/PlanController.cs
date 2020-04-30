@@ -148,6 +148,13 @@ namespace DotNet2020.Domain._6.Controllers
             }
         }
 
+        [HttpPut]
+        public bool EditProject([FromBody] ProjectViewModel viewModel)
+        {
+            //todo: отправить в базу
+            return false;
+        }
+        
         [HttpGet("[controller]/getProjectPlanById/{id}")]
         public ProjectViewModel GetProjectPlanById(int id)
         {
