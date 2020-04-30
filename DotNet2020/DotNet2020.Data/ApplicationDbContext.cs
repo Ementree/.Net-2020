@@ -45,6 +45,7 @@ namespace DotNet2020.Data
         
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(builder);
             OnModelCreating4(modelBuilder);
         }
 
