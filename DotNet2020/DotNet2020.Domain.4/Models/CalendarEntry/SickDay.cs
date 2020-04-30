@@ -8,11 +8,6 @@ namespace DotNet2020.Domain._4.Models
         protected SickDay() { }
 
         public SickDay(DateTime from, DateTime to, AppIdentityUser user)
-        {
-            From = from;
-            To = to;
-            AbsenceType = AbsenceType.SickDay;
-            User = user;
-        }
+            : base(from, to, user, AbsenceType.SickDay) {}
     }
 }

@@ -1,4 +1,4 @@
-@{
+﻿@{
     ViewData["Title"] = "Calendar";
 }
 @using DotNet2020.Domain._4.Models
@@ -6,7 +6,7 @@
 <link rel="stylesheet" href="~/css/calendar.css">
 <div class="calendar">
     <h1>Календарь</h1>
-    @Html.Partial("Calendar.cshtml")
+    @Html.Partial("../Calendar.cshtml")
 </div>
 <div class="container-fluid">
     <hr/>
@@ -41,12 +41,12 @@
                             <td>@isPaidText отпуск</td>
                             <td style="width: 400px">
                                 <div class="approve-reject-buttons">
-                                    <form class="approve" asp-action="Approve" asp-controller="Calendar" method="post" asp-route-id="@calendarEntry.Id">
+                                    <form class="approve" asp-action="Approve" asp-controller="AdminCalendar" method="post" asp-route-id="@calendarEntry.Id">
                                         <div class="adminrecomadd">
                                             <button type="submit">Согласовать</button>
                                         </div>
                                     </form>
-                                    <form class="reject" asp-action="Reject" asp-controller="Calendar" method="post" asp-route-id="@calendarEntry.Id">
+                                    <form class="reject" asp-action="Reject" asp-controller="AdminCalendar" method="post" asp-route-id="@calendarEntry.Id">
                                         <div class="adminrecomadd">
                                             <button type="submit">Отклонить</button>
                                         </div>
@@ -64,12 +64,12 @@
                             <td>Больничный</td>
                             <td style="width: 400px">
                                 <div class="approve-reject-buttons">
-                                    <form class="approve" asp-action="Approve" asp-controller="Calendar" method="post" asp-route-id="@calendarEntry.Id">
+                                    <form class="approve" asp-action="Approve" asp-controller="AdminCalendar" method="post" asp-route-id="@calendarEntry.Id">
                                         <div class="adminrecomadd">
                                             <button type="submit">Согласовать</button>
                                         </div>
                                     </form>
-                                    <form class="reject" asp-action="Reject" asp-controller="Calendar" method="post" asp-route-id="@calendarEntry.Id">
+                                    <form class="reject" asp-action="Reject" asp-controller="AdminCalendar" method="post" asp-route-id="@calendarEntry.Id">
                                         <div class="adminrecomadd">
                                             <button type="submit">Отклонить</button>
                                         </div>
@@ -86,18 +86,18 @@
     <hr />
     <div class="row">
         <div class="col-lg-6">
-            <form asp-action="UpdateRecommendation" asp-controller="Calendar" method="get">
+            <form asp-action="Update" asp-controller="Recommendation" method="get">
                 <div class="adminrecomadd">
                     <button type="submit">Обновить рекомендацию</button>
                 </div>
             </form>
             <br />
-            <form asp-action="AddHoliday" asp-controller="Calendar" method="get">
+            <form asp-action="Add" asp-controller="Holiday" method="get">
                 <div class="adminrecomadd">
                     <button type="submit">Добавить праздничный день</button>
                 </div>
             </form>
-            <form asp-action="RemoveHoliday" asp-controller="Calendar" method="get">
+            <form asp-action="Remove" asp-controller="Holiday" method="get">
                 <div class="adminrecomadd">
                     <button type="submit">Удалить праздничный день</button>
                 </div>

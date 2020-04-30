@@ -1,23 +1,23 @@
 ﻿@{
     ViewData["Title"] = "Добавить";
 }
-    <link rel="stylesheet" href="~/css/calendar.css">
+<link rel="stylesheet" href="~/css/calendar.css">
 <div class="text-center">
     <h1 class="display-4">Добавьте новое событие</h1>
 </div>
 <div>
     <h2>Выберите тип события</h2>
-    <form asp-conttoller="Calendar" asp-action="AddSickDay" method="get">
+    <form asp-controller="SickDay" asp-action="Add" method="get">
         <div class="adminrecomadd">
-            <button>Sick Day</button>
+            <button type="submit">Sick Day</button>
         </div>
     </form>
-    <form asp-conttoller="Calendar" asp-action="AddVacation" method="get">
+    <form asp-controller="Vacation" asp-action="Add" method="get">
         <div class="adminrecomadd">
             <button>Отпуск</button>
         </div>
     </form>
-    <form asp-conttoller="Calendar" asp-action="AddIllness" method="get">
+    <form asp-controller="Illness" asp-action="Add" method="get">
         <div class="adminrecomadd">
             <button>Больничный</button>
         </div>
