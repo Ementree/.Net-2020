@@ -28,9 +28,7 @@ namespace DotNet2020.Data
         {
             Email = email;
             //to do validate email!!!
-            FirstName = firstName;
-            LastName = lastName;
-            Position = position;
+            
             Test = test;
             TotalDayOfVacation = 28;
         }
