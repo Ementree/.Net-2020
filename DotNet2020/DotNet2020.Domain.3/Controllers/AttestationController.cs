@@ -6,7 +6,6 @@ using System.Reflection;
 using System.Text;
 using DotNet2020.Domain._3.Helpers;
 using DotNet2020.Domain._3.Models;
-using DotNet2020.Domain._3.Models.Contexts;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using DotNet2020.Data;

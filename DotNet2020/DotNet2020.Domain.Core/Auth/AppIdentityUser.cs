@@ -10,6 +10,7 @@ namespace DotNet2020.Data
         public string Test { get; protected set; }
 
         public int TotalDayOfVacation { get; set; }
+        public bool IsLastVacationApproved { get; private set; }
 
         public AppIdentityUser(string userName, string email, string firstName, string lastName, string position, string test)
             : base(userName)
