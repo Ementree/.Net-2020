@@ -2,34 +2,45 @@
     Layout = "~/Views/Shared/_Layout6.cshtml";
 }
 @using DotNet2020.Domain._6.Models.ViewModels
-@model Absences
+@model AbsencesViewModel
 <!DOCTYPE html>
-
-
-<div class="wrapper">
-    <div class="scroller1">
-        <table class="scroll-table table">
-            <thead>
-                <tr>
-                    <th class="sticky-col1">  </th>
-                    @foreach (var period in Model.Periods)
-                    {
-                        <td >@period.Start.Day.@period.Start.Month.@period.Start.Year - @period.Start.Day.@period.End.Month.@period.End.Year</td>
-                    }
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var resource in Model.ResourceAbsences)
-                {
+    <div class="container-fluid mb-2 d-inline-flex">
+        <form asp-action="Index" asp-controller="Absence">
+            <partial name="YearChangerPartial"/>
+        </form>
+    </div>
+    <div class="wrapper">
+        <div class="scroller1 scroller">
+            <table class="scroll-table table bottom">
+                <thead>
                     <tr>
-                        <td class="sticky-col1">@resource.Key</td>
-                        @foreach (var absence in resource.Value)
+                        <th class="sticky-col1">  </th>
+                        @foreach (var period in Model.Months)
                         {
-                            <td colspan="1">@absence</td>
+                            <th>@period</th>
                         }
                     </tr>
-                }
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    @foreach (var resource in Model.ResourceAbsences)
+                    {
+                        <tr>
+                            <td class="sticky-col1">@resource.Key</td>
+                            @for (int i = 0; i < resource.Value.Item1.Count; i++)
+                            {
+                                if (resource.Value.Item1[i])
+                                {
+                                    <td class="red-highlight">@resource.Value.Item2[i]</td>
+                                }
+                                else
+                                {
+                                    <td>@resource.Value.Item2[i]</td>
+                                }
+                            }
+
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
     </div>
-</div>
