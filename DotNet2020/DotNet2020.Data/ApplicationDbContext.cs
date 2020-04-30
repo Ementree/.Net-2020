@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using DotNet2020.Domain._6.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using DotNet2020.Domain._6.Models;
 using DotNet2020.Domain._3.Models;
@@ -25,6 +26,7 @@ namespace DotNet2020.Data
         public virtual DbSet<SpecificWorkerModel> Employees { get; set; }
         public virtual DbSet<SpecificWorkerCompetencesModel> SpecificWorkerCompetences { get; set; }
         public virtual DbSet<Position> Position { get; set; }
+        public virtual DbSet<CalendarEntry> CalendarEntries { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)

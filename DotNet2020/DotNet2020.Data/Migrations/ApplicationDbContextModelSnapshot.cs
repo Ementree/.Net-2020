@@ -313,6 +313,27 @@ namespace DotNet2020.Data.Migrations
                     b.ToTable("SpecificWorkerCompetences");
                 });
 
+            modelBuilder.Entity("DotNet2020.Domain._6.Models.CalendarEntry", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<DateTime>("From")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<DateTime>("To")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("UserName")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("CalendarEntries");
+                });
+
             modelBuilder.Entity("DotNet2020.Domain._6.Models.FunctioningCapacityProject", b =>
                 {
                     b.Property<int>("Id")
@@ -396,10 +417,7 @@ namespace DotNet2020.Data.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("text");
 
-                    b.Property<int?>("ProjectStatusId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("StatusId")
+                    b.Property<int>("ProjectStatusId")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
@@ -431,16 +449,15 @@ namespace DotNet2020.Data.Migrations
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
-                    b.Property<string>("FirstName")
-                        .HasColumnType("text");
-
-                    b.Property<string>("LastName")
+                    b.Property<string>("AppIdentityUserId")
                         .HasColumnType("text");
 
                     b.Property<int>("ResourceGroupTypeId")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("AppIdentityUserId");
 
                     b.HasIndex("ResourceGroupTypeId");
 
@@ -719,11 +736,17 @@ namespace DotNet2020.Data.Migrations
                 {
                     b.HasOne("DotNet2020.Domain._6.Models.ProjectStatus", "ProjectStatus")
                         .WithMany()
-                        .HasForeignKey("ProjectStatusId");
+                        .HasForeignKey("ProjectStatusId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("DotNet2020.Domain._6.Models.Resource", b =>
                 {
+                    b.HasOne("DotNet2020.Data.AppIdentityUser", "AppIdentityUser")
+                        .WithMany()
+                        .HasForeignKey("AppIdentityUserId");
+
                     b.HasOne("DotNet2020.Domain._6.Models.ResourceGroupType", "ResourceGroupType")
                         .WithMany()
                         .HasForeignKey("ResourceGroupTypeId")

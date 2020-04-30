@@ -1,3 +1,150 @@
-@{ 
+﻿@using DotNet2020.Domain._6.Models.ViewModels
+@using DotNet2020.Domain._6.Services
+@using DotNet2020.Domain._6.ExtensionMethods
+@{
     Layout = "~/Views/Shared/_Layout6.cshtml";
+    List<string> months = MonthGeneratorService.GetAllMonths(DateTime.Now.Year);
+    List<int[]> CureentGroupCommonBothCapacityCount = new List<int[]>();
 }
+
+@model FunctionalCapacityViewModel
+    <script src="~/wwwroot6/js/FunctionalCapacity.js"></script>
+    <link rel="stylesheet" href="~/wwwroot6/css/FunctionalCapacity.css" />
+
+    <form id="changeYearForm" asp-action="Index" class="form-width-control">
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <label class="input-group-text" for="inputGroupSelect01">Год -</label>
+            </div>
+            <select id="changeYearSelector" class="custom-select align-center" name="year">
+                @for (int i = Model.YearsRange.Item1; i <= Model.YearsRange.Item2; i++)
+                {
+                    if (i == Model.CurrentYear)
+                    {
+                        <option class="align-center" value="@(i)" selected="selected">@(i)</option>
+                    }
+                    else
+                    {
+                        <option class="align-center" value="@(i)">@(i)</option>
+                    }
+                    <option value="2020">2021</option>
+                }
+            </select>
+        </div>
+        @*<div class="mb-2">
+            <partial name="YearChangerPartial" />
+        </div>*@
+    </form>
+
+    <form id="" class="form-width-control">
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <span class="input-group-text" id="basic-addon1">Погрешность,%</span>
+            </div>
+            <input id="accuracy-input" type="number" class="form-control" value="@Model.CurrentAccuracy" size="2" aria-describedby="basic-addon1">
+        </div>
+    </form>
+<div class="fcwrapper">
+    <div class="fcscroller1">
+        <table class="fcscroll-table table bottom">
+            <thead>
+                <tr id="monthRow">
+                    <td class="fcsticky-col1 left">
+                        &nbsp;
+                    </td>
+
+                    @foreach (var m in months)
+                    {
+                        <th class="month-column-left-border month-column-right-border" colspan="2">
+                            @m
+                        </th>
+                    }
+                </tr>
+                <tr>
+                    <th class="fcsticky-col1 left align-center">
+                        <p>Ресурс</p>
+                    </th>
+                    @foreach (var m in months)
+                    {
+                        <th class="right month-column-left-border">
+                            план,%
+                        </th>
+                        <th class="month-column-right-border">
+                            мощность,%
+                        </th>
+                    }
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var pair in Model.GroupedResources)
+                {
+
+                    CureentGroupCommonBothCapacityCount = new List<int[]>();
+
+                    for(int i = 0; i < 12;i++)
+                    {
+                        CureentGroupCommonBothCapacityCount.Add(new int[2]);
+                    }
+
+                <tr>
+                    <td class="fcsticky-col1 left h45">
+                        <h6>@pair.Key</h6>
+                    </td>
+
+                        @for (int i = 0; i < 12; i++)
+                        {
+                            <td class="right h45 month-column-left-border">
+                            </td>
+                            <td class="month-column-right-border h45">
+                            </td>
+                        }
+                </tr>
+
+                    @foreach (var m in pair.Value)
+                    {
+                        <tr>
+                            <td class="fcsticky-col1 left h45">
+                                @(m.Resource.AppIdentityUser.FirstName + " " + m.Resource.AppIdentityUser.LastName)
+                            </td>
+                            @{ 
+                                int counter = 0;
+                            }
+                            @foreach (var capacItem in m.YearItemsDict[Model.CurrentYear])
+                            {
+
+                                <td class="right align-center h45 month-column-left-border for-js-selecor">
+                                    @capacItem.PlannedCapacity%
+                                    @{ 
+                                        CureentGroupCommonBothCapacityCount[counter][0] += capacItem.PlannedCapacity;
+                                    }
+                                </td>
+                                <td class="month-column-right-border align-center h45 for-js-selecor">
+                                    @capacItem.CurrentCapacity%
+                                    @{ 
+                                        CureentGroupCommonBothCapacityCount[counter][1] += capacItem.CurrentCapacity;
+                                        counter++;
+                                    }
+                                </td>
+                            }
+                        </tr>
+                    }
+
+                    <tr class="total">
+                        <td class="fcsticky-col1 left h45 total-highlight">
+                            <h6>Всего(@(pair.Key))</h6>
+                        </td>
+                            @for(int i =0; i < 12; i++)
+                            {
+                                <td class="right align-center h45 total-sum-js month-column-left-border for-js-selecor">
+                                    @CureentGroupCommonBothCapacityCount[i][0]%
+                                </td>
+                                <td class="month-column-right-border align-center h45 total-sum-js for-js-selecor">
+                                    @CureentGroupCommonBothCapacityCount[i][1]%
+                                </td>
+                            }
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
