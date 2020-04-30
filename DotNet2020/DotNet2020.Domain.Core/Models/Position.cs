@@ -1,6 +1,7 @@
 ﻿namespace DotNet2020.Domain.Core.Models
 {
-    public class Position: HasNameBase
+    public class Position : HasNameBase
     {
+
     }
 }

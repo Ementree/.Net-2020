@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using DotNet2020.Data;
+using DotNet2020.Domain._4.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
@@ -68,6 +69,9 @@ namespace DotNet2020.Data.Migrations
                     b.Property<int?>("EmployeeId")
                         .HasColumnType("integer");
 
+                    b.Property<bool>("IsLastVacationApproved")
+                        .HasColumnType("boolean");
+
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("boolean");
 
@@ -96,6 +100,9 @@ namespace DotNet2020.Data.Migrations
 
                     b.Property<string>("Test")
                         .HasColumnType("text");
+
+                    b.Property<int>("TotalDayOfVacation")
+                        .HasColumnType("integer");
 
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("boolean");
@@ -313,6 +320,90 @@ namespace DotNet2020.Data.Migrations
                     b.ToTable("SpecificWorkerCompetences");
                 });
 
+            modelBuilder.Entity("DotNet2020.Domain._4.Models.AbstractCalendarEntry", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<int>("AbsenceType")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("From")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<DateTime>("To")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("AbstractCalendarEntries");
+
+                    b.HasDiscriminator<int>("AbsenceType");
+                });
+
+            modelBuilder.Entity("DotNet2020.Domain._4.Models.Holiday", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Holidays");
+                });
+
+            modelBuilder.Entity("DotNet2020.Domain._4.Models.Recommendation", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<string>("RecommendationText")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Recommendations");
+                });
+
+            modelBuilder.Entity("DotNet2020.Domain._6.Models.CalendarEntry", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<DateTime>("From")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<DateTime>("To")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("UserName")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("CalendarEntries");
+                });
+
             modelBuilder.Entity("DotNet2020.Domain._6.Models.FunctioningCapacityProject", b =>
                 {
                     b.Property<int>("Id")
@@ -396,10 +487,7 @@ namespace DotNet2020.Data.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("text");
 
-                    b.Property<int?>("ProjectStatusId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("StatusId")
+                    b.Property<int>("ProjectStatusId")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
@@ -431,16 +519,15 @@ namespace DotNet2020.Data.Migrations
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
-                    b.Property<string>("FirstName")
-                        .HasColumnType("text");
-
-                    b.Property<string>("LastName")
-                        .HasColumnType("text");
+                    b.Property<int>("EmployeeId")
+                        .HasColumnType("integer");
 
                     b.Property<int>("ResourceGroupTypeId")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("EmployeeId");
 
                     b.HasIndex("ResourceGroupTypeId");
 
@@ -620,6 +707,37 @@ namespace DotNet2020.Data.Migrations
                     b.HasDiscriminator().HasValue("SpecificWorkerModel");
                 });
 
+            modelBuilder.Entity("DotNet2020.Domain._4.Models.Illness", b =>
+                {
+                    b.HasBaseType("DotNet2020.Domain._4.Models.AbstractCalendarEntry");
+
+                    b.Property<bool>("IsApproved")
+                        .HasColumnType("boolean");
+
+                    b.HasDiscriminator().HasValue(1);
+                });
+
+            modelBuilder.Entity("DotNet2020.Domain._4.Models.SickDay", b =>
+                {
+                    b.HasBaseType("DotNet2020.Domain._4.Models.AbstractCalendarEntry");
+
+                    b.HasDiscriminator().HasValue(0);
+                });
+
+            modelBuilder.Entity("DotNet2020.Domain._4.Models.Vacation", b =>
+                {
+                    b.HasBaseType("DotNet2020.Domain._4.Models.AbstractCalendarEntry");
+
+                    b.Property<bool>("IsApproved")
+                        .HasColumnName("Vacation_IsApproved")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsPaid")
+                        .HasColumnType("boolean");
+
+                    b.HasDiscriminator().HasValue(2);
+                });
+
             modelBuilder.Entity("DotNet2020.Data.AppIdentityUser", b =>
                 {
                     b.HasOne("DotNet2020.Domain.Core.Models.Employee", "Employee")
@@ -679,6 +797,13 @@ namespace DotNet2020.Data.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("DotNet2020.Domain._4.Models.AbstractCalendarEntry", b =>
+                {
+                    b.HasOne("DotNet2020.Data.AppIdentityUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+                });
+
             modelBuilder.Entity("DotNet2020.Domain._6.Models.FunctioningCapacityProject", b =>
                 {
                     b.HasOne("DotNet2020.Domain._6.Models.Period", "Period")
@@ -719,11 +844,19 @@ namespace DotNet2020.Data.Migrations
                 {
                     b.HasOne("DotNet2020.Domain._6.Models.ProjectStatus", "ProjectStatus")
                         .WithMany()
-                        .HasForeignKey("ProjectStatusId");
+                        .HasForeignKey("ProjectStatusId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("DotNet2020.Domain._6.Models.Resource", b =>
                 {
+                    b.HasOne("DotNet2020.Domain.Core.Models.Employee", "Employee")
+                        .WithMany()
+                        .HasForeignKey("EmployeeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("DotNet2020.Domain._6.Models.ResourceGroupType", "ResourceGroupType")
                         .WithMany()
                         .HasForeignKey("ResourceGroupTypeId")

@@ -38,6 +38,7 @@ namespace DotNet2020
             services.AddControllersWithViews();
             services.AddRazorPages();
             services.AddScoped<DbContext, ApplicationDbContext>();
+            services.AddKendo();
 
             var attestationAssembly = typeof(AttestationController).Assembly;
             var domain4Assembly = typeof(CalendarController).Assembly;
