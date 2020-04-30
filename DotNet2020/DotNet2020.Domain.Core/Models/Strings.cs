@@ -1,5 +1,4 @@
-﻿
-namespace DotNet2020.Domain.Core.Models
+﻿namespace DotNet2020.Domain.Core.Models
 {
     public static class Strings
     {

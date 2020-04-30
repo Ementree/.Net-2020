@@ -9,19 +9,33 @@ namespace DotNet2020.Data
         public Employee Employee { get; set; }
         public string Test { get; protected set; }
 
-        public AppIdentityUser(string userName,string email,string firstName,string lastName,string position, string test)
-            :base(userName)
+        public int TotalDayOfVacation { get; set; }
+
+        public AppIdentityUser(string userName, string email, string firstName, string lastName, string position, string test)
+            : base(userName)
         {
             Email = email;
             //to do validate email!!!
+            
             Test = test;
+            TotalDayOfVacation = 28;
         }
 
         // For EF Core only
-        protected AppIdentityUser()
+        public AppIdentityUser()
             : base()
         {
            
+        }
+
+        public void Approve()
+        {
+            IsLastVacationApproved = true;
+        }
+
+        public void Reject()
+        {
+            IsLastVacationApproved = false;
         }
     }
 }

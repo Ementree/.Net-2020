@@ -1,4 +1,5 @@
 ﻿using DotNet2020.Data;
+using DotNet2020.Domain.Core.Models;
 
 namespace DotNet2020.Domain._6.Models
 {
@@ -7,9 +8,9 @@ namespace DotNet2020.Domain._6.Models
         protected Resource() : base() { }
         public int Id { get; protected set; }
         public int ResourceGroupTypeId { get; protected set; }
-        public string AppIdentityUserId { get; protected set; }
+        public int EmployeeId { get; protected set; }
         
         public virtual ResourceGroupType ResourceGroupType { get; protected set; }
-        public virtual AppIdentityUser AppIdentityUser { get; protected set; }
+        public virtual Employee Employee { get; protected set; }
     }
 }

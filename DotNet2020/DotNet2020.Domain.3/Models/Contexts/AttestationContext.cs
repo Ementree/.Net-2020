@@ -1,8 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System;
+using Microsoft.EntityFrameworkCore;
 
 namespace DotNet2020.Domain._3.Models.Contexts
 {
     public class AttestationContext123:DbContext
+    [Obsolete("Используйте ApplicationDbContext",true)]
+    public class AttestationContext:DbContext
     {
         public AttestationContext123(DbContextOptions<AttestationContext123> options):base(options) { }
 
@@ -16,7 +19,8 @@ namespace DotNet2020.Domain._3.Models.Contexts
         public DbSet<SpecificWorkerCompetencesModel> SpecificWorkerCompetences { get; set; }
 
         
-        public void OnModelCreating3(ModelBuilder modelBuilder)
+        [Obsolete("Перенесите в метод OnModelCreating3, вызовите этот метод в OnModelCreating в ApplicationDbContext",true)]
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<SpecificWorkerCompetencesModel>()
                 .HasKey(e => new { e.WorkerId, e.CompetenceId });
