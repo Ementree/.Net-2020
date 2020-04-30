@@ -39,7 +39,6 @@ namespace DotNet2020
             services.AddScoped<DbContext, ApplicationDbContext>();
 
 
-
             #region qwertyRegion
 
             services.AddDbContext<AttestationContext>(options =>
