@@ -42,7 +42,7 @@ namespace DotNet2020.Domain._5.Controllers
         public IActionResult Show(CreateReportModel model)
         {
             var ytService = new YouTrackService();
-            var reports = ytService.GetIssues(model.ProjectName, model.IssueFilter)
+            var reports = ytService.GetIssuesTimeInfo(model.ProjectName, model.IssueFilter)
                 .Where(i => i.EstimatedTime.HasValue && i.SpentTime.HasValue)
                 .ToList();
             return View(reports);
