@@ -45,6 +45,11 @@ namespace DotNet2020.Data
         
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            OnModelCreating4(modelBuilder);
+        }
+
+        private void OnModelCreating4(ModelBuilder modelBuilder)
+        {
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<AbstractCalendarEntry>()
