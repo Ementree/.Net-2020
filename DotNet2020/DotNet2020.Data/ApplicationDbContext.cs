@@ -2,6 +2,11 @@
 using DotNet2020.Domain.Core.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Design;
+using DotNet2020.Domain._4.Models;
+using Microsoft.Extensions.Configuration;
+using System.IO;
+
 
 namespace DotNet2020.Data
 {
@@ -22,7 +27,13 @@ namespace DotNet2020.Data
         public virtual DbSet<ResourceCapacity> ResourceCapacities { get; set; }
         
         public virtual DbSet<ResourceGroupType> ResourceGroupsTypes { get; set; }
+
+        public virtual DbSet<Holiday> Holidays { get; set; }
+
+        public virtual DbSet<Recommendation> Recommendations { get; set; }
         
+        public virtual DbSet<AbstractCalendarEntry> AbstractCalendarEntries { get; set; }
+
         public virtual DbSet<CalendarEntry> CalendarEntries { get; set; }
 
         public virtual DbSet<Employee> Employee { get; set; }
@@ -31,10 +42,25 @@ namespace DotNet2020.Data
             : base(options)
         {
         }
-
-        protected override void OnModelCreating(ModelBuilder builder)
+        
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(builder);
+            OnModelCreating4(modelBuilder);
+        }
+
+        private void OnModelCreating4(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<AbstractCalendarEntry>()
+                .HasDiscriminator<AbsenceType>(nameof(AbstractCalendarEntry.AbsenceType))
+                .HasValue<Vacation>
+                    (AbsenceType.Vacation)
+                .HasValue<SickDay>
+                    (AbsenceType.SickDay)
+                .HasValue<Illness>
+                    (AbsenceType.Illness);
         }
     }
 }
