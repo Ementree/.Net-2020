@@ -120,7 +120,7 @@ namespace DotNet2020.Domain._3.Controllers
             return RedirectToAction("Workers");
         }
 
-        public IActionResult WorkersRemove(long id)
+        public IActionResult WorkersRemove(int id)
         {
             var item = _context.Set<SpecificWorkerModel>().Find(id);
             if (item != null)
@@ -456,7 +456,7 @@ namespace DotNet2020.Domain._3.Controllers
             foreach (var element in _context.Set<AttestationModel>().ToList())
             {
                 var attestationListModel = new AttestationListModel(element);
-                attestationListModel.Worker = _context.Set<SpecificWorkerModel>().Find(element.WorkerId);
+                attestationListModel.Worker = _context.Set<SpecificWorkerModel>().Find((int)element.WorkerId);
                 attestationListModel.Competences = element.GotCompetences.Select(x => _context.Set<CompetencesModel>().Find(x)).ToList();
                 attestationListModels.Add(attestationListModel);
             }
