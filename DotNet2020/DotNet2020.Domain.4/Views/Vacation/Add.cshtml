@@ -7,8 +7,18 @@
     {
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
         <p>Выберите интервал времени</p>
-        <p>От: <input asp-for="From" type="date" /></p>
-        <p>До: <input asp-for="To" type="date" /></p>
-        <p><input type="submit" value="Добавить" /></p>
+        <div class="form-group">
+            <p>
+                <span asp-validation-for="From" class="text-danger"></span><br />
+                От: <input asp-for="From" type="date" />
+            </p>
+            <p>
+                <span asp-validation-for="To" class="text-danger"></span><br />
+                До: <input asp-for="To" type="date" />
+            </p>
+            <p>
+                <input type="submit" value="Добавить" />
+            </p>
+        </div>
     }
 </div>

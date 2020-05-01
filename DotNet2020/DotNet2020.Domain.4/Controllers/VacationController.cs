@@ -5,6 +5,7 @@ using DotNet2020.Data;
 using DotNet2020.Domain._4.Domain;
 using DotNet2020.Domain._4.Models;
 using DotNet2020.Domain._4_.Models.ModelView;
+using DotNet2020.Domain.Filters;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -29,6 +30,7 @@ namespace DotNet2020.Domain._4.Controllers
 
         [HttpPost]
         [Authorize]
+        [ValidationFilter]
         public IActionResult Add(VacationViewModel viewModel)
         {
             var user = _dbContext.Set<AppIdentityUser>().FirstOrDefault(u => 
@@ -45,11 +47,6 @@ namespace DotNet2020.Domain._4.Controllers
             if (user.TotalDayOfVacation < DomainLogic.GetWorkDay(days, hollidays))
             {
                 ModelState.AddModelError("Error2", "Количество запрашеваемых дней отпуска превышает количество доступных вам");
-                return View(viewModel);
-            }
-            if (viewModel.From >= viewModel.To)
-            {
-                ModelState.AddModelError("Error", "Дата начала больничного должна быть меньше даты конца");
                 return View(viewModel);
             }
 

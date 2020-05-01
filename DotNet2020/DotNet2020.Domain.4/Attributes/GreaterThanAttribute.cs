@@ -6,21 +6,6 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace DotNet2020.Domain._4.Attributes
 {
-    //public sealed class GreaterThanAttribute : ValidationAttribute
-    //{
-    //    public string DateStartProperty { get; set; }
-    //    public override bool IsValid(object value)
-    //    {
-    //        // Get Value of the DateStart property
-    //        string dateStartString = HttpContext.Current.Request[DateStartProperty];
-    //        DateTime dateEnd = (DateTime)value;
-    //        DateTime dateStart = DateTime.Parse(dateStartString);
-
-    //        // Meeting start time must be before the end time
-    //        return dateStart < dateEnd;
-    //    }
-    //}
-
     public sealed class GreaterThanAttribute : ValidationAttribute
     {
         private readonly string testedPropertyName;
@@ -67,17 +52,5 @@ namespace DotNet2020.Domain._4.Attributes
 
             return new ValidationResult("Дата начала больничного должна быть меньше даты конца");
         }
-
-        //public IEnumerable<ModelClientValidationRule> GetClientValidationRules(ModelMetadata metadata, ControllerContext context)
-        //{
-        //    var rule = new ModelClientValidationRule
-        //    {
-        //        ErrorMessage = this.ErrorMessageString,
-        //        ValidationType = "isdateafter"
-        //    };
-        //    rule.ValidationParameters["propertytested"] = this.testedPropertyName;
-        //    rule.ValidationParameters["allowequaldates"] = this.allowEqualDates;
-        //    yield return rule;
-        //}
     }
 }
