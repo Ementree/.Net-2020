@@ -13,6 +13,7 @@ namespace DotNet2020.Domain._3.Helpers
 {
     public static class PdfHelper
     {
+        const int leftPadding = 5;
         public static MemoryStream GetPdfofWorkers(List<long> ids, List<SpecificWorkerModel> workers)
         {
             var memoryStream = new MemoryStream();
@@ -40,13 +41,15 @@ namespace DotNet2020.Domain._3.Helpers
             document.Add(new Paragraph($"Работники", head));
             document.Add(new Paragraph($" ", body));
             
-            PdfPTable table=new PdfPTable(4);
+            PdfPTable table=new PdfPTable(5);
             table.TotalWidth = document.PageSize.Width - 72f - 65f;
             table.LockedWidth = true;
-            float[] widths = new float[] {4f, 4f, 1.5f, 2f };
+            float[] widths = new float[] {2.7f, 4f, 4f, 1.5f, 2.2f };
             table.SetWidths(widths);
             table.HorizontalAlignment = 0;
-            
+
+            PdfPCell tablecell01 = new PdfPCell(new Phrase($"ФИО", body));
+            table.AddCell(tablecell01);
             PdfPCell tablecell11 = new PdfPCell(new Phrase($"Должность", body));
             table.AddCell(tablecell11);
             PdfPCell tablecell12 = new PdfPCell(new Phrase($"Компетенции", body));
@@ -58,7 +61,12 @@ namespace DotNet2020.Domain._3.Helpers
             
             foreach (var worker in workers)
             {
-                PdfPCell tablecellx1 = new PdfPCell(new Phrase($"{worker.Position}", body));
+                PdfPCell tablecellx0 = new PdfPCell(new Phrase($"{worker.Initials}", body));
+                tablecellx0.PaddingLeft = leftPadding;
+                table.AddCell(tablecellx0);
+
+                PdfPCell tablecellx1 = new PdfPCell(new Phrase($"{worker.Position.Name}", body));
+                tablecellx1.PaddingLeft = leftPadding;
                 table.AddCell(tablecellx1);
 
                 StringBuilder builder = new StringBuilder("");
@@ -76,13 +84,16 @@ namespace DotNet2020.Domain._3.Helpers
                 }
                 
                 PdfPCell tablecellx2 = new PdfPCell(new Phrase($"{builder.ToString()}", body));
+                tablecellx2.PaddingLeft = leftPadding;
                 table.AddCell(tablecellx2);
                 
                 PdfPCell tablecellx3 = new PdfPCell();
                 tablecellx3 = new PdfPCell(new Phrase($"{worker.Experience}", body));
+                tablecellx3.PaddingLeft = leftPadding;
                 table.AddCell(tablecellx3);
                 
                 PdfPCell tablecellx4 = new PdfPCell(new Phrase($"{worker.PreviousWorkPlaces}", body));
+                tablecellx4.PaddingLeft = leftPadding;
                 table.AddCell(tablecellx4);
             }
             document.Add(table);
@@ -171,11 +182,6 @@ namespace DotNet2020.Domain._3.Helpers
             
             document.Add(new Paragraph(" ", body));
             
-            document.Add(new Paragraph("Анализ результатов работы на проекте", head));
-            document.Add(new Paragraph("Данные из другого проекта", body));
-            
-            document.Add(new Paragraph(" ", body));
-            
             document.Add(new Paragraph("Дальнейшие действия", head));
             document.Add(new Paragraph($"{attestation.NextMoves}", body));
             
@@ -205,9 +211,11 @@ namespace DotNet2020.Domain._3.Helpers
             foreach (var answer in attestation.AttestationAnswer)
             {
                 PdfPCell tablecellx1 = new PdfPCell(new Phrase($"{answer.Answer.NumberOfAsk}", body));
+                tablecellx1.PaddingLeft = leftPadding;
                 table.AddCell(tablecellx1);
                 
                 PdfPCell tablecellx2 = new PdfPCell(new Phrase($"{answer.Answer.Question}", body));
+                tablecellx2.PaddingLeft = leftPadding;
                 table.AddCell(tablecellx2);
                 
                 PdfPCell tablecellx3 = new PdfPCell();
@@ -215,9 +223,11 @@ namespace DotNet2020.Domain._3.Helpers
                     tablecellx3 = new PdfPCell(new Phrase("+", body));
                 else
                     tablecellx3 = new PdfPCell(new Phrase("-", body));
+                tablecellx3.PaddingLeft = leftPadding;
                 table.AddCell(tablecellx3);
                 
                 PdfPCell tablecellx4 = new PdfPCell(new Phrase($"{answer.Answer.Commentary}", body));
+                tablecellx4.PaddingLeft = leftPadding;
                 table.AddCell(tablecellx4);
             }
             document.Add(table);
