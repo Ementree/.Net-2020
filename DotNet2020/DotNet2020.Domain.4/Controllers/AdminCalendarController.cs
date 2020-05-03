@@ -3,6 +3,7 @@ using System.Linq;
 using DotNet2020.Data;
 using DotNet2020.Domain._4.Domain;
 using DotNet2020.Domain._4.Models;
+using DotNet2020.Domain.Models;
 using DotNet2020.Domain.Models.ModelView;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -63,8 +64,22 @@ namespace DotNet2020.Domain._4.Controllers
         [Authorize]
         public IActionResult Refresh()
         {
-            var currentYear = DateTime.Now.Year;
+            var currentYear = _dbContext.Set<YearOfVacations>().FirstOrDefault(m => m.Year == DateTime.Now.Year);
+            if(currentYear == null)
+                RefreshTotalDayOfVacations();
+            else
+            {
+                // TODO: Вывести сообщение что все уже обновлено
+            }
             return RedirectToActionPermanent("Index");
+        }
+
+        public void RefreshTotalDayOfVacations()
+        {
+            foreach (var user in _dbContext.Set<AppIdentityUser>().ToList())
+                user.TotalDayOfVacation += 28;
+            _dbContext.Set<YearOfVacations>().Add(new YearOfVacations { Year = DateTime.Now.Year });
+            _dbContext.SaveChanges();
         }
     }
 }
