@@ -60,7 +60,7 @@ namespace DotNet2020.Domain._4.Controllers
             return RedirectToActionPermanent("Index");
         }
 
-        [HttpGet]
+        [HttpPost]
         [Authorize]
         public IActionResult Refresh()
         {
