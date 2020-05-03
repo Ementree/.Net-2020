@@ -2,6 +2,31 @@
 @using DotNet2020.Domain.Models.ModelView
 @model IndexViewModel
 
+@section HeadContent {
+    <style>
+
+        /*
+            Use the DejaVu Sans font for display and embedding in the PDF file.
+            The standard PDF fonts have no support for Unicode characters.
+        */
+        .k-scheduler {
+            font-family: "DejaVu Sans", "Arial", sans-serif;
+        }
+
+        /* Hide toolbar, navigation and footer during export */
+        .k-pdf-export .k-scheduler-toolbar,
+        .k-pdf-export .k-scheduler-navigation .k-nav-today,
+        .k-pdf-export .k-scheduler-navigation .k-nav-prev,
+        .k-pdf-export .k-scheduler-navigation .k-nav-next,
+        .k-pdf-export .k-scheduler-footer {
+            display: none;
+        }
+    </style>
+
+    <!-- Load Pako ZLIB library to enable PDF compression -->
+    <script src="@Url.Content("~/shared/pako.min.js")"></script>
+}
+
 <script id="task-template" type="text/x-kendo-template">
     <div style="background-color: #: kendo.toString(ColorId) #; height: 100%">
         <div class="k-event-template k-event-time">12:00 AM - 12:00 AM</div>
@@ -13,8 +38,7 @@
     <div style='background:#=getColorBasedOnHour(date)#; height: 100%;width: 100%;'></div>
 </script>
 
-<script>
-    function onDataBound(e) {
+<script>function onDataBound(e) {
         var view = this.view();
         if (view.title !== "Year") {
             //view.times.hide();
@@ -31,11 +55,9 @@
                 $(this).text(day)
             })
         }
-    }
-</script>
+    }</script>
 
-<script>
-    var WeeksTimelineGroupedView = kendo.ui.scheduler.TimelineGroupedView.extend({
+<script>var WeeksTimelineGroupedView = kendo.ui.scheduler.TimelineGroupedView.extend({
         _addContent: function (dates, columnCount, groupsCount, rowCount, start, end, slotTemplate, isVerticalGrouped) {
 
             var view = this._view;
@@ -74,9 +96,9 @@
         },
         // don't hide headers
         _hideHeaders: function () {
-                  var view = this._view;
-                  view.timesHeader.find('table tr:last').hide();
-                  view.datesHeader.find('table tr:last').hide();
+            var view = this._view;
+            view.timesHeader.find('table tr:last').hide();
+            view.datesHeader.find('table tr:last').hide();
         }
     });
 
@@ -133,16 +155,16 @@
         // make it one year, from the monday starting with selected date
 
         calculateDateRange: function () {
-             var selectedDate = this.options.date,
-                    start = new Date(selectedDate.getFullYear(), 0, 1),
-                    end = kendo.date.previousDay(new Date(selectedDate.getFullYear() + 1, 0, 1)),
-                    dates = [];
+            var selectedDate = this.options.date,
+                start = new Date(selectedDate.getFullYear(), 0, 1),
+                end = kendo.date.previousDay(new Date(selectedDate.getFullYear() + 1, 0, 1)),
+                dates = [];
 
-                while (start <= end) {
-                    dates.push(start);
-                    start = kendo.date.nextDay(start);
-                }
-                this._render(dates);
+            while (start <= end) {
+                dates.push(start);
+                start = kendo.date.nextDay(start);
+            }
+            this._render(dates);
         },
 
         // make proper slots
@@ -299,8 +321,7 @@
             tableRows.attr('role', 'row');
             this._groupedView._addTimeSlotsCollections(groupCount, tableRows);
         }
-    });
-</script>
+    });</script>
 
 <div class="legend">
     <div class="color-box legend-item-holiday">Праздники</div>
@@ -315,6 +336,11 @@
         .Name("calendar")
         .Date(DateTime.Now)
         .StartTime(new DateTime(DateTime.Now.Year, 1, 1))
+        .Pdf(pdf => pdf
+        .FileName("Kendo UI Scheduler Export.pdf")
+        .ProxyURL(Url.Action("Pdf_Export_Save", "PdfExport"))
+        )
+        .Toolbar(t => t.Pdf())
         .MajorTick(2880)
         .Editable(false)
         .Footer(false)
