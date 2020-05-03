@@ -58,5 +58,13 @@ namespace DotNet2020.Domain._4.Controllers
             _dbContext.SaveChanges();
             return RedirectToActionPermanent("Index");
         }
+
+        [HttpGet]
+        [Authorize]
+        public IActionResult Refresh()
+        {
+            var currentYear = DateTime.Now.Year;
+            return RedirectToActionPermanent("Index");
+        }
     }
 }

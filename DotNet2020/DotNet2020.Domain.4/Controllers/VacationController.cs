@@ -43,7 +43,6 @@ namespace DotNet2020.Domain._4.Controllers
             var hollidays = _dbContext.Set<Holiday>().Where(u => 
                 u.Date >= viewModel.From && u.Date <= viewModel.To).ToList();
             
-            #warning Используйте DataAnnotations аттрибуты
             if (viewModel.IsPaid && user.TotalDayOfVacation < DomainLogic.GetWorkDay(days, hollidays))
             {
                 ModelState.AddModelError("Error2", "Количество запрашеваемых дней отпуска превышает количество доступных вам");
