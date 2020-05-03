@@ -65,12 +65,14 @@ namespace DotNet2020.Domain._4.Controllers
         public IActionResult Refresh()
         {
             var currentYear = _dbContext.Set<YearOfVacations>().FirstOrDefault(m => m.Year == DateTime.Now.Year);
-            if(currentYear == null)
-                RefreshTotalDayOfVacations();
-            else
+            if (currentYear == null)
             {
-                // TODO: Вывести сообщение что все уже обновлено
+                RefreshTotalDayOfVacations();
+                TempData["message"] = string.Format("Количество оплачиваемых дней отпуска успешно обновлен.");
             }
+            else
+                TempData["message"] = string.Format("На текущий год количество оплачиваемых дней отпуска уже обновлен.");
+
             return RedirectToActionPermanent("Index");
         }
 
