@@ -13,8 +13,11 @@ namespace DotNet2020.Domain._4.Models
 
         protected Vacation() { }
 
-        public Vacation(DateTime from, DateTime to, AppIdentityUser user)
-            : base(from, to, user, AbsenceType.Vacation) {}
+        public Vacation(DateTime from, DateTime to, AppIdentityUser user, bool isPaid)
+            : base(from, to, user, AbsenceType.Vacation)
+        {
+            IsPaid = isPaid;
+        }
 
         public void Pay()
         {

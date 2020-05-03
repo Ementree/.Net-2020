@@ -17,6 +17,10 @@
                 До: <input asp-for="To" type="date" />
             </p>
             <p>
+                <span asp-validation-for="IsPaid" class="text-danger"></span><br />
+                Оплачиваемый: <input asp-for="IsPaid" type="checkbox" />
+            </p>
+            <p>
                 <input type="submit" value="Добавить" />
             </p>
         </div>

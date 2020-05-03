@@ -29,7 +29,7 @@ namespace DotNet2020.Domain._4.Controllers
         [HttpPost]
         [Authorize]
         [ValidationFilter]
-        public IActionResult Add(VacationViewModel viewModel)
+        public IActionResult Add(IllnessViewModel viewModel)
         {
             var illness = new Illness(
                 viewModel.From ?? throw new NullReferenceException(), 

@@ -44,7 +44,7 @@ namespace DotNet2020.Domain._4.Controllers
                 u.Date >= viewModel.From && u.Date <= viewModel.To).ToList();
             
             #warning Используйте DataAnnotations аттрибуты
-            if (user.TotalDayOfVacation < DomainLogic.GetWorkDay(days, hollidays))
+            if (viewModel.IsPaid && user.TotalDayOfVacation < DomainLogic.GetWorkDay(days, hollidays))
             {
                 ModelState.AddModelError("Error2", "Количество запрашеваемых дней отпуска превышает количество доступных вам");
                 return View(viewModel);
@@ -53,7 +53,8 @@ namespace DotNet2020.Domain._4.Controllers
             var vacation = new Vacation(
                 viewModel.From ?? throw new NullReferenceException(), 
                 viewModel.To ?? throw new NullReferenceException(),
-                _dbContext.Set<AppIdentityUser>().FirstOrDefault(u => u.Email == HttpContext.User.Identity.Name));
+                _dbContext.Set<AppIdentityUser>().FirstOrDefault(u => u.Email == HttpContext.User.Identity.Name),
+                viewModel.IsPaid);
             _dbContext.Set<AbstractCalendarEntry>().Add(vacation);
             _dbContext.SaveChanges();
             return RedirectToAction("Index", "Calendar");
