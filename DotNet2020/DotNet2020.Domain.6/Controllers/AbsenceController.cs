@@ -25,14 +25,14 @@ namespace DotNet2020.Domain._6.Controllers
 
             var resourcesCapacity = context.Set<ResourceCapacity>()
                 .Include(res => res.Resource)
-                .ThenInclude(res => res.AppIdentityUser)
+                .ThenInclude(res => res.Employee)
                 .ToList();
             var functioningCapacityResources = context.Set<FunctioningCapacityResource>()
                 .Include(res => res.Resource)
-                .ThenInclude(res => res.AppIdentityUser).ToList();
+                .ThenInclude(res => res.Employee).ToList();
             var resources = context.Set<Resource>()
-                .Include(res => res.AppIdentityUser)
-                .Select(res => res.AppIdentityUser.FirstName + " " + res.AppIdentityUser.LastName).ToList();
+                .Include(res => res.Employee)
+                .Select(res => res.Employee.FirstName + " " + res.Employee.LastName).ToList();
             var periods = context.Set<Period>().Where(per => per.Start.Year == year).OrderBy(per => per.Start).ToList();
             viewAbsences.Months = MonthGeneratorService.GetAllMonths(year);
             var resourceAbsences = GetAbsencesVM(absences, resourcesCapacity, functioningCapacityResources, resources, periods);
@@ -55,9 +55,9 @@ namespace DotNet2020.Domain._6.Controllers
                 var period = periods[i];
                 foreach (var resource in resources)
                 {
-                    var sumFunctioningCapacityResource = functioningCapacityResources.Where(fc => fc.Period == period && fc.Resource.AppIdentityUser.FirstName + " " + fc.Resource.AppIdentityUser.LastName == resource).Sum(fc => fc.FunctionCapacity);
+                    var sumFunctioningCapacityResource = functioningCapacityResources.Where(fc => fc.Period == period && fc.Resource.Employee.FirstName + " " + fc.Resource.Employee.LastName == resource).Sum(fc => fc.FunctionCapacity);
 
-                    var resourceCapacity = resourcesCapacity.FirstOrDefault(x => x.Resource.AppIdentityUser.FirstName + " " + x.Resource.AppIdentityUser.LastName == resource);
+                    var resourceCapacity = resourcesCapacity.FirstOrDefault(x => x.Resource.Employee.FirstName + " " + x.Resource.Employee.LastName == resource);
 
                     if (resourceCapacity != null && sumFunctioningCapacityResource > resourceCapacity.Capacity)
                     {

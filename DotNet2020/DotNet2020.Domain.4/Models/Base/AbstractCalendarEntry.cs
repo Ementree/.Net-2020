@@ -37,7 +37,8 @@ namespace DotNet2020.Domain._4.Models
             get
             {
                 if (User != null)
-                    return $"{User.FirstName} {User.LastName}" == " " ? User.Email : $"{User.FirstName} {User.LastName}";
+                    return $"{User.Employee.FirstName} {User.Employee.LastName}" == " " ? 
+                        User.Email : $"{User.Employee.FirstName} {User.Employee.LastName}";
                 else return "";
             }
         }
