@@ -2,17 +2,20 @@
 using System;
 using System.Collections.Generic;
 using DotNet2020.Data;
+using DotNet2020.Domain._4.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace DotNet2020.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200504143254_Test")]
+    partial class Test
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -720,11 +723,15 @@ namespace DotNet2020.Data.Migrations
 
                     b.Property<bool>("IsApproved")
                         .HasColumnType("boolean");
+
+                    b.HasDiscriminator().HasValue(1);
                 });
 
             modelBuilder.Entity("DotNet2020.Domain._4.Models.SickDay", b =>
                 {
                     b.HasBaseType("DotNet2020.Domain._4.Models.AbstractCalendarEntry");
+
+                    b.HasDiscriminator().HasValue(0);
                 });
 
             modelBuilder.Entity("DotNet2020.Domain._4.Models.Vacation", b =>
