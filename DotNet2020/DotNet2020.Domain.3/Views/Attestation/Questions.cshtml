@@ -1,4 +1,5 @@
-﻿<!doctype html>
+﻿@model IEnumerable<DotNet2020.Domain._3.Models.CompetencesModel>
+<!doctype html>
 <html class="no-js" lang="en">
 
 <head>
@@ -6,60 +7,63 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="shortcut icon" href="favicon.ico" />
-    <link rel="stylesheet" href="/css/style.css">
-    <link rel="stylesheet" href="/css/left-nav-style.css">
+    <link rel="stylesheet" href="/css/QWERTYstyles.css">
 </head>
 
 <body>
-<input type="checkbox" id="nav-toggle" hidden>
-<nav class="nav">
-    <label for="nav-toggle" class="nav-toggle" onclick></label>
-    <ul>
-        <li>@Html.ActionLink("Главная страница", "Index", "Attestation")
-        <li>@Html.ActionLink("Сотрудники", "Workers", "Attestation")
-        <li>@Html.ActionLink("Компетенции", "Competences", "Attestation")
-        <li>@Html.ActionLink("Грейды", "Grades", "Attestation")
-        <li>@Html.ActionLink("Вопросы", "Questions", "Attestation")
-        <li>@Html.ActionLink("Аттестация", "Attestation", "Attestation")
-        <li>@Html.ActionLink("Выгрузка", "Output", "Attestation")
-    </ul>
-</nav>
-<main role="main">
-@if (ViewBag.Questions != null && ViewBag.Questions.Count>0)
-{
- <table border="1">
-  <tr>
-   <th>Компетенция</th>
-   <th>Вопросы</th>
-  </tr>
-  @foreach (var element in ViewBag.Questions)
-  {
-   <tr>
-    <td>
-     @element.Competence
-     <form method="post">
-      <p>@Html.ActionLink($"Изменить", "QuestionsManage", "Attestation", new {id = element.Id}, null) </p>
-     </form>
-    </td>
-    @if (element.Questions.Length == 0)
-    {
-     <td> Список вопросов пуст!</td>
-    }
-    else
-    {
-     <td>
-      @for (int i = 0; i < element.Questions.Length; i++)
-      {
-       @element.Questions[i]
-       <br/>
-      }
-     </td>
-    }
-   </tr>
-  }
- </table>
-}
-</main>
+    <input type="checkbox" id="nav-toggle" hidden>
+    <nav class="nav nav-slp">
+        <label for="nav-toggle" class="nav-toggle" onclick></label>
+        <ul>
+            <li>@Html.ActionLink("Главная страница", "Index", "Attestation")
+            <li>@Html.ActionLink("Сотрудники", "Workers", "Attestation")
+            <li>@Html.ActionLink("Компетенции", "Competences", "Attestation")
+            <li>@Html.ActionLink("Грейды", "Grades", "Attestation")
+            <li>@Html.ActionLink("Вопросы", "Questions", "Attestation")
+            <li>@Html.ActionLink("Аттестация", "Attestation", "Attestation")
+            <li>@Html.ActionLink("Выгрузка", "Output", "Attestation")
+        </ul>
+    </nav>
+    <main role="main">
+        @if (Model != null && Model.Any())
+        {
+            <table class="table">
+                <thead class="thead">
+                    <tr>
+                        <th>Компетенция</th>
+                        <th>Вопросы</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var element in Model)
+                    {
+                        <tr>
+                            <td>
+                                @element.Competence
+                                <form method="post">
+                                    <p>@Html.ActionLink($"Изменить", "QuestionsManage", "Attestation", new { id = element.Id }, null) </p>
+                                </form>
+                            </td>
+                            @if (element.Questions.Count == 0)
+                            {
+                                <td> Список вопросов пуст!</td>
+                            }
+                            else
+                            {
+                                <td>
+                                    @for (int i = 0; i < element.Questions.Count; i++)
+                                    {
+                                        @element.Questions[i]
+                                        <br />
+                                    }
+                                </td>
+                            }
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </main>
 </body>
 </html>
 
