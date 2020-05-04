@@ -21,14 +21,6 @@ namespace DotNet2020.Domain._5.Services.Interfaces
         Issue[] GetIssues(string projectName, string issueFilter = "");
 
         /// <summary>
-        /// Get issue time info by project name and issue filter
-        /// </summary>
-        /// <param name="projectName">Project name</param>
-        /// <param name="issueFilter">Issue filter</param>
-        /// <returns>Issue time info array</returns>
-        IssueTimeInfo[] GetIssuesTimeInfo(string projectName, string issueFilter = "");
-
-        /// <summary>
         /// Get all project names
         /// </summary>
         /// <returns></returns>

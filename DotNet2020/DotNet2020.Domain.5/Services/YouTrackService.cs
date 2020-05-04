@@ -47,23 +47,13 @@ namespace DotNet2020.Domain._5.Services
                 .ToArray();
         }
 
-        public IssueTimeInfo[] GetIssuesTimeInfo(string projectName, string issueFilter = "")
-        {
-            var issues = issueService.GetIssuesInProject(projectName, filter: issueFilter).Result;
-            if (issues == null) return new IssueTimeInfo[0];
-            return issues
-                .Select(i => new IssueTimeInfo(i.GetField("Estimate")?.AsInt32() / 60, i.GetField("Spent time")?.AsInt32() / 60))
-                .ToArray();
-        }
-
         private Issue CreateIssue(YouTrackSharp.Issues.Issue issue, IEnumerable<YouTrackSharp.TimeTracking.WorkItem> workItems)
         {
             return new Issue(
                 issue.Id,
                 issue.Summary,
-                new IssueTimeInfo(
-                    issue.GetField("Estimate")?.AsInt32() / 60,
-                    issue.GetField("Spent time")?.AsInt32() / 60),
+                issue.GetField("Estimate")?.AsInt32() / 60,
+                issue.GetField("Spent time")?.AsInt32() / 60,
                 issue.GetField("reporterFullName").Value.ToString(),
                 issue.GetField("Assignee")?.AsCollection().FirstOrDefault(),
                 issue.GetField("projectShortName").AsString(),

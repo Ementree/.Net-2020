@@ -19,16 +19,16 @@ namespace DotNet2020.Domain._5.Controllers
         {
             var issues = new Issue[]
             {
-                new Issue("ADAS-81", "Нарисовать аниме", new IssueTimeInfo(4, null), "arsol.plex@gmail.com",
+                new Issue("ADAS-81", "Нарисовать аниме", 1, null, "arsol.plex@gmail.com",
                 "akihito.subaru@japan.jp", "ADAS", @"https://kpfu-net.myjetbrains.com/youtrack/issue/ADAS-81"),
 
-                new Issue("ADAS-98", "Сделать хорошее дело", new IssueTimeInfo(4, null), "arsol.plex@gmail.com",
+                new Issue("ADAS-98", "Сделать хорошее дело", null, 1, "arsol.plex@gmail.com",
                 "arsol.plex@gmail.com", "ADAS", @"https://kpfu-net.myjetbrains.com/youtrack/issue/ADAS-98"),
 
-                new Issue("ADAS-99", "Сломать проект", new IssueTimeInfo(4, null), "arsol.plex@gmail.com",
+                new Issue("ADAS-99", "Сломать проект", 4, null, "arsol.plex@gmail.com",
                 "azamat@russia.ru", "ADAS", @"https://kpfu-net.myjetbrains.com/youtrack/issue/ADAS-99"),
 
-                new Issue("ADAS-100", "Нарисовать аниме", new IssueTimeInfo(4, null), "arsol.plex@gmail.com",
+                new Issue("ADAS-100", "Нарисовать аниме", 4, null, "arsol.plex@gmail.com",
                 "somedude@mail.ru", "ADAS", @"https://kpfu-net.myjetbrains.com/youtrack/issue/ADAS-100")
             };
 
