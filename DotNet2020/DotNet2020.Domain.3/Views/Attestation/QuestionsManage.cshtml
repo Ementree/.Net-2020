@@ -1,60 +1,28 @@
-﻿@model DotNet2020.Domain._3.Models.QuestionUpdateModel
+﻿<h1>Управление вопросами</h1>
+<h2>Добавление вопроса</h2>
+<p>@Html.ActionLink("Вернуться", "Questions", "Attestation")</p>
+<form method="post">
+    <p>Введите вопрос</p>
+    <textarea style="border:none;border-top:groove;border-left:groove;"  name="question" cols="100" required></textarea>
+    <input type="text" hidden name="method" value="AddQuestion"/>
+    <p><input type="submit" value="Добавить"/></p>
+</form>
 
-<!doctype html>
-<html class="no-js" lang="en">
+<br/>
 
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="shortcut icon" href="favicon.ico" />
-    <link rel="stylesheet" href="/css/QWERTYstyles.css">
-</head>
-
-<body>
-    <input type="checkbox" id="nav-toggle" hidden>
-    <nav class="nav nav-slp">
-        <label for="nav-toggle" class="nav-toggle" onclick></label>
-        <ul>
-            <li>@Html.ActionLink("Главная страница", "Index", "Attestation")
-            <li>@Html.ActionLink("Сотрудники", "Workers", "Attestation")
-            <li>@Html.ActionLink("Компетенции", "Competences", "Attestation")
-            <li>@Html.ActionLink("Грейды", "Grades", "Attestation")
-            <li>@Html.ActionLink("Вопросы", "Questions", "Attestation")
-            <li>@Html.ActionLink("Аттестация", "Attestation", "Attestation")
-            <li>@Html.ActionLink("Выгрузка", "Output", "Attestation")
-        </ul>
-    </nav>
-    <main role="main">
-        <h1>Управление вопросами</h1>
-        <h2>Добавление вопроса</h2>
-        <p>@Html.ActionLink("Вернуться", "Questions", "Attestation")</p>
-
-        <form method="post">
-            <p>Введите вопрос</p>
-            <textarea style="border:none;border-top:groove;border-left:groove;" name="NewQuestion" cols="100" required></textarea>
-            <input type="text" hidden name="Action" value="AddQuestion" />
-            <p><input type="submit" value="Добавить" /></p>
-        </form>
-
-        <br />
-
-        <form method="post">
-            <p>Удаление необходимых вопросов</p>
-            <input type="text" hidden name="Action" value="RemoveQuestions" />
-            @if (Model.Questions.Count == 0)
-            {
-                <p>Список вопросов пуст!</p>
-            }
-            else
-            {
-                @for (var i = 0; i < Model.Questions.Count; i++)
-                {
-                    <p><input type="checkbox" name="QuestionsToRemove" value="@Model.Questions[i]" /> @Model.Questions[i] </p>
-                }
-                <input type="submit" value="Удалить выбранные" />
-            }
-        </form>
-    </main>
-</body>
-</html>
+<form method="post">
+    <p>Удаление необходимых вопросов</p>
+    <input type="text" hidden name="method" value="RemoveQuestion"/>
+    @if (ViewBag.Questions.Length == 0)
+    {
+        <p>Список вопросов пуст!</p>
+    }
+    else
+    {
+        @for (var i=0;i<ViewBag.Questions.Length;i++)
+        {
+            <p><input type="checkbox" name="checkboxes" value="@i"/> @ViewBag.Questions[i] </p>
+        }
+        <input type="submit" value="Удалить выбранные"/>
+    }
+</form>

@@ -230,7 +230,7 @@ namespace DotNet2020.Domain._6.Services
             return _context.Set<ResourceCapacity>()
                 .Include(rc => rc.Period)
                 .Include(rc => rc.Resource)
-                .ThenInclude(res => res.Employee)
+                .ThenInclude(res => res.AppIdentityUser)
                 .ToList()
                 .GroupBy(rc => rc.Resource)
                 .ToDictionary(rc => rc.Key, rc => rc

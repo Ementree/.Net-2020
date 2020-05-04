@@ -13,6 +13,6 @@ namespace DotNet2020.Domain._3.Models
         public string Commentary { get; set; }
         public string Question { get; set; }
 
-        public List<AttestationAnswerModel> AttestationAnswer { get; set; } = new List<AttestationAnswerModel>();
+        public List<AttestationAnswerModel> AttestationAnswer { get; set; }
     }
 }

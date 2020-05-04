@@ -10,7 +10,7 @@ namespace DotNet2020.Domain._3.Models
         public long Id { get; set; }
         
         public string Grade { get; set; }
-
-        public List<GradeCompetencesModel> GradesCompetences { get; set; } = new List<GradeCompetencesModel>();
+        
+        public List<GradeCompetencesModel> GradesCompetences { get; set; }
     }
 }

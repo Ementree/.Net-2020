@@ -92,8 +92,7 @@ namespace DotNet2020.Domain._4.Domain
                 .Select(u =>
                     new UserViewModel()
                     {
-                        Name = $"{u.Employee.FirstName} {u.Employee.LastName}" == " " ? 
-                            u.Email : $"{u.Employee.FirstName} {u.Employee.LastName}",
+                        Name = $"{u.FirstName} {u.LastName}" == " " ? u.Email : $"{u.FirstName} {u.LastName}",
                         Email = u.Email,
                         Color = "#6eb3fa"
                     })

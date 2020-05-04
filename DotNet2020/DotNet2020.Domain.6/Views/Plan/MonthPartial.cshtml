@@ -29,7 +29,7 @@
                     <option value="" disabled="disabled" selected="">Выберите человека</option>
                     @foreach (var res in resources)
                     {
-                        <option value="@(res.Id)">@(res.Employee.FirstName) @(res.Employee.LastName)</option>
+                        <option value="@(res.Id)">@(res.AppIdentityUser.FirstName) @(res.AppIdentityUser.LastName)</option>
                     }
                 </select>
             </div>

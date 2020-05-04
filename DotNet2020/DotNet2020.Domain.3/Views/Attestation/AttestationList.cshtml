@@ -1,81 +1,28 @@
-﻿@model IEnumerable<DotNet2020.Domain._3.Models.AttestationListModel>
-<!doctype html>
-<html class="no-js" lang="en">
-
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="shortcut icon" href="favicon.ico" />
-    <link rel="stylesheet" href="/css/QWERTYstyles.css">
-</head>
-
-<body>
-    <input type="checkbox" id="nav-toggle" hidden>
-    <nav class="nav nav-slp">
-        <label for="nav-toggle" class="nav-toggle" onclick></label>
-        <ul>
-            <li>@Html.ActionLink("Главная страница", "Index", "Attestation")
-            <li>@Html.ActionLink("Сотрудники", "Workers", "Attestation")
-            <li>@Html.ActionLink("Компетенции", "Competences", "Attestation")
-            <li>@Html.ActionLink("Грейды", "Grades", "Attestation")
-            <li>@Html.ActionLink("Вопросы", "Questions", "Attestation")
-            <li>@Html.ActionLink("Аттестация", "Attestation", "Attestation")
-            <li>@Html.ActionLink("Выгрузка", "Output", "Attestation")
-        </ul>
-    </nav>
-    <main role="main">
-        <p>@Html.ActionLink("Назад", "Attestation", "Attestation")</p>
-        <table class="table">
-            <thead class="thead">
-                <tr>
-                    <th>ФИО</th>
-                    <th>Полученные компетенции</th>
-                    <th>Дата</th>
-                    <th>Выгрузить</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var element in Model)
+﻿<p>@Html.ActionLink("Назад", "Attestation", "Attestation")</p>
+<table border="1">
+    <tr>
+        <th>ФИО</th>
+        <th>Полученные компетенции</th>
+        <th>Дата</th>
+        <th>Выгрузить</th>
+    </tr>
+    @foreach (var element in ViewBag.Attestations)
+    {
+        <tr><td>@element.WorkerName</td>
+            <td>
+                @if (element.Competences.Count > 0)
                 {
-                    <tr>
-                        @if (element.Worker == null)
-                        {
-                            <td>Сотрудник был удалён!</td>
-                        }
-                        else
-                        {
-                            <td>@element.Worker.FullName</td>
-                        }
-
-                        <td>
-                            @if (element.Competences.Count > 0)
-                            {
-                                foreach (var subElement in element.Competences)
-                                {
-                                    if (subElement == null)
-                                    {
-                                        <p>Компетенция была удалена</p>
-                                    }
-                                    else
-                                    {
-                                        <p>@subElement.Competence</p>
-                                    }
-
-                                }
-                            }
-                            else
-                            {
-                                <p>Компетенции не были получены!</p>
-                            }
-                        </td>
-                        <td>@element.Attestation.Date.ToString("d")</td>
-                        <td>@Html.ActionLink($"Выгрузить", "DownloadAttestation", "Attestation", new { id = element.Attestation.Id }, null)</td>
-                    </tr>
-
+                    foreach (var subElement in element.Competences)
+                    {
+                        <p>@subElement</p>
+                    }
                 }
-            </tbody>
-        </table>
-    </main>
-</body>
-</html>
+                else
+                {
+                    <p>Компетенции не были получены!</p>
+                }
+            </td>
+            <td>@element.Date.ToString("d")</td>
+            <td>@Html.ActionLink($"Выгрузить", "DownloadAttestation", "Attestation", new {id = element.AttestationId}, null)</td></tr>
+    }
+</table>

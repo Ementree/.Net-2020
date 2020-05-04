@@ -1,8 +1,11 @@
-﻿@charset "UTF-8";
-@import url(https://fonts.googleapis.com/css?family=Open+Sans:400,300&subset=latin,cyrillic);
+@charset "UTF-8";
 
+/**
+ * Переключаемая боковая панель навигации
+ * выдвигающаяся по клику слева
+ */
 
-.nav-slp {
+.nav {
     /*  ширна произвольная, не стесняйтесь экспериментировать */
     width: 320px;
     min-width: 320px;
@@ -61,21 +64,21 @@
 }
 
 
-    /* определяем текст кнопки 
+/* определяем текст кнопки 
  * символ Unicode (TRIGRAM FOR HEAVEN)
 */
 
-    .nav-toggle:after {
-        content: '\2630';
-        text-decoration: none;
-    }
+.nav-toggle:after {
+    content: '\2630';
+    text-decoration: none;
+}
 
 
-    /* цвет текста при наведении */
+/* цвет текста при наведении */
 
-    .nav-toggle:hover {
-        color: #f4f4f4;
-    }
+.nav-toggle:hover {
+    color: #f4f4f4;
+}
 
 
 /**
@@ -90,55 +93,55 @@
 }
 
 
-    /**
+/**
  * изменение положения переключателя 
  * при просмотре на мобильных устройствах
  * когда навигация раскрыта, распологаем внутри панели
 */
 
-    [id='nav-toggle']:checked ~ .nav > .nav-toggle {
-        left: auto;
-        right: 2px;
-        top: 1em;
-    }
+[id='nav-toggle']:checked ~ .nav > .nav-toggle {
+    left: auto;
+    right: 2px;
+    top: 1em;
+}
 
 
-    /**
+/**
  * Когда флажок установлен, открывается панель
  * используем псевдокласс:checked
  */
 
-    [id='nav-toggle']:checked ~ .nav {
-        left: 0;
-        box-shadow: 4px 0px 20px 0px rgba(0,0,0, 0.5);
-        -moz-box-shadow: 4px 0px 20px 0px rgba(0,0,0, 0.5);
-        -webkit-box-shadow: 4px 0px 20px 0px rgba(0,0,0, 0.5);
-        overflow-y: auto;
-    }
+[id='nav-toggle']:checked ~ .nav {
+    left: 0;
+    box-shadow:4px 0px 20px 0px rgba(0,0,0, 0.5);
+    -moz-box-shadow:4px 0px 20px 0px rgba(0,0,0, 0.5);
+    -webkit-box-shadow:4px 0px 20px 0px rgba(0,0,0, 0.5);
+    overflow-y: auto;
+}
 
 
-    /* 
+/* 
  * смещение контента страницы
  * на размер ширины панели,
  * фишка необязательная, на любителя
 */
 
-    [id='nav-toggle']:checked ~ main > article {
-        -webkit-transform: translateX(320px);
-        -moz-transform: translateX(320px);
-        transform: translateX(320px);
-    }
+[id='nav-toggle']:checked ~ main > article {
+    -webkit-transform: translateX(320px);
+    -moz-transform: translateX(320px);
+    transform: translateX(320px);
+}
 
 
-    /*
+/*
  * изменение символа переключателя,
  * привычный крестик (MULTIPLICATION X), 
  * вы можете испльзовать любой другой значок
 */
 
-    [id='nav-toggle']:checked ~ .nav > .nav-toggle:after {
-        content: '\2715';
-    }
+[id='nav-toggle']:checked ~ .nav > .nav-toggle:after {
+    content: '\2715';
+}
 
 
 /**
@@ -152,7 +155,7 @@ body {
 
 @-webkit-keyframes bugfix {
     to {
-        padding: 0;
+      padding: 0;
     }
 }
 
@@ -165,21 +168,20 @@ body {
 @media screen and (min-width: 320px) {
     html,
     body {
-        margin: 0;
-        overflow-x: hidden;
+      margin: 0;
+      overflow-x: hidden;
     }
 }
 
 @media screen and (max-width: 320px) {
     html,
     body {
-        margin: 0;
-        overflow-x: hidden;
+      margin: 0;
+      overflow-x: hidden;
     }
-
     .nav {
-        width: 100%;
-        box-shadow: none
+      width: 100%;
+      box-shadow: none
     }
 }
 
@@ -211,11 +213,11 @@ body {
     -webkit-transition: opacity 0.8s, -webkit-transform 0.8s;
 }
 
-    .nav h2 a {
-        color: #dadada;
-        text-decoration: none;
-        text-transform: uppercase;
-    }
+.nav h2 a {
+    color: #dadada;
+    text-decoration: none;
+    text-transform: uppercase;
+}
 
 
 /*плавное появление заголовка (логотипа) при раскрытии панели */
@@ -242,18 +244,18 @@ body {
     list-style: none;
 }
 
-    .nav > ul > li {
-        line-height: 2.5;
-        opacity: 0;
-        -webkit-transform: translateX(-50%);
-        -moz-transform: translateX(-50%);
-        -ms-transform: translateX(-50%);
-        transform: translateX(-50%);
-        -webkit-transition: opacity .5s .1s, -webkit-transform .5s .1s;
-        -moz-transition: opacity .5s .1s, -moz-transform .5s .1s;
-        -ms-transition: opacity .5s .1s, -ms-transform .5s .1s;
-        transition: opacity .5s .1s, transform .5s .1s;
-    }
+.nav > ul > li {
+    line-height: 2.5;
+    opacity: 0;
+    -webkit-transform: translateX(-50%);
+    -moz-transform: translateX(-50%);
+    -ms-transform: translateX(-50%);
+    transform: translateX(-50%);
+    -webkit-transition: opacity .5s .1s, -webkit-transform .5s .1s;
+    -moz-transition: opacity .5s .1s, -moz-transform .5s .1s;
+    -ms-transition: opacity .5s .1s, -ms-transform .5s .1s;
+    transition: opacity .5s .1s, transform .5s .1s;
+}
 
 [id='nav-toggle']:checked ~ .nav > ul > li {
     opacity: 1;
@@ -318,65 +320,65 @@ body {
 }
 
 
-    /**
+/**
  * состояние ссылок меню при наведении
  */
 
-    .nav > ul > li > a:hover,
-    .nav > ul > li > a:focus {
-        color: white;
-        padding-left: 15px;
-    }
+.nav > ul > li > a:hover,
+.nav > ul > li > a:focus {
+    color: white;
+    padding-left: 15px;
+}
 
 
-    /**
+/**
  * линия подчеркивания ссылок меню
  */
 
-    .nav > ul > li > a:before {
-        content: '';
-        display: block;
-        position: absolute;
-        right: 0;
-        bottom: 0;
-        height: 1px;
-        width: 100%;
-        -webkit-transition: width 0s ease;
-        transition: width 0s ease;
-    }
+.nav > ul > li > a:before {
+    content: '';
+    display: block;
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    height: 1px;
+    width: 100%;
+    -webkit-transition: width 0s ease;
+    transition: width 0s ease;
+}
 
-    .nav > ul > li > a:after {
-        content: '';
-        display: block;
-        position: absolute;
-        left: 0;
-        bottom: 0;
-        height: 1px;
-        width: 100%;
-        background: #3bc1a0;
-        -webkit-transition: width .5s ease;
-        transition: width .5s ease;
-    }
+.nav > ul > li > a:after {
+    content: '';
+    display: block;
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    height: 1px;
+    width: 100%;
+    background: #3bc1a0;
+    -webkit-transition: width .5s ease;
+    transition: width .5s ease;
+}
 
 
-    /**
+/**
  * анимируем линию подчеркивания 
  * ссылок при наведении
  */
 
-    .nav > ul > li > a:hover:before {
-        width: 0%;
-        background: #3bc1a0;
-        -webkit-transition: width .5s ease;
-        transition: width .5s ease;
-    }
+.nav > ul > li > a:hover:before {
+    width: 0%;
+    background: #3bc1a0;
+    -webkit-transition: width .5s ease;
+    transition: width .5s ease;
+}
 
-    .nav > ul > li > a:hover:after {
-        width: 0%;
-        background: transparent;
-        -webkit-transition: width 0s ease;
-        transition: width 0s ease;
-    }
+.nav > ul > li > a:hover:after {
+    width: 0%;
+    background: transparent;
+    -webkit-transition: width 0s ease;
+    transition: width 0s ease;
+}
 
 
 /* фон затемнения на основной контент 
@@ -406,155 +408,3 @@ body {
     transition: opacity .5s, visibility .5s;
 }
 */
-
-
-* {
-    box-sizing: border-box;
-}
-
-/**
- * Максимальная высота базового контейнера
- */
-html {
-    font-size: 100%;
-}
-html,
-body {
-    margin: 0;
-    padding: 0;
-    width: 100%;
-    height: 100%;
-}
-
-body {
-    color: #333;
-    font: 1em 'Open Sans', sans-serif;
-    background-color: #f1f1f1;
-}
-
-
-/* изменяем полоcу прокрутки */
-
-::-webkit-scrollbar {
-    width: .65em;
-}
-
-::-webkit-scrollbar-track {
-    background-color: rgba(217, 217, 217, 0.75);
-}
-
-::-webkit-scrollbar-thumb {
-    background: rgba(170, 170, 170, 0.6);
-    border-radius: 5px;
-    box-shadow: inset 0.05em 0.05em 0 rgba(0, 0, 0, 0.1), inset 0 -0.05em 0 rgba(0, 0, 0, 0.07);
-}
-
-main {
-    max-width: 1024px;
-    margin: 0 auto
-}
-
-article {
-    margin: 0 1em;
-    padding: 0 22px;
-    -webkit-transition: -webkit-transform .3s;
-    -moz-transition: : -moz-transform .3s;
-    transition: transform .3s;
-}
-
-header {
-    margin: 0;
-    padding: 0;
-    text-align: center;
-}
-
-footer {
-    font-size: 14px;
-    text-align: center
-}
-
-p {
-    margin-bottom: 16px;
-}
-
-hr {
-    margin: 22px 0;
-    height: 1px;
-    border: 0;
-    background-image: -webkit-linear-gradient(left, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0));
-    background-image: -moz-linear-gradient(left, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0));
-    background-image: -ms-linear-gradient(left, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0));
-    background-image: linear-gradient(left, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0));
-}
-
-h1,
-h2 {
-    margin-bottom: 22px;
-    color: #191919;
-    font-weight: 300;
-}
-
-h1 {
-    font-size: 32px;
-    line-height: 32px;
-}
-
-h2 {
-    color: #565d66;
-    font-size: 26px;
-    line-height: 26px;
-}
-
-a {
-    color: #006b05;
-    text-decoration: none;
-}
-.btn {
-    -webkit-border-radius: 10em;
-    -moz-border-radius: 10em;
-    -ms-border-radius: 10em;
-    -o-border-radius: 10em;
-    border-radius: 10em;
-    border: 0;
-    color: #fff!important;
-    margin: 6px;
-    white-space: normal!important;
-    word-wrap: break-word;
-		display: inline-block;
-    line-height: 1.25;
-    text-align: center;
-    vertical-align: middle;
-    cursor: pointer;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-    padding: .5rem 1rem;
-    font-size: 1rem;
-    font-weight: 400;
-    -webkit-box-shadow: 0 2px 5px 0 rgba(0,0,0,.16),0 2px 10px 0 rgba(0,0,0,.12);
-    -moz-box-shadow: 0 2px 5px 0 rgba(0,0,0,.16),0 2px 10px 0 rgba(0,0,0,.12);
-    box-shadow: 0 2px 5px 0 rgba(0,0,0,.16),0 2px 10px 0 rgba(0,0,0,.12);
-}
-.btn {
-	  -webkit-transition: box-shadow .2s ease-out;
-	  -moz-transition: box-shadow .2s ease-out;
-		-ms-transition: box-shadow .2s ease-out;
-    transition: box-shadow .2s ease-out;
-}
-.btn:hover {
-	  -webkit-box-shadow: 0 5px 11px 0 rgba(0,0,0,.18),0 4px 15px 0 rgba(0,0,0,.15);
-	  -moz-box-shadow: 0 5px 11px 0 rgba(0,0,0,.18),0 4px 15px 0 rgba(0,0,0,.15);
-	  box-shadow: 0 5px 11px 0 rgba(0,0,0,.18),0 4px 15px 0 rgba(0,0,0,.15);
-}
-.btn-primary {
-	  border: 2px solid #2BBBAD;
-    color: #00695c!important;
-    background-color: transparent;
-}
-
-.btn-secondary {
-    border: 2px solid #00C851;
-    color: #007E33!important;
-    background-color: transparent;
-}

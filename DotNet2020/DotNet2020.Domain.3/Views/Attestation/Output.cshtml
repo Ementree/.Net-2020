@@ -1,5 +1,4 @@
-﻿@model IEnumerable<DotNet2020.Domain._3.Models.SpecificWorkerModel>
-<!doctype html>
+﻿<!doctype html>
 <html class="no-js" lang="en">
 
 <head>
@@ -7,71 +6,68 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="shortcut icon" href="favicon.ico" />
-    <link rel="stylesheet" href="/css/QWERTYstyles.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/left-nav-style.css">
 </head>
 
 <body>
-    <input type="checkbox" id="nav-toggle" hidden>
-    <nav class="nav nav-slp">
-        <label for="nav-toggle" class="nav-toggle" onclick></label>
-        <ul>
-            <li>@Html.ActionLink("Главная страница", "Index", "Attestation")
-            <li>@Html.ActionLink("Сотрудники", "Workers", "Attestation")
-            <li>@Html.ActionLink("Компетенции", "Competences", "Attestation")
-            <li>@Html.ActionLink("Грейды", "Grades", "Attestation")
-            <li>@Html.ActionLink("Вопросы", "Questions", "Attestation")
-            <li>@Html.ActionLink("Аттестация", "Attestation", "Attestation")
-            <li>@Html.ActionLink("Выгрузка", "Output", "Attestation")
-        </ul>
-    </nav>
-    <main role="main">
-        @if (Model.Any())
+<input type="checkbox" id="nav-toggle" hidden>
+<nav class="nav">
+    <label for="nav-toggle" class="nav-toggle" onclick></label>
+    <ul>
+        <li>@Html.ActionLink("Главная страница", "Index", "Attestation")
+        <li>@Html.ActionLink("Сотрудники", "Workers", "Attestation")
+        <li>@Html.ActionLink("Компетенции", "Competences", "Attestation")
+        <li>@Html.ActionLink("Грейды", "Grades", "Attestation")
+        <li>@Html.ActionLink("Вопросы", "Questions", "Attestation")
+        <li>@Html.ActionLink("Аттестация", "Attestation", "Attestation")
+        <li>@Html.ActionLink("Выгрузка", "Output", "Attestation")
+    </ul>
+</nav>
+<main role="main">
+ @if (ViewBag.Workers.Count > 0)
+ {
+  <form method="post">
+   <table border="1">
+    <tr>
+     <th>Выбрать</th>
+     <th>ФИО</th>
+     <th>Должность</th>
+     <th>Компетенции</th>
+     <th>Общий стаж</th>
+    </tr>
+    @foreach (var element in ViewBag.Workers)
+    {
+     <tr>
+      <td><input type="checkbox" value="@element.Worker.Id" name="ids"/></td>
+      <td>@element.Worker.FullName</td>
+      <td>@element.Worker.Position</td>
+      <td>
+       @if (element.Competences.Count == 0 || element.Competences.Count == 1 && element.Competences[0].Competence == "")
+       {
+        <span>Данный работник не обладает никакими компетенциями</span>
+       }
+       else
+       {
+        foreach (var subElement in element.Competences)
         {
-            <form method="post">
-                <table class="table">
-                    <thead class="thead">
-                        <tr>
-                            <th>Выбрать</th>
-                            <th>ФИО</th>
-                            <th>Должность</th>
-                            <th>Компетенции</th>
-                            <th>Общий стаж</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var element in Model)
-                        {
-                            <tr>
-                                <td><input type="checkbox" value="@element.Id" name="ids" /></td>
-                                <td>@element.FullName</td>
-                                <td>@element.Position.Name</td>
-                                <td>
-                                    @if (element.SpecificWorkerCompetencesModels.Count == 0)
-                                    {
-                                        <span>Данный работник не обладает никакими компетенциями</span>
-                                    }
-                                    else
-                                    {
-                                        foreach (var subElement in element.SpecificWorkerCompetencesModels)
-                                        {
-                                            <p>@subElement.Competence.Competence</p>
-                                        }
-                                    }
-                                </td>
-                                <td>@element.Experience</td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-                <br />
-                <input type="submit" value="Выгрузить выбранных" />
-            </form>
+         <p>@subElement.Competence</p>
         }
-        else
-        {
-            <p>Список работников пуст!</p>
-        }
-    </main>
+       }
+      </td>
+      <td>@element.Worker.Experience</td>
+     </tr>
+    }
+   </table>
+   <br/>
+   <input type="submit" value="Выгрузить выбранных"/>
+  </form>
+ }
+ else
+ {
+  <p>Список работников пуст!</p>
+ }
+</main>
 </body>
 </html>
 
