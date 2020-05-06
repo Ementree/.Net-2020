@@ -51,7 +51,6 @@
             pts = data.points[i].x;
         }
     var start = pts - @Model.Chart1.Tick.ToString();
-                //window.open(`https://localhost:44354/ReportView/Test?a=${pts}&titles=${titles}&assignees=${assignees}&d=${d}&est=${est}&spent=${spent}&x=${arrX}`);
                 window.open(`https://localhost:44354/ReportView/ShowRange?reportId=${id}&start=${start}&end=${pts}&graphType=${d}`)
 });
         </script>
@@ -90,7 +89,6 @@
             pts = data.points[i].x;
         }
             var start = pts - @Model.Chart2.Tick.ToString();
-        //window.open(`https://localhost:44354/ReportView/Test?a=${pts}&titles=${titles}&assignees=${assignees}&d=${d}&est=${est}&spent=${spent}&x=${arrX}`);
         window.open(`https://localhost:44354/ReportView/ShowRange?reportId=${id}&start=${start}&end=${pts}&graphType=${d}`)
 });
         </script>
@@ -126,7 +124,6 @@
             pts = data.points[i].x;
         }
         var start = pts - @Model.Chart3.Tick.ToString();
-        //window.open(`https://localhost:44354/ReportView/Test?a=${pts}&titles=${titles}&assignees=${assignees}&d=${d}&est=${est}&spent=${spent}&x=${arrX}`);
         window.open(`https://localhost:44354/ReportView/ShowRange?reportId=${id}&start=${start}&end=${pts}&graphType=${d}`)
 });
         </script>
@@ -162,7 +159,6 @@
             pts = data.points[i].x;
         }
         var start = pts - @Model.Chart4.Tick.ToString();
-        //window.open(`https://localhost:44354/ReportView/Test?a=${pts}&titles=${titles}&assignees=${assignees}&d=${d}&est=${est}&spent=${spent}&x=${arrX}`);
         window.open(`https://localhost:44354/ReportView/ShowRange?reportId=${id}&start=${start}&end=${pts}&graphType=${d}`)
 });
         </script>

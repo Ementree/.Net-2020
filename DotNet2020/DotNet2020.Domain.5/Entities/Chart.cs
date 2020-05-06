@@ -22,26 +22,13 @@ namespace DotNet2020.Domain._5.Entities
             {
                 if (!dict.ContainsKey(min))
                     dict[min] = 0;
-                if (e <= min)
+                while(e>min)
                 {
-                    dict[min]++;
+                    min += Tick;
+                    if (!dict.ContainsKey(min))
+                        dict[min] = 0;
                 }
-                else
-                {
-                    while (true)
-                    {
-                        min += Tick;
-                        if (!dict.ContainsKey(min))
-                            dict[min] = 0;
-                        if (e <= min)
-                        {
-                            if (!dict.ContainsKey(min))
-                                dict[min] = 0;
-                            dict[min]++;
-                            break;
-                        }
-                    }
-                }
+                dict[min]++;
             }
             foreach (var e in dict)
             {
