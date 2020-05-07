@@ -19,10 +19,10 @@ namespace DotNet2020.Domain._4.Attributes
 
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
-            var propertyTestedInfo = validationContext.ObjectType.GetProperty(this.testedPropertyName);
+            var propertyTestedInfo = validationContext.ObjectType.GetProperty(testedPropertyName);
             if (propertyTestedInfo == null)
             {
-                return new ValidationResult(string.Format("Неправильная дата", this.testedPropertyName));
+                return new ValidationResult(string.Format("Неправильная дата"));
             }
 
             var propertyTestedValue = propertyTestedInfo.GetValue(validationContext.ObjectInstance, null);
