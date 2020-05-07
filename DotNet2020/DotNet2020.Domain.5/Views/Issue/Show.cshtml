@@ -67,8 +67,8 @@
                 <tr>
                     <td class="td"><p class="tditem">@issue.CreatorName</p></td>
                     <td class="td"><p class="tditem">@issue.AssigneeName</p></td>
-                    <td class="td"><p class="tditem">@(issue.TimeInfo.SpentTime.HasValue ? issue.TimeInfo.SpentTime.Value + "h" : "?")</p></td>
-                    <td class="tdlast"><p class="tditem">@(issue.TimeInfo.EstimatedTime.HasValue ? issue.TimeInfo.EstimatedTime.Value + "h" : "?")</p></td>
+                    <td class="td"><p class="tditem">@(issue.SpentTime.HasValue ? issue.SpentTime.Value + "h" : "?")</p></td>
+                    <td class="tdlast"><p class="tditem">@(issue.EstimatedTime.HasValue ? issue.EstimatedTime.Value + "h" : "?")</p></td>
                 </tr>
             }
         </table>
