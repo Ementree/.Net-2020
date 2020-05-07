@@ -43,6 +43,15 @@ namespace DotNet2020.Domain._4.Controllers
             var hollidays = _dbContext.Set<Holiday>().Where(u => 
                 u.Date >= viewModel.From && u.Date <= viewModel.To).ToList();
             
+            var _vacation = _dbContext.Set<Vacation>()
+                .FirstOrDefault(s =>
+                    s.From == viewModel.From && s.To == viewModel.To && s.UserId == user.Id);
+            if (_vacation != null)
+            {
+                ModelState.AddModelError("Error", "Вы уже выбирали отпуск на эти даты, нельзя так!");
+                return View(viewModel);
+            }
+            
             if (viewModel.IsPaid && user.TotalDayOfVacation < DomainLogic.GetWorkDay(days, hollidays))
             {
                 ModelState.AddModelError("Error2", "Количество запрашеваемых дней отпуска превышает количество доступных вам");

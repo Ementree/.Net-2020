@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Security.Claims;
 using DotNet2020.Data;
 using DotNet2020.Domain._4.Models;
 using DotNet2020.Domain._4_.Models.ModelView;
@@ -31,9 +32,11 @@ namespace DotNet2020.Domain._4.Controllers
         [ValidationFilter]
         public IActionResult Add(SickDayViewModel viewModel)
         {
+            var user = _dbContext.Set<AppIdentityUser>()
+                .FirstOrDefault(u => u.Id == User.FindFirstValue(ClaimTypes.NameIdentifier));
             var sickday = _dbContext.Set<SickDay>()
-                .FirstOrDefault(s => s.From == viewModel.Day && s.UserId == User.Identity.Name);
-            if (sickday == null)
+                .FirstOrDefault(s => s.From == viewModel.Day && s.UserId == user.Id);
+            if (sickday != null)
             {
                 ModelState.AddModelError("Error", "Вы уже выбирали sickDay на эту дату, нельзя так!");
                 return View(viewModel);

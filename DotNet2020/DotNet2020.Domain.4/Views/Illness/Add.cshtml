@@ -1,7 +1,6 @@
 ﻿@using Microsoft.AspNetCore.Components.Forms
 @model DotNet2020.Domain._4_.Models.ModelView.IllnessViewModel
 <div class="text-danger">@Html.ValidationMessage("Error")</div>
-<div class="text-danger">@Html.ValidationMessage("Error1")</div>
 <div>
     @using (Html.BeginForm("Add", "Illness", FormMethod.Post))
     {

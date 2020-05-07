@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Security.Claims;
 using DotNet2020.Data;
 using DotNet2020.Domain._4.Models;
 using DotNet2020.Domain._4_.Models.ModelView;
@@ -18,7 +19,7 @@ namespace DotNet2020.Domain._4.Controllers
         {
             _dbContext = dbContext;
         }
-        
+
         [HttpGet]
         [Authorize]
         public IActionResult Add()
@@ -31,9 +32,20 @@ namespace DotNet2020.Domain._4.Controllers
         [ValidationFilter]
         public IActionResult Add(IllnessViewModel viewModel)
         {
+            var user = _dbContext.Set<AppIdentityUser>()
+                .FirstOrDefault(u => u.Id == User.FindFirstValue(ClaimTypes.NameIdentifier));
+            var ilness = _dbContext.Set<Illness>()
+                .FirstOrDefault(s =>
+                    s.From == viewModel.From && s.To == viewModel.To && s.UserId == user.Id);
+            if (ilness != null)
+            {
+                ModelState.AddModelError("Error", "Вы уже выбирали больнчный на эти даты, нельзя так!");
+                return View(viewModel);
+            }
+
             var illness = new Illness(
-                viewModel.From ?? throw new NullReferenceException(), 
-                viewModel.To ?? throw new NullReferenceException(), 
+                viewModel.From ?? throw new NullReferenceException(),
+                viewModel.To ?? throw new NullReferenceException(),
                 _dbContext.Set<AppIdentityUser>().FirstOrDefault(u => u.Email == HttpContext.User.Identity.Name));
             _dbContext.Set<AbstractCalendarEntry>().Add(illness);
             _dbContext.SaveChanges();
