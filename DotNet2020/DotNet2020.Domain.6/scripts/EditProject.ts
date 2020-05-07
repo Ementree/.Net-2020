@@ -121,7 +121,7 @@ function generateButtonsBlock(): HTMLDivElement {
     return buttonBlock;
 }
 
-function generateMonth(period: Period) {
+function generateMonth(period: Period):HTMLDivElement {
     let idBase = `Year${period.date.getFullYear()}Month${period.date.getMonth()}`;
     let container = <HTMLDivElement>document.createElement('div');
     container.id = `edit` + idBase;
