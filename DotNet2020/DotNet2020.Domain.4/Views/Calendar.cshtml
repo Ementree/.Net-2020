@@ -407,4 +407,29 @@
             return "red";
         }
     }
+    
+    $(function () {
+          $("#calendar").kendoTooltip({
+              filter: ".k-event > div",
+              position: "top",
+              width: 250,
+              content: kendo.template($('#template').html())
+          });
+    
+        
+      });
 </script>
+
+<script id="template" type="text/x-kendo-template">
+      #var uid = target.parent().attr("data-uid");#
+      #var scheduler = target.closest("[data-role=scheduler]").data("kendoScheduler");#
+      #var model = scheduler.occurrenceByUid(uid);#
+
+      #if(model) {#
+          <strong>event start:</strong> #=kendo.format('{0:d}',model.start)#<br />
+          <strong>event end:</strong> #=kendo.format('{0:d}',model.end)#<br />
+      #} else {#
+          <strong>No event data is available</strong>
+      #}#
+</script>
+
