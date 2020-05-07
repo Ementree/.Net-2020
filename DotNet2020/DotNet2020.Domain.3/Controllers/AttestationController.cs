@@ -226,6 +226,10 @@ namespace DotNet2020.Domain._3.Controllers
             var grade = _context.Set<GradesModel>().Find(id);
             _context.Entry(grade).Collection(x => x.GradesCompetences).Load();
             var gradeUpdateModel = new GradeUpdateModel { GradeModel = grade, Competences = _context.Set<CompetencesModel>().ToList() };
+            gradeUpdateModel.Grades = GetLoadedGrades();
+            gradeUpdateModel.Grades.Remove(grade);
+            gradeUpdateModel.GradeToGrades = _context.Set<GradeToGradeModel>().ToList();
+            ViewBag.UpdatedGrade = grade;
             return View(gradeUpdateModel);
         }
 
@@ -258,11 +262,24 @@ namespace DotNet2020.Domain._3.Controllers
                     _context.Set<GradesModel>().Remove(grade);
                     _context.SaveChanges();
                     return RedirectToAction("Grades");
+                case GradeActions.AddGrade:
+                    var oldGrades = _context.Set<GradeToGradeModel>().Where(x => x.GradeId == id);
+                    _context.Set<GradeToGradeModel>().RemoveRange(oldGrades);
+                    foreach (var newGradeId in gradeUpdateModel.NewGradesIds)
+                    {
+                        _context.Set<GradeToGradeModel>().Add(new GradeToGradeModel { GradeId = id, NextGradeId = newGradeId });
+                    }
+                    _context.SaveChanges();
+                    break;
             }
 
             _context.Entry(grade).Collection(x => x.GradesCompetences).Load();
             gradeUpdateModel.GradeModel = grade;
             gradeUpdateModel.Competences = _context.Set<CompetencesModel>().ToList();
+            gradeUpdateModel.Grades = GetLoadedGrades();
+            gradeUpdateModel.Grades.Remove(grade);
+            gradeUpdateModel.GradeToGrades = _context.Set<GradeToGradeModel>().ToList();
+            ViewBag.UpdatedGrade = grade;
             return View(gradeUpdateModel);
         }
 
@@ -337,28 +354,62 @@ namespace DotNet2020.Domain._3.Controllers
             switch (model.Action)
             {
                 case AttestationAction.Choosing: //вывести окно выбора
+                    model.Workers = GetLoadedWorkers();
                     break;
 
-                case AttestationAction.CompetencesChose: //вывести таблицу компетенций и работников
+                case AttestationAction.CompetencesChose: //вывести таблицу компетенций
                     model.Workers = GetLoadedWorkers();
                     model.Competences = _context.Set<CompetencesModel>().ToList();
                     model.Grades = GetLoadedGrades();
+
+                    var worker = model.Workers.Where(x=>x.Id==model.WorkerId).FirstOrDefault();
+                    foreach (var item in worker.SpecificWorkerCompetencesModels)
+                    {
+                        model.Competences.Remove(item.Competence);
+                    }
+                    
                     break;
 
-                case AttestationAction.GradeChose: //вывести таблицу грейдов и работников
+                case AttestationAction.GradeChose: //вывести таблицу грейдов
                     model.Workers = GetLoadedWorkers();
                     model.Competences = _context.Set<CompetencesModel>().ToList();
                     model.Grades = GetLoadedGrades();
+
+                    worker = model.Workers.Where(x => x.Id == model.WorkerId).FirstOrDefault();
+                    var workerCompetences = new List<CompetencesModel>();
+                    foreach (var item in worker.SpecificWorkerCompetencesModels)
+                    {
+                        workerCompetences.Add(item.Competence);
+                    }
+
+                    var workerGrades = GetWorkerGrades(workerCompetences, model.Grades, _context.Set<GradeToGradeModel>().ToList());
+
+                    foreach (var element in workerGrades)
+                    {
+                        if (model.Grades.Contains(element))
+                        {
+                            model.Grades.Remove(element);
+                        }
+                    }
                     break;
 
                 case AttestationAction.AttestationByCompetences: //вывести окно аттестации по компетенциям
+                    worker = GetLoadedWorkers().Where(x => x.Id == model.WorkerId).FirstOrDefault();
+                    workerCompetences = new List<CompetencesModel>();
+
+                    foreach (var item in worker.SpecificWorkerCompetencesModels)
+                        workerCompetences.Add(item.Competence);
+
                     var questions = new List<string>();
                     var testedCompetences = new List<CompetencesModel>();
                     foreach (var competenceId in model.IdsTestedCompetences)
                     {
                         var competence = _context.Set<CompetencesModel>().Find(competenceId);
-                        testedCompetences.Add(competence);
-                        questions = questions.Union(competence.Questions).ToList();
+                        if (!workerCompetences.Contains(competence))
+                        {
+                            testedCompetences.Add(competence);
+                            questions = questions.Union(competence.Questions).ToList();
+                        }
                     }
                     questions = questions.Distinct().ToList();
                     model.Questions = questions;
@@ -366,25 +417,36 @@ namespace DotNet2020.Domain._3.Controllers
                     break;
 
                 case AttestationAction.AttestationByGrade: //вывести окно аттестации по грейдам
+                    worker = GetLoadedWorkers().Where(x => x.Id == model.WorkerId).FirstOrDefault();
                     var questionsForGrade = new List<string>();
                     var gradeId = model.GradeId.Value;
 
                     var testedGradeCompetences = _context.Set<GradeCompetencesModel>().Where(x => x.GradeId == gradeId).ToList();
+                    testedCompetences = new List<CompetencesModel>();
 
-                    var idsOfTestedCompetences = new List<CompetencesModel>();
+                    workerCompetences = new List<CompetencesModel>();
+
+                    foreach (var item in worker.SpecificWorkerCompetencesModels)
+                        workerCompetences.Add(item.Competence);
 
                     foreach (var testedGradeCompetence in testedGradeCompetences)
                     {
                         var competence = _context.Set<CompetencesModel>().Find(testedGradeCompetence.CompetenceId);
-                        questionsForGrade = questionsForGrade.Union(competence.Questions).ToList();
-                        idsOfTestedCompetences.Add(competence);
+                        if (!workerCompetences.Contains(competence))
+                        {
+                            questionsForGrade = questionsForGrade.Union(competence.Questions).ToList();
+                            testedCompetences.Add(competence);
+                        }
                     }
+
                     questionsForGrade = questionsForGrade.Distinct().ToList();
-                    model.TestedCompetences = idsOfTestedCompetences;
+                    model.TestedCompetences = testedCompetences;
                     model.Questions = questionsForGrade;
+
                     break;
 
                 case AttestationAction.Finished: //сохранить результаты
+                    model.Grades = GetLoadedGrades();
                     var tuple = GetProblemsAndAnswers(model);
                     model.Problems = tuple.Item1;
                     var answers = tuple.Item2;
@@ -407,6 +469,24 @@ namespace DotNet2020.Domain._3.Controllers
                         gotCompetences.Add(newCompetence.CompetenceId);
                     }
 
+                    workerCompetences = new List<CompetencesModel>();
+                    worker = _context.Set<SpecificWorkerModel>().Where(x => x.Id == model.WorkerId).FirstOrDefault();
+                    foreach (var item in worker.SpecificWorkerCompetencesModels.Union(newCompetences))
+                    {
+                        workerCompetences.Add(item.Competence);
+                    }
+
+                    workerGrades = GetWorkerGrades(workerCompetences, model.Grades, _context.Set<GradeToGradeModel>().ToList());
+
+                    foreach (var element in workerGrades)
+                    {
+                        if (model.Grades.Contains(element))
+                        {
+                            model.Grades.Remove(element);
+                        }
+                    }
+
+                    model.NextMoves = GetNextMoves(model.Grades);
                     model.GotCompetences = gotCompetences;
 
                     AddAnswers(answers, model);
@@ -419,6 +499,16 @@ namespace DotNet2020.Domain._3.Controllers
             return View(model);
         }
         #endregion
+
+        private string GetNextMoves(List<GradesModel> nextGrades)
+        {
+            StringBuilder builder = new StringBuilder();
+            foreach (var item in nextGrades)
+            {
+                builder.Append(item.Grade + "\n");
+            }
+            return builder.ToString();
+        }
         private List<SpecificWorkerModel> GetLoadedWorkers()
         {
             var workers = _context.Set<SpecificWorkerModel>().ToList();
@@ -542,6 +632,51 @@ namespace DotNet2020.Domain._3.Controllers
                 answer.AttestationAnswer.Add(attestationAnswerModel);
                 _context.Add(answer);
             }
+        }
+
+        public List<GradesModel> GetLowerGrades(long gradeId, List<GradesModel> grades, List<GradeToGradeModel> links)
+        {
+            var neededLinks = links.Where(l => l.NextGradeId == gradeId);
+            var result = new List<GradesModel>();
+            foreach (var link in neededLinks)
+            {
+                var currentGrade = grades.FirstOrDefault(g => g.Id == link.GradeId);
+                if (!result.Contains(currentGrade))
+                {
+                    result.Add(currentGrade);
+                    result.AddRange(GetLowerGrades(currentGrade.Id, grades, links));
+                }
+            }
+
+            return result;
+        }
+
+        public List<CompetencesModel> GetLowerCompetences(long gradeId, List<GradesModel> grades, List<GradeToGradeModel> links)
+        {
+            var neededGrades = GetLowerGrades(gradeId, grades, links);
+            neededGrades.Add(grades.FirstOrDefault(x => x.Id == gradeId));
+            var result = new List<CompetencesModel>();
+            foreach (var grade in neededGrades)
+            {
+                var gradeCompetences = grade.GradesCompetences;
+                foreach (var competence in gradeCompetences.Where(competence => !result.Contains(competence.Competence)))
+                    result.Add(competence.Competence);
+            }
+
+            return result;
+        }
+
+        public List<GradesModel> GetWorkerGrades(List<CompetencesModel> workerCompetences, List<GradesModel> grades,
+            List<GradeToGradeModel> links)
+        {
+            var result = new List<GradesModel>();
+            foreach (var grade in grades)
+            {
+                var gradeCompetences = GetLowerCompetences(grade.Id, grades, links);
+                if (!gradeCompetences.Except(workerCompetences).Any()) //чекает что у рабочего есть все компетенции грейда
+                    result.Add(grade);
+            }
+            return result;
         }
     }
 }
