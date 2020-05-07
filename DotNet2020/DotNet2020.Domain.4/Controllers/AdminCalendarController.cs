@@ -28,7 +28,7 @@ namespace DotNet2020.Domain._4.Controllers
             ViewBag.Events = _dbContext.Set<AbstractCalendarEntry>()
                 .Where(c => c.AbsenceType == AbsenceType.Illness || c.AbsenceType == AbsenceType.Vacation)
                 .Include(m => m.User)
-                .AsEnumerable();
+                .ToList();
 
             var allVacations = _dbContext.GetAllVacations();
             var users = _dbContext.GetAllUsers();
