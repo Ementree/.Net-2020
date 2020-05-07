@@ -1,41 +1,73 @@
-﻿<h1>Управление грейдами</h1>
-<h2>Добавление компетенций</h2>
-<p>@Html.ActionLink("Грейды", "Grades", "Attestation")</p>
-<form method="post">
-    <p>Компетенции:</p>
-    @foreach (var element in ViewBag.CompetencesList)
-    {
-        if (ViewBag.AddedCompetences.Contains(element))
+﻿@model DotNet2020.Domain._3.Models.GradeUpdateModel
+<!doctype html>
+<html class="no-js" lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" href="favicon.ico" />
+    <link rel="stylesheet" href="/css/QWERTYstyles.css">
+</head>
+
+<body>
+    <input type="checkbox" id="nav-toggle" hidden>
+    <nav class="nav nav-slp">
+        <label for="nav-toggle" class="nav-toggle" onclick></label>
+        <ul>
+            <li>@Html.ActionLink("Главная страница", "Index", "Attestation")
+            <li>@Html.ActionLink("Сотрудники", "Workers", "Attestation")
+            <li>@Html.ActionLink("Компетенции", "Competences", "Attestation")
+            <li>@Html.ActionLink("Грейды", "Grades", "Attestation")
+            <li>@Html.ActionLink("Вопросы", "Questions", "Attestation")
+            <li>@Html.ActionLink("Аттестация", "Attestation", "Attestation")
+            <li>@Html.ActionLink("Выгрузка", "Output", "Attestation")
+        </ul>
+    </nav>
+    <main role="main">
+        <h1>Управление грейдами</h1>
+        <h2>Добавление компетенций</h2>
+        <p>@Html.ActionLink("Грейды", "Grades", "Attestation")</p>
+
+        <form method="post">
+            <p>Компетенции:</p>
+            @foreach (var element in Model.Competences)
+            {
+                if (Model.GradeModel.GradesCompetences.Any(x => x.CompetenceId == element.Id))
+                {
+                    <p><input type="checkbox" value="@element.Id" name="NewCompetencesIds" checked="" /> @element.Competence</p>
+                }
+                else
+                {
+                    <p><input type="checkbox" value="@element.Id" name="NewCompetencesIds" /> @element.Competence</p>
+                }
+            }
+            <input type="text" hidden name="Action" value="SetCompetences" />
+            <p><input type="submit" value="Обновить" /></p>
+        </form>
+
+        <br />
+        @if (Model.GradeModel.GradesCompetences != null && Model.GradeModel.GradesCompetences.Count > 0)
         {
-            <p><input type="checkbox" value="@element.Id" name="competences" checked=""/> @element.Competence</p>
+            <p>Список прикреплённых на данный момент компетенций:</p>
+            @foreach (var element in Model.GradeModel.GradesCompetences)
+            {
+                <p><b>@element.Competence.Competence</b></p>
+            }
         }
         else
         {
-            <p><input type="checkbox" value="@element.Id" name="competences"/> @element.Competence</p>
+            <p>Компетенции не привязаны!</p>
         }
-    }
-    <input type="text" hidden name="method" value="AddCompetenceItem"/>
-    <p><input type="submit" value="Обновить"/></p>
-</form>
-
-<br/>
-@if (ViewBag.AddedCompetences != null && ViewBag.AddedCompetences.Count > 0)
-{
-    <p>Список прикреплённых на данный момент компетенций:</p>
-    @foreach (var element in ViewBag.AddedCompetences)
-    {
-        <p><b>@element.Competence</b></p>
-    }
-}
-else
-{
-    <p>Компетенции не привязаны!</p>
-}
 
 
-<br/>
-<form method="post">
-    <p>Удаление грейда</p>
-    <input type="text" hidden name="method" value="RemoveGrade"/>
-    <input type="submit" value="Удалить грейд"/>
-</form>
+        <br />
+        <form method="post">
+            <p>Удаление грейда</p>
+            <input type="text" hidden name="Action" value="RemoveGrade" />
+            <input type="submit" value="Удалить грейд" />
+        </form>
+    </main>
+</body>
+</html>
+

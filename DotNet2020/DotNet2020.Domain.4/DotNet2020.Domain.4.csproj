@@ -6,20 +6,14 @@
     <ProjectReference Include="..\DotNet2020.Domain.Core\DotNet2020.Domain.Core.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Views\Calendar\AddHoliday.cshtml">
+    <EmbeddedResource Include="Views\AdminCalendar\Index.cshtml">
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
-    <EmbeddedResource Include="Views\Calendar\UpdateRecommendation.cshtml">
-      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Views\Calendar\Admin.cshtml">
-      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <EmbeddedResource Include="Views\Calendar.cshtml">
+      <Generator>RazorTemplatePreprocessor</Generator>
+      <LastGenOutput>Calendar.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Calendar\Index.cshtml">
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
@@ -30,26 +24,64 @@
 	    <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
 	    <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
 	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </EmbeddedResource>
+	  <EmbeddedResource Include="Views\Holiday\Add.cshtml">
+	    <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+	    <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </EmbeddedResource>
+	  <EmbeddedResource Include="Views\Holiday\Remove.cshtml">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	    <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+	    <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+	  </EmbeddedResource>
+	  <EmbeddedResource Include="Views\Illness\Add.cshtml">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	    <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+	    <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+	  </EmbeddedResource>
+	  <EmbeddedResource Include="Views\Recommendation\Update.cshtml">
+	    <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+	    <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </EmbeddedResource>
+	  <EmbeddedResource Include="Views\SickDay\Add.cshtml">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	    <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+	    <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+	  </EmbeddedResource>
+	  <EmbeddedResource Include="Views\Vacation\Add.cshtml">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	    <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+	    <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
 	  </EmbeddedResource>  
 	  <EmbeddedResource Include="wwwroot\css\calendar.css">
 	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Repositories\" />
     <Folder Include="Models\Contexts\" />
     <Folder Include="Models\Base\" />
-    <Folder Include="Models\ModelView\" />
     <Folder Include="Models\CalendarEntry\" />
     <Folder Include="wwwroot\" />
+    <Folder Include="Filters\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.2">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
+    <PackageReference Include="Telerik.UI.for.AspNet.Core.Trial" Version="2020.1.406" />
   </ItemGroup>
   <ItemGroup>
+    <None Remove="Views\Calendar\AddIllness.cshtml" />
+    <None Remove="Views\Calendar\AddSickDay.cshtml" />
+    <None Remove="Views\Calendar\AddVacation.cshtml" />
+    <None Remove="Views\Calendar\RemoveHoliday.cshtml" />
     <None Remove="wwwroot\css\calendar.css" />
+    <None Remove="Views\Calendar\Calendar.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="Views\Calendar\Calendar.cs" />
   </ItemGroup>
 </Project>

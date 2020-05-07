@@ -8,15 +8,15 @@ namespace DotNet2020.Domain._3.Models
     {
         [Key]
         public long Id { get; set; }
-        
+
         public string Competence { get; set; }
-        
-        public string[] Content { get; set; }
-        
-        public string[] Questions { get; set; }
-        
-        public List<GradeCompetencesModel> GradesCompetences { get; set; }
-        public List<SpecificWorkerCompetencesModel> SpecificWorkerCompetencesModels { get; set; }
-        
+
+        public List<string> Content { get; set; } = new List<string>();
+
+        public List<string> Questions { get; set; } = new List<string>();
+
+        public List<GradeCompetencesModel> GradesCompetences { get; set; } = new List<GradeCompetencesModel>();
+        public List<SpecificWorkerCompetencesModel> SpecificWorkerCompetencesModels { get; set; } = new List<SpecificWorkerCompetencesModel>();
+
     }
 }
