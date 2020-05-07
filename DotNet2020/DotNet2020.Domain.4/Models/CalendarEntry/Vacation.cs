@@ -25,6 +25,7 @@ namespace DotNet2020.Domain._4.Models
         }
 
         #warning добавить согласующего
+        #warning убрать DbContext -> инверсия зависимости
         public void Approve(DbContext context)
         {
             var user = context.Set<AppIdentityUser>()
