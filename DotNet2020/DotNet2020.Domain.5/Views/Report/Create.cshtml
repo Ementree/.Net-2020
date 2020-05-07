@@ -24,7 +24,7 @@
                 <div class="form-group">
                     <label for="CreateReport">Проект:</label>
                     <br>
-                    <select size="2" asp-for="ProjectName">
+                    <select asp-for="ProjectName">
                         @foreach (var project in Model.CreateProject)
                         {
                             <option value="@project">@project</option>

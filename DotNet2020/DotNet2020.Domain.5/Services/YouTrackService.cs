@@ -41,7 +41,7 @@ namespace DotNet2020.Domain._5.Services
 
         public Issue[] GetIssues(string projectName, string issueFilter = "")
         {
-            var issues = issueService.GetIssuesInProject(projectName, issueFilter).Result;
+            var issues = issueService.GetIssuesInProject(projectName, filter: issueFilter, take: 100).Result;
             return issues
                 .Select(i => CreateIssue(i, timeService.GetWorkItemsForIssue(i.Id).Result))
                 .ToArray();
@@ -55,9 +55,9 @@ namespace DotNet2020.Domain._5.Services
                 issue.GetField("Estimate")?.AsInt32() / 60,
                 issue.GetField("Spent time")?.AsInt32() / 60,
                 issue.GetField("reporterFullName").Value.ToString(),
-                issue.GetField("Assignee")?.AsCollection().FirstOrDefault(),
+                ((List<YouTrackSharp.Issues.Assignee>)issue.GetField("Assignee")?.Value)?.FirstOrDefault()?.UserName,
                 issue.GetField("projectShortName").AsString(),
-                serverUrl + @"/issue/" + issue.GetField("projectShortName").AsString(),
+                serverUrl + @"/issue/" + issue.Id,
                 workItems?
                     .Select(w => new WorkItem()
                     {
