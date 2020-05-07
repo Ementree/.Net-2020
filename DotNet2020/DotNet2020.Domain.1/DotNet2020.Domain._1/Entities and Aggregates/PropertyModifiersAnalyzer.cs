@@ -16,12 +16,12 @@ namespace DotNet2020.Domain._1
     {
         public const string DiagnosticId = "PropertyDiagnosticId";
         public const string CodeFixTitle = "Change modificator";
-
         private const string Title = "Property encapsulation problem";
         private const string MessageFormat = @"Property should have public get and protected set";
-        private const string Category = "Entities and Aggregates";
         private const string Description = @"Property should have public get and protected set";
-        public static DiagnosticDescriptor Rule = new DiagnosticDescriptor(DiagnosticId, Title, MessageFormat, Category, DiagnosticSeverity.Warning, isEnabledByDefault: true, description: Description);
+        private const string Category = "Entities and Aggregates";
+        public static DiagnosticDescriptor Rule = new DiagnosticDescriptor(DiagnosticId, Title, MessageFormat, Category,
+            DiagnosticSeverity.Warning, isEnabledByDefault: true, description: Description);
 
         public static void Analyze(SyntaxNodeAnalysisContext context)
         {
@@ -41,7 +41,7 @@ namespace DotNet2020.Domain._1
                 propertyNode.Identifier.Text));
         }
 
-        public async Task<Solution> ChangeSolutoin(Document document, CodeFixContext context,
+        public static async Task<Solution> CodeFix(Document document, CodeFixContext context,
             CancellationToken cancellationToken)
         {
             var root = await context.Document

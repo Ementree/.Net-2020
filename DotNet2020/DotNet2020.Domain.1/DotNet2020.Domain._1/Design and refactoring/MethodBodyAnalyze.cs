@@ -9,10 +9,6 @@ using Microsoft.CodeAnalysis.Diagnostics;
 
 namespace DotNet2020.Domain._1
 {
-    /// <summary>
-    /// Задача: Не допускаются слишком длинные методы
-    ///https://kpfu-net.myjetbrains.com/youtrack/issue/1R-24
-    /// </summary>
     class MethodBodyAnalyze
     {
         public const string DiagnosticId = "MethodBodyAnalyze";
@@ -25,10 +21,9 @@ namespace DotNet2020.Domain._1
 
         private static int totalCount = 0;
 
-
         private static void GetContInDeep(SyntaxNode node, SyntaxKind syntaxKind)
         {
-            
+
             node.ChildNodes().All(t =>
             {
                 GetContInDeep(t, syntaxKind);
@@ -42,9 +37,9 @@ namespace DotNet2020.Domain._1
                 .Count(t2 => t2.IsKind(SyntaxKind.EndOfLineTrivia));
 
                 totalCount += count;
-                
+
                 return true;
-            });   
+            });
         }
 
         public static void Analyze(SyntaxNodeAnalysisContext context)
@@ -59,23 +54,20 @@ namespace DotNet2020.Domain._1
 
             totalCount = 0;
 
-            
+
             GetContInDeep(methodBlock, SyntaxKind.EndOfLineTrivia);
 
-            if(totalCount > 20)
+            if (totalCount > 20)
             {
-            var diagnostic = Diagnostic.Create(
-                Rule,
-                methodDeclaration.GetLocation(),
-                methodDeclaration.GetText(),
-                totalCount
-                );
+                var diagnostic = Diagnostic.Create(
+                    Rule,
+                    methodDeclaration.GetLocation(),
+                    methodDeclaration.GetText(),
+                    totalCount
+                    );
 
                 context.ReportDiagnostic(diagnostic);
             }
-
-
-
         }
     }
 }

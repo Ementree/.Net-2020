@@ -21,8 +21,11 @@ namespace DotNet2020.Domain._1
                     LineLengthAnalyzer.Rule,
                     FluentAnalyzer.Rule,
                     PropertyModifiersAnalyzer.Rule,
+                    MethodParamsAnalyzer.Rule,
                     BooleanPropsNameAnalyzer.Rule,
                     MethodBodyAnalyze.Rule,
+                    SimpleInterfaceAnalizer.Rule,
+                    EnumCheck.Rule,
                     OneFileOneClass.Rule,
                     LanguageAnalyzer.RussianRule,
                     LanguageAnalyzer.EnglishRule);
@@ -34,10 +37,12 @@ namespace DotNet2020.Domain._1
             context.RegisterSyntaxTreeAction(LineLengthAnalyzer.AnalyzeTree);
             context.RegisterSyntaxNodeAction(FluentAnalyzer.Analyze, SyntaxKind.SimpleMemberAccessExpression);
             context.RegisterSyntaxNodeAction(PropertyModifiersAnalyzer.Analyze, SyntaxKind.PropertyDeclaration);
+            context.RegisterSyntaxNodeAction(MethodParamsAnalyzer.Analyze, SyntaxKind.MethodDeclaration);
             context.RegisterSyntaxNodeAction(OneFileOneClass.Analyze, SyntaxKind.NamespaceDeclaration);
             context.RegisterSyntaxNodeAction(BooleanPropsNameAnalyzer.Analyze, SyntaxKind.PropertyDeclaration);
             context.RegisterSyntaxNodeAction(SimpleInterfaceAnalizer.Analyze, SyntaxKind.InterfaceDeclaration);
-            context.RegisterSyntaxNodeAction(MethodParamsAnalyzer.Analyze, SyntaxKind.MethodDeclaration);
+            context.RegisterSyntaxNodeAction(EnumCheck.Analyze, SyntaxKind.EnumDeclaration);
+            context.RegisterSyntaxNodeAction(MethodBodyAnalyze.Analyze, SyntaxKind.MethodDeclaration);
             context.RegisterSyntaxNodeAction(LanguageAnalyzer.AnalyzeXML, SyntaxKind.SingleLineDocumentationCommentTrivia);
             context.RegisterSyntaxTreeAction(LanguageAnalyzer.Analyze);
         }

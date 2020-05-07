@@ -11,14 +11,9 @@ using Microsoft.CodeAnalysis.Diagnostics;
 
 namespace DotNet2020.Domain._1
 {
-
-    /// <summary>
-    /// Доработать! Enum
-    /// https://kpfu-net.myjetbrains.com/youtrack/issue/1R-14
-    /// </summary>
     class EnumCheck
     {
-        private const string DiagnosticId = "EnumCheck";
+        public const string DiagnosticId = "EnumCheck";
         private const string Title = "Move Enum to single file or change modificator to private";
         private const string MessageFormat = "Move Enum to single file or change modificator to private";
         private const string Category = "Syntax";
@@ -29,9 +24,8 @@ namespace DotNet2020.Domain._1
         public static void Analyze(SyntaxNodeAnalysisContext context)
         {
             var enumDeclaration = context.Node as EnumDeclarationSyntax;
-            
 
-            if(enumDeclaration != null)
+            if (enumDeclaration != null)
             {
                 var parent = enumDeclaration.Parent;
 
@@ -49,16 +43,14 @@ namespace DotNet2020.Domain._1
 
                 if (isPrivate) return;
 
-               var diagnostic = Diagnostic.Create(
-                   Rule, 
-                   enumDeclaration.GetLocation(), 
-                   enumDeclaration.GetText()
-                   );
+                var diagnostic = Diagnostic.Create(
+                    Rule,
+                    enumDeclaration.GetLocation(),
+                    enumDeclaration.GetText()
+                    );
 
-               context.ReportDiagnostic(diagnostic);
+                context.ReportDiagnostic(diagnostic);
             }
-
         }
-
     }
 }

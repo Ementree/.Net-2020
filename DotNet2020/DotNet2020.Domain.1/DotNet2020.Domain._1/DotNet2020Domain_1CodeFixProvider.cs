@@ -23,14 +23,8 @@ namespace DotNet2020.Domain._1
             get
             {
                 return ImmutableArray.Create(
-                    LineLengthAnalyzer.DiagnosticId,
-                    FluentAnalyzer.DiagnosticId,
-                    PropertyModifiersAnalyzer.DiagnosticId,
-                    BooleanPropsNameAnalyzer.DiagnosticId,
-                    MethodBodyAnalyze.DiagnosticId,
-                    OneFileOneClass.DiagnosticId,
-                    MethodParamsAnalyzer.DiagnosticId,
-                    LanguageAnalyzer.DiagnosticId);
+                    //MethodParamsAnalyzer.DiagnosticId,
+                    PropertyModifiersAnalyzer.DiagnosticId);
             }
         }
 
@@ -41,7 +35,19 @@ namespace DotNet2020.Domain._1
 
         public sealed override async Task RegisterCodeFixesAsync(CodeFixContext context)
         {
-            
+            var diagnostic = context.Diagnostics.First();
+
+            switch (diagnostic.Id)
+            {
+                case PropertyModifiersAnalyzer.DiagnosticId:
+                    context.RegisterCodeFix(
+                        CodeAction.Create(
+                            title: PropertyModifiersAnalyzer.CodeFixTitle,
+                            createChangedSolution: c => PropertyModifiersAnalyzer.CodeFix(context.Document, context, c),
+                            equivalenceKey: PropertyModifiersAnalyzer.CodeFixTitle),
+                        diagnostic);
+                    break;
+            }
         }
     }
 }
