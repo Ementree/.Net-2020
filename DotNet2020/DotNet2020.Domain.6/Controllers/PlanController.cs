@@ -13,6 +13,7 @@ namespace DotNet2020.Domain._6.Controllers
     {
         private readonly DbContext _dbContext;
         private readonly ProjectService _projectService;
+
         public PlanController(DbContext dbDbContext)
         {
             _dbContext = dbDbContext;
@@ -34,7 +35,6 @@ namespace DotNet2020.Domain._6.Controllers
                 .Include(fres => fres.Resource)
                 .ThenInclude(res => res.Employee)
                 .ToList();
-            
 
 
             var groupBy = functioningCapacityResources.GroupBy(f => f.ProjectId);
@@ -65,9 +65,10 @@ namespace DotNet2020.Domain._6.Controllers
                 _dbContext.Set<FunctioningCapacityProject>()
                     .ToList();
             var resourceCapacity = _dbContext.Set<ResourceCapacity>().ToList();
-            
+
             ViewBag.FunctioningCapacityProject = funcCapacitiesProject;
-            var highlightService = new PlanHighlightService(resourceCapacity, funcCapacitiesProject, functioningCapacityResources);
+            var highlightService =
+                new PlanHighlightService(resourceCapacity, funcCapacitiesProject, functioningCapacityResources);
             ViewBag.FuncCapacityProjHighlight = highlightService.GetFuncCapacityProjHighlight();
             ViewBag.FuncCapacityResourceHighlight = highlightService.GetFuncCapacityResourceHighlight();
             ViewBag.CurrentDate = DateTime.Now;
@@ -143,36 +144,108 @@ namespace DotNet2020.Domain._6.Controllers
                         return false;
                     }
                 }
+
                 transaction.Commit();
                 return true;
             }
         }
 
         [HttpPut]
-        public bool EditProject([FromBody] ProjectViewModel viewModel)
+        public bool EditProject([FromBody] ProjectViewModel projectViewModel)
         {
-            //todo: отправить в базу
-            return false;
+            //todo: сделать обработку удаления данных при редактировании(капасити =-1)
+            using (var transaction = _dbContext.Database.BeginTransaction())
+            {
+                var project = _dbContext.Set<Project>().Find(projectViewModel.Id);
+                project.UpdateProjectInfo(projectViewModel.Name, projectViewModel.StatusId);
+                _dbContext.Set<Project>().Update(project);
+                _dbContext.SaveChanges();
+
+                foreach (var periodViewModel in projectViewModel.Periods.Where(model => model.Capacity >= 0))
+                {
+                    //обновляем(создаем) мощность месяца в проекте
+                    var functioningCapacityProjects = _dbContext
+                        .Set<FunctioningCapacityProject>();
+                    var period = _dbContext.Set<Period>()
+                        .FirstOrDefault(p => p.Start.Year == periodViewModel.Date.Year &&
+                                             p.Start.Month == periodViewModel.Date.Month);
+                    if (period == default)
+                    {
+                        var periodEntity = _dbContext.Set<Period>()
+                            .Add(new Period(
+                                new DateTime(periodViewModel.Date.Year, periodViewModel.Date.Month, 1),
+                                new DateTime(periodViewModel.Date.Year, periodViewModel.Date.Month, 28)
+                            ));
+                        _dbContext.SaveChanges();
+                        period = periodEntity.Entity;
+                    }
+
+                    var projectCapacity = functioningCapacityProjects.FirstOrDefault(fcp =>
+                        fcp.Period.Start.Year == periodViewModel.Date.Year &&
+                        fcp.Period.Start.Month == periodViewModel.Date.Month &&
+                        fcp.ProjectId == projectViewModel.Id);
+                    if (projectCapacity != default)
+                    {
+                        projectCapacity.UpdateFunctioningCapacity(periodViewModel.Capacity);
+                        functioningCapacityProjects.Update(projectCapacity);
+                    }
+                    else
+                    {
+                        var functioningCapacityProject = new FunctioningCapacityProject(projectViewModel.Id,
+                            period.Id, periodViewModel.Capacity);
+                        functioningCapacityProjects.Add(functioningCapacityProject);
+                    }
+
+                    _dbContext.SaveChanges();
+                    //тут людей обновляем capacity > 0
+                    var fResources = _dbContext.Set<FunctioningCapacityResource>();
+                    foreach (var resourceViewModel in periodViewModel.Resources)
+                    {
+                        var functioningCapacityResource = fResources.FirstOrDefault(res =>
+                            res.ResourceId == resourceViewModel.Id &&
+                            res.ProjectId == projectViewModel.Id &&
+                            res.PeriodId == period.Id);
+                        if (functioningCapacityResource != default)
+                        {
+                            functioningCapacityResource.UpdateCapacity(resourceViewModel.Capacity);
+                            fResources.Update(functioningCapacityResource);
+                        }
+                        else
+                        {
+                            functioningCapacityResource = new FunctioningCapacityResource(projectViewModel.Id,
+                                resourceViewModel.Id,
+                                resourceViewModel.Capacity,
+                                period.Id);
+                            fResources.Add(functioningCapacityResource);
+                        }
+
+                        _dbContext.SaveChanges();
+                    }
+                }
+
+                transaction.Commit();
+                return true;
+            }
         }
-        
+
         [HttpGet("[controller]/getProjectPlanById/{id}")]
         public ProjectViewModel GetProjectPlanById(int id)
         {
             return _projectService.GetProjectViewModelById(id);
         }
-        
+
         [HttpGet("[controller]/getProjectStatuses")]
         public IEnumerable<ProjectStatus> GetProjectStatuses()
         {
             var projectStatuses = new StatusesService(_dbContext).GetProjectStatuses();
             return projectStatuses;
         }
-        
+
         [HttpGet("[controller]/getResources")]
         public IEnumerable<ProjectViewModel.ResourceCapacityViewModel> GetResources()
         {
             var projectStatuses = new ResourceService(_dbContext).GetResources()
-                .Select(res=>new ProjectViewModel.ResourceCapacityViewModel()
+                .Select(res => new ProjectViewModel.ResourceCapacityViewModel()
                 {
                     Id = res.Id,
                     Name = $"{res.Employee.FirstName} {res.Employee.LastName}"

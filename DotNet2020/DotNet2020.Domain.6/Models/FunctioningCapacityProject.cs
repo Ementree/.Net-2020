@@ -17,5 +17,10 @@
         public int FunctioningCapacity { get; protected set; }
         public virtual Project Project { get; protected set; }
         public virtual Period Period { get; protected set; }
+
+        public void UpdateFunctioningCapacity(int newCapacity)
+        {
+            FunctioningCapacity = newCapacity;
+        }
     }
 }
