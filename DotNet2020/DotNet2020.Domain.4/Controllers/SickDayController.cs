@@ -31,6 +31,13 @@ namespace DotNet2020.Domain._4.Controllers
         [ValidationFilter]
         public IActionResult Add(SickDayViewModel viewModel)
         {
+            var sickday = _dbContext.Set<SickDay>()
+                .FirstOrDefault(s => s.From == viewModel.Day && s.UserId == User.Identity.Name);
+            if (sickday == null)
+            {
+                ModelState.AddModelError("Error", "Вы уже выбирали sickDay на эту дату, нельзя так!");
+                return View(viewModel);
+            }
             var sickDay = new SickDay(
                 viewModel.Day ?? throw new NullReferenceException(),
                 viewModel.Day ?? throw new NullReferenceException(),
