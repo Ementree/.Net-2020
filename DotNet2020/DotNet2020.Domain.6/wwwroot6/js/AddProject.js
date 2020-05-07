@@ -38,11 +38,9 @@ function RemoveLastYear() {
     lastYear--;
 }
 function generateMonthForNewYear(localYear, monthNumber) {
-    console.log(document.getElementById("year" + (localYear - 1) + "Month" + monthNumber));
     var monthBlock = (document
         .getElementById("year" + (localYear - 1) + "Month" + monthNumber)
         .cloneNode(true));
-    console.log(monthBlock);
     monthBlock.id = "year" + localYear + "Month" + monthNumber;
     var addRes = monthBlock.children[2];
     addRes.id = "addResourceYear" + localYear + "Month" + monthNumber;
@@ -125,7 +123,6 @@ function GetPeriodInfo(monthBlock) {
     var date = monthBlock.id.replace(/\D/g, '_').split('_').filter(function (d) { return d !== ''; }).map(function (d) { return parseInt(d); });
     period.date = new Date(date[0], date[1]);
     period.resources = [];
-    console.log(monthBlock.id);
     var capacity = parseInt(monthBlock.firstElementChild.lastElementChild.firstElementChild.value);
     if (isNaN(capacity)) {
         capacity = -1;
@@ -184,7 +181,6 @@ function SendProjectToDb() {
         var xhr = new XMLHttpRequest();
         xhr.open('PUT', 'plan/addProject', false);
         xhr.setRequestHeader('Content-type', 'application/json');
-        console.log(project);
         xhr.send(JSON.stringify(project));
         var success = xhr.responseText;
         if (success === 'true')

@@ -88,7 +88,7 @@
                         @for (int i = 1; i <= 12; i++) 
                         {
                             var fcp = functioningCapacityProject.FirstOrDefault(project =>
-                                project.PeriodId == i &&
+                                project.Period.Start.Month == i &&
                                 project.ProjectId == pair.Key.Id);
                             var period = periods.Where(keyValuePair =>
                                 keyValuePair.Key.Start.Month == i);

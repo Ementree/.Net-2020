@@ -381,7 +381,6 @@ function sendEditedProject() {
         var xhr = new XMLHttpRequest();
         xhr.open('PUT', 'plan/editProject', false);
         xhr.setRequestHeader('Content-type', 'application/json');
-        console.log(project);
         xhr.send(JSON.stringify(project));
         var success = xhr.responseText;
         if (success === 'true')

@@ -29,7 +29,7 @@ namespace DotNet2020.Domain._6.Services
                 .Include(resource => resource.Project)
                 .ThenInclude(project => project.ProjectStatus)
                 .Include(resource => resource.Resource)
-                .ThenInclude(resource => resource.AppIdentityUser)
+                .ThenInclude(resource => resource.Employee)
                 .Include(resource => resource.Period)
                 .OrderBy(resource => resource.Period.Start)
                 .ToList()
@@ -49,7 +49,8 @@ namespace DotNet2020.Domain._6.Services
                     fresArr = a[periodCap.Period]
                         .Select(functioningCapacityResource =>
                             new ProjectViewModel.ResourceCapacityViewModel(functioningCapacityResource.Resource.Id,
-                                $"{functioningCapacityResource.Resource.AppIdentityUser.FirstName} {functioningCapacityResource.Resource.AppIdentityUser.LastName}",
+                                $"{functioningCapacityResource.Resource.Employee.FirstName} " +
+                                $"{functioningCapacityResource.Resource.Employee.LastName}",
                                 functioningCapacityResource.FunctionCapacity))
                         .ToArray();
                 }
