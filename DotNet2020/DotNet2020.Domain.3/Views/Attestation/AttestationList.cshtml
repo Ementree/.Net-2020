@@ -39,13 +39,29 @@
                 @foreach (var element in Model)
                 {
                     <tr>
-                        <td>@element.Worker.FullName</td>
+                        @if (element.Worker == null)
+                        {
+                            <td>Сотрудник был удалён!</td>
+                        }
+                        else
+                        {
+                            <td>@element.Worker.FullName</td>
+                        }
+
                         <td>
                             @if (element.Competences.Count > 0)
                             {
                                 foreach (var subElement in element.Competences)
                                 {
-                                    <p>@subElement.Competence</p>
+                                    if (subElement == null)
+                                    {
+                                        <p>Компетенция была удалена</p>
+                                    }
+                                    else
+                                    {
+                                        <p>@subElement.Competence</p>
+                                    }
+
                                 }
                             }
                             else
@@ -56,6 +72,7 @@
                         <td>@element.Attestation.Date.ToString("d")</td>
                         <td>@Html.ActionLink($"Выгрузить", "DownloadAttestation", "Attestation", new { id = element.Attestation.Id }, null)</td>
                     </tr>
+
                 }
             </tbody>
         </table>

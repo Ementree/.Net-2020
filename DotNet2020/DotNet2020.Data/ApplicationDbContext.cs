@@ -55,7 +55,8 @@ namespace DotNet2020.Data
         public virtual DbSet<CalendarEntry> CalendarEntries { get; set; }
 
         public virtual DbSet<Employee> Employee { get; set; }
-        
+        public virtual DbSet<GradeToGradeModel> GradeToGrade { get; set; }
+
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
@@ -70,6 +71,8 @@ namespace DotNet2020.Data
 
         private void OnModelCreating3(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<GradeToGradeModel>().HasKey(x => new { x.GradeId, x.NextGradeId });
+
             modelBuilder.Entity<SpecificWorkerCompetencesModel>()
                 .HasKey(e => new { e.WorkerId, e.CompetenceId });
             modelBuilder.Entity<GradeCompetencesModel>()

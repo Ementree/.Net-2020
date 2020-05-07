@@ -36,188 +36,130 @@
                     break;
                 case AttestationAction.Choosing:
                     <form method="post">
-                        <p>Выберите, по чему будет проходить аттестация</p>
-                        <p><input type="radio" value="CompetencesChose" name="Action"> По компетенциям</p>
-                        <p><input type="radio" value="GradeChose" name="Action"> По грейдам</p>
-                        <br />
-                        <input type="submit" value="Выбрать!" />
+                        <ul class="nav nav-tabs">
+                            <li class="nav-item">
+                                <a class="nav-link active" data-toggle="tab" href="#workers">Работники</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" data-toggle="tab" href="#functional">По чему</a>
+                            </li>
+                        </ul>
+                        <div class="tab-content">
+                            <div class="tab-pane fade show active" id="workers">
+                                <table class="table">
+                                    <thead class="thead">
+                                        <tr>
+                                            <th>Выбрать для аттестации</th>
+                                            <th>ФИО</th>
+                                            <th>Должность</th>
+                                            <th>Оклад</th>
+                                            <th>Премия</th>
+                                            <th>Комментарий</th>
+                                            <th>Компетенции</th>
+                                            <th>Предыдущие места работы</th>
+                                            <th>Опыт работы</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var element in Model.Workers)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    <input type="radio" name="WorkerId" value="@element.Id" />
+                                                </td>
+                                                <td>@element.FullName</td>
+                                                <td>@element.Position.Name</td>
+                                                <td>@element.Salary</td>
+                                                <td>@element.Bonus</td>
+                                                <td>@element.Commentary</td>
+                                                <td>
+                                                    @if (element.SpecificWorkerCompetencesModels.Count == 0)
+                                                    {
+                                                        <span>Компетенции не добавлены!</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        foreach (var competence in element.SpecificWorkerCompetencesModels)
+                                                        {
+                                                            <span>@competence.Competence.Competence</span>
+                                                            <br />
+                                                        }
+                                                    }
+
+                                                </td>
+                                                <td>@element.PreviousWorkPlaces</td>
+                                                <td>@element.Experience</td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="tab-pane fade" id="functional">
+                                <p><input type="radio" value="CompetencesChose" name="Action"> По компетенциям</p>
+                                <p><input type="radio" value="GradeChose" name="Action"> По грейдам</p>
+                                <br />
+                                <input type="submit" value="Выбрать!" />
+                            </div>
+                        </div>
                     </form>
                     break;
                 case AttestationAction.CompetencesChose:
-                    <!-- #region таблица работников и компетенций -->
-    <form method="post">
-        <input type="text" hidden value="AttestationByCompetences" name="Action" />
-        <ul class="nav nav-tabs">
-            <li class="nav-item">
-                <a class="nav-link active" data-toggle="tab" href="#workers">Работники</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" data-toggle="tab" href="#functional">Компетенции</a>
-            </li>
-        </ul>
-        <div class="tab-content">
-            <div class="tab-pane fade show active" id="workers">
-                <table class="table">
-                    <thead class="thead">
-                        <tr>
-                            <th>Выбрать для аттестации</th>
-                            <th>ФИО</th>
-                            <th>Должность</th>
-                            <th>Оклад</th>
-                            <th>Премия</th>
-                            <th>Комментарий</th>
-                            <th>Компетенции</th>
-                            <th>Предыдущие места работы</th>
-                            <th>Опыт работы</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var element in Model.Workers)
-                        {
-                            <tr>
-                                <td>
-                                    <input type="radio" name="WorkerId" value="@element.Id" />
-                                </td>
-                                <td>@element.FullName</td>
-                                <td>@element.Position.Name</td>
-                                <td>@element.Salary</td>
-                                <td>@element.Bonus</td>
-                                <td>@element.Commentary</td>
-                                <td>
-                                    @if (element.SpecificWorkerCompetencesModels.Count == 0)
-                                    {
-                                        <span>Компетенции не добавлены!</span>
-                                    }
-                                    else
-                                    {
-                                        foreach (var competence in element.SpecificWorkerCompetencesModels)
-                                        {
-                                            <span>@competence.Competence.Competence</span>
-                                            <br />
-                                        }
-                                    }
+                    <!-- #region таблица компетенций -->
+                    <form method="post">
+                        <input type="text" hidden value="AttestationByCompetences" name="Action" />
 
-                                </td>
-                                <td>@element.PreviousWorkPlaces</td>
-                                <td>@element.Experience</td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            </div>
-            <div class="tab-pane fade" id="functional">
-                <table class="table">
-                    <thead class="thead">
-                        <tr>
-                            <th>Выбрать</th>
-                            <th>Компетенции</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var element in Model.Competences)
-                        {
-                            <tr>
-                                <td>
-                                    <input type="checkbox" value="@element.Id" name="IdsTestedCompetences" />
-                                </td>
-                                <td>@element.Competence</td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            </div>
-        </div>
-        <input type="submit" value="Начать аттестацию по выбранным" />
-    </form>
+                        <table class="table">
+                            <thead class="thead">
+                                <tr>
+                                    <th>Выбрать</th>
+                                    <th>Компетенции</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var element in Model.Competences)
+                                {
+                                    <tr>
+                                        <td>
+                                            <input type="checkbox" value="@element.Id" name="IdsTestedCompetences" />
+                                        </td>
+                                        <td>@element.Competence</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                        <input type="number" name="WorkerId" hidden value="@Model.WorkerId" />
+                        <input type="submit" value="Начать аттестацию по выбранным" />
+                    </form>
                     <!-- #endregion -->
                     break;
                 case AttestationAction.GradeChose:
-                    <!-- #region таблица работников и грейдов -->
-    <form method="post">
-        <input type="text" hidden value="AttestationByGrade" name="Action" />
-        <ul class="nav nav-tabs">
-            <li class="nav-item">
-                <a class="nav-link active" data-toggle="tab" href="#workers">Работники</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" data-toggle="tab" href="#functional">Грейды</a>
-            </li>
-        </ul>
-        <div class="tab-content">
-            <div class="tab-pane fade show active" id="workers">
-                <table class="table">
-                    <thead class="thead">
-                        <tr>
-                            <th>Выбрать для аттестации</th>
-                            <th>ФИО</th>
-                            <th>Должность</th>
-                            <th>Оклад</th>
-                            <th>Премия</th>
-                            <th>Комментарий</th>
-                            <th>Компетенции</th>
-                            <th>Предыдущие места работы</th>
-                            <th>Опыт работы</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var element in Model.Workers)
-                        {
-                            <tr>
-                                <td>
-                                    <input type="radio" name="WorkerId" value="@element.Id" />
-                                </td>
-                                <td>@element.FullName</td>
-                                <td>@element.Position.Name</td>
-                                <td>@element.Salary</td>
-                                <td>@element.Bonus</td>
-                                <td>@element.Commentary</td>
-                                <td>
-                                    @if (element.SpecificWorkerCompetencesModels.Count == 0)
-                                    {
-                                        <span>Компетенции не добавлены!</span>
-                                    }
-                                    else
-                                    {
-                                        foreach (var competence in element.SpecificWorkerCompetencesModels)
-                                        {
-                                            <span>@competence.Competence.Competence</span>
-                                            <br />
-                                        }
-                                    }
+                    <!-- #region таблица грейдов -->
+                    <p>Сюда!</p>
+                    <form method="post">
+                        <input type="text" hidden value="AttestationByGrade" name="Action" />
+                        <table class="table">
+                            <thead class="thead">
+                                <tr>
+                                    <th>Выбрать</th>
+                                    <th>Грейд</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var element in Model.Grades)
+                                {
+                                    <tr>
+                                        <td>
+                                            <input type="radio" value="@element.Id" name="GradeId" />
+                                        </td>
+                                        <td>@element.Grade</td>
+                                    </tr>
+                                }
+                            </tbody>
 
-                                </td>
-                                <td>@element.PreviousWorkPlaces</td>
-                                <td>@element.Experience</td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            </div>
-            <div class="tab-pane fade" id="functional">
-                <table class="table">
-                    <thead class="thead">
-                        <tr>
-                            <th>Выбрать</th>
-                            <th>Грейд</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var element in Model.Grades)
-                        {
-                            <tr>
-                                <td>
-                                    <input type="radio" value="@element.Id" name="GradeId" checked />
-                                </td>
-                                <td>@element.Grade</td>
-                            </tr>
-                        }
-                    </tbody>
-
-                </table>
-            </div>
-        </div>
-        <input type="submit" value="Начать аттестацию по выбранному грейду" />
-    </form>
+                        </table>
+                        <input type="number" name="WorkerId" hidden value="@Model.WorkerId" />
+                        <input type="submit" value="Начать аттестацию по выбранному грейду" />
+                    </form>
                     <!-- #endregion -->
                     break;
                 case AttestationAction.AttestationByCompetences:
@@ -261,9 +203,6 @@
                                 </tbody>
                             </table>
 
-
-                            <p>Дальнейшие действия</p>
-                            <textarea style="border:none;border-top:groove;border-left:groove;" name="NextMoves" cols="100" required></textarea>
                             <p>Обратная связь</p>
                             <textarea style="border:none;border-top:groove;border-left:groove;" name="Feedback" cols="100" required></textarea>
                             <input type="number" name="WorkerId" hidden value="@Model.WorkerId" />
@@ -300,8 +239,6 @@
                             <p><input type="checkbox" name="IsGotGrade" value="true" /> Получил ли сотрудник грейд? </p>
                             <input name="GradeId" value="@Model.GradeId" hidden />
 
-                            <p>Дальнейшие действия</p>
-                            <textarea style="border:none;border-top:groove;border-left:groove;" name="NextMoves" cols="100" required></textarea>
                             <p>Обратная связь</p>
                             <textarea style="border:none;border-top:groove;border-left:groove;" name="Feedback" cols="100" required></textarea>
                             <input type="number" name="WorkerId" hidden value="@Model.WorkerId" />

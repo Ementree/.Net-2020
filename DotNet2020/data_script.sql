@@ -1,3 +1,38 @@
+CREATE FUNCTION updateResource() RETURNS trigger AS $updateResource$
+    BEGIN
+        if (tg_op = 'INSERT') then
+            INSERT INTO "Resources" ("Id", "ResourceGroupTypeId", "EmployeeId")
+            VALUES (new."Id", 3, new."Id")
+            ON CONFLICT ("Id") DO UPDATE
+            SET "ResourceGroupTypeId" = excluded."ResourceGroupTypeId",
+                "EmployeeId" = excluded."EmployeeId";
+        end if;
+        if (tg_op = 'DELETE') then
+            DELETE FROM "Resources"
+            WHERE ("Id" = old."Id");
+        end if;
+        Return new;
+    END
+$updateResource$ LANGUAGE plpgsql;
+
+CREATE TRIGGER resourse_update
+    AFTER UPDATE OR INSERT OR DELETE ON "Employee"
+    FOR EACH ROW
+    EXECUTE PROCEDURE updateResource();
+
+INSERT INTO "ResourceGroupsTypes" ("Id", "Type", "Group")
+VALUES
+    (1, 'Сотрудник', 'Специалист'),
+    (2, 'Подрядчик', 'Подрядчик'),
+    (3, 'Сотрудник', 'Студент'),
+    (4, 'Сотрудник', 'Подрядчик'),
+    (5, 'Подрядчик', 'Студент')
+ON CONFLICT ("Id") DO UPDATE
+SET "Type" = excluded."Type",
+    "Group" = excluded."Group";
+SELECT setval('"ResourceGroupsTypes_Id_seq"', (SELECT Max("Id") FROM "ResourceGroupsTypes"));
+
+
 INSERT INTO "Position" as p
 VALUES
        (1,'Фронтенд'),
@@ -13,7 +48,16 @@ INSERT INTO "Employee" ("Id", "FirstName", "LastName", "MiddleName", "PositionId
 VALUES
        (1, 'Дмитрий', 'Чемкин', 'Николаевич',1, 1, 76547, 'Хорошо верстает', 'Нет', 'Нет', 'SpecificWorkerModel'),
        (2, 'Дмитрий', 'Орлов', 'Павлович',2,2, 56437, 'Не верстает', 'Нет', 'Нет', 'SpecificWorkerModel'),
-       (3, 'Игорь', 'Квасников', 'Константинович',3, 3, 76747, 'Не верстает', 'Нет', 'Нет', 'SpecificWorkerModel')
+       (3, 'Игорь', 'Квасников', 'Константинович',3, 3, 76747, 'Не верстает', 'Нет', 'Нет', 'SpecificWorkerModel'),
+       (4, 'Мухаммад', 'Мукиев', 'Мухаммадович', 3, 500000, 0, 'начинающий аналитик', 'coderlar', '1 коммерческий проект', 'SpecificWorkerModel'),
+       (5, 'Яков', 'Григорьев', 'Александрович',2, 2, 45673, 'Не верстает', 'Нет', 'Нет', 'SpecificWorkerModel'),
+       (6, 'Анна', 'Федорова', 'Эдуардовна', 2, 2, 76747, 'Делает бд', 'Нет', 'Нет', 'SpecificWorkerModel'),
+       (7, 'Тагмир', 'Гилязов', 'Радикович', 1, 2, 76747, 'Знает ангуляр', 'Нет', 'Нет', 'SpecificWorkerModel'),
+       (8, 'Артур', 'Саттаров', 'Рустамович', 2, 2, 76747, 'Главный специалист по рефакторингу', 'Нет', 'Нет', 'SpecificWorkerModel'),
+       (9, 'Егор', 'Малышкин', 'Андреевич', 3, 2, 76747, 'Делает отсутсвия', 'Нет', 'Нет', 'SpecificWorkerModel'),
+       (10, 'Айдар', 'Габдрахманов', 'Ренатович', 1, 2, 76747, 'Наверно верстает', 'Нет', 'Нет', 'SpecificWorkerModel'),
+       (11, 'Равиль', 'Насыбуллин', 'Эдуардович', 3, 2, 76747, 'Наверно не верстает', 'Нет', 'Нет', 'SpecificWorkerModel')
+
 ON CONFLICT ("Id") DO UPDATE
 SET
     "FirstName" = excluded."FirstName",
@@ -97,5 +141,14 @@ VALUES
        (3, 1),
        (3, 2)
 ON CONFLICT ("WorkerId", "CompetenceId") DO NOTHING;
+
+INSERT INTO "ProjectStatuses" ("Id", "Status")
+VALUES
+       (1, 'Завершенные проекты'),
+       (2, 'Текущие обязательства'),
+       (3, 'Внутренние проекты')
+ON CONFLICT ("Id") DO UPDATE
+SET "Status"= excluded."Status";
+SELECT setval('"ProjectStatuses_Id_seq"', (SELECT Max("Id") FROM "ProjectStatuses"));
 
 

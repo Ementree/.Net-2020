@@ -290,6 +290,19 @@ namespace DotNet2020.Data.Migrations
                     b.ToTable("GradeCompetences");
                 });
 
+            modelBuilder.Entity("DotNet2020.Domain._3.Models.GradeToGradeModel", b =>
+                {
+                    b.Property<long>("GradeId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("NextGradeId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("GradeId", "NextGradeId");
+
+                    b.ToTable("GradeToGrade");
+                });
+
             modelBuilder.Entity("DotNet2020.Domain._3.Models.GradesModel", b =>
                 {
                     b.Property<long>("Id")
