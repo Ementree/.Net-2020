@@ -60,7 +60,6 @@
 	  </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Models\Contexts\" />
     <Folder Include="Models\Base\" />
     <Folder Include="Models\CalendarEntry\" />
     <Folder Include="wwwroot\" />
