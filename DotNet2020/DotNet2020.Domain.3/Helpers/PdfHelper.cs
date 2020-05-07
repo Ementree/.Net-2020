@@ -189,11 +189,6 @@ namespace DotNet2020.Domain._3.Helpers
             
             document.Add(new Paragraph(" ", body));
             
-            document.Add(new Paragraph("Анализ результатов работы на проекте", head));
-            document.Add(new Paragraph("Данные из другого проекта", body));
-            
-            document.Add(new Paragraph(" ", body));
-            
             document.Add(new Paragraph("Дальнейшие действия", head));
             document.Add(new Paragraph($"{attestation.NextMoves}", body));
             
