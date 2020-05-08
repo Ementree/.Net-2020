@@ -57,7 +57,7 @@
                 @for (int i = 1; i <= 12; i++)
                 {
                     var period = new DateTime(ViewBag.Year, i, 1);
-                    var color = (i == ViewBag.CurrentDate.Month && ViewBag.Year == ViewBag.CurrentDate.Year)?"month-highlight":"";
+                    var color = (i == ViewBag.CurrentDate.Month && ViewBag.Year == ViewBag.CurrentDate.Year) ? "month-highlight" : "";
                     <th colspan="2" class="border-right @color">
                         @($"{period.GetMonthName()} {period.Year}")
                     </th>
@@ -69,7 +69,7 @@
             @foreach (var group in Model)
             {
                 <tr>
-                    <th class="sticky-col1 gray"> 
+                    <th class="sticky-col1 gray">
                         @group.Key
                     </th>
                     @for (int i = 0; i < 12; i++)
@@ -85,25 +85,40 @@
                         <th class="sticky-col1 total-sum-highlight">
                             @(pair.Key.Name)
                         </th>
-                        @for (int i = 1; i <= 12; i++) 
+                        @for (int i = 1; i <= 12; i++)
                         {
-                            var fcp = functioningCapacityProject.FirstOrDefault(project =>
-                                project.Period.Start.Month == i &&
-                                project.ProjectId == pair.Key.Id);
+                            var fcp = functioningCapacityProject
+                                .FirstOrDefault(project =>
+                                    project.Period.Start.Month == i &&
+                                    project.ProjectId == pair.Key.Id);
                             var period = periods.Where(keyValuePair =>
                                 keyValuePair.Key.Start.Month == i);
                             var highlight = funcCapacityProjHighlight.FirstOrDefault(fcproj =>
                                 fcproj.PeriodId == i && fcproj.ProjectId == pair.Key.Id);
                             var color = highlight != default ? highlight.Color : "total-sum-highlight";
                             <th id="fcp;@i;@ViewBag.Year;@pair.Key.Id" class="resource_capacity_plan @color">
-                                @(fcp != default ? fcp.FunctioningCapacity.ToString() : "")
+                                @(fcp != default ? fcp.FunctioningCapacity.ToString() : " ")
                             </th>
-                            <th id="sum;@i;@ViewBag.Year;@pair.Key.Id" class="border-right resource_capacity_real @color">
-                                @(period.Count() == 1 ?
-                                    period.First().Value.Sum(fcres =>
-                                        fcres.FunctionCapacity).ToString() :
-                                    "")
-                            </th>
+                            if (period.Count() == 1)
+                            {
+                                if (period.First().Key == null)
+                                {
+                                    <th id="sum;@i;@ViewBag.Year;@pair.Key.Id" class="border-right resource_capacity_real @color">@(" ")</th>
+                                }
+                                else
+                                {
+                                    <th id="sum;@i;@ViewBag.Year;@pair.Key.Id" class="border-right resource_capacity_real @color">
+                                        @{
+                                            period.First().Value.Sum(fcres =>
+                                                fcres.FunctionCapacity).ToString();
+                                        }
+                                    </th>
+                                }
+                            }
+                            else
+                            {
+                                <th id="sum;@i;@ViewBag.Year;@pair.Key.Id" class="border-right resource_capacity_real @color">@(" ")</th>
+                            }
                         }
                     </tr>
                     for (int i = 0; i < projectsCapacity[pair.Key.Id]; i++)
@@ -124,7 +139,7 @@
                                     var fresList = keyValuePairs.First().Value;
                                     if (fresList.Count - 1 >= i)
                                     {
-                                        var highlight = funcCapacityResourceHighlight. FirstOrDefault(fcr => 
+                                        var highlight = funcCapacityResourceHighlight.FirstOrDefault(fcr =>
                                             fcr.Month == j && fcr.Year == ViewBag.Year && fcr.ProjectId == fresList[i].ProjectId && fcr.ResourceId == fresList[i].ResourceId);
                                         var color = highlight == default ? "" : highlight.Color;
                                         <td id="name;@j;@ViewBag.Year;@pair.Key.Id;@fresList[i].ResourceId"

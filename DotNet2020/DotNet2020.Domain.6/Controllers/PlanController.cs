@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using DotNet2020.Domain._6.Models.ViewModels;
 using DotNet2020.Domain._6.Services;
+using Kendo.Mvc.Extensions;
 
 namespace DotNet2020.Domain._6.Controllers
 {
@@ -49,13 +50,13 @@ namespace DotNet2020.Domain._6.Controllers
                     var value = pair.Value.GroupBy(res => res.PeriodId)
                             .ToDictionary(group =>
                                     group.ToList().FirstOrDefault()?.Period,
-                                group => group.ToList())
-                        ;
-
+                                group => group.ToList());
                     return KeyValuePair.Create(key, value);
                 })
                 .ToDictionary(pair => pair.Key, pair => pair.Value);
-
+            
+            model.AddRange(GetProjectsWithoutResources(year));
+            
             var newModel = model.GroupBy(pair => pair.Key.ProjectStatus.Status)
                 .ToDictionary(pairs => pairs.Key,
                     pairs => pairs.ToDictionary(
@@ -63,6 +64,8 @@ namespace DotNet2020.Domain._6.Controllers
 
             var funcCapacitiesProject =
                 _dbContext.Set<FunctioningCapacityProject>()
+                    .Include(project => project.Period)
+                    .Where(project => project.Period.Start.Year == year)
                     .ToList();
             var resourceCapacity = _dbContext.Set<ResourceCapacity>().ToList();
 
@@ -111,7 +114,7 @@ namespace DotNet2020.Domain._6.Controllers
                     foreach (var resourceCapacityViewModel in period.Resources)
                     {
                         if (resourceCapacityViewModel.Capacity == -1)
-                            continue;
+                            resourceCapacityViewModel.Capacity = 0;
                         var fres = new FunctioningCapacityResource(projectId,
                             resourceCapacityViewModel.Id,
                             resourceCapacityViewModel.Capacity,
@@ -161,8 +164,12 @@ namespace DotNet2020.Domain._6.Controllers
                 _dbContext.Set<Project>().Update(project);
                 _dbContext.SaveChanges();
 
-                foreach (var periodViewModel in projectViewModel.Periods.Where(model => model.Capacity >= 0))
+                foreach (var periodViewModel in projectViewModel.Periods
+                    .Where(model => model.Capacity >= 0 ||
+                                    model.Resources.Length > 0))
                 {
+                    if (periodViewModel.Capacity == -1)
+                        periodViewModel.Capacity = 0;
                     //обновляем(создаем) мощность месяца в проекте
                     var functioningCapacityProjects = _dbContext
                         .Set<FunctioningCapacityProject>();
@@ -201,6 +208,8 @@ namespace DotNet2020.Domain._6.Controllers
                     var fResources = _dbContext.Set<FunctioningCapacityResource>();
                     foreach (var resourceViewModel in periodViewModel.Resources)
                     {
+                        if (resourceViewModel.Capacity == -1)
+                            resourceViewModel.Capacity = 0;
                         var functioningCapacityResource = fResources.FirstOrDefault(res =>
                             res.ResourceId == resourceViewModel.Id &&
                             res.ProjectId == projectViewModel.Id &&
@@ -251,6 +260,22 @@ namespace DotNet2020.Domain._6.Controllers
                     Name = $"{res.Employee.FirstName} {res.Employee.LastName}"
                 });
             return projectStatuses;
+        }
+
+        private Dictionary<Project, Dictionary<Period, List<FunctioningCapacityResource>>> 
+            GetProjectsWithoutResources(int year)
+        {
+            var resources = _dbContext.Set<FunctioningCapacityResource>()
+                .Select(res=>res.ProjectId);
+            var projects = _dbContext.Set<Project>()
+                .Where(project => !resources.Contains(project.Id))
+                .Include(project => project.ProjectStatus)
+                .ToList();
+            var periodDictionary = _dbContext.Set<Period>()
+                .Where(period => period.Start.Date.Year == year)
+                .ToDictionary(period => period, 
+                    period => new List<FunctioningCapacityResource>());
+            return projects.ToDictionary(project => project, project => periodDictionary);
         }
     }
 }

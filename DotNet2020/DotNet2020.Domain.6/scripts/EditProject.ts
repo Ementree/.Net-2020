@@ -57,13 +57,13 @@ function generateNameBlock(projectName: string): HTMLDivElement {
     nameForm.classList.add('form-inline', 'mt-2');
     let nameLabel = <HTMLLabelElement>document.createElement('label');
     nameLabel.textContent = 'Название проекта:';
-    nameLabel.htmlFor = 'projectNameEdit';
+    nameLabel.htmlFor = 'editProjectName';
     nameLabel.classList.add('mr-2')
     let nameInput = <HTMLInputElement>document.createElement('input');
     nameInput.type = 'text';
     nameInput.classList.add('form-control', 'w-75');
     nameInput.value = projectName;
-    nameInput.id = 'projectNameEdit';
+    nameInput.id = 'editProjectName';
     nameForm.append(nameLabel, nameInput);
     return nameForm;
 }
@@ -354,7 +354,7 @@ function getProjectEditedInfo():Project {
     let projectId = parseInt(projectIdSelect.options[projectIdSelect.selectedIndex].value);
     project.id=projectId;
     
-    let projectName = (<HTMLInputElement>document.getElementById('projectNameEdit')).value;
+    let projectName = (<HTMLInputElement>document.getElementById('editProjectName')).value;
 
     let projectStatusSelect = <HTMLSelectElement>document.getElementById('projectStatusEdit');
     let projectStatusId = parseInt(projectStatusSelect.options[projectStatusSelect.selectedIndex].value);
@@ -405,15 +405,17 @@ function getEditedPeriodInfo(monthBlock: Element): Period {
     for (let rowNumber = 0; rowNumber < selects.length; rowNumber++) {
         let selectValuePair = selects[rowNumber];
         let select = <HTMLSelectElement>selectValuePair.firstElementChild.firstElementChild;
-        let resourceId = select.options[select.selectedIndex].value;
+        let resourceId = parseInt(select.options[select.selectedIndex].value);
+        if (isNaN(resourceId)) {
+            resourceId = -1;
+        }
         let resourceFullName = select.options[select.selectedIndex].text;
         let value = parseInt((<HTMLInputElement>selectValuePair.lastElementChild.firstElementChild).value);
         if (isNaN(value)) {
             value = -1;
         }
-        if (resourceId.trim() !== "") {
-            period.resources.push(new ResourceCapacity(parseInt(resourceId), resourceFullName, value));
-        }
+            period.resources.push(new ResourceCapacity(resourceId, resourceFullName, value));
+        
     }
     return period;
 }

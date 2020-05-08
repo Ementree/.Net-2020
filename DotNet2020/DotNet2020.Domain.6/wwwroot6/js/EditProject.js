@@ -53,13 +53,13 @@ function generateNameBlock(projectName) {
     nameForm.classList.add('form-inline', 'mt-2');
     var nameLabel = document.createElement('label');
     nameLabel.textContent = 'Название проекта:';
-    nameLabel.htmlFor = 'projectNameEdit';
+    nameLabel.htmlFor = 'editProjectName';
     nameLabel.classList.add('mr-2');
     var nameInput = document.createElement('input');
     nameInput.type = 'text';
     nameInput.classList.add('form-control', 'w-75');
     nameInput.value = projectName;
-    nameInput.id = 'projectNameEdit';
+    nameInput.id = 'editProjectName';
     nameForm.append(nameLabel, nameInput);
     return nameForm;
 }
@@ -318,7 +318,7 @@ function getProjectEditedInfo() {
     var projectIdSelect = document.getElementById('projectSelector');
     var projectId = parseInt(projectIdSelect.options[projectIdSelect.selectedIndex].value);
     project.id = projectId;
-    var projectName = document.getElementById('projectNameEdit').value;
+    var projectName = document.getElementById('editProjectName').value;
     var projectStatusSelect = document.getElementById('projectStatusEdit');
     var projectStatusId = parseInt(projectStatusSelect.options[projectStatusSelect.selectedIndex].value);
     if (!isNaN(projectStatusId))
@@ -363,15 +363,16 @@ function getEditedPeriodInfo(monthBlock) {
     for (var rowNumber = 0; rowNumber < selects.length; rowNumber++) {
         var selectValuePair = selects[rowNumber];
         var select = selectValuePair.firstElementChild.firstElementChild;
-        var resourceId = select.options[select.selectedIndex].value;
+        var resourceId = parseInt(select.options[select.selectedIndex].value);
+        if (isNaN(resourceId)) {
+            resourceId = -1;
+        }
         var resourceFullName = select.options[select.selectedIndex].text;
         var value = parseInt(selectValuePair.lastElementChild.firstElementChild.value);
         if (isNaN(value)) {
             value = -1;
         }
-        if (resourceId.trim() !== "") {
-            period.resources.push(new ResourceCapacity(parseInt(resourceId), resourceFullName, value));
-        }
+        period.resources.push(new ResourceCapacity(resourceId, resourceFullName, value));
     }
     return period;
 }

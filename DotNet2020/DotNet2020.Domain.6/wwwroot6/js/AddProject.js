@@ -193,6 +193,15 @@ function SendProjectToDb() {
 function ValidateForm(project, additionalPrefix) {
     if (additionalPrefix === void 0) { additionalPrefix = ''; }
     var flag = true;
+    if (project.name.trim() === '') {
+        var nameId = 'projectName';
+        if (additionalPrefix !== '')
+            nameId = additionalPrefix + 'ProjectName';
+        var inputName = document.getElementById(nameId);
+        inputName.style.border = '2px solid red';
+        inputName.style.padding = '1px';
+        flag = false;
+    }
     project.periods.forEach(function (elem) {
         var length = elem.resources.length;
         var lengthDistinct = elem.resources.map(function (res) { return res.id; }).filter(function (value, index, self) {
@@ -200,8 +209,11 @@ function ValidateForm(project, additionalPrefix) {
         }).length;
         if (length > lengthDistinct) {
             flag = false;
+            var id = "addResourceYear" + elem.date.getFullYear() + "Month" + elem.date.getMonth();
+            if (additionalPrefix !== '')
+                id = additionalPrefix + "AddResourceYear" + elem.date.getFullYear() + "Month" + elem.date.getMonth();
             var addResBlock = document
-                .getElementById(additionalPrefix + "addResourceYear" + elem.date.getFullYear() + "Month" + elem.date.getMonth());
+                .getElementById(id);
             var selects = addResBlock.children;
             for (var i = 0; i < selects.length; i++) {
                 var elem_1 = selects[i];

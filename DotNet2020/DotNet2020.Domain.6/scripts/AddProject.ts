@@ -220,6 +220,16 @@ function SendProjectToDb() {
 
 function ValidateForm(project: Project, additionalPrefix = ''): boolean {
     let flag = true;
+    if(project.name.trim() === ''){
+        let nameId = 'projectName';
+        if(additionalPrefix !== '')
+            nameId = additionalPrefix + 'ProjectName';
+        let inputName = document.getElementById(nameId);
+        inputName.style.border = '2px solid red';
+        inputName.style.padding = '1px';
+        flag = false;
+    }
+    
     project.periods.forEach(elem => {
         let length = elem.resources.length;
         let lengthDistinct = elem.resources.map(res => res.id).filter((value, index, self) => {
@@ -227,8 +237,11 @@ function ValidateForm(project: Project, additionalPrefix = ''): boolean {
         }).length;
         if (length > lengthDistinct) {
             flag = false;
+            let id = `addResourceYear${elem.date.getFullYear()}Month${elem.date.getMonth()}`;
+            if(additionalPrefix!=='')
+                id = `${additionalPrefix}AddResourceYear${elem.date.getFullYear()}Month${elem.date.getMonth()}`;    
             let addResBlock = document
-                .getElementById(`${additionalPrefix}addResourceYear${elem.date.getFullYear()}Month${elem.date.getMonth()}`);
+                .getElementById(id);
             let selects = addResBlock.children;
             for(let i = 0; i<selects.length;i++){
                 let elem = <HTMLDivElement>selects[i];
