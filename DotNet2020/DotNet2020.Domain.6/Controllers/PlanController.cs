@@ -156,7 +156,7 @@ namespace DotNet2020.Domain._6.Controllers
         [HttpPut]
         public bool EditProject([FromBody] ProjectViewModel projectViewModel)
         {
-            //todo: сделать обработку удаления данных при редактировании(капасити =-1)
+            //todo: сделать удаление челиков
             using (var transaction = _dbContext.Database.BeginTransaction())
             {
                 var project = _dbContext.Set<Project>().Find(projectViewModel.Id);
@@ -204,12 +204,14 @@ namespace DotNet2020.Domain._6.Controllers
                     }
 
                     _dbContext.SaveChanges();
-                    //тут людей обновляем capacity > 0
+                    //тут людей обновляем
                     var fResources = _dbContext.Set<FunctioningCapacityResource>();
                     foreach (var resourceViewModel in periodViewModel.Resources)
                     {
                         if (resourceViewModel.Capacity == -1)
                             resourceViewModel.Capacity = 0;
+                        if(resourceViewModel.Id == -1)
+                            continue;
                         var functioningCapacityResource = fResources.FirstOrDefault(res =>
                             res.ResourceId == resourceViewModel.Id &&
                             res.ProjectId == projectViewModel.Id &&

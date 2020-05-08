@@ -92,26 +92,26 @@
                                     project.Period.Start.Month == i &&
                                     project.ProjectId == pair.Key.Id);
                             var period = periods.Where(keyValuePair =>
-                                keyValuePair.Key.Start.Month == i);
+                                keyValuePair.Key.Start.Month == i)
+                                .ToList();
                             var highlight = funcCapacityProjHighlight.FirstOrDefault(fcproj =>
                                 fcproj.PeriodId == i && fcproj.ProjectId == pair.Key.Id);
                             var color = highlight != default ? highlight.Color : "total-sum-highlight";
                             <th id="fcp;@i;@ViewBag.Year;@pair.Key.Id" class="resource_capacity_plan @color">
                                 @(fcp != default ? fcp.FunctioningCapacity.ToString() : " ")
                             </th>
-                            if (period.Count() == 1)
+                            if (period.Count >= 1)
                             {
-                                if (period.First().Key == null)
+                                if (period.First().Key == null || period.First().Value.Count()==0)
                                 {
                                     <th id="sum;@i;@ViewBag.Year;@pair.Key.Id" class="border-right resource_capacity_real @color">@(" ")</th>
                                 }
                                 else
                                 {
+                                    var sum = period.First().Value.Sum(fcres =>
+                                        fcres.FunctionCapacity).ToString();
                                     <th id="sum;@i;@ViewBag.Year;@pair.Key.Id" class="border-right resource_capacity_real @color">
-                                        @{
-                                            period.First().Value.Sum(fcres =>
-                                                fcres.FunctionCapacity).ToString();
-                                        }
+                                        @sum
                                     </th>
                                 }
                             }
