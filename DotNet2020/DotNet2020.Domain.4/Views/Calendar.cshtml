@@ -350,7 +350,7 @@
         .Views(views =>
         {
             views.TimelineMonthView(view => view.SlotTemplateId("my-holiday")).Title("Month").ColumnWidth(20);
-            views.TimelineWeekView(view => view.SlotTemplateId("my-holiday")).Title("Week");
+            views.TimelineWeekView(view => view.SlotTemplateId("my-holiday").WorkWeekStart(2)).Title("Week");
             views.CustomView("WeekYearView", view => view.Selected(true).Title("Year"));
         })
         .BindTo(Model.Events)
