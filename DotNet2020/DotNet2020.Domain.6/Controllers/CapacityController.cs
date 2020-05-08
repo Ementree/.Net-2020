@@ -32,8 +32,9 @@ namespace DotNet2020.Domain._6.Controllers
                 .Where(x => x.Period.Start.Year == year)
                 .ToList();
 
-            var builder = new CapacityViewModelBuilder(resources, resourceCapacities);
+            var builder = new CapacityViewModelBuilder(resources, resourceCapacities, year, false);
             var model = builder.Build();
+            
 
             ViewBag.CurrentYear = DateTime.Now.Year;
             ViewBag.Year = year;
@@ -43,7 +44,7 @@ namespace DotNet2020.Domain._6.Controllers
         }
 
         [HttpPost("/changeCapacity")]
-        public void ChangeCapacity([FromBody] string data)
+        public void SetCapacity([FromBody] string data)
         {
             var dataArr = data.Split(';');
 

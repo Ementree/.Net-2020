@@ -1,11 +1,10 @@
 @{
     Layout = "~/Views/Shared/_Layout6.cshtml";
-    var months = ViewBag.Months;
     var date = DateTime.Now;
     var year = ViewBag.Year;
 }
 @using DotNet2020.Domain._6.Models.ViewModels
-@model Dictionary<string, List<ViewModelCapacity>>
+@model CapacityViewModel
 
 <link rel="stylesheet" href="~/wwwroot6/css/Capacity.css"/>
 <div class="form-inline">
@@ -32,14 +31,14 @@
                 {
                     var color = (date.Month == i + 1 && year == ViewBag.CurrentYear) ? "month-highlight" : "";
                     <th class="right @color">
-                        @months[i]
+                        @Model.Months[i]
                     </th>
                 }
             </tr>
             </thead>
 
             <tbody>
-            @foreach (var resources in Model)
+            @foreach (var resources in Model.Data)
             {
                 <tr>
                     <th class="sticky-col1 left h45 total-sum-highlight" style="width: 20%;">
