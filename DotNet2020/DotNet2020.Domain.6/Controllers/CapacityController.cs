@@ -19,7 +19,7 @@ namespace DotNet2020.Domain._6.Controllers
             _context = context;
         }
 
-        public IActionResult Index(int year = 2020)
+        public IActionResult Index(int year = 2020, bool withAbsence = false)
         {
             var resources = _context.Set<Resource>()
                 .Include(res => res.Employee)
@@ -31,8 +31,14 @@ namespace DotNet2020.Domain._6.Controllers
                 .Include(x => x.Period)
                 .Where(x => x.Period.Start.Year == year)
                 .ToList();
-
-            var builder = new CapacityViewModelBuilder(resources, resourceCapacities, year, false);
+            var absence = _context.Set<CalendarEntry>().ToList();
+            
+            if (withAbsence)
+            {
+                resourceCapacities = CapacityWithAbsenceService.GetCapacityWithAbsence(resourceCapacities, absence);
+            }
+            
+            var builder = new CapacityViewModelBuilder(resources, resourceCapacities, year, withAbsence);
             var model = builder.Build();
             
 

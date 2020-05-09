@@ -12,8 +12,20 @@
         <div class="mb-2">
             <partial name="YearChangerPartial"/>
         </div>
+        @if (Model.WithAbsence)
+   {
+       <button 
+           class="btn btn-primary mb-2 ml-2" 
+           asp-route-withAbsence="@(!Model.WithAbsence)" 
+           
+           onclick="this.form.submit()">Показать с учетом отсутствий</button>
+   }
+   else
+   {
+       <button class="btn btn-primary mb-2 ml-2" asp-route-withAbsence="@(!Model.WithAbsence)" onclick="this.form.submit()">Показать без учета отсутствий</button>
+   }        
     </form> 
-    <button class="btn btn-primary mb-2 ml-2">Без учета отсутствий</button>
+
 </div>
 
 <div class="wrapper">
