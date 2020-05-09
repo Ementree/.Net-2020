@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using DotNet2020.Domain._4.Models;
 using DotNet2020.Domain._6.Models;
 using DotNet2020.Domain._6.Models.ViewModels;
 
@@ -16,7 +17,7 @@ namespace DotNet2020.Domain._6.Services
             List<ResourceCapacity> capacity, 
             List<FunctioningCapacityProject> funcCapacityProject, 
             List<FunctioningCapacityResource> funcCapacityResource,
-            List<CalendarEntry> absences)
+            List<AbstractCalendarEntry> absences)
         
         {
             _capacity = CapacityWithAbsenceService.GetCapacityWithAbsence(capacity, absences);

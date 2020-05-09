@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using DotNet2020.Domain._4.Models;
 using DotNet2020.Domain._6.Models.ViewModels;
 using DotNet2020.Domain._6.Services;
 
@@ -64,7 +65,7 @@ namespace DotNet2020.Domain._6.Controllers
                 _dbContext.Set<FunctioningCapacityProject>()
                     .ToList();
             var resourceCapacity = _dbContext.Set<ResourceCapacity>().ToList();
-            var absences = _dbContext.Set<CalendarEntry>().ToList();
+            var absences = _dbContext.Set<AbstractCalendarEntry>().ToList();
             
             
             ViewBag.FunctioningCapacityProject = funcCapacitiesProject;

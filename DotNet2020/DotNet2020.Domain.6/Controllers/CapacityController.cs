@@ -1,10 +1,9 @@
 using System;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
 using System.Linq;
+using DotNet2020.Domain._4.Models;
 using DotNet2020.Domain._6.Models;
 using Microsoft.EntityFrameworkCore;
-using DotNet2020.Domain._6.Models.ViewModels;
 using DotNet2020.Domain._6.Services;
 
 
@@ -31,7 +30,7 @@ namespace DotNet2020.Domain._6.Controllers
                 .Include(x => x.Period)
                 .Where(x => x.Period.Start.Year == year)
                 .ToList();
-            var absence = _context.Set<CalendarEntry>().ToList();
+            var absence = _context.Set<AbstractCalendarEntry>().ToList();
             
             if (withAbsence)
             {
