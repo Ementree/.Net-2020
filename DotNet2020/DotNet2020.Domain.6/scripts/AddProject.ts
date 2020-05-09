@@ -1,28 +1,4 @@
-﻿class Project {
-    Name: string;
-    StatusId: number;
-    Periods: Period[];
-}
-
-class Period {
-    Capacity: number;
-    Date: Date;
-    Resources: ResourceCapacity[];
-}
-
-class ResourceCapacity {
-    constructor(id: number, name: string, capacity: number) {
-        this.Id = id;
-        this.Name = name;
-        this.Capacity = capacity;
-    }
-
-    Id: number;
-    Name: string;
-    Capacity: number;
-}
-
-let lastYear: number = new Date(Date.now()).getFullYear();
+﻿let lastYear: number = new Date(Date.now()).getFullYear();
 
 function AddYear() {
     lastYear++;
@@ -42,7 +18,7 @@ function AddYear() {
     firstHalfYearDiv.classList.add('row', 'pb-3', 'halfYear');
     firstHalfYearDiv.id = `year${localYear}_1`;
     for (let i = 0; i < 6; i++) {
-        const monthBlock = GenerateMonth(localYear, i + 1);
+        const monthBlock = generateMonthForNewYear(localYear, i + 1);
         firstHalfYearDiv.appendChild(monthBlock);
     }
 
@@ -51,7 +27,7 @@ function AddYear() {
     secondHalfYearDiv.classList.add('row', 'pb-3', 'halfYear');
     secondHalfYearDiv.id = `year${localYear}_2`;
     for (let i = 6; i < 12; i++) {
-        const monthBlock = GenerateMonth(localYear, i + 1);
+        const monthBlock = generateMonthForNewYear(localYear, i + 1);
         secondHalfYearDiv.appendChild(monthBlock);
     }
 
@@ -71,7 +47,7 @@ function RemoveLastYear() {
     lastYear--;
 }
 
-function GenerateMonth(localYear: number, monthNumber: number): Element {
+function generateMonthForNewYear(localYear: number, monthNumber: number): Element {
     const monthBlock = <Element>(document
         .getElementById(`year${localYear - 1}Month${monthNumber}`)
         .cloneNode(true));
@@ -79,9 +55,9 @@ function GenerateMonth(localYear: number, monthNumber: number): Element {
     let addRes = monthBlock.children[2];
     addRes.id = `addResourceYear${localYear}Month${monthNumber}`;
 
-    let monthCapacity = monthBlock.children[0].children[1];
+    let monthCapacity = <HTMLInputElement>monthBlock.children[0].children[1].children[0];
     monthCapacity.id = `monthlyCapacityYear${localYear}Month${monthNumber}`;
-    monthCapacity.textContent = '';
+    monthCapacity.value = '';
 
     while (addRes.childElementCount > 1) {
         addRes.removeChild(addRes.children[addRes.childElementCount - 1])
@@ -165,13 +141,13 @@ function GetMonthName(number: number): string {
 function GetPeriodInfo(monthBlock: Element): Period {
     let period = new Period();
     let date = monthBlock.id.replace(/\D/g, '_').split('_').filter(d => d !== '').map(d => parseInt(d));
-    period.Date = new Date(date[0], date[1]);
-    period.Resources = [];
+    period.date = new Date(date[0], date[1]);
+    period.resources = [];
     let capacity = parseInt((<HTMLInputElement>monthBlock.firstElementChild.lastElementChild.firstElementChild).value);
     if (isNaN(capacity)) {
         capacity = -1;
     }
-    period.Capacity = capacity;
+    period.capacity = capacity;
     let selects = monthBlock.children[2].children;
     for (let rowNumber = 0; rowNumber < selects.length; rowNumber++) {
         let selectValuePair = selects[rowNumber];
@@ -183,7 +159,7 @@ function GetPeriodInfo(monthBlock: Element): Period {
             value = -1;
         }
         if (resourceId.trim() !== "") {
-            period.Resources.push(new ResourceCapacity(parseInt(resourceId), resourceFullName, value));
+            period.resources.push(new ResourceCapacity(parseInt(resourceId), resourceFullName, value));
         }
     }
     return period;
@@ -197,9 +173,9 @@ function GetProjectInfo(): Project {
     let projectStatusSelect = <HTMLSelectElement>document.getElementById('projectStatus');
     let projectStatusId = parseInt(projectStatusSelect.options[projectStatusSelect.selectedIndex].value);
     if (!isNaN(projectStatusId))
-        project.StatusId = projectStatusId;
-    project.Name = projectName;
-    project.Periods = [];
+        project.statusId = projectStatusId;
+    project.name = projectName;
+    project.periods = [];
     let yearDivs = document.getElementById('yearsContainer').children;
     for (let i = 0; i < yearDivs.length; i++) {
         let yearDiv = yearDivs[i];
@@ -211,7 +187,7 @@ function GetProjectInfo(): Project {
         for (let j = 0; j < firstHalfMonths.length; j++) {
             let monthBlock = firstHalfMonths[j];
             let period = GetPeriodInfo(monthBlock);
-            project.Periods.push(period);
+            project.periods.push(period);
         }
 
         //собираем второе полугодие
@@ -220,7 +196,7 @@ function GetProjectInfo(): Project {
         for (let j = 0; j < secondHalfMonths.length; j++) {
             let monthBlock = secondHalfMonths[j];
             let period = GetPeriodInfo(monthBlock);
-            project.Periods.push(period);
+            project.periods.push(period);
         }
     }
     return project;
@@ -229,6 +205,8 @@ function GetProjectInfo(): Project {
 function SendProjectToDb() {
     let project = GetProjectInfo();
     if (ValidateForm(project)) {
+        let btn = <HTMLButtonElement>document.getElementById('addProjectBtn');
+        btn.disabled = true;
         let xhr = new XMLHttpRequest();
         xhr.open('PUT', 'plan/addProject', false);
         xhr.setRequestHeader('Content-type', 'application/json');
@@ -236,25 +214,37 @@ function SendProjectToDb() {
         let success = xhr.responseText;
         if (success === 'true')
             location.reload();
-    }
-    else{
+    } else {
         document.getElementById('errorHandler').style.display = 'block';
     }
 }
 
-function ValidateForm(project: Project): boolean {
+function ValidateForm(project: Project, additionalPrefix = ''): boolean {
     let flag = true;
-    project.Periods.forEach(elem => {
-        let length = elem.Resources.length;
-        let lengthDistinct = elem.Resources.map(res => res.Id).filter((value, index, self) => {
+    if (project.name.trim() === '') {
+        let nameId = 'projectName';
+        if (additionalPrefix !== '')
+            nameId = additionalPrefix + 'ProjectName';
+        let inputName = document.getElementById(nameId);
+        inputName.style.border = '2px solid red';
+        inputName.style.padding = '1px';
+        flag = false;
+    }
+
+    project.periods.forEach(elem => {
+        let length = elem.resources.length;
+        let lengthDistinct = elem.resources.map(res => res.id).filter((value, index, self) => {
             return self.indexOf(value) === index;
         }).length;
         if (length > lengthDistinct) {
             flag = false;
+            let id = `addResourceYear${elem.date.getFullYear()}Month${elem.date.getMonth()}`;
+            if (additionalPrefix !== '')
+                id = `${additionalPrefix}AddResourceYear${elem.date.getFullYear()}Month${elem.date.getMonth()}`;
             let addResBlock = document
-                .getElementById(`addResourceYear${elem.Date.getFullYear()}Month${elem.Date.getMonth()}`);
+                .getElementById(id);
             let selects = addResBlock.children;
-            for(let i = 0; i<selects.length;i++){
+            for (let i = 0; i < selects.length; i++) {
                 let elem = <HTMLDivElement>selects[i];
                 elem.style.border = '0.5px solid red';
                 elem.style.padding = '1px';
