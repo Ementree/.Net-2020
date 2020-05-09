@@ -41,10 +41,15 @@ function getProject(id) {
 }
 function generateProjectDOM(project) {
     var rootDiv = document.createElement('div');
+    var yearCount = project.periods
+        .map(function (period) { return period.date.getFullYear(); })
+        .filter(function (value, index, self) {
+        return self.indexOf(value) === index;
+    }).length;
     rootDiv.id = "editProjectDiv";
     rootDiv.appendChild(generateNameBlock(project.name));
     rootDiv.appendChild(generateProjectStatusSelect(project.statusId));
-    rootDiv.appendChild(generateButtonsBlock());
+    rootDiv.appendChild(generateButtonsBlock(yearCount));
     rootDiv.appendChild(generateYearsContainer(project.periods));
     return rootDiv;
 }
@@ -85,7 +90,7 @@ function generateProjectStatusSelect(projectStatusId) {
     selectForm.append(selectLabel, selector);
     return selectForm;
 }
-function generateButtonsBlock() {
+function generateButtonsBlock(yearsCount) {
     var buttonBlock = document.createElement('div');
     buttonBlock.classList.add('form-inline', 'mt-2', 'mb-4');
     var addYearButton = document.createElement('button');
@@ -94,7 +99,7 @@ function generateButtonsBlock() {
     var removeYearButton = document.createElement('button');
     removeYearButton.classList.add('btn', 'btn-primary');
     removeYearButton.textContent = 'Удалить последний год';
-    removeYearButton.disabled = true;
+    removeYearButton.disabled = yearsCount <= 1;
     removeYearButton.id = 'editRemoveYearButton';
     addYearButton.addEventListener('click', function () {
         var newYearPeriods = [];
@@ -104,7 +109,7 @@ function generateButtonsBlock() {
         document.getElementById('yearsContainerEdit').appendChild(generateEditYear(newYearPeriods));
         document.getElementById('editRemoveYearButton').disabled = false;
     });
-    removeYearButton.addEventListener('dblclick', function () {
+    removeYearButton.addEventListener('click', function () {
         var removedYear = --currentYear;
         var container = document.getElementById('yearsContainerEdit');
         container.removeChild(container.lastChild);
@@ -379,6 +384,8 @@ function getEditedPeriodInfo(monthBlock) {
 function sendEditedProject() {
     var project = getProjectEditedInfo();
     if (ValidateForm(project, 'edit')) {
+        var btn = document.getElementById('editSendProject');
+        btn.disabled = true;
         var xhr = new XMLHttpRequest();
         xhr.open('PUT', 'plan/editProject', false);
         xhr.setRequestHeader('Content-type', 'application/json');

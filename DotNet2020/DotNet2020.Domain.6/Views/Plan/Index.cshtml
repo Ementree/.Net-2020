@@ -40,8 +40,6 @@
     <button type="button" class="btn btn-primary mr-2" data-toggle="modal" data-target="#editProject">
         Редактировать проект
     </button>
-    <button type="button" class="btn btn-primary mr-2">Перенести проект в завершенные</button>
-
     <partial name="AddProjectPartial"/>
     <partial name="EditProjectPartial"/>
 </div>
@@ -49,7 +47,6 @@
     <div class="scroller1">
         <table class="scroll-table table">
             <thead>
-            <!-- хедер таблицы -->
             <tr>
                 <th class="sticky-col1">
                     Группа \ Проект \\ Месяц
@@ -63,7 +60,6 @@
                     </th>
                 }
             </tr>
-            <!-- конец хедера таблицы -->
             </thead>
             <tbody>
             @foreach (var group in Model)

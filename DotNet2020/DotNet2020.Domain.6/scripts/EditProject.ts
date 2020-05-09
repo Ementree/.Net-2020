@@ -44,10 +44,15 @@ function getProject(id: number): Project {
 
 function generateProjectDOM(project: Project): HTMLDivElement {
     let rootDiv = <HTMLDivElement>document.createElement('div');
+    let yearCount = project.periods
+        .map(period => period.date.getFullYear())
+        .filter((value, index, self) => {
+            return self.indexOf(value) === index;
+        }).length;
     rootDiv.id = `editProjectDiv`;
     rootDiv.appendChild(generateNameBlock(project.name));
     rootDiv.appendChild(generateProjectStatusSelect(project.statusId));
-    rootDiv.appendChild(generateButtonsBlock());
+    rootDiv.appendChild(generateButtonsBlock(yearCount));
     rootDiv.appendChild(generateYearsContainer(project.periods));
     return rootDiv;
 }
@@ -76,7 +81,7 @@ function generateProjectStatusSelect(projectStatusId: number): HTMLDivElement {
     selectLabel.htmlFor = 'projectStatusEdit';
     selectLabel.classList.add('mr-2');
     let selector = <HTMLSelectElement>document.createElement('select');
-    selector.id='projectStatusEdit';
+    selector.id = 'projectStatusEdit';
     projectStatuses.forEach(value => {
         let option = <HTMLOptionElement>document.createElement('option');
         option.value = String(value.id);
@@ -91,7 +96,7 @@ function generateProjectStatusSelect(projectStatusId: number): HTMLDivElement {
     return selectForm;
 }
 
-function generateButtonsBlock(): HTMLDivElement {
+function generateButtonsBlock(yearsCount: number): HTMLDivElement {
     let buttonBlock = <HTMLDivElement>document.createElement('div');
     buttonBlock.classList.add('form-inline', 'mt-2', 'mb-4');
     let addYearButton = <HTMLButtonElement>document.createElement('button');
@@ -100,7 +105,7 @@ function generateButtonsBlock(): HTMLDivElement {
     let removeYearButton = <HTMLButtonElement>document.createElement('button');
     removeYearButton.classList.add('btn', 'btn-primary');
     removeYearButton.textContent = 'Удалить последний год';
-    removeYearButton.disabled = true;
+    removeYearButton.disabled = yearsCount <= 1;
     removeYearButton.id = 'editRemoveYearButton';
     addYearButton.addEventListener('click', function () {
         let newYearPeriods = [];
@@ -110,7 +115,7 @@ function generateButtonsBlock(): HTMLDivElement {
         document.getElementById('yearsContainerEdit').appendChild(generateEditYear(newYearPeriods));
         (<HTMLButtonElement>document.getElementById('editRemoveYearButton')).disabled = false;
     });
-    removeYearButton.addEventListener('dblclick', function () {
+    removeYearButton.addEventListener('click', function () {
         let removedYear = --currentYear;
         let container = document.getElementById('yearsContainerEdit');
         container.removeChild(container.lastChild);
@@ -121,7 +126,7 @@ function generateButtonsBlock(): HTMLDivElement {
     return buttonBlock;
 }
 
-function generateMonth(period: Period):HTMLDivElement {
+function generateMonth(period: Period): HTMLDivElement {
     let idBase = `Year${period.date.getFullYear()}Month${period.date.getMonth()}`;
     let container = <HTMLDivElement>document.createElement('div');
     container.id = `edit` + idBase;
@@ -348,12 +353,12 @@ function generateYearsContainer(periods: Period[]) {
     return yearsContainer;
 }
 
-function getProjectEditedInfo():Project {
+function getProjectEditedInfo(): Project {
     let project = new Project();
     let projectIdSelect = <HTMLSelectElement>document.getElementById('projectSelector');
     let projectId = parseInt(projectIdSelect.options[projectIdSelect.selectedIndex].value);
-    project.id=projectId;
-    
+    project.id = projectId;
+
     let projectName = (<HTMLInputElement>document.getElementById('editProjectName')).value;
 
     let projectStatusSelect = <HTMLSelectElement>document.getElementById('projectStatusEdit');
@@ -391,7 +396,7 @@ function getProjectEditedInfo():Project {
 function getEditedPeriodInfo(monthBlock: Element): Period {
     let period = new Period();
     let date = monthBlock.id.replace(/\D/g, '_').split('_').filter(d => d !== '').map(d => parseInt(d));
-    period.date = new Date(date[0], date[1]+1);
+    period.date = new Date(date[0], date[1] + 1);
     period.resources = [];
     let capacity = parseInt((<HTMLInputElement>document
         .getElementById(`editMonthCapacityYear${date[0]}Month${date[1]}`))
@@ -414,15 +419,17 @@ function getEditedPeriodInfo(monthBlock: Element): Period {
         if (isNaN(value)) {
             value = -1;
         }
-            period.resources.push(new ResourceCapacity(resourceId, resourceFullName, value));
-        
+        period.resources.push(new ResourceCapacity(resourceId, resourceFullName, value));
+
     }
     return period;
 }
 
 function sendEditedProject() {
     let project = getProjectEditedInfo();
-    if(ValidateForm(project, 'edit')){
+    if (ValidateForm(project, 'edit')) {
+        let btn = <HTMLButtonElement>document.getElementById('editSendProject');
+        btn.disabled = true;
         let xhr = new XMLHttpRequest();
         xhr.open('PUT', 'plan/editProject', false);
         xhr.setRequestHeader('Content-type', 'application/json');
@@ -430,8 +437,7 @@ function sendEditedProject() {
         let success = xhr.responseText;
         if (success === 'true')
             location.reload();
-    }
-    else{
+    } else {
         document.getElementById('editErrorHandler').style.display = 'block';
     }
 }

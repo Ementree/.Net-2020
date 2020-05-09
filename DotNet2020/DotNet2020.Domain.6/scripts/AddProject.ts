@@ -205,6 +205,8 @@ function GetProjectInfo(): Project {
 function SendProjectToDb() {
     let project = GetProjectInfo();
     if (ValidateForm(project)) {
+        let btn = <HTMLButtonElement>document.getElementById('addProjectBtn');
+        btn.disabled = true;
         let xhr = new XMLHttpRequest();
         xhr.open('PUT', 'plan/addProject', false);
         xhr.setRequestHeader('Content-type', 'application/json');
@@ -212,24 +214,23 @@ function SendProjectToDb() {
         let success = xhr.responseText;
         if (success === 'true')
             location.reload();
-    }
-    else{
+    } else {
         document.getElementById('errorHandler').style.display = 'block';
     }
 }
 
 function ValidateForm(project: Project, additionalPrefix = ''): boolean {
     let flag = true;
-    if(project.name.trim() === ''){
+    if (project.name.trim() === '') {
         let nameId = 'projectName';
-        if(additionalPrefix !== '')
+        if (additionalPrefix !== '')
             nameId = additionalPrefix + 'ProjectName';
         let inputName = document.getElementById(nameId);
         inputName.style.border = '2px solid red';
         inputName.style.padding = '1px';
         flag = false;
     }
-    
+
     project.periods.forEach(elem => {
         let length = elem.resources.length;
         let lengthDistinct = elem.resources.map(res => res.id).filter((value, index, self) => {
@@ -238,12 +239,12 @@ function ValidateForm(project: Project, additionalPrefix = ''): boolean {
         if (length > lengthDistinct) {
             flag = false;
             let id = `addResourceYear${elem.date.getFullYear()}Month${elem.date.getMonth()}`;
-            if(additionalPrefix!=='')
-                id = `${additionalPrefix}AddResourceYear${elem.date.getFullYear()}Month${elem.date.getMonth()}`;    
+            if (additionalPrefix !== '')
+                id = `${additionalPrefix}AddResourceYear${elem.date.getFullYear()}Month${elem.date.getMonth()}`;
             let addResBlock = document
                 .getElementById(id);
             let selects = addResBlock.children;
-            for(let i = 0; i<selects.length;i++){
+            for (let i = 0; i < selects.length; i++) {
                 let elem = <HTMLDivElement>selects[i];
                 elem.style.border = '0.5px solid red';
                 elem.style.padding = '1px';

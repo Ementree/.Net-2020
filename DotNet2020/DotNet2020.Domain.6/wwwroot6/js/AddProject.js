@@ -178,6 +178,8 @@ function GetProjectInfo() {
 function SendProjectToDb() {
     var project = GetProjectInfo();
     if (ValidateForm(project)) {
+        var btn = document.getElementById('addProjectBtn');
+        btn.disabled = true;
         var xhr = new XMLHttpRequest();
         xhr.open('PUT', 'plan/addProject', false);
         xhr.setRequestHeader('Content-type', 'application/json');
