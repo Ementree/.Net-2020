@@ -24,5 +24,10 @@ namespace DotNet2020.Domain._6.Models
         public virtual Project Project { get; protected set; }
         public virtual Resource Resource { get; protected set; }
         public virtual Period Period { get; protected set; }
+
+        public void UpdateCapacity(int newCapacity)
+        {
+            FunctionCapacity = newCapacity;
+        }
     }
 }

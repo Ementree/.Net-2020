@@ -1,21 +1,3 @@
-var Project = (function () {
-    function Project() {
-    }
-    return Project;
-}());
-var Period = (function () {
-    function Period() {
-    }
-    return Period;
-}());
-var ResourceCapacity = (function () {
-    function ResourceCapacity(id, name, capacity) {
-        this.Id = id;
-        this.Name = name;
-        this.Capacity = capacity;
-    }
-    return ResourceCapacity;
-}());
 var lastYear = new Date(Date.now()).getFullYear();
 function AddYear() {
     lastYear++;
@@ -32,14 +14,14 @@ function AddYear() {
     firstHalfYearDiv.classList.add('row', 'pb-3', 'halfYear');
     firstHalfYearDiv.id = "year" + localYear + "_1";
     for (var i = 0; i < 6; i++) {
-        var monthBlock = GenerateMonth(localYear, i + 1);
+        var monthBlock = generateMonthForNewYear(localYear, i + 1);
         firstHalfYearDiv.appendChild(monthBlock);
     }
     var secondHalfYearDiv = document.createElement('div');
     secondHalfYearDiv.classList.add('row', 'pb-3', 'halfYear');
     secondHalfYearDiv.id = "year" + localYear + "_2";
     for (var i = 6; i < 12; i++) {
-        var monthBlock = GenerateMonth(localYear, i + 1);
+        var monthBlock = generateMonthForNewYear(localYear, i + 1);
         secondHalfYearDiv.appendChild(monthBlock);
     }
     yearDiv.appendChild(firstHalfYearDiv);
@@ -55,16 +37,16 @@ function RemoveLastYear() {
     document.getElementById('yearsContainer').removeChild(lastYearDiv);
     lastYear--;
 }
-function GenerateMonth(localYear, monthNumber) {
+function generateMonthForNewYear(localYear, monthNumber) {
     var monthBlock = (document
         .getElementById("year" + (localYear - 1) + "Month" + monthNumber)
         .cloneNode(true));
     monthBlock.id = "year" + localYear + "Month" + monthNumber;
     var addRes = monthBlock.children[2];
     addRes.id = "addResourceYear" + localYear + "Month" + monthNumber;
-    var monthCapacity = monthBlock.children[0].children[1];
+    var monthCapacity = monthBlock.children[0].children[1].children[0];
     monthCapacity.id = "monthlyCapacityYear" + localYear + "Month" + monthNumber;
-    monthCapacity.textContent = '';
+    monthCapacity.value = '';
     while (addRes.childElementCount > 1) {
         addRes.removeChild(addRes.children[addRes.childElementCount - 1]);
     }
@@ -139,13 +121,13 @@ function GetMonthName(number) {
 function GetPeriodInfo(monthBlock) {
     var period = new Period();
     var date = monthBlock.id.replace(/\D/g, '_').split('_').filter(function (d) { return d !== ''; }).map(function (d) { return parseInt(d); });
-    period.Date = new Date(date[0], date[1]);
-    period.Resources = [];
+    period.date = new Date(date[0], date[1]);
+    period.resources = [];
     var capacity = parseInt(monthBlock.firstElementChild.lastElementChild.firstElementChild.value);
     if (isNaN(capacity)) {
         capacity = -1;
     }
-    period.Capacity = capacity;
+    period.capacity = capacity;
     var selects = monthBlock.children[2].children;
     for (var rowNumber = 0; rowNumber < selects.length; rowNumber++) {
         var selectValuePair = selects[rowNumber];
@@ -157,7 +139,7 @@ function GetPeriodInfo(monthBlock) {
             value = -1;
         }
         if (resourceId.trim() !== "") {
-            period.Resources.push(new ResourceCapacity(parseInt(resourceId), resourceFullName, value));
+            period.resources.push(new ResourceCapacity(parseInt(resourceId), resourceFullName, value));
         }
     }
     return period;
@@ -168,9 +150,9 @@ function GetProjectInfo() {
     var projectStatusSelect = document.getElementById('projectStatus');
     var projectStatusId = parseInt(projectStatusSelect.options[projectStatusSelect.selectedIndex].value);
     if (!isNaN(projectStatusId))
-        project.StatusId = projectStatusId;
-    project.Name = projectName;
-    project.Periods = [];
+        project.statusId = projectStatusId;
+    project.name = projectName;
+    project.periods = [];
     var yearDivs = document.getElementById('yearsContainer').children;
     for (var i = 0; i < yearDivs.length; i++) {
         var yearDiv = yearDivs[i];
@@ -181,14 +163,14 @@ function GetProjectInfo() {
         for (var j = 0; j < firstHalfMonths.length; j++) {
             var monthBlock = firstHalfMonths[j];
             var period = GetPeriodInfo(monthBlock);
-            project.Periods.push(period);
+            project.periods.push(period);
         }
         var secondHalfYear = halfYears[1];
         var secondHalfMonths = secondHalfYear.children;
         for (var j = 0; j < secondHalfMonths.length; j++) {
             var monthBlock = secondHalfMonths[j];
             var period = GetPeriodInfo(monthBlock);
-            project.Periods.push(period);
+            project.periods.push(period);
         }
     }
     return project;
@@ -196,6 +178,8 @@ function GetProjectInfo() {
 function SendProjectToDb() {
     var project = GetProjectInfo();
     if (ValidateForm(project)) {
+        var btn = document.getElementById('addProjectBtn');
+        btn.disabled = true;
         var xhr = new XMLHttpRequest();
         xhr.open('PUT', 'plan/addProject', false);
         xhr.setRequestHeader('Content-type', 'application/json');
@@ -208,17 +192,30 @@ function SendProjectToDb() {
         document.getElementById('errorHandler').style.display = 'block';
     }
 }
-function ValidateForm(project) {
+function ValidateForm(project, additionalPrefix) {
+    if (additionalPrefix === void 0) { additionalPrefix = ''; }
     var flag = true;
-    project.Periods.forEach(function (elem) {
-        var length = elem.Resources.length;
-        var lengthDistinct = elem.Resources.map(function (res) { return res.Id; }).filter(function (value, index, self) {
+    if (project.name.trim() === '') {
+        var nameId = 'projectName';
+        if (additionalPrefix !== '')
+            nameId = additionalPrefix + 'ProjectName';
+        var inputName = document.getElementById(nameId);
+        inputName.style.border = '2px solid red';
+        inputName.style.padding = '1px';
+        flag = false;
+    }
+    project.periods.forEach(function (elem) {
+        var length = elem.resources.length;
+        var lengthDistinct = elem.resources.map(function (res) { return res.id; }).filter(function (value, index, self) {
             return self.indexOf(value) === index;
         }).length;
         if (length > lengthDistinct) {
             flag = false;
+            var id = "addResourceYear" + elem.date.getFullYear() + "Month" + elem.date.getMonth();
+            if (additionalPrefix !== '')
+                id = additionalPrefix + "AddResourceYear" + elem.date.getFullYear() + "Month" + elem.date.getMonth();
             var addResBlock = document
-                .getElementById("addResourceYear" + elem.Date.getFullYear() + "Month" + elem.Date.getMonth());
+                .getElementById(id);
             var selects = addResBlock.children;
             for (var i = 0; i < selects.length; i++) {
                 var elem_1 = selects[i];
