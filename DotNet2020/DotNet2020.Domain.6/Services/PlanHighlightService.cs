@@ -11,13 +11,15 @@ namespace DotNet2020.Domain._6.Services
         private readonly List<ResourceCapacity> _capacity;
         private readonly List<FunctioningCapacityProject> _funcCapacityProject;
         private readonly List<FunctioningCapacityResource> _funcCapacityResource;
-        
+
         public PlanHighlightService(
             List<ResourceCapacity> capacity, 
             List<FunctioningCapacityProject> funcCapacityProject, 
-            List<FunctioningCapacityResource> funcCapacityResource)
+            List<FunctioningCapacityResource> funcCapacityResource,
+            List<CalendarEntry> absences)
+        
         {
-            _capacity = capacity;
+            _capacity = CapacityWithAbsenceService.GetCapacityWithAbsence(capacity, absences);
             _funcCapacityProject = funcCapacityProject;
             _funcCapacityResource = funcCapacityResource;
         }

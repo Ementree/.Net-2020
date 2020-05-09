@@ -8,23 +8,33 @@
 
 <link rel="stylesheet" href="~/wwwroot6/css/Capacity.css"/>
 <div class="form-inline">
-    <form asp-controller="Capacity" asp-action="Index">
+    <form asp-controller="Capacity" asp-action="Index" class="form-inline">
         <div class="mb-2">
             <partial name="YearChangerPartial"/>
         </div>
-        @if (Model.WithAbsence)
-   {
-       <button 
-           class="btn btn-primary mb-2 ml-2" 
-           asp-route-withAbsence="@(!Model.WithAbsence)" 
-           
-           onclick="this.form.submit()">Показать с учетом отсутствий</button>
-   }
-   else
-   {
-       <button class="btn btn-primary mb-2 ml-2" asp-route-withAbsence="@(!Model.WithAbsence)" onclick="this.form.submit()">Показать без учета отсутствий</button>
-   }        
-    </form> 
+        <div class="mb-2">
+            @if (Model.WithAbsence)
+            {
+                <button
+                    class="btn btn-primary mb-2 ml-2"
+                    asp-route-withAbsence="@(!Model.WithAbsence)"
+                    asp-route-year="@(year)"
+                    onclick="this.form.submit()">
+                    Показать с учетом отсутствий
+                </button>
+            }
+            else
+            {
+                <button
+                    class="btn btn-primary mb-2 ml-2"
+                    asp-route-withAbsence="@(!Model.WithAbsence)"
+                    asp-route-year="@(year)"
+                    onclick="this.form.submit()">
+                    Показать без учета отсутствий
+                </button>
+            }
+        </div>
+    </form>
 
 </div>
 

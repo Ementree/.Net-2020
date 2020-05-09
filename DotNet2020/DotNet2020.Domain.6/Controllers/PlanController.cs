@@ -64,9 +64,11 @@ namespace DotNet2020.Domain._6.Controllers
                 _dbContext.Set<FunctioningCapacityProject>()
                     .ToList();
             var resourceCapacity = _dbContext.Set<ResourceCapacity>().ToList();
+            var absences = _dbContext.Set<CalendarEntry>().ToList();
+            
             
             ViewBag.FunctioningCapacityProject = funcCapacitiesProject;
-            var highlightService = new PlanHighlightService(resourceCapacity, funcCapacitiesProject, functioningCapacityResources);
+            var highlightService = new PlanHighlightService(resourceCapacity, funcCapacitiesProject, functioningCapacityResources, absences);
             ViewBag.FuncCapacityProjHighlight = highlightService.GetFuncCapacityProjHighlight();
             ViewBag.FuncCapacityResourceHighlight = highlightService.GetFuncCapacityResourceHighlight();
             ViewBag.CurrentDate = DateTime.Now;
