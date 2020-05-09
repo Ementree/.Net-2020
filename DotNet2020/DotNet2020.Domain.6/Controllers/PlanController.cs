@@ -315,51 +315,52 @@ namespace DotNet2020.Domain._6.Controllers
 
         private bool EditProject1(ProjectViewModel projectViewModel)
         {
-            using (var transaction = _dbContext.Database.BeginTransaction())
+            using var transaction = _dbContext.Database.BeginTransaction();
+            try
             {
-                try
+                var project = _dbContext.Set<Project>().Find(projectViewModel.Id);
+                project.UpdateProjectInfo(projectViewModel.Name, projectViewModel.StatusId);
+                _dbContext.Set<Project>().Update(project);
+                _dbContext.SaveChanges();
+                RemoveUnusedFuncCapacityProjects(projectViewModel.Periods, project.Id);
+                foreach (var periodViewModel in projectViewModel.Periods)
                 {
-                    var project = _dbContext.Set<Project>().Find(projectViewModel.Id);
-                    project.UpdateProjectInfo(projectViewModel.Name, projectViewModel.StatusId);
-                    _dbContext.Set<Project>().Update(project);
-                    _dbContext.SaveChanges();
-                    foreach (var periodViewModel in projectViewModel.Periods)
+                    var period = GetPeriodForViewModel(periodViewModel);
+                    RemoveUnusedFunctioningCapacityResources(periodViewModel.Resources, period.Id, project.Id);
+                    
+                    if (periodViewModel.Capacity < 0)
                     {
-                        var period = GetPeriodForViewModel(periodViewModel);
-                        RemoveUnusedFunctioningCapacityResources(periodViewModel.Resources, period.Id, project.Id);
-                        if (periodViewModel.Capacity < 0)
+                        if (periodViewModel.Resources.Length > 0)
                         {
-                            if (periodViewModel.Resources.Length > 0)
-                            {
-                                periodViewModel.Capacity = 0;
-                                UpdateOrAddProjectPeriodCapacity(periodViewModel.Capacity, period.Id, project.Id);
-                                foreach (var resource in periodViewModel.Resources)
-                                    AddFunctioningCapacityResource(resource, period.Id, project.Id);
-                            }
-                            else
-                                RemoveFuncCapacityProject(period.Id, project.Id);
+                            periodViewModel.Capacity = 0;
+                            UpdateOrAddProjectPeriodCapacity(periodViewModel.Capacity, period.Id, project.Id);
+                            foreach (var resource in periodViewModel.Resources)
+                                AddFunctioningCapacityResource(resource, period.Id, project.Id);
                         }
                         else
+                            RemoveFuncCapacityProject(period.Id, project.Id);
+                    }
+                    else
+                    {
+                        if (periodViewModel.Resources.Length > 0)
                         {
-                            if (periodViewModel.Resources.Length > 0)
-                            {
-                                UpdateOrAddProjectPeriodCapacity(periodViewModel.Capacity, period.Id, project.Id);
-                                foreach (var resource in periodViewModel.Resources)
-                                    AddFunctioningCapacityResource(resource, period.Id, project.Id);
-                            }
-                            else
-                                UpdateOrAddProjectPeriodCapacity(periodViewModel.Capacity, period.Id, project.Id);
+                            UpdateOrAddProjectPeriodCapacity(periodViewModel.Capacity, period.Id, project.Id);
+                            foreach (var resource in periodViewModel.Resources)
+                                AddFunctioningCapacityResource(resource, period.Id, project.Id);
                         }
+                        else
+                            UpdateOrAddProjectPeriodCapacity(periodViewModel.Capacity, period.Id, project.Id);
                     }
                 }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e);
-                    transaction.Rollback();
-                    return false;
-                }
-                transaction.Commit();
             }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                transaction.Rollback();
+                return false;
+            }
+            transaction.Commit();
+            transaction.Dispose();
             return true;
         }
 
@@ -457,6 +458,27 @@ namespace DotNet2020.Domain._6.Controllers
                     functioningCapacityProject.PeriodId == periodId);
             if (periodCapacity != default)
                 periodCapacities.Remove(periodCapacity);
+            _dbContext.SaveChanges();
+        }
+
+        private void RemoveUnusedFuncCapacityProjects(
+            ProjectViewModel.PeriodViewModel[] periodViewModels,
+            int projectId)
+        {
+            var funcPeriods = _dbContext.Set<FunctioningCapacityProject>();
+            var projectPeriods = funcPeriods
+                .Where(project => project.ProjectId == projectId)
+                .Include(project => project.Period)
+                .ToList();
+            foreach (var projectPeriod in projectPeriods)
+            {
+                if (!periodViewModels
+                    .Select(model => Tuple.Create(model.Date.Month, model.Date.Year))
+                    .ToList()
+                    .Contains(Tuple.Create(projectPeriod.Period.Start.Month, projectPeriod.Period.Start.Year)))
+                    projectPeriods.Remove(projectPeriod);
+            }
+
             _dbContext.SaveChanges();
         }
     }
