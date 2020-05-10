@@ -20,5 +20,13 @@ namespace DotNet2020.Domain.Models
         {
             IsLastVacationApproved = false;
         }
+
+        public string UserName
+        {
+            get
+            {
+                return $"{Employee.FirstName} {Employee.LastName}";
+            }
+        }
     }
 }
