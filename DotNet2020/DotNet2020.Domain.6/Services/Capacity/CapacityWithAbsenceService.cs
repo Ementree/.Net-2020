@@ -8,7 +8,6 @@ namespace DotNet2020.Domain._6.Services
 {
     public class CapacityWithAbsenceService
     {
-        private static int monthInHours = 160;
         private static List<ResourceCapacity> _capacity;
 
         public CapacityWithAbsenceService(List<ResourceCapacity> capacity)

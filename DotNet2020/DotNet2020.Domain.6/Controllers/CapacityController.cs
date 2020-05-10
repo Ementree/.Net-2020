@@ -18,7 +18,7 @@ namespace DotNet2020.Domain._6.Controllers
             _context = context;
         }
 
-        public IActionResult Index(int year = 2020, bool withAbsence = false)
+        public IActionResult Index(int year = 2020, bool withAbsence = true)
         {
             var resources = _context.Set<Resource>()
                 .Include(res => res.Employee)

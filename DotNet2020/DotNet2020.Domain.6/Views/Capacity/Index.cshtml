@@ -16,21 +16,21 @@
             @if (Model.WithAbsence)
             {
                 <button
-                    class="btn btn-primary mb-2 ml-2"
+                    class="btn btn-primary ml-2"
                     asp-route-withAbsence="@(!Model.WithAbsence)"
                     asp-route-year="@(year)"
                     onclick="this.form.submit()">
-                    Показать с учетом отсутствий
+                    Показать без учета отсутствий
                 </button>
             }
             else
             {
                 <button
-                    class="btn btn-primary mb-2 ml-2"
+                    class="btn btn-primary ml-2"
                     asp-route-withAbsence="@(!Model.WithAbsence)"
                     asp-route-year="@(year)"
                     onclick="this.form.submit()">
-                    Показать без учета отсутствий
+                    Показать с учетом отсутствий
                 </button>
             }
         </div>
