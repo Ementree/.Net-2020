@@ -6,162 +6,56 @@
 </head>
 
 <script>
-    $(function () {
+    (function () {
         $("#myTab2 li:eq(0) a").tab('show');
     });
 </script>
 <ul id="myTab2" class="nav nav-tabs">
-    <li><a data-toggle="tab" href="#panely1">Запланированное время  </a></li>
+    <li><a data-toggle="tab" href="#0">Запланированное время</a></li>
     <li><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p></li>
-    <li><a data-toggle="tab" href="#panely2">Потраченное время  </a></li>
+    <li><a data-toggle="tab" href="#1">Потраченное время</a></li>
     <li><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p></li>
-    <li><a data-toggle="tab" href="#panely3">Ошибка в процентах  </a></li>
+    <li><a data-toggle="tab" href="#2">Ошибка в процентах</a></li>
     <li><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p></li>
-    <li><a data-toggle="tab" href="#panely4">Ошибка в часах  </a></li>
+    <li><a data-toggle="tab" href="#3">Ошибка в часах</a></li>
 </ul>
+@{
+    var mas = new int[4] { 1000, 1001, 1002, 1003 };
+}
 <div class="tab-content">
-    <div id="panely1" class="tab-pane fade in active">
-        <div id='myDiv' style="height:auto"></div>
-        <script>
-            var myPlot = document.getElementById('myDiv');
-    var arrY = @Json.Serialize(Model.Charts[0].YAxis);
-    var arrX = @Json.Serialize(Model.Charts[0].XAxis);
-
-    var data = [
-        {
-            x: arrX,
-            y: arrY,
-            type: 'bar'
-        }
-    ];
-    var layout = {
-        title: 'Запланированное время',
-        showlegend: false
-    };
-
-            Plotly.newPlot('myDiv', data, layout, { staticPlot: false });
-
-
-    var d = '0'
-
+    @for (int i = 0; i < 4; i++)
+    {
+        <div id='@i.ToString()' class="tab-pane fade in active">
+            <div id='@mas[i].ToString()' style="height:auto"></div>
+            <form method="get">
+                <button asp-action="Edit" asp-route-id="5">Edit</button>
+            </form>
+            <script>
+            var myPlot = document.getElementById(`@Json.Serialize(mas[i]).ToString()`);
+            var data = [
+                {
+                    x: @Json.Serialize(Model.Charts[i].YAxis),
+                    y: @Json.Serialize(Model.Charts[i].XAxis),
+                    type: 'bar'
+                }
+            ];
+            var layout = {
+                title: 'Запланированное время',
+                showlegend: false
+            };
+            Plotly.newPlot(`@Json.Serialize(mas[i]).ToString()`, data, layout);
+            var d = '0'
             var id = 5;
-            myPlot.on('plotly_click', function (data) {
-    var pts = '';
-        for (var i = 0; i < data.points.length; i++){
-            pts = data.points[i].x;
-        }
-    var start = pts - @Model.Charts[0].Tick.ToString();
-                window.open(`https://localhost:44354/ReportView/ShowRange?reportId=${id}&start=${start}&end=${pts}&graphType=${d}`)
-});
-        </script>
-        <form method="get">
-            <button asp-action="Edit" asp-route-id="5">Edit</button>
-        </form>
-    </div>
-    <div id="panely2" class="tab-pane fade in active">
-        <div id='myDiv1'></div>
-        <script>
-    var myPlot = document.getElementById('myDiv1');
-    var arrY = @Json.Serialize(Model.Charts[1].YAxis);
-    var arrX = @Json.Serialize(Model.Charts[1].XAxis);
-
-    var data = [
-        {
-            x: arrX,
-            y: arrY,
-            type: 'bar'
-        }
-    ];
-    var layout = {
-        title: 'Потраченное время',
-        showlegend: false
-    };
-
-        Plotly.newPlot('myDiv1', data, layout, { staticPlot: false });
-
-
-    var d = '1'
-
-            var id = 5;
-    myPlot.on('plotly_click', function(data){
-    var pts = '';
-        for (var i = 0; i < data.points.length; i++){
-            pts = data.points[i].x;
-        }
-            var start = pts - @Model.Charts[1].Tick.ToString();
-        window.open(`https://localhost:44354/ReportView/ShowRange?reportId=${id}&start=${start}&end=${pts}&graphType=${d}`)
-});
-        </script>
-    </div>
-    <div id="panely3" class="tab-pane fade in active">
-        <div id='myDiv2'></div>
-        <script>
-    var myPlot = document.getElementById('myDiv2');
-    var arrY = @Json.Serialize(Model.Charts[2].YAxis);
-    var arrX = @Json.Serialize(Model.Charts[2].XAxis);
-
-    var data = [
-        {
-            x: arrX,
-            y: arrY,
-            type: 'bar'
-        }
-    ];
-    var layout = {
-        title: 'Ошибка в процентах',
-        showlegend: false
-    };
-
-        Plotly.newPlot('myDiv2', data, layout, { staticPlot: false });
-
-
-    var d = '2'
-
-            var id = 5;
-    myPlot.on('plotly_click', function(data){
-    var pts = '';
-        for (var i = 0; i < data.points.length; i++){
-            pts = data.points[i].x;
-        }
-        var start = pts - @Model.Charts[2].Tick.ToString();
-        window.open(`https://localhost:44354/ReportView/ShowRange?reportId=${id}&start=${start}&end=${pts}&graphType=${d}`)
-});
-        </script>
-    </div>
-    <div id="panely4" class="tab-pane fade in active">
-        <div id='myDiv3'></div>
-
-        <script>
-    var myPlot = document.getElementById('myDiv3');
-    var arrY = @Json.Serialize(Model.Charts[3].YAxis);
-    var arrX = @Json.Serialize(Model.Charts[3].XAxis);
-
-    var data = [
-        {
-            x: arrX,
-            y: arrY,
-            type: 'bar'
-        }
-    ];
-    var layout = {
-        title: 'Ошибка в часах',
-        showlegend: false
-    };
-        Plotly.newPlot('myDiv3', data, layout);
-
-
-    d = '3'
-
-            var id = 5;
-    myPlot.on('plotly_click', function(data){
-    var pts = '';
-        for (var i = 0; i < data.points.length; i++){
-            pts = data.points[i].x;
-        }
-        var start = pts - @Model.Charts[3].Tick.ToString();
-        window.open(`https://localhost:44354/ReportView/ShowRange?reportId=${id}&start=${start}&end=${pts}&graphType=${d}`)
-});
-        </script>
-    </div>
+            myPlot.on('plotly_click', function(data) {
+            var pts = '';
+            for (var i = 0; i < data.points.length; i++)
+            {
+                pts = data.points[i].x;
+            }
+            var start = pts - @Model.Charts[i].Tick.ToString();
+            window.open(`https://localhost:44354/ReportView/ShowRange?reportId=${id}&start=${start}&end=${pts}&graphType=${d}`)
+            });
+            </script>
+        </div>
+    }
 </div>
-
