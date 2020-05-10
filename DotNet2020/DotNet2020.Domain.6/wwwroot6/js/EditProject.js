@@ -1,6 +1,24 @@
 var projectStatuses = getProjectStatuses();
 var resources = [];
 var currentYear;
+var pastYear;
+var firstProjectYear;
+function getProjectFirstYear() {
+    var select = document.getElementById('projectSelector');
+    var projectId = parseInt(select.options[select.selectedIndex].value);
+    var project = getProject(projectId);
+    var years = project.periods
+        .map(function (period) { return period.date.getFullYear(); })
+        .filter(function (value, index, self) {
+        return self.indexOf(value) === index;
+    });
+    if (years.length == 0) {
+        return new Date(Date.now()).getFullYear();
+    }
+    else {
+        return years[0];
+    }
+}
 function selectProject() {
     var select = document.getElementById('projectSelector');
     var projectId = parseInt(select.options[select.selectedIndex].value);
@@ -20,9 +38,13 @@ function selectProject() {
     if (years.length == 0) {
         var date = new Date(Date.now());
         currentYear = date.getFullYear() - 1;
+        pastYear = currentYear - 1;
+        firstProjectYear = date.getFullYear();
     }
     else {
         currentYear = years[years.length - 1];
+        pastYear = years[0] - 1;
+        firstProjectYear = years[0];
     }
     var projectDOM = generateProjectDOM(project);
     mainContainer.appendChild(projectDOM);
@@ -117,12 +139,52 @@ function generateButtonsBlock(yearsCount) {
     });
     removeYearButton.addEventListener('click', function () {
         var removedYear = --currentYear;
-        var container = document.getElementById('yearsContainerEdit');
-        container.removeChild(container.lastChild);
-        if (container.childElementCount === 1)
+        var yearsContainer = document.getElementById('yearsContainerEdit');
+        yearsContainer.removeChild(yearsContainer.lastChild);
+        if (yearsContainer.childElementCount <= 1)
             document.getElementById('editRemoveYearButton').disabled = true;
     });
-    buttonBlock.append(addYearButton, removeYearButton);
+    var addPastYearBtn = document.createElement('button');
+    addPastYearBtn.classList.add('btn', 'btn-primary');
+    addPastYearBtn.textContent = "\u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C " + pastYear + " \u0433\u043E\u0434";
+    addPastYearBtn.id = 'addPastYearBtn';
+    addPastYearBtn.addEventListener('click', function () {
+        var newYearPeriods = [];
+        var year = pastYear;
+        pastYear--;
+        for (var i = 0; i < 12; i++)
+            newYearPeriods.push(new Period(Number.NaN, new Date(year, i), []));
+        var yearBlock = generateEditYear(newYearPeriods);
+        var yearsContainer = document.getElementById('yearsContainerEdit');
+        yearsContainer.insertBefore(yearBlock, yearsContainer.firstChild);
+        addPastYearBtn.textContent = "\u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C " + (year - 1) + " \u0433\u043E\u0434";
+        removePastYearBtn.textContent = "\u0423\u0434\u0430\u043B\u0438\u0442\u044C " + year + " \u0433\u043E\u0434";
+        removePastYearBtn.style.display = 'block';
+        removePastYearBtn.disabled = false;
+    });
+    var removePastYearBtn = document.createElement('button');
+    removePastYearBtn.classList.add('btn', 'btn-primary');
+    removePastYearBtn.textContent = "\u0423\u0434\u0430\u043B\u0438\u0442\u044C " + pastYear + " \u0433\u043E\u0434";
+    removePastYearBtn.id = 'removePastYearBtn';
+    removePastYearBtn.disabled = true;
+    removePastYearBtn.style.display = 'none';
+    removePastYearBtn.addEventListener('click', function () {
+        var yearsContainer = document.getElementById('yearsContainerEdit');
+        yearsContainer.removeChild(yearsContainer.firstChild);
+        var pastYearLocal = pastYear;
+        console.log(pastYearLocal, '    ', firstProjectYear);
+        if (pastYearLocal + 2 === firstProjectYear) {
+            pastYear++;
+            removePastYearBtn.style.display = 'none';
+            removePastYearBtn.disabled = true;
+        }
+        else {
+            pastYear++;
+        }
+        addPastYearBtn.textContent = "\u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C " + pastYear + " \u0433\u043E\u0434";
+        removePastYearBtn.textContent = "\u0423\u0434\u0430\u043B\u0438\u0442\u044C " + (pastYear + 1) + " \u0433\u043E\u0434";
+    });
+    buttonBlock.append(addYearButton, removeYearButton, addPastYearBtn, removePastYearBtn);
     return buttonBlock;
 }
 function generateMonth(period) {
