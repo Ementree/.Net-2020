@@ -25,8 +25,8 @@ namespace DotNet2020.Domain._4.Controllers
         [Authorize]
         public IActionResult Index()
         {
-            var emp = _dbContext.Set<Employee>().ToList();
             var employee = _dbContext.Set<AppIdentityUser>()
+                .Include(u => u.Employee)
                 .FirstOrDefault(u => u.Id == User.FindFirstValue(ClaimTypes.NameIdentifier)).Employee;
             var user = _dbContext.Set<EmployeeCalendar>()
                 .FirstOrDefault(u => u.Employee == employee);
