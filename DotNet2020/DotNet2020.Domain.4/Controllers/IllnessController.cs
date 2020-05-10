@@ -41,7 +41,8 @@ namespace DotNet2020.Domain._4.Controllers
 
             var ilness = _dbContext.Set<Illness>()
                 .FirstOrDefault(s =>
-                    s.From == viewModel.From && s.To == viewModel.To && s.CalendarEmployeeId == employeeCalendar.Id);
+                      s.CalendarEmployeeId == employeeCalendar.Id &&
+                      s.To >= viewModel.From && s.From <= viewModel.To);
             if (ilness != null)
             {
                 ModelState.AddModelError("Error", "Вы уже выбирали больнчный на эти даты, нельзя так!");
