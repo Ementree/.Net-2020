@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using DotNet2020.Data;
 using DotNet2020.Domain._4.Models;
 using DotNet2020.Domain.Models;
 using DotNet2020.Domain.Models.ModelView;
@@ -89,7 +88,7 @@ namespace DotNet2020.Domain._4.Domain
         public static List<UserViewModel> GetAllUsers(this DbContext context)
         {
             var users = context.Set<EmployeeCalendar>()
-                .OrderBy(x => x.UserName)
+                .OrderBy(x => x.Employee.FirstName)
                 .Select(u =>
                     new UserViewModel()
                     {
