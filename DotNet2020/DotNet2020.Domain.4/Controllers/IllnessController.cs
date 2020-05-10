@@ -5,6 +5,7 @@ using DotNet2020.Data;
 using DotNet2020.Domain._4.Models;
 using DotNet2020.Domain._4_.Models.ModelView;
 using DotNet2020.Domain.Filters;
+using DotNet2020.Domain.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -43,10 +44,17 @@ namespace DotNet2020.Domain._4.Controllers
                 return View(viewModel);
             }
 
+            var employee = _dbContext.Set<AppIdentityUser>()
+                .Include(u => u.Employee)
+                .FirstOrDefault(u => u.Id == User.FindFirstValue(ClaimTypes.NameIdentifier)).Employee;
+            var employeeCalendar = _dbContext.Set<EmployeeCalendar>()
+                .FirstOrDefault(u => u.Employee == employee);
+
             var illness = new Illness(
-                viewModel.From ?? throw new NullReferenceException(),
+                viewModel.From ?? throw new NullReferenceException(), 
                 viewModel.To ?? throw new NullReferenceException(),
-                _dbContext.Set<AppIdentityUser>().FirstOrDefault(u => u.Email == HttpContext.User.Identity.Name));
+                employeeCalendar);
+                
             _dbContext.Set<AbstractCalendarEntry>().Add(illness);
             _dbContext.SaveChanges();
             return RedirectToAction("Index", "Calendar");

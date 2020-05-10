@@ -2,6 +2,7 @@
 using System.Linq;
 using DotNet2020.Data;
 using DotNet2020.Domain._4.Domain;
+using DotNet2020.Domain.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace DotNet2020.Domain._4.Models
@@ -13,8 +14,8 @@ namespace DotNet2020.Domain._4.Models
 
         protected Vacation() { }
 
-        public Vacation(DateTime from, DateTime to, AppIdentityUser user, bool isPaid)
-            : base(from, to, user, AbsenceType.Vacation)
+        public Vacation(DateTime from, DateTime to, EmployeeCalendar user, bool isPaid)
+            : base(from, to, user, AbsenceType.Vacation) 
         {
             IsPaid = isPaid;
         }
@@ -28,8 +29,8 @@ namespace DotNet2020.Domain._4.Models
         #warning убрать DbContext -> инверсия зависимости
         public void Approve(DbContext context)
         {
-            var user = context.Set<AppIdentityUser>()
-                .FirstOrDefault(u => u.Id == UserId);
+            var user = context.Set<EmployeeCalendar>()
+                .FirstOrDefault(u => u.Id == CalendarEmployeeId);
             if(user == null) throw new NullReferenceException();
             var holidays = context.Set<Holiday>()
                 .Where(u => u.Date >= From && u.Date <= To).ToList();

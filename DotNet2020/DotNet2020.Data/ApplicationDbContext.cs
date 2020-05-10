@@ -7,6 +7,7 @@ using DotNet2020.Domain.Models;
 using Microsoft.Extensions.Configuration;
 using System.IO;
 using DotNet2020.Domain._3.Models;
+using DotNet2020.Domain.Models;
 
 namespace DotNet2020.Data
 {
@@ -56,7 +57,9 @@ namespace DotNet2020.Data
         public virtual DbSet<YearOfVacations> YearOfVacations { get; set; }
 
         public virtual DbSet<Employee> Employee { get; set; }
-        
+
+        public virtual DbSet<EmployeeCalendar> EmployeeCalendar { get; set; }
+
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
