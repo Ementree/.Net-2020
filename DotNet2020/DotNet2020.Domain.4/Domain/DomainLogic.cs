@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using DotNet2020.Data;
 using DotNet2020.Domain._4.Models;
+using DotNet2020.Domain.Models;
 using DotNet2020.Domain.Models.ModelView;
 using Kendo.Mvc.Examples.Models.Scheduler;
 using Microsoft.EntityFrameworkCore;
@@ -87,14 +88,13 @@ namespace DotNet2020.Domain._4.Domain
         
         public static List<UserViewModel> GetAllUsers(this DbContext context)
         {
-            var users = context.Set<AppIdentityUser>()
+            var users = context.Set<EmployeeCalendar>()
                 .OrderBy(x => x.UserName)
                 .Select(u =>
                     new UserViewModel()
                     {
-                        Name = $"{u.Employee.FirstName} {u.Employee.LastName}" == " " ? 
-                            u.Email : $"{u.Employee.FirstName} {u.Employee.LastName}",
-                        Email = u.Email,
+                        Name = u.UserName,
+                        Email = u.UserName,
                         Color = "#6eb3fa"
                     })
                 .ToList();
