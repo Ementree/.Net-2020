@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Security.Claims;
 using DotNet2020.Data;
 using DotNet2020.Domain._4.Domain;
 using DotNet2020.Domain._4.Models;
-using DotNet2020.Domain._4_.Models.ModelView;
-using DotNet2020.Domain.Filters;
 using DotNet2020.Domain.Models.ModelView;
-using Kendo.Mvc.Examples.Models.Scheduler;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
