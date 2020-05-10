@@ -1,5 +1,6 @@
 ﻿using System;
 using DotNet2020.Data;
+using DotNet2020.Domain.Models;
 using Kendo.Mvc.UI;
 
 namespace DotNet2020.Domain._4.Models
@@ -10,10 +11,10 @@ namespace DotNet2020.Domain._4.Models
         public DateTime From { get; protected set; }
         public DateTime To { get; protected set; }
         public AbsenceType AbsenceType { get; set; }
-        public string UserId { get; set; }
-        public AppIdentityUser User { get; set; }
+        public int UserId { get; set; }
+        public EmployeeCalendar User { get; set; }
 
-        protected AbstractCalendarEntry(DateTime from, DateTime to, AppIdentityUser user, AbsenceType type)
+        protected AbstractCalendarEntry(DateTime from, DateTime to, EmployeeCalendar user, AbsenceType type)
         {
             From = from;
             To = to;
@@ -37,8 +38,7 @@ namespace DotNet2020.Domain._4.Models
             get
             {
                 if (User != null)
-                    return $"{User.Employee.FirstName} {User.Employee.LastName}" == " " ? 
-                        User.Email : $"{User.Employee.FirstName} {User.Employee.LastName}";
+                    return $"{User.Employee.FirstName} {User.Employee.LastName}";
                 else return "";
             }
         }
