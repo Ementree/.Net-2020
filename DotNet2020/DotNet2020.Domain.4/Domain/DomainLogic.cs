@@ -50,7 +50,7 @@ namespace DotNet2020.Domain._4.Domain
         public static List<CalendarEventViewModel> GetAllVacations(this DbContext context)
         {
             var allVacations = context.Set<AbstractCalendarEntry>()
-                .Include(v => v.CalendarEmployee)
+                .Include(v => v.CalendarEmployee.Employee)
                 .ToList()
                 .Select(m =>
                     {
