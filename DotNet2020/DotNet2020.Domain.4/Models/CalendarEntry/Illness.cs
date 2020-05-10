@@ -1,5 +1,6 @@
 ﻿using System;
 using DotNet2020.Data;
+using DotNet2020.Domain.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace DotNet2020.Domain._4.Models
@@ -10,7 +11,7 @@ namespace DotNet2020.Domain._4.Models
 
         protected Illness() { }
 
-        public Illness(DateTime from, DateTime to, AppIdentityUser user)
+        public Illness(DateTime from, DateTime to, EmployeeCalendar user)
         : base(from, to, user, AbsenceType.Illness) {}
 
         #warning добавить согласующего
