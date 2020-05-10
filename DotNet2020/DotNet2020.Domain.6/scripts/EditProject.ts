@@ -1,6 +1,8 @@
 ﻿const projectStatuses: ProjectStatus[] = getProjectStatuses();
 const resources: ResourceCapacity[] = [];
 let currentYear: number;
+let pastYear: number;
+let firstProjectYear: number;
 
 function selectProject() {
     let select = <HTMLSelectElement>document.getElementById('projectSelector');
@@ -17,7 +19,16 @@ function selectProject() {
         .filter((value, index, self) => {
             return self.indexOf(value) === index;
         });
-    currentYear = years[years.length - 1];
+    if (years.length == 0) {
+        let date = new Date(Date.now());
+        currentYear = date.getFullYear() - 1;
+        pastYear = currentYear - 1;
+        firstProjectYear = date.getFullYear();
+    } else {
+        currentYear = years[years.length - 1];
+        pastYear = years[0] - 1;
+        firstProjectYear = years[0];
+    }
     let projectDOM = generateProjectDOM(project);
     mainContainer.appendChild(projectDOM);
 }
@@ -117,12 +128,55 @@ function generateButtonsBlock(yearsCount: number): HTMLDivElement {
     });
     removeYearButton.addEventListener('click', function () {
         let removedYear = --currentYear;
-        let container = document.getElementById('yearsContainerEdit');
-        container.removeChild(container.lastChild);
-        if (container.childElementCount === 1)
+        let yearsContainer = document.getElementById('yearsContainerEdit');
+        yearsContainer.removeChild(yearsContainer.lastChild);
+        if (yearsContainer.childElementCount <= 1)
             (<HTMLButtonElement>document.getElementById('editRemoveYearButton')).disabled = true;
     })
-    buttonBlock.append(addYearButton, removeYearButton);
+
+
+    let addPastYearBtn = <HTMLButtonElement>document.createElement('button');
+    addPastYearBtn.classList.add('btn', 'btn-primary');
+    addPastYearBtn.textContent = `Добавить ${pastYear} год`;
+    addPastYearBtn.id = 'addPastYearBtn';
+    addPastYearBtn.addEventListener('click', function () {
+        let newYearPeriods = [];
+        let year = pastYear;
+        pastYear--;
+        for (let i = 0; i < 12; i++)
+            newYearPeriods.push(new Period(Number.NaN, new Date(year, i), []));
+        let yearBlock = generateEditYear(newYearPeriods);
+        let yearsContainer = document.getElementById('yearsContainerEdit');
+        yearsContainer.insertBefore(yearBlock, yearsContainer.firstChild);
+        addPastYearBtn.textContent = `Добавить ${year - 1} год`;
+        removePastYearBtn.textContent = `Удалить ${year} год`
+        removePastYearBtn.style.display = 'block';
+        removePastYearBtn.disabled = false;
+    });
+
+    let removePastYearBtn = <HTMLButtonElement>document.createElement('button');
+    removePastYearBtn.classList.add('btn', 'btn-primary');
+    removePastYearBtn.textContent = `Удалить ${pastYear} год`;
+    removePastYearBtn.id = 'removePastYearBtn';
+    removePastYearBtn.disabled = true;
+    removePastYearBtn.style.display = 'none';
+    removePastYearBtn.addEventListener('click', function () {
+        let yearsContainer = document.getElementById('yearsContainerEdit');
+        yearsContainer.removeChild(yearsContainer.firstChild);
+        let pastYearLocal = pastYear;
+        console.log(pastYearLocal, '    ', firstProjectYear);
+        if (pastYearLocal + 2 === firstProjectYear) {
+            pastYear++;
+            removePastYearBtn.style.display = 'none';
+            removePastYearBtn.disabled = true;
+        } else {
+            pastYear++;
+        }
+        addPastYearBtn.textContent = `Добавить ${pastYear} год`;
+        removePastYearBtn.textContent = `Удалить ${pastYear + 1} год`;
+    });
+
+    buttonBlock.append(addYearButton, removeYearButton, addPastYearBtn, removePastYearBtn);
     return buttonBlock;
 }
 
