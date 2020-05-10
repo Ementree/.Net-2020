@@ -49,7 +49,8 @@ namespace DotNet2020.Domain._4.Controllers
             
             var _vacation = _dbContext.Set<Vacation>()
                 .FirstOrDefault(s =>
-                    s.From == viewModel.From && s.To == viewModel.To && s.CalendarEmployeeId == employeeCalendar.Id);
+                      s.CalendarEmployeeId == employeeCalendar.Id &&
+                      s.To >= viewModel.From && s.From <= viewModel.To);
             if (_vacation != null)
             {
                 ModelState.AddModelError("Error", "Вы уже выбирали отпуск на эти даты, нельзя так!");
