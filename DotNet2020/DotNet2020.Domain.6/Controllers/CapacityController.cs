@@ -34,7 +34,8 @@ namespace DotNet2020.Domain._6.Controllers
             
             if (withAbsence)
             {
-                resourceCapacities = CapacityWithAbsenceService.GetCapacityWithAbsence(resourceCapacities, absence);
+                var capacityWithAbsenceService = new CapacityWithAbsenceService(resourceCapacities);
+                resourceCapacities = capacityWithAbsenceService.GetCapacityWithAbsence(absence);
             }
             
             var builder = new CapacityViewModelBuilder(resources, resourceCapacities, year, withAbsence);

@@ -20,7 +20,8 @@ namespace DotNet2020.Domain._6.Services
             List<AbstractCalendarEntry> absences)
         
         {
-            _capacity = CapacityWithAbsenceService.GetCapacityWithAbsence(capacity, absences);
+            var capacityWithAbsenceService = new CapacityWithAbsenceService(capacity);
+            _capacity = capacityWithAbsenceService.GetCapacityWithAbsence(absences);
             _funcCapacityProject = funcCapacityProject;
             _funcCapacityResource = funcCapacityResource;
         }
