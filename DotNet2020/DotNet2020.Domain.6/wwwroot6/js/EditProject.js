@@ -17,7 +17,13 @@ function selectProject() {
         .filter(function (value, index, self) {
         return self.indexOf(value) === index;
     });
-    currentYear = years[years.length - 1];
+    if (years.length == 0) {
+        var date = new Date(Date.now());
+        currentYear = date.getFullYear() - 1;
+    }
+    else {
+        currentYear = years[years.length - 1];
+    }
     var projectDOM = generateProjectDOM(project);
     mainContainer.appendChild(projectDOM);
 }
