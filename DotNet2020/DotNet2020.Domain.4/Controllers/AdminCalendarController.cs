@@ -77,7 +77,7 @@ namespace DotNet2020.Domain._4.Controllers
 
         public void RefreshTotalDayOfVacations()
         {
-            foreach (var user in _dbContext.Set<AppIdentityUser>().ToList())
+            foreach (var user in _dbContext.Set<EmployeeCalendar>().ToList())
                 user.TotalDayOfVacation += 28;
             _dbContext.Set<YearOfVacations>().Add(new YearOfVacations { Year = DateTime.Now.Year });
             _dbContext.SaveChanges();

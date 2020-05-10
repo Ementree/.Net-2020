@@ -1,10 +1,9 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace DotNet2020.Data.Migrations
 {
-    public partial class ProductionYear : Migration
+    public partial class _4_YearOfAbsence : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

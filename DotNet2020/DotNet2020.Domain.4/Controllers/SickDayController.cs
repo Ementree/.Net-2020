@@ -39,7 +39,7 @@ namespace DotNet2020.Domain._4.Controllers
             var employeeCalendar = _dbContext.Set<EmployeeCalendar>()
                 .FirstOrDefault(u => u.Employee == employee);
             var sickday = _dbContext.Set<SickDay>()
-                .FirstOrDefault(s => s.From == viewModel.Day && s.UserId == employeeCalendar.Id);
+                .FirstOrDefault(s => s.From == viewModel.Day && s.CalendarEmployeeId == employeeCalendar.Id);
             if (sickday != null)
             {
                 ModelState.AddModelError("Error", "Вы уже выбирали sickDay на эту дату, нельзя так!");

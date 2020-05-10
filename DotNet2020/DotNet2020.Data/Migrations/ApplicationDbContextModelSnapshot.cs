@@ -202,6 +202,18 @@ namespace DotNet2020.Data.Migrations
                     b.ToTable("EmployeeCalendar");
                 });
 
+            modelBuilder.Entity("DotNet2020.Domain.Models.YearOfVacations", b =>
+                {
+                    b.Property<int>("Year")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.HasKey("Year");
+
+                    b.ToTable("YearOfVacations");
+                });
+
             modelBuilder.Entity("DotNet2020.Domain._3.Models.AnswerModel", b =>
                 {
                     b.Property<long>("AnswerId")

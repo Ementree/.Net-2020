@@ -33,22 +33,20 @@ namespace DotNet2020.Domain._4.Controllers
         [ValidationFilter]
         public IActionResult Add(IllnessViewModel viewModel)
         {
-            var user = _dbContext.Set<AppIdentityUser>()
-                .FirstOrDefault(u => u.Id == User.FindFirstValue(ClaimTypes.NameIdentifier));
-            var ilness = _dbContext.Set<Illness>()
-                .FirstOrDefault(s =>
-                    s.From == viewModel.From && s.To == viewModel.To && s.UserId == user.Id);
-            if (ilness != null)
-            {
-                ModelState.AddModelError("Error", "Вы уже выбирали больнчный на эти даты, нельзя так!");
-                return View(viewModel);
-            }
-
             var employee = _dbContext.Set<AppIdentityUser>()
                 .Include(u => u.Employee)
                 .FirstOrDefault(u => u.Id == User.FindFirstValue(ClaimTypes.NameIdentifier)).Employee;
             var employeeCalendar = _dbContext.Set<EmployeeCalendar>()
                 .FirstOrDefault(u => u.Employee == employee);
+
+            var ilness = _dbContext.Set<Illness>()
+                .FirstOrDefault(s =>
+                    s.From == viewModel.From && s.To == viewModel.To && s.CalendarEmployeeId == employeeCalendar.Id);
+            if (ilness != null)
+            {
+                ModelState.AddModelError("Error", "Вы уже выбирали больнчный на эти даты, нельзя так!");
+                return View(viewModel);
+            }
 
             var illness = new Illness(
                 viewModel.From ?? throw new NullReferenceException(), 

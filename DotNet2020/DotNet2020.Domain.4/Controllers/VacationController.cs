@@ -49,14 +49,14 @@ namespace DotNet2020.Domain._4.Controllers
             
             var _vacation = _dbContext.Set<Vacation>()
                 .FirstOrDefault(s =>
-                    s.From == viewModel.From && s.To == viewModel.To && s.UserId == user.Id);
+                    s.From == viewModel.From && s.To == viewModel.To && s.CalendarEmployeeId == employeeCalendar.Id);
             if (_vacation != null)
             {
                 ModelState.AddModelError("Error", "Вы уже выбирали отпуск на эти даты, нельзя так!");
                 return View(viewModel);
             }
             
-            if (viewModel.IsPaid && user.TotalDayOfVacation < DomainLogic.GetWorkDay(days, hollidays))
+            if (viewModel.IsPaid && employeeCalendar.TotalDayOfVacation < DomainLogic.GetWorkDay(days, hollidays))
             {
                 ModelState.AddModelError("Error2", "Количество запрашеваемых дней отпуска превышает количество доступных вам");
                 return View(viewModel);
@@ -65,7 +65,8 @@ namespace DotNet2020.Domain._4.Controllers
             var vacation = new Vacation(
                 viewModel.From ?? throw new NullReferenceException(), 
                 viewModel.To ?? throw new NullReferenceException(),
-                employeeCalendar);
+                employeeCalendar,
+                viewModel.IsPaid);
                 
             _dbContext.Set<AbstractCalendarEntry>().Add(vacation);
             _dbContext.SaveChanges();
