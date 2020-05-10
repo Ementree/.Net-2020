@@ -50,7 +50,7 @@ namespace DotNet2020.Domain._4.Domain
         public static List<CalendarEventViewModel> GetAllVacations(this DbContext context)
         {
             var allVacations = context.Set<AbstractCalendarEntry>()
-                .Include(v => v.User)
+                .Include(v => v.CalendarEmployee)
                 .ToList()
                 .Select(m =>
                     {
@@ -77,7 +77,7 @@ namespace DotNet2020.Domain._4.Domain
                             Title = m.AbsenceType.ToString(),
                             Start = m.From,
                             End = m.To,
-                            UserEmail = $"{m.User.Employee.FirstName} {m.User.Employee.LastName}",
+                            UserEmail = $"{m.CalendarEmployee.Employee.FirstName} {m.CalendarEmployee.Employee.LastName}",
                             ColorId = color
                         };
                     }

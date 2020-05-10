@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using DotNet2020.Data;
-using DotNet2020.Domain._4.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
@@ -732,15 +731,11 @@ namespace DotNet2020.Data.Migrations
 
                     b.Property<bool>("IsApproved")
                         .HasColumnType("boolean");
-
-                    b.HasDiscriminator().HasValue(1);
                 });
 
             modelBuilder.Entity("DotNet2020.Domain._4.Models.SickDay", b =>
                 {
                     b.HasBaseType("DotNet2020.Domain._4.Models.AbstractCalendarEntry");
-
-                    b.HasDiscriminator().HasValue(0);
                 });
 
             modelBuilder.Entity("DotNet2020.Domain._4.Models.Vacation", b =>

@@ -26,7 +26,7 @@ namespace DotNet2020.Domain._4.Models
         public void Approve(DbContext context)
         {
             var user = context.Set<EmployeeCalendar>()
-                .FirstOrDefault(u => u.Id == UserId);
+                .FirstOrDefault(u => u.Id == CalendarEmployeeId);
             if(user == null) throw new NullReferenceException();
             var holidays = context.Set<Holiday>()
                 .Where(u => u.Date >= From && u.Date <= To).ToList();

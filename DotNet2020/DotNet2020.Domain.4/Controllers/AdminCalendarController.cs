@@ -26,7 +26,7 @@ namespace DotNet2020.Domain._4.Controllers
             ViewBag.Recommendation = _dbContext.Set<Recommendation>().FirstOrDefault();
             ViewBag.Events = _dbContext.Set<AbstractCalendarEntry>()
                 .Where(c => c.AbsenceType == AbsenceType.Illness || c.AbsenceType == AbsenceType.Vacation)
-                .Include(m => m.User)
+                .Include(m => m.CalendarEmployee)
                 .AsEnumerable();
 
             var allVacations = _dbContext.GetAllVacations();
@@ -52,7 +52,7 @@ namespace DotNet2020.Domain._4.Controllers
         public IActionResult Reject(int id)
         {
             var calendarEntry =  _dbContext.Set<AbstractCalendarEntry>().Find(id);
-            var user = _dbContext.Set<EmployeeCalendar>().FirstOrDefault(u => u.Id == calendarEntry.UserId);
+            var user = _dbContext.Set<EmployeeCalendar>().FirstOrDefault(u => u.Id == calendarEntry.CalendarEmployeeId);
             user?.Reject();
             _dbContext.Set<AbstractCalendarEntry>().Remove(calendarEntry);
             _dbContext.SaveChanges();
