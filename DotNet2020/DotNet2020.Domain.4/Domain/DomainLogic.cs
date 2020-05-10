@@ -77,7 +77,7 @@ namespace DotNet2020.Domain._4.Domain
                             Title = m.AbsenceType.ToString(),
                             Start = m.From,
                             End = m.To,
-                            UserEmail = m.User?.Email,
+                            UserEmail = $"{m.User.Employee.FirstName} {m.User.Employee.LastName}",
                             ColorId = color
                         };
                     }
