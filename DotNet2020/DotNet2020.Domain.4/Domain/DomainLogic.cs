@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using DotNet2020.Data;
 using DotNet2020.Domain._4.Models;
+using DotNet2020.Domain.Models;
 using DotNet2020.Domain.Models.ModelView;
 using Kendo.Mvc.Examples.Models.Scheduler;
 using Microsoft.EntityFrameworkCore;
@@ -50,7 +50,7 @@ namespace DotNet2020.Domain._4.Domain
         public static List<CalendarEventViewModel> GetAllVacations(this DbContext context)
         {
             var allVacations = context.Set<AbstractCalendarEntry>()
-                .Include(v => v.User)
+                .Include(v => v.CalendarEmployee.Employee)
                 .ToList()
                 .Select(m =>
                     {
@@ -77,7 +77,7 @@ namespace DotNet2020.Domain._4.Domain
                             Title = m.AbsenceType.ToString(),
                             Start = m.From,
                             End = m.To,
-                            UserEmail = m.User?.Email,
+                            UserEmail = m.CalendarEmployee.UserName,
                             ColorId = color
                         };
                     }
@@ -87,14 +87,13 @@ namespace DotNet2020.Domain._4.Domain
         
         public static List<UserViewModel> GetAllUsers(this DbContext context)
         {
-            var users = context.Set<AppIdentityUser>()
-                .OrderBy(x => x.UserName)
+            var users = context.Set<EmployeeCalendar>()
+                .OrderBy(x => x.Employee.FirstName)
                 .Select(u =>
                     new UserViewModel()
                     {
-                        Name = $"{u.Employee.FirstName} {u.Employee.LastName}" == " " ? 
-                            u.Email : $"{u.Employee.FirstName} {u.Employee.LastName}",
-                        Email = u.Email,
+                        Name = u.UserName,
+                        Email = u.UserName,
                         Color = "#6eb3fa"
                     })
                 .ToList();
