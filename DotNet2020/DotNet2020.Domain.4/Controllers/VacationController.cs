@@ -5,6 +5,7 @@ using DotNet2020.Data;
 using DotNet2020.Domain._4.Domain;
 using DotNet2020.Domain._4.Models;
 using DotNet2020.Domain._4_.Models.ModelView;
+using DotNet2020.Domain.Filters;
 using DotNet2020.Domain.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -30,6 +31,7 @@ namespace DotNet2020.Domain._4.Controllers
 
         [HttpPost]
         [Authorize]
+        [ValidationFilter]
         public IActionResult Add(VacationViewModel viewModel)
         {
             var employee = _dbContext.Set<AppIdentityUser>()
