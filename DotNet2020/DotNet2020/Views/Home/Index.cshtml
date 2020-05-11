@@ -3,6 +3,19 @@
 }
 
 <div class="text-center">
+
     <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    @if (User.Identity.IsAuthenticated)
+    {
+        @if (!ViewBag.HasEmployee)
+        {
+            <form>
+                <button asp-action="BindWithEmployee" class="btn btn-primary">Привязать к Employee</button>
+            </form>
+        }
+        else
+        {
+            <h3>Ваш аккаунт привязан к Employee</h3>
+        }
+    }
 </div>

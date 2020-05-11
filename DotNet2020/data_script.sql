@@ -160,4 +160,16 @@ ON CONFLICT ("Id") DO UPDATE
 SET "Status"= excluded."Status";
 SELECT setval('"ProjectStatuses_Id_seq"', (SELECT Max("Id") FROM "ProjectStatuses"));
 
-
+INSERT INTO "EmployeeCalendar" ("Id", "EmployeeId", "TotalDayOfVacation", "IsLastVacationApproved")
+VALUES
+       (1, 1, 0, FALSE),
+       (2, 2, 0, FALSE),
+       (3, 3, 0, FALSE),
+       (4, 4, 0, FALSE),
+       (5, 5, 0, FALSE),
+       (6, 6, 0, FALSE),
+       (7, 7, 0, FALSE),
+       (8, 8, 0, FALSE),
+       (9, 9, 0, FALSE),
+       (10, 10, 0, FALSE),
+       (11, 11, 0, FALSE);

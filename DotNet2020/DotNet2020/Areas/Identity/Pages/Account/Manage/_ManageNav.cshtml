@@ -1,4 +1,5 @@
-@inject SignInManager<IdentityUser> SignInManager
+@using DotNet2020.Data
+@inject SignInManager<AppIdentityUser> SignInManager
 @{
     var hasExternalLogins = (await SignInManager.GetExternalAuthenticationSchemesAsync()).Any();
 }
