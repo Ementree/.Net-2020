@@ -5,6 +5,7 @@ using DotNet2020.Data;
 using DotNet2020.Domain._4.Domain;
 using DotNet2020.Domain._4.Models;
 using DotNet2020.Domain._4_.Models.ModelView;
+using DotNet2020.Domain.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -31,9 +32,12 @@ namespace DotNet2020.Domain._4.Controllers
         [Authorize]
         public IActionResult Add(VacationViewModel viewModel)
         {
-            var user = _dbContext.Set<AppIdentityUser>().FirstOrDefault(u => 
-                u.Id == User.FindFirstValue(ClaimTypes.NameIdentifier));
-            
+            var employee = _dbContext.Set<AppIdentityUser>()
+                .Include(u => u.Employee)
+                .FirstOrDefault(u => u.Id == User.FindFirstValue(ClaimTypes.NameIdentifier)).Employee;
+            var employeeCalendar = _dbContext.Set<EmployeeCalendar>()
+                .FirstOrDefault(u => u.Employee == employee);
+
             var days = DomainLogic.GetDatesFromInterval(
                 viewModel.From ?? throw new NullReferenceException(), 
                 viewModel.To ?? throw new NullReferenceException());
@@ -42,7 +46,7 @@ namespace DotNet2020.Domain._4.Controllers
                 u.Date >= viewModel.From && u.Date <= viewModel.To).ToList();
             
             #warning Используйте DataAnnotations аттрибуты
-            if (user.TotalDayOfVacation < DomainLogic.GetWorkDay(days, hollidays))
+            if (employeeCalendar.TotalDayOfVacation < DomainLogic.GetWorkDay(days, hollidays))
             {
                 ModelState.AddModelError("Error2", "Количество запрашеваемых дней отпуска превышает количество доступных вам");
                 return View(viewModel);
@@ -56,7 +60,7 @@ namespace DotNet2020.Domain._4.Controllers
             var vacation = new Vacation(
                 viewModel.From ?? throw new NullReferenceException(), 
                 viewModel.To ?? throw new NullReferenceException(),
-                _dbContext.Set<AppIdentityUser>().FirstOrDefault(u => u.Email == HttpContext.User.Identity.Name));
+                employeeCalendar);
             _dbContext.Set<AbstractCalendarEntry>().Add(vacation);
             _dbContext.SaveChanges();
             return RedirectToAction("Index", "Calendar");

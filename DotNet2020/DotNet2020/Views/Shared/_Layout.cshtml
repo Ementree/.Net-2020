@@ -30,6 +30,27 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbar6Dropdown"
+                               role="button" data-toggle="dropdown"
+                               aria-haspopup="true" aria-expanded="false">
+                                Domain6
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbar6Dropdown">
+                                <a class="dropdown-item" asp-controller="Absence" asp-action="Index">
+                                    Отсутствия
+                                </a>
+                                <a class="dropdown-item" asp-controller="FunctionalCapacity" asp-action="Index">
+                                    Загрузка ресурсов
+                                </a>
+                                <a class="dropdown-item" asp-controller="Capacity" asp-action="Index">
+                                    Мощность ресурсов
+                                </a>
+                                <a class="dropdown-item" asp-controller="Plan" asp-action="Index">
+                                    План
+                                </a>
+                            </div>
+                        </li>
                     </ul>
                 </div>
             </div>

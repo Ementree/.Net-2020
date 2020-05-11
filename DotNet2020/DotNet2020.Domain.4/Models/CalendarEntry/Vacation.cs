@@ -2,6 +2,7 @@
 using System.Linq;
 using DotNet2020.Data;
 using DotNet2020.Domain._4.Domain;
+using DotNet2020.Domain.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace DotNet2020.Domain._4.Models
@@ -13,7 +14,7 @@ namespace DotNet2020.Domain._4.Models
 
         protected Vacation() { }
 
-        public Vacation(DateTime from, DateTime to, AppIdentityUser user)
+        public Vacation(DateTime from, DateTime to, EmployeeCalendar user)
             : base(from, to, user, AbsenceType.Vacation) {}
 
         public void Pay()
@@ -24,8 +25,8 @@ namespace DotNet2020.Domain._4.Models
         #warning добавить согласующего
         public void Approve(DbContext context)
         {
-            var user = context.Set<AppIdentityUser>()
-                .FirstOrDefault(u => u.Id == UserId);
+            var user = context.Set<EmployeeCalendar>()
+                .FirstOrDefault(u => u.Id == CalendarEmployeeId);
             if(user == null) throw new NullReferenceException();
             var holidays = context.Set<Holiday>()
                 .Where(u => u.Date >= From && u.Date <= To).ToList();
