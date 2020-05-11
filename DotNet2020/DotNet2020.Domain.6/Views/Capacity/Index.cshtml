@@ -87,17 +87,35 @@
                         </td>
                         @for (int i = 1; i < 13; i++)
                         {
-                            if (resource.Capacity.ContainsKey(i))
+                            if (Model.WithAbsence)
                             {
-                                <td style="padding: 7px;" id="@(resource.ResourceId.ToString() + ';' + i.ToString() + ';' + year)" class="right align-center" ondblclick="handle(this)">
-                                    @resource.Capacity[i]%
-                                </td>
+                                if (resource.Capacity.ContainsKey(i))
+                                {
+                                    <td style="padding: 7px;" id="@(resource.ResourceId.ToString() + ';' + i.ToString() + ';' + year)" class="right align-center" ondblclick="">
+                                        @resource.Capacity[i]%
+                                    </td>
+                                }
+                                else
+                                {
+                                    <td style="padding: 7px;" id="@(resource.ResourceId.ToString() + ';' + i.ToString() + ';' + year)" class="right h45 align-center" ondblclick="">
+    
+                                    </td>
+                                }                            
                             }
                             else
                             {
-                                <td style="padding: 7px;" id="@(resource.ResourceId.ToString() + ';' + i.ToString() + ';' + year)" class="right h45 align-center" ondblclick="handle(this)">
-
-                                </td>
+                                if (resource.Capacity.ContainsKey(i))
+                                {
+                                    <td style="padding: 7px;" id="@(resource.ResourceId.ToString() + ';' + i.ToString() + ';' + year)" class="right align-center" ondblclick="handle(this)">
+                                        @resource.Capacity[i]%
+                                    </td>
+                                }
+                                else
+                                {
+                                    <td style="padding: 7px;" id="@(resource.ResourceId.ToString() + ';' + i.ToString() + ';' + year)" class="right h45 align-center" ondblclick="handle(this)">
+    
+                                    </td>
+                                }  
                             }
                         }
                     </tr>

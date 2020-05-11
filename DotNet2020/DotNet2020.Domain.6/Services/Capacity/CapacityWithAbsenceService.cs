@@ -10,11 +10,17 @@ namespace DotNet2020.Domain._6.Services
     {
         private static List<ResourceCapacity> _capacity;
         private static List<ResourceCapacity> _capacityWithAbsences;
+        private static Dictionary<int, int> _startCapacity;
 
         public CapacityWithAbsenceService(List<ResourceCapacity> capacity)
         {
             _capacity = capacity;
-            _capacityWithAbsences = capacity;
+            _capacityWithAbsences = new List<ResourceCapacity>(capacity);
+            _startCapacity = new Dictionary<int, int>();
+            foreach (var cap in _capacity)
+            {
+                _startCapacity.Add(cap.Id, cap.Capacity);
+            }
         }
         
         public List<ResourceCapacity> GetCapacityWithAbsence(List<AbstractCalendarEntry> absences)
@@ -28,15 +34,6 @@ namespace DotNet2020.Domain._6.Services
                     ModifyCapacity(day, absence.CalendarEmployeeId);
                 }
             }
-
-            // for (int i = 0; i < _capacity.Count; i++)
-            // {
-            //     var capacity = _capacityWithAbsences.FirstOrDefault(c => c.Id == _capacity[i].Id);
-            //     if (capacity != default)
-            //     {
-            //         _capacity[i].Capacity = capacity.Capacity;
-            //     }
-            // }
 
             return _capacity;
         }
@@ -52,7 +49,10 @@ namespace DotNet2020.Domain._6.Services
                         x.Period.Start.Year == day.Year)
                     .Select(x =>
                     {
-                        x.Capacity -= 5;
+                        double capacity = _startCapacity[x.Id];
+                        Console.WriteLine(capacity);
+                        x.Capacity -= Convert.ToInt32(Math.Round(capacity/20));
+                        Console.WriteLine(x.Capacity);
                         if (x.Capacity < 0) throw new Exception("capacity < 0");
                         return x;
                     })
