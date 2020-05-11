@@ -32,7 +32,6 @@ namespace DotNet2020.Domain._6.Controllers
                 .Include(fres => fres.Project)
                 .ThenInclude(proj => proj.ProjectStatus)
                 .Include(fres => fres.Resource)
-                .ThenInclude(resource => resource.ResourceGroupType)
                 .Include(fres => fres.Resource)
                 .ThenInclude(res => res.Employee)
                 .ToList();
