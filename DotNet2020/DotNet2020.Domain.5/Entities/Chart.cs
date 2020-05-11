@@ -7,15 +7,16 @@ namespace DotNet2020.Domain._5.Entities
 {
     public class Chart
     {
-        private Dictionary<double,int> dict { get; set; }
-        public List<double> XAxis { get; set; } 
-        public List<double> YAxis { get; set; }
+        public string Name { get; private set; }
+        public List<double> XAxis { get; private set; } 
+        public List<double> YAxis { get; private set; }
         public double Tick { get;set; }
-        public Chart(IEnumerable<double> chart, int count)
+        public Chart(IEnumerable<double> chart,string name, int count)
         {
+            Name = name;
             XAxis = new List<double>();
             YAxis = new List<double>();
-            dict = new Dictionary<double, int>();
+            var dict = new Dictionary<double, int>();
             Tick = Math.Ceiling((chart.Last() - chart.First()) / count);
             var min = chart.First() + Tick;
             foreach (var e in chart)

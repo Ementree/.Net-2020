@@ -11,27 +11,29 @@
     });
 </script>
 <ul id="myTab2" class="nav nav-tabs">
-    <li><a data-toggle="tab" href="#0">Запланированное время</a></li>
+    @for (int i = 0; i < Model.Charts.Count; i++)
+    {
+    <li><a data-toggle="tab" href="#@i">@Model.Charts[i].Name</a></li>
     <li><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p></li>
-    <li><a data-toggle="tab" href="#1">Потраченное время</a></li>
-    <li><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p></li>
-    <li><a data-toggle="tab" href="#2">Ошибка в процентах</a></li>
-    <li><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p></li>
-    <li><a data-toggle="tab" href="#3">Ошибка в часах</a></li>
+    }
 </ul>
 @{
-    var mas = new int[4] { 1000, 1001, 1002, 1003 };
+    var mas = new int[Model.Charts.Count];
+    for (int i = 0; i < mas.Length; i++)
+    {
+        mas[i] = -i;
+    }
 }
 <div class="tab-content">
     @for (int i = 0; i < 4; i++)
     {
-        <div id='@i.ToString()' class="tab-pane fade in active">
-            <div id='@mas[i].ToString()' style="height:auto"></div>
+        <div id='@i' class="tab-pane fade in active">
+            <div id='@mas[i]' style="height:auto"></div>
             <form method="get">
                 <button asp-action="Edit" asp-route-id="5">Edit</button>
             </form>
             <script>
-            var myPlot = document.getElementById(`@Json.Serialize(mas[i]).ToString()`);
+            var myPlot = document.getElementById(`@Json.Serialize(mas[i])`);
             var data = [
                 {
                     x: @Json.Serialize(Model.Charts[i].YAxis),
@@ -43,7 +45,7 @@
                 title: 'Запланированное время',
                 showlegend: false
             };
-            Plotly.newPlot(`@Json.Serialize(mas[i]).ToString()`, data, layout);
+            Plotly.newPlot(`@Json.Serialize(mas[i])`, data, layout);
             var d = '0'
             var id = 5;
             myPlot.on('plotly_click', function(data) {

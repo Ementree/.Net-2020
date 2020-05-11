@@ -12,7 +12,7 @@ namespace DotNet2020.Domain._5.Models
         public Issue[] Issues { get; set; }
         public Report Report { get; set; }
         public ChartModel() { }
-        public ChartModel(IEnumerable<Chart> charts, Issue[] issuess)
+        public ChartModel(List<Chart> charts, Issue[] issuess)
         {
             Issues = issuess;
             Charts = charts.ToList();
