@@ -26,7 +26,7 @@ namespace DotNet2020.Domain._6.Controllers
             var hardcode = new Dictionary<string,Dictionary<string,int>>();
             
             hardcode["Артур Саттаров"] = new Dictionary<string, int>();
-            hardcode["Артур Саттаров"]["Май"] = 8848;
+            hardcode["Артур Саттаров"]["май"] = 8848;
 
             return hardcode;
         }

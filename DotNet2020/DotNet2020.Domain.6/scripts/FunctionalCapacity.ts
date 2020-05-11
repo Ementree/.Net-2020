@@ -36,12 +36,9 @@ function PaintCurrentMonthColumn() {
     let monthCellsCollection = monthRow.cells;
     let currentMonthName = getCurrentMonthName(new Date().getMonth());
 
-    var currentYear = new Date().getFullYear();
-    var tableYear = parseInt((<HTMLSelectElement>document.getElementById("changeYearSelector")).value);
-    //console.log(tableYear);
-    //console.log("Ntreonq ujl");
-    //console.log(currentYear);
-
+    let currentYear = new Date().getFullYear();
+    let tableYear = parseInt((<HTMLSelectElement>document.getElementById("changeYearSelector")).value);
+    
     if (currentYear == tableYear) {
         for (let i = 1; i < monthCellsCollection.length; i++) {
             let cellText = monthCellsCollection[i].innerText;
@@ -50,16 +47,14 @@ function PaintCurrentMonthColumn() {
             if (monthName == currentMonthName) {
 
                 monthCellsCollection[i].classList.add("month-highlight");
-                //console.log("добвился класс :" + currentMonthName);
                 return;
             }
-            //console.log(monthName);
         }
     }
 }
 
 function AddPaintCurrentMonthEvent() {
-    var yearSelectorElement = <HTMLSelectElement>document.getElementById("changeYearSelector");
+    let yearSelectorElement = <HTMLSelectElement>document.getElementById("changeYearSelector");
     yearSelectorElement.addEventListener("change", function () {
         PaintCurrentMonthColumn();
     })
@@ -70,25 +65,18 @@ function AddYearChangeEvent() {
 
     selector.addEventListener("change", function () {
         let form = <HTMLFormElement>document.getElementById("changeYearForm");
-        //console.log("Кто-то сменил год...");
         let newYear = selector.value;
         let accuracyInput = <HTMLInputElement>document.getElementById("accuracy-input");
         let newAccuracy = accuracyInput.value;
-        //console.log(newAccuracy);
-        //console.log(newYear);
-        //console.log(window.location.search);
         window.location.search = ("?Year=" + newYear + "&Accuracy=" + newAccuracy);
-        //console.log(window.location.search);
     });
 }
 
 function AddAccuracyChangeEvent() {
     let accuracyInput = <HTMLInputElement>document.getElementById("accuracy-input");
-    //console.log("v accuracy event");
 
     accuracyInput.addEventListener("change", function () {
         let input = this.value;
-        //console.log(input);
 
         if (input.length > 0 && input[0] == "0" || input.length == 0 || input[0] == "-") {
             this.value = "0";
@@ -140,7 +128,6 @@ function HighlightCells() {
 
 
     for (let i = 0; i < cells.length; i+=2) {
-        //console.log(cells[i].innerText);
 
         if (cells[i].classList.contains("total-sum-js") && !cells[i].classList.contains("total-sum-highlight")) {
             AddTotalSumHighlight(cells[i], cells[i + 1]);
@@ -150,30 +137,125 @@ function HighlightCells() {
     }
 }
 
-function AbsenceResolver() {
+function AbsenceResolver(year:number) {
     console.log("здесь")
+    let dict;
     let request = new XMLHttpRequest();
-    request.open("GET", "functionalcapacity/getAbsences?year=2008", true);
+    request.open("GET", "functionalcapacity/getAbsences?year=" + year, false);
     request.onload = function () {
-        console.log(request.responseText);
-
-        let dict = JSON.parse(request.responseText);
-
-        console.log(dict);
-        console.log(dict["Артур Саттаров"]);
-    }
+        //console.log(request.responseText);
+        dict = JSON.parse(request.responseText);
+    };
 
     request.send();
-
-    return request.responseText;
     
+    return JSON.parse(request.responseText);
+}
+
+function AbsenceCheckboxEvent(){
+    let checkbox = <HTMLInputElement> document.getElementById("absence-checkbox");
+    
+    checkbox.addEventListener("change",function () {
+        let tableYear = parseInt((<HTMLSelectElement>document.getElementById("changeYearSelector")).value);
+        let absenceDict = AbsenceResolver(tableYear);
+        let dif = 1;
+        let userNameKey = "";
+        let currentMonthName = "";
+        
+        if(checkbox.checked)
+            dif = -1;
+
+        let cells = <HTMLCollectionOf<HTMLTableDataCellElement>>document.getElementsByClassName("absence-for-js");
+
+        for (let i = 0; i < cells.length; i++) {
+            if(i%13 == 0){
+                
+                userNameKey = cells[i].innerText;
+            }
+            else{
+                if(absenceDict[userNameKey] != undefined){
+                    currentMonthName = getCurrentMonthName(i%13-1);
+                    
+                    if(absenceDict[userNameKey][currentMonthName] != undefined){
+                        let str = (cells[i].innerText);
+                        let str1 = str.substr(0,str.length);
+                        let currentCapac = parseInt(str1);
+                        let newCapac = currentCapac + dif*absenceDict[userNameKey][currentMonthName];
+                        cells[i].innerText = newCapac + "%";
+                    }
+                }
+            }
+        }
+        
+        AmountResolver();
+        HighlightCells();
+    })
+    
+}
+
+function AmountResolver(){
+    //main-column-js
+    let cells = <HTMLCollectionOf<HTMLTableDataCellElement>>document.getElementsByClassName("main-column-js");
+    let indexList: number[] = [];
+    let rangeList: number[] = [];
+    
+    for (let i = 0; i < cells.length; i++){
+        console.log(cells[i].innerText);
+        
+        if(cells[i].innerText.split(' ').length == 1){
+            indexList.push(i);
+        }
+    }
+    
+    for(let i = 0; i < indexList.length; i+=2){
+        rangeList.push(indexList[i+1] - indexList[i] - 1);
+    }
+
+    cells = <HTMLCollectionOf<HTMLTableDataCellElement>>document.getElementsByClassName("for-js-selecor");
+    
+    let prev = 0;
+    
+    for (let index of rangeList){
+        let array = InitYearAmountArray();
+        
+        for(let i = prev*24; i < (prev + index)*24; i++){
+            let value = GetNumberFromCell(cells[i]);
+            array[i%24] += value;
+        }   
+        
+        for(let i =(prev + index)*24; i < (prev + index)*24+24;i++){
+            WriteNumberToCell(cells[i],array[i%24]);
+        }    
+        
+        prev = index + prev;
+    }
+}
+
+function GetNumberFromCell(cell : HTMLTableDataCellElement){
+    let str = (cell.innerText);
+    let str1 = str.substr(0,str.length);
+    return parseInt(str1);
+}
+
+function InitYearAmountArray() {
+    let array: number[] = [];
+    
+    for (let i =0; i < 24; i++){
+        array.push(0);
+    }
+    
+    return array;
+}
+
+function WriteNumberToCell(cell : HTMLTableDataCellElement,output : number){
+    cell.innerText = output + "%";
 }
 
 document.addEventListener("DOMContentLoaded", function () {
     console.log("doom загрузился");
-
-    AbsenceResolver();
-
+    //AmountResolver();
+    
+    AbsenceCheckboxEvent();
     HighlightCells();
     AddAccuracyChangeEvent();
     PaintCurrentMonthColumn();

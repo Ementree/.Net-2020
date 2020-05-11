@@ -107,22 +107,97 @@ function HighlightCells() {
         AddVlaueDifferenceHighlight(cells[i], cells[i + 1]);
     }
 }
-function AbsenceResolver() {
+function AbsenceResolver(year) {
     console.log("здесь");
+    var dict;
     var request = new XMLHttpRequest();
-    request.open("GET", "functionalcapacity/getAbsences?year=2008", true);
+    request.open("GET", "functionalcapacity/getAbsences?year=" + year, false);
     request.onload = function () {
-        console.log(request.responseText);
-        var dict = JSON.parse(request.responseText);
-        console.log(dict);
-        console.log(dict["Артур Саттаров"]);
+        dict = JSON.parse(request.responseText);
     };
     request.send();
-    return request.responseText;
+    return JSON.parse(request.responseText);
+}
+function AbsenceCheckboxEvent() {
+    var checkbox = document.getElementById("absence-checkbox");
+    checkbox.addEventListener("change", function () {
+        var tableYear = parseInt(document.getElementById("changeYearSelector").value);
+        var absenceDict = AbsenceResolver(tableYear);
+        var dif = 1;
+        var userNameKey = "";
+        var currentMonthName = "";
+        if (checkbox.checked)
+            dif = -1;
+        var cells = document.getElementsByClassName("absence-for-js");
+        for (var i = 0; i < cells.length; i++) {
+            if (i % 13 == 0) {
+                userNameKey = cells[i].innerText;
+            }
+            else {
+                if (absenceDict[userNameKey] != undefined) {
+                    currentMonthName = getCurrentMonthName(i % 13 - 1);
+                    if (absenceDict[userNameKey][currentMonthName] != undefined) {
+                        var str = (cells[i].innerText);
+                        var str1 = str.substr(0, str.length);
+                        var currentCapac = parseInt(str1);
+                        var newCapac = currentCapac + dif * absenceDict[userNameKey][currentMonthName];
+                        cells[i].innerText = newCapac + "%";
+                    }
+                }
+            }
+        }
+        AmountResolver();
+        HighlightCells();
+    });
+}
+function AmountResolver() {
+    var cells = document.getElementsByClassName("main-column-js");
+    var indexList = [];
+    var rangeList = [];
+    for (var i = 0; i < cells.length; i++) {
+        console.log(cells[i].innerText);
+        if (cells[i].innerText.split(' ').length == 1) {
+            indexList.push(i);
+        }
+    }
+    for (var i = 0; i < indexList.length; i += 2) {
+        rangeList.push(indexList[i + 1] - indexList[i] - 1);
+    }
+    cells = document.getElementsByClassName("for-js-selecor");
+    var prev = 0;
+    for (var _i = 0, rangeList_1 = rangeList; _i < rangeList_1.length; _i++) {
+        var index = rangeList_1[_i];
+        console.log("итерация:" + index);
+        var array = InitYearAmountArray();
+        for (var i = prev * 24; i < index * 24; i++) {
+            console.log(cells[i].innerText);
+            var value = GetNumberFromCell(cells[i]);
+            array[i % 24] += value;
+        }
+        for (var i = index * 24; i < index * 24 + 24; i++) {
+            WriteNumberToCell(cells[i], array[i % 24]);
+        }
+        prev = index;
+    }
+}
+function GetNumberFromCell(cell) {
+    var str = (cell.innerText);
+    var str1 = str.substr(0, str.length);
+    return parseInt(str1);
+}
+function InitYearAmountArray() {
+    var array = [];
+    for (var i = 0; i < 24; i++) {
+        array.push(0);
+    }
+    return array;
+}
+function WriteNumberToCell(cell, output) {
+    cell.innerText = output + "%";
 }
 document.addEventListener("DOMContentLoaded", function () {
     console.log("doom загрузился");
-    AbsenceResolver();
+    AbsenceCheckboxEvent();
     HighlightCells();
     AddAccuracyChangeEvent();
     PaintCurrentMonthColumn();
