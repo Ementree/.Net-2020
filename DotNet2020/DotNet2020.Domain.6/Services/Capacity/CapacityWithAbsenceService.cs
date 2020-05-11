@@ -9,10 +9,12 @@ namespace DotNet2020.Domain._6.Services
     public class CapacityWithAbsenceService
     {
         private static List<ResourceCapacity> _capacity;
+        private static List<ResourceCapacity> _capacityWithAbsences;
 
         public CapacityWithAbsenceService(List<ResourceCapacity> capacity)
         {
             _capacity = capacity;
+            _capacityWithAbsences = capacity;
         }
         
         public List<ResourceCapacity> GetCapacityWithAbsence(List<AbstractCalendarEntry> absences)
@@ -27,6 +29,15 @@ namespace DotNet2020.Domain._6.Services
                 }
             }
 
+            // for (int i = 0; i < _capacity.Count; i++)
+            // {
+            //     var capacity = _capacityWithAbsences.FirstOrDefault(c => c.Id == _capacity[i].Id);
+            //     if (capacity != default)
+            //     {
+            //         _capacity[i].Capacity = capacity.Capacity;
+            //     }
+            // }
+
             return _capacity;
         }
 
@@ -34,7 +45,7 @@ namespace DotNet2020.Domain._6.Services
         {
             if (day.DayOfWeek != DayOfWeek.Saturday && day.DayOfWeek != DayOfWeek.Sunday)
             {
-                _capacity = _capacity
+                _capacityWithAbsences = _capacityWithAbsences
                     .Where(x => 
                         x.ResourceId == resourceId &&
                         x.Period.Start.Month == day.Month &&
@@ -56,7 +67,7 @@ namespace DotNet2020.Domain._6.Services
             var currentMonth = from.Month;
             var currentYear = from.Year;
 
-            for (int i = 0; i < daysCount; i++)
+            for (int i = 0; i < daysCount + 1; i++)
             {
                 days.Add(new DateTime(currentYear, currentMonth, currentDay));
                 if (currentDay + 1 > CountOfDaysByMonth(currentMonth, DateTime.IsLeapYear(currentYear)))
