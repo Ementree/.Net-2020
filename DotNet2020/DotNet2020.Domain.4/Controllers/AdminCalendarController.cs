@@ -41,8 +41,14 @@ namespace DotNet2020.Domain._4.Controllers
         public IActionResult Approve(int id)
         {
             var calendarEntry = _dbContext.Set<AbstractCalendarEntry>().Find(id);
-            if(calendarEntry is IApprovableEvent approvableEvent)
-                approvableEvent.Approve(_dbContext);
+            if (calendarEntry is IApprovableEvent approvableEvent)
+            {
+                approvableEvent
+                    .Approve(_dbContext.Set<Holiday>()
+                    .Where(u => u.Date >= calendarEntry.From &&
+                                u.Date <= calendarEntry.To).ToList());
+                _dbContext.SaveChanges();
+            }
             else throw new ArgumentException("You trying to Approve non approvable entry");
             return RedirectToActionPermanent("Index");
         }

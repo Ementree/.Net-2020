@@ -3,7 +3,6 @@ using System.Security.Claims;
 using DotNet2020.Data;
 using DotNet2020.Domain._4.Domain;
 using DotNet2020.Domain._4.Models;
-using DotNet2020.Domain.Core.Models;
 using DotNet2020.Domain.Models;
 using DotNet2020.Domain.Models.ModelView;
 using Microsoft.AspNetCore.Authorization;
