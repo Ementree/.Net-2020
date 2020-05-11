@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using DotNet2020.Data;
 using DotNet2020.Domain._4.Domain;
 using DotNet2020.Domain.Models;
 using Microsoft.EntityFrameworkCore;
