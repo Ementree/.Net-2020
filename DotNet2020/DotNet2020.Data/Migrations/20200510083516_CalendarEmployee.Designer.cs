@@ -5,15 +5,17 @@ using DotNet2020.Data;
 using DotNet2020.Domain._4.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace DotNet2020.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200510083516_CalendarEmployee")]
+    partial class CalendarEmployee
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -353,18 +355,18 @@ namespace DotNet2020.Data.Migrations
                     b.Property<int>("AbsenceType")
                         .HasColumnType("integer");
 
-                    b.Property<int>("CalendarEmployeeId")
-                        .HasColumnType("integer");
-
                     b.Property<DateTime>("From")
                         .HasColumnType("timestamp without time zone");
 
                     b.Property<DateTime>("To")
                         .HasColumnType("timestamp without time zone");
 
+                    b.Property<string>("UserId")
+                        .HasColumnType("text");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("CalendarEmployeeId");
+                    b.HasIndex("UserId");
 
                     b.ToTable("AbstractCalendarEntries");
 
@@ -825,11 +827,9 @@ namespace DotNet2020.Data.Migrations
 
             modelBuilder.Entity("DotNet2020.Domain._4.Models.AbstractCalendarEntry", b =>
                 {
-                    b.HasOne("DotNet2020.Domain.Models.EmployeeCalendar", "CalendarEmployee")
+                    b.HasOne("DotNet2020.Data.AppIdentityUser", "User")
                         .WithMany()
-                        .HasForeignKey("CalendarEmployeeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("DotNet2020.Domain._6.Models.FunctioningCapacityProject", b =>
