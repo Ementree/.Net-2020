@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
+using DotNet2020.Domain._4.Models;
 
 namespace DotNet2020.Domain._6.Controllers
 {
@@ -21,7 +22,7 @@ namespace DotNet2020.Domain._6.Controllers
             ViewBag.Year = year;
             var viewAbsences = new AbsencesViewModel();
 
-            var absences = context.Set<CalendarEntry>().ToList();
+            var absences = context.Set<AbstractCalendarEntry>().ToList();
 
             var resourcesCapacity = context.Set<ResourceCapacity>()
                 .Include(res => res.Resource)
@@ -41,7 +42,7 @@ namespace DotNet2020.Domain._6.Controllers
             return View(viewAbsences);
         }
 
-        private Dictionary<string, (List<bool>, List<int>)> GetAbsencesVM(List<CalendarEntry> absences, List<ResourceCapacity> resourcesCapacity, List<FunctioningCapacityResource> functioningCapacityResources, List<string> resources, List<Period> periods)
+        private Dictionary<string, (List<bool>, List<int>)> GetAbsencesVM(List<AbstractCalendarEntry> absences, List<ResourceCapacity> resourcesCapacity, List<FunctioningCapacityResource> functioningCapacityResources, List<string> resources, List<Period> periods)
         {
             var resourceAbsences = new Dictionary<string, (List<bool>, List<int>)>();
 
@@ -81,7 +82,7 @@ namespace DotNet2020.Domain._6.Controllers
             return resourceAbsences;
         }
 
-        private int CalculateAbsences(Period period,CalendarEntry entry)
+        private int CalculateAbsences(Period period,AbstractCalendarEntry entry)
         {
             if (!(entry.To >= period.Start && entry.From <= period.End))
             {

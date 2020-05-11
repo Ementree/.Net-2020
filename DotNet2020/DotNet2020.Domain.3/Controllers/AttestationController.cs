@@ -115,8 +115,13 @@ namespace DotNet2020.Domain._3.Controllers
             }
 
             _context.Set<SpecificWorkerModel>().Add(workerModel);
-            _context.SaveChanges();
+            var user = _context.Set<AppIdentityUser>().FirstOrDefault(u => u.Email == workerModel.Email);
+            if (user != default)
+            {
+                user.Employee = workerModel;
+            }
 
+            _context.SaveChanges();
             return RedirectToAction("Workers");
         }
 
