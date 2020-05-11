@@ -4,7 +4,7 @@
 @{
     Layout = "~/Views/Shared/_Layout6.cshtml";
     List<string> months = MonthGeneratorService.GetAllMonths(DateTime.Now.Year);
-    List<double[]> CureentGroupCommonBothCapacityCount = new List<double[]>();
+    List<int[]> CureentGroupCommonBothCapacityCount = new List<int[]>();
 }
 
 @model FunctionalCapacityViewModel
@@ -79,11 +79,11 @@
                 @foreach (var pair in Model.GroupedResources)
                 {
 
-                    CureentGroupCommonBothCapacityCount = new List<double[]>();
+                    CureentGroupCommonBothCapacityCount = new List<int[]>();
 
                     for(int i = 0; i < 12;i++)
                     {
-                        CureentGroupCommonBothCapacityCount.Add(new double[2]);
+                        CureentGroupCommonBothCapacityCount.Add(new int[2]);
                     }
 
                 <tr>

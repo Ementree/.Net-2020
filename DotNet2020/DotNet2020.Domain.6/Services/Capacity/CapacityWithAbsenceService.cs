@@ -10,13 +10,13 @@ namespace DotNet2020.Domain._6.Services
     {
         private static List<ResourceCapacity> _capacity;
         private static List<ResourceCapacity> _capacityWithAbsences;
-        private static Dictionary<int, double> _startCapacity;
+        private static Dictionary<int, int> _startCapacity;
 
         public CapacityWithAbsenceService(List<ResourceCapacity> capacity)
         {
             _capacity = capacity;
             _capacityWithAbsences = new List<ResourceCapacity>(capacity);
-            _startCapacity = new Dictionary<int, double>();
+            _startCapacity = new Dictionary<int, int>();
             foreach (var cap in _capacity)
             {
                 _startCapacity.Add(cap.Id, cap.Capacity);
@@ -51,7 +51,7 @@ namespace DotNet2020.Domain._6.Services
                     {
                         double capacity = _startCapacity[x.Id];
                         Console.WriteLine(capacity);
-                        x.Capacity -= capacity/20;
+                        x.Capacity -= Convert.ToInt32(Math.Round(capacity/20));
                         Console.WriteLine(x.Capacity);
                         if (x.Capacity < 0) throw new Exception("capacity < 0");
                         return x;

@@ -8,8 +8,8 @@ namespace DotNet2020.Domain._6.Models.ViewModels
         public string Name { get; set; }
         public string Type { get; set; }
         public string Group { get; set; }
-        public Dictionary<int,double> Capacity { get; set; }
-        public CapacityViewModelData(int resourceId, string name, string type, string group, Dictionary<int, double> capacity)
+        public Dictionary<int,int> Capacity { get; set; }
+        public CapacityViewModelData(int resourceId, string name, string type, string group, Dictionary<int, int> capacity)
         {
             ResourceId = resourceId;
             Name = name;

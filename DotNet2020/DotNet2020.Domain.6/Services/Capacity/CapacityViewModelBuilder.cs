@@ -31,12 +31,12 @@ namespace DotNet2020.Domain._6.Services
             return model;
         }
 
-        private List<CapacityViewModelData> MakeViewModelList(Dictionary<int, Dictionary<int, double>> capacities)
+        private List<CapacityViewModelData> MakeViewModelList(Dictionary<int, Dictionary<int, int>> capacities)
         {
             var viewModelList = new List<CapacityViewModelData>();
             foreach (var resource in _resources)
             {
-                var capacity = new Dictionary<int, double>();
+                var capacity = new Dictionary<int, int>();
                 if (capacities.ContainsKey(resource.Id))
                 {
                     capacity = capacities[resource.Id];
@@ -53,7 +53,7 @@ namespace DotNet2020.Domain._6.Services
             return viewModelList;
         }
 
-        private Dictionary<int, Dictionary<int, double>> GroupByResource()
+        private Dictionary<int, Dictionary<int, int>> GroupByResource()
         {
             var capacities = _resourceCapacities
                 .GroupBy(res => res.Resource.Id)
