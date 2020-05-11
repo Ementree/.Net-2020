@@ -3,7 +3,6 @@ var resources = [];
 var currentYear;
 var pastYear;
 var firstProjectYear;
-
 function selectProject() {
     var select = document.getElementById('projectSelector');
     var projectId = parseInt(select.options[select.selectedIndex].value);
