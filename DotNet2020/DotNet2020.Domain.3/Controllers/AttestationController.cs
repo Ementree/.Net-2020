@@ -259,6 +259,9 @@ namespace DotNet2020.Domain._3.Controllers
 
                     break;
                 case GradeActions.RemoveGrade:
+                    var needToDelete = _context.Set<GradeToGradeModel>()
+                    .Where(x => x.GradeId == grade.Id || x.NextGradeId == grade.Id);
+                    _context.Set<GradeToGradeModel>().RemoveRange(needToDelete);
                     _context.Set<GradesModel>().Remove(grade);
                     _context.SaveChanges();
                     return RedirectToAction("Grades");
