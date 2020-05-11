@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using DotNet2020.Domain._4.Domain;
 using DotNet2020.Domain.Models;
@@ -26,19 +27,14 @@ namespace DotNet2020.Domain._4.Models
 
         #warning добавить согласующего
         #warning убрать DbContext -> инверсия зависимости
-        public void Approve(DbContext context)
+        public void Approve(List<Holiday> holidays)
         {
-            var user = context.Set<EmployeeCalendar>()
-                .FirstOrDefault(u => u.Id == CalendarEmployeeId);
-            if(user == null) throw new NullReferenceException();
-            var holidays = context.Set<Holiday>()
-                .Where(u => u.Date >= From && u.Date <= To).ToList();
+            if(CalendarEmployee == null) throw new NullReferenceException();
             var days = DomainLogic.GetDatesFromInterval(From, To);
             var total = DomainLogic.GetWorkDay(days, holidays);
-            user.TotalDayOfVacation = user.TotalDayOfVacation - total;
+            CalendarEmployee.TotalDayOfVacation = CalendarEmployee.TotalDayOfVacation - total;
             IsApproved = true;
-            user.Approve();
-            context.SaveChanges();
+            CalendarEmployee.Approve();
         }
     }
 }

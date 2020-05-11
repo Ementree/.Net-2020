@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using DotNet2020.Data;
 using DotNet2020.Domain.Models;
 using Microsoft.EntityFrameworkCore;
@@ -15,10 +16,9 @@ namespace DotNet2020.Domain._4.Models
         : base(from, to, user, AbsenceType.Illness) {}
 
         #warning добавить согласующего
-        public void Approve(DbContext context)
+        public void Approve(List<Holiday> holidays)
         {
             IsApproved = true;
-            context.SaveChanges();
         }
     }
 }
