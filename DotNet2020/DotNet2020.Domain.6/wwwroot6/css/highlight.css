@@ -1,0 +1,27 @@
+﻿.red-highlight {
+    background-color: #f5b7b1;
+}
+
+.green-highlight {
+    background-color: #b7d6ab;
+}
+
+.month-highlight {
+    background-color: darkseagreen;
+}
+
+.blue-highlight {
+    background-color: #a4c2f4;
+}
+
+.yellow-highlight {
+    background-color: #ffd966;
+}
+
+.total-sum-highlight {
+    background-color: #dee2e6;
+}
+
+.gray{
+    background-color: #cccccc;
+}

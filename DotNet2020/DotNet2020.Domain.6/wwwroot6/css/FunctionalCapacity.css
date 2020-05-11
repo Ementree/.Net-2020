@@ -1,0 +1,156 @@
+.fctable thead th {
+    border-bottom: none;
+}
+
+.fcscroll-table {
+    border-collapse:collapse;
+    border-spacing: 0;
+    border-bottom: none;
+}
+
+.fcscroll-table thead th {
+    color: #336B6B;
+    padding: 10px;
+    text-align: left;
+    white-space: nowrap;
+}
+
+.fcscroll-table tbody td {
+    padding: 10px;
+    white-space: nowrap;
+}
+
+.fcwrapper {
+    position: relative;
+}
+
+.fcscroller1 {
+    margin-left: 15%;
+    overflow-x: scroll;
+    overflow-y: visible;
+    padding-bottom: 5px;
+}
+
+.fcscroller2 {
+    margin-left: 30%;
+    overflow-x: scroll;
+    overflow-y: visible;
+    padding-bottom: 5px;
+}
+
+.fcscroll-table .fcsticky-col1 {
+    left: 0;
+    position: absolute;
+    top: auto;
+    width: 15%;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    border-right: 1px solid #dee2e6;
+}
+
+
+.fcscroll-table .fcsticky-col2 {
+    margin-left: 15%;
+    position: absolute;
+    left: 0;
+    width: 15%;
+    top: auto;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    border-right: 1px solid #dee2e6;
+}
+
+.scroller {
+    margin-left: 30%;
+}
+
+.year {
+    margin-bottom: 1vw;
+}
+
+.top {
+    border-top: 1px solid #dee2e6;
+}
+
+.left {
+    border-left: 1px solid #dee2e6;
+}
+
+.right {
+    border-right: 1px solid #dee2e6;
+}
+
+.bottom {
+    border-bottom: 1px solid #dee2e6;
+}
+
+.no-bottom {
+    border-bottom: none;
+}
+
+.no-top {
+    border-top: none;
+}
+
+.align-center {
+    text-align: center;
+}
+
+.h45 {
+    height: 45px;
+}
+
+.total-highlight {
+    background-color: #dee2e6;
+}
+
+.total-sum-js{
+
+}
+
+.month-column-left-border {
+    border-left: 1px solid #092310;
+}
+
+.month-column-right-border {
+    border-right: 1px solid #092310;
+}
+
+.current-month {
+    background-color: #9CBAAA;
+}
+
+.form-width-control{
+    width: 15%;
+}
+
+input[type='number'] {
+    -moz-appearance: textfield;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+}
+
+.for-js-selecor{
+
+}
+
+/*.red-hilight {
+    background-color: #A92525;
+}
+
+.blue-hilight {
+    background-color: #25A9A9;
+}*/
+
+.blue-highlight {
+    background-color: #a4c2f4;
+}
+
+.red-highlight {
+    background-color: #f5b7b1;
+}
