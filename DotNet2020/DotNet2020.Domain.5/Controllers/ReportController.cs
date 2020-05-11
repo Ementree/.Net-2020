@@ -46,12 +46,6 @@ namespace DotNet2020.Domain._5.Controllers
                 .Where(i => i.EstimatedTime.HasValue && i.SpentTime.HasValue)
                 .ToList();
             return View(reports);
-
-            //var estChart = new Chart(issues.OrderBy(t => t.TimeInfo.EstimatedTime).Select(t => (double)t.TimeInfo.EstimatedTime.Value), Count);
-            //var spentChart = new Chart(issues.OrderBy(t => t.TimeInfo.SpentTime).Select(t => (double)t.TimeInfo.SpentTime.Value), Count);
-            //var erCoefChart = new Chart(issues.OrderBy(t => t.TimeInfo.GetErrorCoef()).Select(t => t.TimeInfo.GetErrorCoef().Value), Count);
-            //var erChart = new Chart(issues.OrderBy(t => t.TimeInfo.GetErrorHours()).Select(t => (double)t.TimeInfo.GetErrorHours().Value), Count);
-            //return View(new ChartModel(new List<Chart>() { estChart, spentChart, erCoefChart, erChart }, issues));
         }
     }
 }
