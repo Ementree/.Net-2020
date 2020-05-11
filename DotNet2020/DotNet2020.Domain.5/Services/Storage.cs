@@ -6,35 +6,35 @@ using System.Linq;
 
 namespace DotNet2020.Domain._5.Services
 {
-    public class Storage : DbContext, IStorage
+    public class Storage : IStorage
     {
-        public DbSet<Report> Reports { get; set; }
-        public DbSet<Issue> Issues { get; set; }
+        private DbSet<Report> _reports { get; set; }
+        private DbContext _db { get; set; }
 
-        public Storage(DbContextOptions<Storage> options)
-            : base(options)
+        public Storage(DbContext db)
         {
-            Database.EnsureCreated();
+            _reports = db.Set<Report>();
+            _db = db;
         }
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<Issue>()
-                .HasMany(i => i.WorkItems)
-                .WithOne()
-                .HasForeignKey(w => w.IssueId);
-            modelBuilder.Entity<Report>()
-                .HasMany(r => r.Issues)
-                .WithOne()
-                .HasForeignKey(i => i.ReportId);
-        }
+        //protected override void OnModelCreating(ModelBuilder modelBuilder)
+        //{
+        //    modelBuilder.Entity<Issue>()
+        //        .HasMany(i => i.WorkItems)
+        //        .WithOne()
+        //        .HasForeignKey(w => w.IssueId);
+        //    modelBuilder.Entity<Report>()
+        //        .HasMany(r => r.Issues)
+        //        .WithOne()
+        //        .HasForeignKey(i => i.ReportId);
+        //}
 
         RequestResult IStorage.SaveReport(Report report)
         {
             return RequestResult.SaveExecute(() =>
             {
-                Reports.Add(report);
-                SaveChanges();
+                _reports.Add(report);
+                _db.SaveChanges();
             });
         }
 
@@ -42,7 +42,7 @@ namespace DotNet2020.Domain._5.Services
         {
             return RequestResult<Report>.SaveExecute(() =>
             {
-                var report = Reports.Find(reportId);
+                var report = _reports.Find(reportId);
                 return report;
             });
         }
@@ -51,7 +51,7 @@ namespace DotNet2020.Domain._5.Services
         {
             return RequestResult<Report>.SaveExecute(() =>
             {
-                var report = Reports.FirstOrDefault(r => r.Name == reportName);
+                var report = _reports.FirstOrDefault(r => r.Name == reportName);
                 return report;
             });
         }
@@ -60,11 +60,11 @@ namespace DotNet2020.Domain._5.Services
         {
             return RequestResult.SaveExecute(() =>
             {
-                var report = Reports.Find(reportId);
+                var report = _reports.Find(reportId);
                 if (report == null)
                     return;
-                Reports.Remove(report);
-                SaveChanges();
+                _reports.Remove(report);
+                _db.SaveChanges();
             });
         }
 
@@ -72,11 +72,11 @@ namespace DotNet2020.Domain._5.Services
         {
             return RequestResult.SaveExecute(() =>
             {
-                var report = Reports.FirstOrDefault(r => r.Name == reportName);
+                var report = _reports.FirstOrDefault(r => r.Name == reportName);
                 if (report == null)
                     return;
-                Reports.Remove(report);
-                SaveChanges();
+                _reports.Remove(report);
+                _db.SaveChanges();
             });
         }
 
@@ -84,12 +84,12 @@ namespace DotNet2020.Domain._5.Services
         {
             return RequestResult<Report>.SaveExecute(() =>
             {
-                var report = Reports.Find(oldReportId);
+                var report = _reports.Find(oldReportId);
                 if (report == null)
                     throw new KeyNotFoundException($"Key {oldReportId} is not found!");
                 newReport.ReportId = report.ReportId;
                 report = newReport;
-                SaveChanges();
+                _db.SaveChanges();
             });
         }
 
@@ -97,7 +97,7 @@ namespace DotNet2020.Domain._5.Services
         {
             return RequestResult<IQueryable<Report>>.SaveExecute(() =>
             {
-                return Reports;
+                return _reports;
             });
         }
     }

@@ -11,7 +11,7 @@ namespace DotNet2020.Domain._5.Entities
         public string IssueFilter { get; private set; }
         public List<Issue> Issues { get; private set; }
 
-        public Report(string name, string projectName, string issueFilter)
+        public Report(string name, string projectName, string issueFilter, List<Issue> issues = null)
         {
             if (String.IsNullOrEmpty(name))
                 throw new ArgumentException("Must be not empty!", "Name");
@@ -19,11 +19,13 @@ namespace DotNet2020.Domain._5.Entities
                 projectName = String.Empty;
             if (issueFilter == null)
                 issueFilter = String.Empty;
+            if (issues == null)
+                issues = new List<Issue>();
 
             Name = name;
             ProjectName = projectName;
             IssueFilter = issueFilter;
-            Issues = new List<Issue>();
+            Issues = issues;
         }
 
         protected Report() : base() { }
