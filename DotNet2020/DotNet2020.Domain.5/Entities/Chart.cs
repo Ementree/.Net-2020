@@ -7,6 +7,7 @@ namespace DotNet2020.Domain._5.Entities
 {
     public class Chart
     {
+        public string Id { get; set; }
         public string Name { get; private set; }
         public List<double> XAxis { get; private set; } 
         public List<double> YAxis { get; private set; }

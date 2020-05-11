@@ -42,11 +42,11 @@
                 }
             ];
             var layout = {
-                title: 'Запланированное время',
+                title: '@Json.Serialize(Model.Charts[i].Name)',
                 showlegend: false
             };
             Plotly.newPlot(`@Json.Serialize(mas[i])`, data, layout);
-            var d = '0'
+            var d = '@Json.Serialize(Model.Charts[i].Id)'
             var id = 5;
             myPlot.on('plotly_click', function(data) {
             var pts = '';
