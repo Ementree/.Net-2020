@@ -11,12 +11,12 @@ namespace DotNet2020.Domain._5.Controllers
 {
     public class IssueController : Controller
     {
-        private readonly ILogger<ReportController> _logger;
+        private readonly ILogger<IssueController> _logger;
         private readonly IStorage _storage;
         private readonly ITimeTrackingService _timeTrackingService;
         private readonly IChartService _chartService;
 
-        public IssueController(ILogger<ReportController> logger, DbContext db)
+        public IssueController(ILogger<IssueController> logger, DbContext db)
         {
             _logger = logger;
             _storage = new Storage(db);
