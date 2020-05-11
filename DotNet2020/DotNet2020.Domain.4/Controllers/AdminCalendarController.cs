@@ -1,7 +1,10 @@
 using System;
 using System.Linq;
+using System.Security.Claims;
+using DotNet2020.Data;
 using DotNet2020.Domain._4.Domain;
 using DotNet2020.Domain._4.Models;
+using DotNet2020.Domain.Core.Models;
 using DotNet2020.Domain.Models;
 using DotNet2020.Domain.Models.ModelView;
 using Microsoft.AspNetCore.Authorization;
@@ -43,10 +46,14 @@ namespace DotNet2020.Domain._4.Controllers
             var calendarEntry = _dbContext.Set<AbstractCalendarEntry>().Find(id);
             if (calendarEntry is IApprovableEvent approvableEvent)
             {
+                var employee = _dbContext.Set<AppIdentityUser>()
+                            .Include(u => u.Employee)
+                            .FirstOrDefault(u => u.Id == User.FindFirstValue(ClaimTypes.NameIdentifier)).Employee;
                 approvableEvent
                     .Approve(_dbContext.Set<Holiday>()
                     .Where(u => u.Date >= calendarEntry.From &&
-                                u.Date <= calendarEntry.To).ToList());
+                                u.Date <= calendarEntry.To).ToList(),
+                            employee);
                 _dbContext.SaveChanges();
             }
             else throw new ArgumentException("You trying to Approve non approvable entry");

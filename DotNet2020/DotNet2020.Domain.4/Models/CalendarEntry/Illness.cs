@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using DotNet2020.Data;
+using DotNet2020.Domain.Core.Models;
 using DotNet2020.Domain.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -9,6 +10,8 @@ namespace DotNet2020.Domain._4.Models
     public class Illness : AbstractCalendarEntry, IApprovableEvent
     {
         public bool IsApproved { get; private set; }
+        public Employee Agreeing { get; set; }
+
 
         protected Illness() { }
 
@@ -16,8 +19,9 @@ namespace DotNet2020.Domain._4.Models
         : base(from, to, user, AbsenceType.Illness) {}
 
         #warning добавить согласующего
-        public void Approve(List<Holiday> holidays)
+        public void Approve(List<Holiday> holidays, Employee agreeing)
         {
+            Agreeing = agreeing;
             IsApproved = true;
         }
     }
