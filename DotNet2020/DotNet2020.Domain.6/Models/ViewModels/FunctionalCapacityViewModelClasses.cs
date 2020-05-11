@@ -4,7 +4,7 @@ namespace DotNet2020.Domain._6.Models.ViewModels
 {
     public class CurrentPeriodCapacity
     {
-        public int Capacity { get; set; }
+        public double Capacity { get; set; }
         public Period Period { get; set; }
     }
 
@@ -17,7 +17,7 @@ namespace DotNet2020.Domain._6.Models.ViewModels
     public class FCPeriodWithBothCapacity
     {
         public Period Period { get; set; }
-        public int CurrentCapacity { get; set; }
+        public double CurrentCapacity { get; set; }
         public int PlannedCapacity { get; set; }
     }
 
@@ -25,7 +25,7 @@ namespace DotNet2020.Domain._6.Models.ViewModels
     {
         public Resource Resource { get; set; }
         public Period Period { get; set; }
-        public int currentCapacity { get; set; }
+        public double currentCapacity { get; set; }
         public int plannedCapacity { get; set; }
     }
 
