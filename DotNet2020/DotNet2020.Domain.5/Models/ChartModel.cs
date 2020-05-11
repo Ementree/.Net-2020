@@ -1,19 +1,17 @@
 ﻿using DotNet2020.Domain._5.Entities;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace DotNet2020.Domain._5.Models
 {
     public class ChartModel
     {
-        public List<Chart> Charts { get; set; }
-        public Report Report { get; set; }
-        public ChartModel() { }
-        public ChartModel(List<Chart> charts)
+        public List<Chart> Charts { get; private set; }
+        public int ReportId { get; private set; }
+
+        public ChartModel(int reportId, List<Chart> charts)
         {
-            Charts = charts.ToList();
+            ReportId = reportId;
+            Charts = charts;
         }
     }
 }

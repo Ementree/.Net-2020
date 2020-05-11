@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace DotNet2020.Domain._5.Entities
 {
@@ -108,6 +109,20 @@ namespace DotNet2020.Domain._5.Entities
             return EstimatedTime.HasValue && SpentTime.HasValue
                 ? SpentTime - EstimatedTime
                 : null;
+        }
+
+        /// <summary>
+        /// Установить потраченное время по work items
+        /// </summary>
+        public void SetTimeByWorkItems()
+        {
+            if (WorkItems.Count == 0)
+                return;
+
+            SpentTime = WorkItems
+                .GroupBy(w => w.UserName)
+                .Select(g => g.Sum(w => w.SpentTime))
+                .Max();
         }
     }
 }
