@@ -1,6 +1,4 @@
-function getCurrentMonthName() {
-    var currentMonthNumber = new Date().getMonth();
-    console.log("текущий месяц " + currentMonthNumber);
+function getCurrentMonthName(currentMonthNumber) {
     switch (currentMonthNumber) {
         case 0:
             return "январь";
@@ -31,22 +29,17 @@ function getCurrentMonthName() {
 function PaintCurrentMonthColumn() {
     var monthRow = document.getElementById("monthRow");
     var monthCellsCollection = monthRow.cells;
-    var currentMonthName = getCurrentMonthName();
+    var currentMonthName = getCurrentMonthName(new Date().getMonth());
     var currentYear = new Date().getFullYear();
     var tableYear = parseInt(document.getElementById("changeYearSelector").value);
-    console.log(tableYear);
-    console.log("Ntreonq ujl");
-    console.log(currentYear);
     if (currentYear == tableYear) {
         for (var i = 1; i < monthCellsCollection.length; i++) {
             var cellText = monthCellsCollection[i].innerText;
             var monthName = cellText.split(' ')[0].toLowerCase();
             if (monthName == currentMonthName) {
                 monthCellsCollection[i].classList.add("month-highlight");
-                console.log("добвился класс :" + currentMonthName);
                 return;
             }
-            console.log(monthName);
         }
     }
 }
@@ -60,23 +53,16 @@ function AddYearChangeEvent() {
     var selector = document.getElementById("changeYearSelector");
     selector.addEventListener("change", function () {
         var form = document.getElementById("changeYearForm");
-        console.log("Кто-то сменил год...");
         var newYear = selector.value;
         var accuracyInput = document.getElementById("accuracy-input");
         var newAccuracy = accuracyInput.value;
-        console.log(newAccuracy);
-        console.log(newYear);
-        console.log(window.location.search);
         window.location.search = ("?Year=" + newYear + "&Accuracy=" + newAccuracy);
-        console.log(window.location.search);
     });
 }
 function AddAccuracyChangeEvent() {
     var accuracyInput = document.getElementById("accuracy-input");
-    console.log("v accuracy event");
     accuracyInput.addEventListener("change", function () {
         var input = this.value;
-        console.log(input);
         if (input.length > 0 && input[0] == "0" || input.length == 0 || input[0] == "-") {
             this.value = "0";
         }
@@ -115,15 +101,28 @@ function AddTotalSumHighlight(cell1, cell2) {
 function HighlightCells() {
     var cells = document.getElementsByClassName("for-js-selecor");
     for (var i = 0; i < cells.length; i += 2) {
-        console.log(cells[i].innerText);
         if (cells[i].classList.contains("total-sum-js") && !cells[i].classList.contains("total-sum-highlight")) {
             AddTotalSumHighlight(cells[i], cells[i + 1]);
         }
         AddVlaueDifferenceHighlight(cells[i], cells[i + 1]);
     }
 }
+function AbsenceResolver() {
+    console.log("здесь");
+    var request = new XMLHttpRequest();
+    request.open("GET", "functionalcapacity/getAbsences?year=2008", true);
+    request.onload = function () {
+        console.log(request.responseText);
+        var dict = JSON.parse(request.responseText);
+        console.log(dict);
+        console.log(dict["Артур Саттаров"]);
+    };
+    request.send();
+    return request.responseText;
+}
 document.addEventListener("DOMContentLoaded", function () {
     console.log("doom загрузился");
+    AbsenceResolver();
     HighlightCells();
     AddAccuracyChangeEvent();
     PaintCurrentMonthColumn();

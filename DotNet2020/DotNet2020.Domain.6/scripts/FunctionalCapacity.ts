@@ -1,6 +1,6 @@
-﻿function getCurrentMonthName() {
-    var currentMonthNumber = new Date().getMonth();
-    console.log("текущий месяц " + currentMonthNumber);
+﻿function getCurrentMonthName(currentMonthNumber:number) {
+    //var currentMonthNumber = new Date().getMonth();
+    //console.log("текущий месяц " + currentMonthNumber);
 
     switch (currentMonthNumber) {
         case 0:
@@ -34,13 +34,13 @@
 function PaintCurrentMonthColumn() {
     let monthRow = <HTMLTableRowElement>document.getElementById("monthRow");
     let monthCellsCollection = monthRow.cells;
-    let currentMonthName = getCurrentMonthName();
+    let currentMonthName = getCurrentMonthName(new Date().getMonth());
 
     var currentYear = new Date().getFullYear();
     var tableYear = parseInt((<HTMLSelectElement>document.getElementById("changeYearSelector")).value);
-    console.log(tableYear);
-    console.log("Ntreonq ujl");
-    console.log(currentYear);
+    //console.log(tableYear);
+    //console.log("Ntreonq ujl");
+    //console.log(currentYear);
 
     if (currentYear == tableYear) {
         for (let i = 1; i < monthCellsCollection.length; i++) {
@@ -50,10 +50,10 @@ function PaintCurrentMonthColumn() {
             if (monthName == currentMonthName) {
 
                 monthCellsCollection[i].classList.add("month-highlight");
-                console.log("добвился класс :" + currentMonthName);
+                //console.log("добвился класс :" + currentMonthName);
                 return;
             }
-            console.log(monthName);
+            //console.log(monthName);
         }
     }
 }
@@ -70,25 +70,25 @@ function AddYearChangeEvent() {
 
     selector.addEventListener("change", function () {
         let form = <HTMLFormElement>document.getElementById("changeYearForm");
-        console.log("Кто-то сменил год...");
+        //console.log("Кто-то сменил год...");
         let newYear = selector.value;
         let accuracyInput = <HTMLInputElement>document.getElementById("accuracy-input");
         let newAccuracy = accuracyInput.value;
-        console.log(newAccuracy);
-        console.log(newYear);
-        console.log(window.location.search);
+        //console.log(newAccuracy);
+        //console.log(newYear);
+        //console.log(window.location.search);
         window.location.search = ("?Year=" + newYear + "&Accuracy=" + newAccuracy);
-        console.log(window.location.search);
+        //console.log(window.location.search);
     });
 }
 
 function AddAccuracyChangeEvent() {
     let accuracyInput = <HTMLInputElement>document.getElementById("accuracy-input");
-    console.log("v accuracy event");
+    //console.log("v accuracy event");
 
     accuracyInput.addEventListener("change", function () {
         let input = this.value;
-        console.log(input);
+        //console.log(input);
 
         if (input.length > 0 && input[0] == "0" || input.length == 0 || input[0] == "-") {
             this.value = "0";
@@ -140,7 +140,7 @@ function HighlightCells() {
 
 
     for (let i = 0; i < cells.length; i+=2) {
-        console.log(cells[i].innerText);
+        //console.log(cells[i].innerText);
 
         if (cells[i].classList.contains("total-sum-js") && !cells[i].classList.contains("total-sum-highlight")) {
             AddTotalSumHighlight(cells[i], cells[i + 1]);
@@ -150,9 +150,30 @@ function HighlightCells() {
     }
 }
 
+function AbsenceResolver() {
+    console.log("здесь")
+    let request = new XMLHttpRequest();
+    request.open("GET", "functionalcapacity/getAbsences?year=2008", true);
+    request.onload = function () {
+        console.log(request.responseText);
+
+        let dict = JSON.parse(request.responseText);
+
+        console.log(dict);
+        console.log(dict["Артур Саттаров"]);
+    }
+
+    request.send();
+
+    return request.responseText;
+    
+}
 
 document.addEventListener("DOMContentLoaded", function () {
-    console.log("doom загрузился")
+    console.log("doom загрузился");
+
+    AbsenceResolver();
+
     HighlightCells();
     AddAccuracyChangeEvent();
     PaintCurrentMonthColumn();
