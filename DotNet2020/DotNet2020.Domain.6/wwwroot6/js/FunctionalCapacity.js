@@ -32,15 +32,22 @@ function PaintCurrentMonthColumn() {
     var monthRow = document.getElementById("monthRow");
     var monthCellsCollection = monthRow.cells;
     var currentMonthName = getCurrentMonthName();
-    for (var i = 1; i < monthCellsCollection.length; i++) {
-        var cellText = monthCellsCollection[i].innerText;
-        var monthName = cellText.split(' ')[0].toLowerCase();
-        if (monthName == currentMonthName) {
-            monthCellsCollection[i].classList.add("month-highlight");
-            console.log("добвился класс :" + currentMonthName);
-            return;
+    var currentYear = new Date().getFullYear();
+    var tableYear = parseInt(document.getElementById("changeYearSelector").value);
+    console.log(tableYear);
+    console.log("Ntreonq ujl");
+    console.log(currentYear);
+    if (currentYear == tableYear) {
+        for (var i = 1; i < monthCellsCollection.length; i++) {
+            var cellText = monthCellsCollection[i].innerText;
+            var monthName = cellText.split(' ')[0].toLowerCase();
+            if (monthName == currentMonthName) {
+                monthCellsCollection[i].classList.add("month-highlight");
+                console.log("добвился класс :" + currentMonthName);
+                return;
+            }
+            console.log(monthName);
         }
-        console.log(monthName);
     }
 }
 function AddYearChangeEvent() {

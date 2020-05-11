@@ -3,22 +3,6 @@ var resources = [];
 var currentYear;
 var pastYear;
 var firstProjectYear;
-function getProjectFirstYear() {
-    var select = document.getElementById('projectSelector');
-    var projectId = parseInt(select.options[select.selectedIndex].value);
-    var project = getProject(projectId);
-    var years = project.periods
-        .map(function (period) { return period.date.getFullYear(); })
-        .filter(function (value, index, self) {
-        return self.indexOf(value) === index;
-    });
-    if (years.length == 0) {
-        return new Date(Date.now()).getFullYear();
-    }
-    else {
-        return years[0];
-    }
-}
 function selectProject() {
     var select = document.getElementById('projectSelector');
     var projectId = parseInt(select.options[select.selectedIndex].value);

@@ -36,17 +36,25 @@ function PaintCurrentMonthColumn() {
     let monthCellsCollection = monthRow.cells;
     let currentMonthName = getCurrentMonthName();
 
-    for (let i = 1; i < monthCellsCollection.length; i++) {
-        let cellText = monthCellsCollection[i].innerText;
-        let monthName = cellText.split(' ')[0].toLowerCase();
+    var currentYear = new Date().getFullYear();
+    var tableYear = parseInt((<HTMLSelectElement>document.getElementById("changeYearSelector")).value);
+    console.log(tableYear);
+    console.log("Ntreonq ujl");
+    console.log(currentYear);
 
-        if (monthName == currentMonthName) {
+    if (currentYear == tableYear) {
+        for (let i = 1; i < monthCellsCollection.length; i++) {
+            let cellText = monthCellsCollection[i].innerText;
+            let monthName = cellText.split(' ')[0].toLowerCase();
 
-            monthCellsCollection[i].classList.add("month-highlight");
-            console.log("добвился класс :" + currentMonthName);
-            return;
+            if (monthName == currentMonthName) {
+
+                monthCellsCollection[i].classList.add("month-highlight");
+                console.log("добвился класс :" + currentMonthName);
+                return;
+            }
+            console.log(monthName);
         }
-        console.log(monthName);
     }
 }
 
