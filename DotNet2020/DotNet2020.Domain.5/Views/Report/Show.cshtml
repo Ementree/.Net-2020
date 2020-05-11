@@ -25,12 +25,12 @@
     }
 }
 <div class="tab-content">
-    @for (int i = 0; i < 4; i++)
+    @for (int i = 0; i < Model.Charts.Count; i++)
     {
         <div id='@i' class="tab-pane fade in active">
             <div id='@mas[i]' style="height:auto"></div>
             <form method="get">
-                <button asp-action="Edit" asp-route-id="5">Edit</button>
+                <button asp-action="Edit" asp-route-id="@Model.Report.ReportId">Edit</button>
             </form>
             <script>
             var myPlot = document.getElementById(`@Json.Serialize(mas[i])`);
@@ -47,7 +47,7 @@
             };
             Plotly.newPlot(`@Json.Serialize(mas[i])`, data, layout);
             var d = '@Json.Serialize(Model.Charts[i].Id)'
-            var id = 5;
+            var id = @Json.Serialize(Model.Report.ReportId);
             myPlot.on('plotly_click', function(data) {
             var pts = '';
             for (var i = 0; i < data.points.length; i++)
