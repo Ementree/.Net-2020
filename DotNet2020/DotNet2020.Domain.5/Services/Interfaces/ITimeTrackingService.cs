@@ -25,5 +25,11 @@ namespace DotNet2020.Domain._5.Services.Interfaces
         /// </summary>
         /// <returns></returns>
         string[] GetAllProjects();
+
+        /// <summary>
+        /// Get issues that were tracked by
+        /// </summary>
+        /// <returns></returns>
+        string[] GetProblematicIssues(string projectName);
     }
 }
