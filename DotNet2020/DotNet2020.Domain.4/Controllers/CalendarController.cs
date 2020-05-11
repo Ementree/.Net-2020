@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Security.Claims;
 using DotNet2020.Data;
 using DotNet2020.Domain._4.Domain;
 using DotNet2020.Domain._4.Models;
-using DotNet2020.Domain._4_.Models.ModelView;
-using DotNet2020.Domain.Filters;
+using DotNet2020.Domain.Core.Models;
+using DotNet2020.Domain.Models;
 using DotNet2020.Domain.Models.ModelView;
-using Kendo.Mvc.Examples.Models.Scheduler;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -28,8 +25,11 @@ namespace DotNet2020.Domain._4.Controllers
         [Authorize]
         public IActionResult Index()
         {
-            var user = _dbContext.Set<AppIdentityUser>()
-                .FirstOrDefault(u => u.Id == User.FindFirstValue(ClaimTypes.NameIdentifier));
+            var employee = _dbContext.Set<AppIdentityUser>()
+                .Include(u => u.Employee)
+                .FirstOrDefault(u => u.Id == User.FindFirstValue(ClaimTypes.NameIdentifier)).Employee;
+            var user = _dbContext.Set<EmployeeCalendar>()
+                .FirstOrDefault(u => u.Employee == employee);
             ViewBag.TotalVacation = user?.TotalDayOfVacation;
             ViewBag.Recommendation = _dbContext.Set<Recommendation>().FirstOrDefault();
             ViewBag.User = user;
