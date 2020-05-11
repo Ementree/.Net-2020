@@ -32,6 +32,15 @@ SET "Type" = excluded."Type",
     "Group" = excluded."Group";
 SELECT setval('"ResourceGroupsTypes_Id_seq"', (SELECT Max("Id") FROM "ResourceGroupsTypes"));
 
+INSERT INTO "GradeToGrade" as p
+VALUES
+       (1,2),
+       (1,3),
+       (2,4),
+       (3,4),
+       (4,5)
+       ON CONFLICT ("GradeId", "NextGradeId") DO NOTHING;
+
 
 INSERT INTO "Position" as p
 VALUES
