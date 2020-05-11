@@ -41,7 +41,9 @@ namespace DotNet2020.Domain._4.Controllers
         [HttpPost]
         public IActionResult Approve(int id)
         {
-            var calendarEntry = _dbContext.Set<AbstractCalendarEntry>().Find(id);
+            var calendarEntry = _dbContext.Set<AbstractCalendarEntry>()
+                .Include(u => u.CalendarEmployee)
+                .FirstOrDefault(u => u.Id == id);
             if (calendarEntry is IApprovableEvent approvableEvent)
             {
                 var employee = _dbContext.Set<AppIdentityUser>()
