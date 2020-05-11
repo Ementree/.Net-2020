@@ -50,6 +50,12 @@ function PaintCurrentMonthColumn() {
         }
     }
 }
+function AddPaintCurrentMonthEvent() {
+    var yearSelectorElement = document.getElementById("changeYearSelector");
+    yearSelectorElement.addEventListener("change", function () {
+        PaintCurrentMonthColumn();
+    });
+}
 function AddYearChangeEvent() {
     var selector = document.getElementById("changeYearSelector");
     selector.addEventListener("change", function () {
@@ -123,5 +129,6 @@ document.addEventListener("DOMContentLoaded", function () {
     PaintCurrentMonthColumn();
     AddYearChangeEvent();
     AddAccuracyChangeEvent();
+    AddPaintCurrentMonthEvent();
 });
 //# sourceMappingURL=FunctionalCapacity.js.map

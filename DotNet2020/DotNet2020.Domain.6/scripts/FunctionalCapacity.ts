@@ -58,6 +58,13 @@ function PaintCurrentMonthColumn() {
     }
 }
 
+function AddPaintCurrentMonthEvent() {
+    var yearSelectorElement = <HTMLSelectElement>document.getElementById("changeYearSelector");
+    yearSelectorElement.addEventListener("change", function () {
+        PaintCurrentMonthColumn();
+    })
+}
+
 function AddYearChangeEvent() {
     let selector = <HTMLSelectElement>document.getElementById("changeYearSelector");
 
@@ -151,4 +158,5 @@ document.addEventListener("DOMContentLoaded", function () {
     PaintCurrentMonthColumn();
     AddYearChangeEvent();
     AddAccuracyChangeEvent();
+    AddPaintCurrentMonthEvent();
 });
