@@ -1,4 +1,4 @@
-﻿function getCurrentMonthName(currentMonthNumber:number) {
+﻿﻿function getCurrentMonthName(currentMonthNumber:number) {
     //var currentMonthNumber = new Date().getMonth();
     //console.log("текущий месяц " + currentMonthNumber);
 
