@@ -25,7 +25,7 @@ namespace DotNet2020.Domain._3.Models
         public string NextMoves { get; set; }
         public string Feedback { get; set; }
         public DateTime Date { get; set; }
-        
+
         public List<long> IdsTestedCompetences { get; set; }
         [NotMapped]
         public List<CompetencesModel> TestedCompetences { get; set; }

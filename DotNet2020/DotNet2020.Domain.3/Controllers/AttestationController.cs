@@ -41,7 +41,7 @@ namespace DotNet2020.Domain._3.Controllers
         {
             var worker = _context.Set<SpecificWorkerModel>().Find(id);
 
-            var positionId=_context.Entry(worker).Member("PositionId").CurrentValue;
+            var positionId = _context.Entry(worker).Member("PositionId").CurrentValue;
 
             var position = _context.Set<Position>().Find(positionId);
 
@@ -65,7 +65,7 @@ namespace DotNet2020.Domain._3.Controllers
         public IActionResult WorkersUpdate(int id, WorkerUpdateModel workerUpdateModel)
         {
             workerUpdateModel.Worker.Id = id;
-            
+
             var specificWorkerCompetences = _context.Set<SpecificWorkerCompetencesModel>();
             var competences = _context.Set<CompetencesModel>();
 
@@ -365,12 +365,12 @@ namespace DotNet2020.Domain._3.Controllers
                     model.Competences = _context.Set<CompetencesModel>().ToList();
                     model.Grades = GetLoadedGrades();
 
-                    var worker = model.Workers.Where(x=>x.Id==model.WorkerId).FirstOrDefault();
+                    var worker = model.Workers.Where(x => x.Id == model.WorkerId).FirstOrDefault();
                     foreach (var item in worker.SpecificWorkerCompetencesModels)
                     {
                         model.Competences.Remove(item.Competence);
                     }
-                    
+
                     break;
 
                 case AttestationAction.GradeChose: //вывести таблицу грейдов
@@ -522,8 +522,8 @@ namespace DotNet2020.Domain._3.Controllers
                 {
                     specificWorkerCompetence.Competence = _context.Set<CompetencesModel>().Find(specificWorkerCompetence.CompetenceId);
                 }
-                var positionId=_context.Entry(worker).Member("PositionId").CurrentValue;
-                var position=_context.Set<Position>().Find((int)positionId);
+                var positionId = _context.Entry(worker).Member("PositionId").CurrentValue;
+                var position = _context.Set<Position>().Find((int)positionId);
                 worker.Position = position;
             }
             return workers;

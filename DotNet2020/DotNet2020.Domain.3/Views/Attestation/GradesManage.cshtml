@@ -65,7 +65,7 @@
             <h3>грейды:</h3>
             @foreach (var element in Model.Grades)
             {
-                if (Model.GradeToGrades.Any(x=>x.NextGradeId==element.Id && x.GradeId==ViewBag.UpdatedGrade.Id))
+                if (Model.GradeToGrades.Any(x => x.NextGradeId == element.Id && x.GradeId == ViewBag.UpdatedGrade.Id))
                 {
                     <p><input type="checkbox" value="@element.Id" name="NewGradesIds" checked="" /> @element.Grade</p>
                 }
