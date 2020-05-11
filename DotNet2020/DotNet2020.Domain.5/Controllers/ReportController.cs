@@ -18,10 +18,10 @@ namespace DotNet2020.Domain._5.Controllers
         [HttpGet]
         public IActionResult Create()
         {
+            var ytService = new YouTrackService();
             var model = new CreateReportModel()
             {
-                CreateProject = new string[]
-            {"option 1", "option 2", "option 3", "option 4",  "option 5", "option 6"}
+                CreateProject = ytService.GetAllProjects()
             };
             return View(model);
         }
@@ -29,11 +29,11 @@ namespace DotNet2020.Domain._5.Controllers
         [HttpGet]
         public IActionResult Edit()
         {
+            var ytService = new YouTrackService();
             var model = new EditReportModel()
             {
                 ProjectName = "option 1",
-                UserFilter = new string[]
-                {"option 1", "option 2", "option 3", "option 4",  "option 5", "option 6"}
+                UserFilter = ytService.GetAllProjects()
             };
             return View(model);
         }
@@ -42,7 +42,7 @@ namespace DotNet2020.Domain._5.Controllers
         public IActionResult Show(CreateReportModel model)
         {
             var ytService = new YouTrackService();
-            var reports = ytService.GetIssuesTimeInfo(model.ProjectName, model.IssueFilter)
+            var reports = ytService.GetIssues(model.ProjectName, model.IssueFilter)
                 .Where(i => i.EstimatedTime.HasValue && i.SpentTime.HasValue)
                 .ToList();
             return View(reports);
