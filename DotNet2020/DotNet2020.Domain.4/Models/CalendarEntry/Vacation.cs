@@ -26,7 +26,6 @@ namespace DotNet2020.Domain._4.Models
         }
 
         #warning добавить согласующего
-        #warning убрать DbContext -> инверсия зависимости
         public void Approve(List<Holiday> holidays)
         {
             if(CalendarEmployee == null) throw new NullReferenceException();
