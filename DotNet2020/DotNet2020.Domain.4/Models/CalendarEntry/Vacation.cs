@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using DotNet2020.Domain._4.Domain;
 using DotNet2020.Domain.Core.Models;
 using DotNet2020.Domain.Models;
-using Microsoft.EntityFrameworkCore;
 
 namespace DotNet2020.Domain._4.Models
 {
@@ -28,9 +26,10 @@ namespace DotNet2020.Domain._4.Models
         }
 
         #warning добавить согласующего
-        public void Approve(List<Holiday> holidays, Employee employee)
+        public void Approve(List<Holiday> holidays, Employee agreeing)
         {
             if(CalendarEmployee == null) throw new NullReferenceException();
+            Agreeing = agreeing;
             var days = DomainLogic.GetDatesFromInterval(From, To);
             var total = DomainLogic.GetWorkDay(days, holidays);
             CalendarEmployee.TotalDayOfVacation = CalendarEmployee.TotalDayOfVacation - total;

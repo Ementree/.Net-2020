@@ -4,11 +4,7 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using DotNet2020.Domain._4.Models;
 using DotNet2020.Domain.Models;
-using Microsoft.Extensions.Configuration;
-using System.IO;
 using DotNet2020.Domain._3.Models;
-using DotNet2020.Domain.Models;
-using Microsoft.EntityFrameworkCore.Design;
 
 namespace DotNet2020.Data
 {
@@ -121,21 +117,6 @@ namespace DotNet2020.Data
                     (AbsenceType.SickDay)
                 .HasValue<Illness>
                     (AbsenceType.Illness);
-        }
-    }
-
-    public class DesignTimeDbContextFactory : IDesignTimeDbContextFactory<ApplicationDbContext>
-    {
-        public ApplicationDbContext CreateDbContext(string[] args)
-        {
-            IConfigurationRoot configuration = new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appsettings.json")
-                .Build();
-            var builder = new DbContextOptionsBuilder<ApplicationDbContext>();
-            var connectionString = configuration.GetConnectionString("DefaultConnection");
-            builder.UseNpgsql(connectionString, b => b.MigrationsAssembly("DotNet2020.Data"));
-            return new ApplicationDbContext(builder.Options);
         }
     }
 }

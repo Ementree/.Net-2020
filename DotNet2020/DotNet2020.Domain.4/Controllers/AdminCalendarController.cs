@@ -4,7 +4,6 @@ using System.Security.Claims;
 using DotNet2020.Data;
 using DotNet2020.Domain._4.Domain;
 using DotNet2020.Domain._4.Models;
-using DotNet2020.Domain.Core.Models;
 using DotNet2020.Domain.Models;
 using DotNet2020.Domain.Models.ModelView;
 using Microsoft.AspNetCore.Authorization;
@@ -13,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DotNet2020.Domain._4.Controllers
 {
+    [Authorize]
     public class AdminCalendarController : Controller
     {
         private readonly DbContext _dbContext;
@@ -23,7 +23,6 @@ namespace DotNet2020.Domain._4.Controllers
         }
         
         [HttpGet]
-        [Authorize]
         public IActionResult Index()
         {
             ViewBag.Recommendation = _dbContext.Set<Recommendation>().FirstOrDefault();
@@ -40,7 +39,6 @@ namespace DotNet2020.Domain._4.Controllers
         }
 
         [HttpPost]
-        [Authorize]
         public IActionResult Approve(int id)
         {
             var calendarEntry = _dbContext.Set<AbstractCalendarEntry>().Find(id);
@@ -61,7 +59,6 @@ namespace DotNet2020.Domain._4.Controllers
         }
 
         [HttpPost]
-        [Authorize]
         public IActionResult Reject(int id)
         {
             var calendarEntry =  _dbContext.Set<AbstractCalendarEntry>().Find(id);
@@ -73,7 +70,6 @@ namespace DotNet2020.Domain._4.Controllers
         }
 
         [HttpPost]
-        [Authorize]
         public IActionResult Refresh()
         {
             var currentYear = _dbContext.Set<YearOfVacations>().FirstOrDefault(m => m.Year == DateTime.Now.Year);

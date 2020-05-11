@@ -11,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DotNet2020.Domain._4.Controllers
 {
+    [Authorize]
     public class CalendarController : Controller
     {
         private readonly DbContext _dbContext;
@@ -21,7 +22,6 @@ namespace DotNet2020.Domain._4.Controllers
         }
 
         [HttpGet]
-        [Authorize]
         public IActionResult Index()
         {
             var employee = _dbContext.Set<AppIdentityUser>()
@@ -41,7 +41,6 @@ namespace DotNet2020.Domain._4.Controllers
         }
 
         [HttpGet]
-        [Authorize]
         public IActionResult AddEvent()
         {
             return View();

@@ -12,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DotNet2020.Domain._4.Controllers
 {
+    [Authorize]
     public class SickDayController : Controller
     {
         private readonly DbContext _dbContext;
@@ -22,14 +23,12 @@ namespace DotNet2020.Domain._4.Controllers
         }
         
         [HttpGet]
-        [Authorize]
         public IActionResult Add()
         {
             return View();
         }
         
         [HttpPost]
-        [Authorize]
         [ValidationFilter]
         public IActionResult Add(SickDayViewModel viewModel)
         {

@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using DotNet2020.Data;
 using DotNet2020.Domain.Core.Models;
 using DotNet2020.Domain.Models;
-using Microsoft.EntityFrameworkCore;
 
 namespace DotNet2020.Domain._4.Models
 {
