@@ -122,7 +122,7 @@ namespace DotNet2020.Areas.Identity.Pages.Account
 
             if (ModelState.IsValid)
             {
-                var user = new AppIdentityUser(Input.Email, Input.Email, "", "", "", "");
+                var user = new AppIdentityUser(Input.Email, Input.Email);
                 var result = await _userManager.CreateAsync(user);
                 if (result.Succeeded)
                 {

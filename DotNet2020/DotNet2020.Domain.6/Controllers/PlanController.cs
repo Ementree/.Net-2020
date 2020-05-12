@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using DotNet2020.Domain._4.Models;
 using DotNet2020.Domain._6.Models.ViewModels;
 using DotNet2020.Domain._6.Services;
 using Kendo.Mvc.Extensions;
@@ -67,10 +68,12 @@ namespace DotNet2020.Domain._6.Controllers
                     .Where(project => project.Period.Start.Year == year)
                     .ToList();
             var resourceCapacity = _dbContext.Set<ResourceCapacity>().ToList();
+            var absences = _dbContext.Set<AbstractCalendarEntry>().ToList();
+            var periods = _dbContext.Set<Period>().ToList();
 
             ViewBag.FunctioningCapacityProject = funcCapacitiesProject;
-            var highlightService =
-                new PlanHighlightService(resourceCapacity, funcCapacitiesProject, functioningCapacityResources);
+            var highlightService = new PlanHighlightService(resourceCapacity, funcCapacitiesProject, functioningCapacityResources, absences, periods);
+
             ViewBag.FuncCapacityProjHighlight = highlightService.GetFuncCapacityProjHighlight();
             ViewBag.FuncCapacityResourceHighlight = highlightService.GetFuncCapacityResourceHighlight();
             ViewBag.CurrentDate = DateTime.Now;
