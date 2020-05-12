@@ -69,7 +69,7 @@ namespace DotNet2020.Domain._6.Services
                 {
                     double capacity = _startCapacity[res.Id];
                     _tempCapacity[res.Id] -= capacity / CountOfWorkDaysInMonth(day.Month, day.Year);
-                    if (_tempCapacity[res.Id] < 0) throw new Exception("capacity < 0");
+                    if (_tempCapacity[res.Id] < 0) _tempCapacity[res.Id] = 0;
                 }
             }
         }
