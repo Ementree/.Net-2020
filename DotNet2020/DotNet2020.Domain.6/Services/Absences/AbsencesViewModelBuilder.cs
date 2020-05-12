@@ -88,7 +88,10 @@ namespace DotNet2020.Domain._6.Services.Absences
                 var period = _periods[i];
                 foreach (var absence in _absences.Where(absence => absence.To >= period.Start && absence.From <= period.End))
                 {
-                    resourceAbsences[absence.UserName].Item2[i] += (CalculateAbsences(period, absence));
+                    if (resourceAbsences.ContainsKey(absence.UserName))
+                    {
+                        resourceAbsences[absence.UserName].Item2[i] += (CalculateAbsences(period, absence));
+                    }
                 }
             }
 
