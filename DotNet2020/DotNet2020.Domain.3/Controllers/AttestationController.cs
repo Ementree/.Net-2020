@@ -519,6 +519,61 @@ namespace DotNet2020.Domain._3.Controllers
                         }
                     }
 
+                    if (ViewBag.ReAttestation)
+                    {
+                        if (!gradeToGrades.Where(x => x.NextGradeId == gradeId).Any())
+                        {
+                            var grade = grades.Where(x => x.Id == gradeId).FirstOrDefault();
+                            testedCompetences.AddRange(grade.GradesCompetences.Select(x => x.Competence));
+                        }
+                        else
+                        {
+                            var previousGradesIds = gradeToGrades
+                                .Where(x => x.NextGradeId == gradeId)
+                                .Select(x => x.GradeId)
+                                .ToList();
+                            var previousGrades = grades
+                                .Where(x => previousGradesIds.Contains(x.Id))
+                                .ToList();
+                            var previousCompetences = previousGrades.SelectMany(x => x.GradesCompetences).Select(x => x.Competence).Distinct().ToList();
+
+                            List<CompetencesModel> currentCompetences = new List<CompetencesModel>();
+
+                            if (previousGrades.Count == 1)
+                            {
+                                currentCompetences = workerCompetences.Where(x => !previousCompetences.Any(y => x.Id == y.Id)).ToList();
+                            }
+                            else
+                            {
+                                Dictionary<CompetencesModel, int> dict = new Dictionary<CompetencesModel, int>();
+
+                                foreach (var previousCompetence in previousCompetences)
+                                {
+                                    dict[previousCompetence] = 0;
+                                }
+
+                                foreach (var previousGrade in previousGrades)
+                                {
+                                    var competences = previousGrade.GradesCompetences.Select(x => x.Competence).ToList();
+                                    foreach (var competence in competences)
+                                    {
+                                        dict[competence]++;
+                                    }
+                                }
+
+                                foreach (var element in dict)
+                                {
+                                    if (element.Value != previousGrades.Count())
+                                    {
+                                        currentCompetences.Add(element.Key);
+                                    }
+                                }
+                                
+                            }
+                            testedCompetences.AddRange(currentCompetences);
+                        }
+                    }
+
                     questionsForGrade = questionService.GetCompetencesAttestationQuestions(testedCompetences, out isValid).Select(x => x.Question).ToList();
 
                     if (!isValid)
@@ -547,26 +602,6 @@ namespace DotNet2020.Domain._3.Controllers
 
                     questionsForGrade = questionsForGrade.Distinct().ToList();
 
-                    if (ViewBag.ReAttestation)
-                    {
-                        if (!gradeToGrades.Where(x => x.NextGradeId == gradeId).Any())
-                        {
-                            var grade = grades.Where(x => x.Id == gradeId).FirstOrDefault();
-                            testedCompetences.AddRange(grade.GradesCompetences.Select(x => x.Competence));
-                        }
-                        else
-                        {
-                            var previousGradesIds = gradeToGrades
-                                .Where(x => x.NextGradeId == gradeId)
-                                .Select(x => x.GradeId);
-                            var previousGrades = grades
-                                .Where(x => previousGradesIds.Contains(x.Id))
-                                .ToList();
-                            var previousCompetences = previousGrades.SelectMany(x => x.GradesCompetences).Select(x => x.Competence).ToList();
-                            testedCompetences.AddRange(previousCompetences);
-                        }
-                    }
-
                     model.TestedCompetences = testedCompetences;
                     model.Questions = questionsForGrade;
 
@@ -576,13 +611,11 @@ namespace DotNet2020.Domain._3.Controllers
                     if (model.ReAttestation)
                     {
                         var specificWorkerCompetences = _context.Set<SpecificWorkerCompetencesModel>();
-                        foreach (var competenceid in model.IdsTestedCompetences)
-                        {
-                            specificWorkerCompetences
-                                .Remove(_context.Set<SpecificWorkerCompetencesModel>()
-                                .Where(x => x.CompetenceId == competenceid)
-                                .FirstOrDefault());
-                        }
+                        var needToRemoveCompetences = specificWorkerCompetences.
+                            Where(x => x.WorkerId == model.WorkerId && model.IdsTestedCompetences.
+                            Contains(x.CompetenceId)).
+                            ToList();
+                        specificWorkerCompetences.RemoveRange(needToRemoveCompetences);
                     }
 
                     model.Grades = GetLoadedGrades();

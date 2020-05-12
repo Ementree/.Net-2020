@@ -83,17 +83,16 @@ SELECT setval('"Employee_Id_seq"', (SELECT Max("Employee"."Id") FROM "Employee")
 
 INSERT INTO "Competences" as W
 VALUES
-       (1, 'Базовое программирование', ARRAY['Алгоритмы и структуры данных', 'Знание C# или JavaScript'], ARRAY['Что такое АИСД', 'Что такое var'] ),
-       (2, 'Базовый backend', ARRAY['ASPNET MVC', ' ASPNET WEBAPI', 'ASPNET MVC CORE', 'LINQ', 'EF'], ARRAY['Что такое EF', 'Что такое WEBAPI', 'Что такое MVC'] ),
-       (3, 'Базовый frontend', ARRAY['Базовые знания HTML, CSS, JS, Jquery', 'Node.js, npm'], ARRAY['Что такое npm', 'Что такое JS'] ),
-       (4, 'Продвинутый backend', ARRAY['SOLID', 'GOF', 'REST', 'HTTP', 'CQRS', 'TPL'], ARRAY['Что такое TPL', 'Что такое REST', 'Что такое HTTP'] ),
-       (5, 'Продвинутый frontend', ARRAY['ES6 / TypeScript', 'Webpack', 'React + Redux / Angular + rxjs'], ARRAY['Что такое rxjs', 'Что такое webpack', 'Что такое es6'] ),
+       (1, 'Базовое программирование', ARRAY['Алгоритмы и структуры данных', 'Знание C# или JavaScript']),
+       (2, 'Базовый backend', ARRAY['ASPNET MVC', ' ASPNET WEBAPI', 'ASPNET MVC CORE', 'LINQ', 'EF'] ),
+       (3, 'Базовый frontend', ARRAY['Базовые знания HTML, CSS, JS, Jquery', 'Node.js, npm'] ),
+       (4, 'Продвинутый backend', ARRAY['SOLID', 'GOF', 'REST', 'HTTP', 'CQRS', 'TPL' ] ),
+       (5, 'Продвинутый frontend', ARRAY['ES6 / TypeScript', 'Webpack', 'React + Redux / Angular + rxjs'] ),
        (6, 'Управление командной разработки', ARRAY['Опыт управление командой разработки (не менее 3 разработчиков) от 1 года',
-           'Знание гибких методологий разработки: Scrum / Kanban'], ARRAY['Что такое scrum', 'Что такое kanban', 'Что такое youtrack'] )
+           'Знание гибких методологий разработки: Scrum / Kanban'])
 ON CONFLICT ("Id") DO UPDATE
 SET "Competence" = excluded."Competence",
     "Content" = excluded."Content",
-    "Questions" = excluded."Questions";
 SELECT setval('"Competences_Id_seq"', (SELECT Max("Competences"."Id") FROM "Competences"));
 
 
@@ -107,6 +106,58 @@ VALUES
 ON CONFLICT ("Id") DO UPDATE
 SET "Grade"= excluded."Grade";
 SELECT setval('"Grades_Id_seq"', (SELECT Max("Grades"."Id") FROM "Grades"));
+
+INSERT INTO "QuestionComplexity" as q
+VALUES
+       (1, 'легкий'),
+       (2, 'средний'),
+       (3, 'тяжелый')
+       ON CONFLICT ("Id") DO UPDATE
+SET "Value"=excluded."Value";
+
+INSERT INTO "Questions" ("Id", "Question", "ComplexityId")
+VALUES
+       (1, 'Что такое базовое программирование', 1),
+       (2, 'что такое var', 2),
+       (3, 'как объявить переменную типа string', 3),
+       (4, 'что такое алгоритм?', 1),
+       (5, 'что такое asp net', 1),
+       (6, 'Что такое web api', 2),
+       (7, 'Что такое rest api', 3),
+       (8, 'что такое сервер', 2),
+       (9, 'Что такое html', 1),
+       (10, 'Что такое css', 2),
+       (11, 'Что такое typescript', 3),
+       (12, 'Что такое SOLID', 1),
+       (13, 'Что такое async await', 2),
+       (14, 'Что такое expressionTrees?', 3),
+       (15, 'Как управлять проектом?', 1),
+       (16, 'Что такое youtrack', 2),
+       (17, 'Что такое покер планирование?', 3)
+ON CONFLICT ("Id") DO UPDATE
+SET "Question"=excluded."Question",
+    "ComplexityId"=excluded."ComplexityId";
+
+INSERT INTO "CompetenceQuestions" ("CompetenceId", "QuestionId")
+VALUES
+       (1,1),
+       (1,2),
+       (1,3),
+       (1,4),
+       (2,5),
+       (2,6),
+       (2,7),
+       (2,8),
+       (3,9),
+       (3,10),
+       (3,11),
+       (4,12),
+       (4,13),
+       (4,14),
+       (6,15),
+       (6,16),
+       (6,17)
+ON CONFLICT DO NOTHING;
 
 
 INSERT INTO "GradeCompetences" as W
