@@ -12,6 +12,7 @@ using DotNet2020.Data;
 using Microsoft.EntityFrameworkCore;
 using DotNet2020.Domain.Core.Models;
 using DotNet2020.Domain._3.ViewModels;
+using DotNet2020.Domain._3.Services;
 
 namespace DotNet2020.Domain._3.Controllers
 {
@@ -295,8 +296,11 @@ namespace DotNet2020.Domain._3.Controllers
         {
             var questionIds = _context.Set<CompetenceQuestionsModel>().Where(x => x.CompetenceId == id).Select(x => x.QuestionId).ToList();
             var questions = _context.Set<QuestionModel>().Where(x => questionIds.Contains(x.Id)).Select(x => x.Question).ToList();
-            var questionUpdateModel = new QuestionUpdateModel { Complexities = _context.Set<QuestionComplexityModel>().Select(x=>x.Value).ToList(), 
-                Questions = questions };
+            var questionUpdateModel = new QuestionUpdateModel
+            {
+                Complexities = _context.Set<QuestionComplexityModel>().Select(x => x.Value).ToList(),
+                Questions = questions
+            };
             return View(questionUpdateModel);
         }
 
@@ -309,7 +313,7 @@ namespace DotNet2020.Domain._3.Controllers
                 case QuestionActions.RemoveQuestions:
                     foreach (var question in questionUpdateModel.QuestionsToRemove)
                     {
-                        var neededToDeleteQuestionModels = _context.Set<QuestionModel>().Where(x=>x.Question == question);
+                        var neededToDeleteQuestionModels = _context.Set<QuestionModel>().Where(x => x.Question == question);
                         var neededToDeleteIds = neededToDeleteQuestionModels.Select(x => x.Id).ToList();
                         var relatedDataToDelete = _context.Set<CompetenceQuestionsModel>().
                             Where(x => x.CompetenceId == id && neededToDeleteIds.Contains(x.QuestionId)).ToList();
@@ -319,12 +323,15 @@ namespace DotNet2020.Domain._3.Controllers
                     }
                     break;
                 case QuestionActions.AddQuestion:
-                    var newQuestion = new QuestionModel { Question = questionUpdateModel.NewQuestion, 
+                    var newQuestion = new QuestionModel
+                    {
+                        Question = questionUpdateModel.NewQuestion,
                         ComplexityId = _context
                         .Set<QuestionComplexityModel>()
-                        .Where(x=>x.Value==questionUpdateModel.Complexity)
-                        .Select(x=>x.Id)
-                        .FirstOrDefault() };
+                        .Where(x => x.Value == questionUpdateModel.Complexity)
+                        .Select(x => x.Id)
+                        .FirstOrDefault()
+                    };
                     _context.Set<QuestionModel>().Add(newQuestion);
                     _context.SaveChanges();
                     _context.Set<CompetenceQuestionsModel>().Add(new CompetenceQuestionsModel { CompetenceId = id, QuestionId = newQuestion.Id });
@@ -370,6 +377,7 @@ namespace DotNet2020.Domain._3.Controllers
         [HttpPost]
         public IActionResult Attestation(AttestationModel model)
         {
+            var questionService = new QuestionService(_context);
             switch (model.Action)
             {
                 case AttestationAction.Choosing: //вывести окно выбора
@@ -427,9 +435,10 @@ namespace DotNet2020.Domain._3.Controllers
                         if (!workerCompetences.Contains(competence))
                         {
                             testedCompetences.Add(competence);
-                            //questions = questions.Union(competence.Questions).ToList();
                         }
                     }
+                    questions = questionService.GetCompetencesAttestationQuestions(testedCompetences).Select(x => x.Question).ToList();
+
                     questions = questions.Distinct().ToList();
                     model.Questions = questions;
                     model.TestedCompetences = testedCompetences;
@@ -453,10 +462,10 @@ namespace DotNet2020.Domain._3.Controllers
                         var competence = _context.Set<CompetencesModel>().Find(testedGradeCompetence.CompetenceId);
                         if (!workerCompetences.Contains(competence))
                         {
-                            //questionsForGrade = questionsForGrade.Union(competence.Questions).ToList();
                             testedCompetences.Add(competence);
                         }
                     }
+                    questionsForGrade = questionService.GetCompetencesAttestationQuestions(testedCompetences).Select(x => x.Question).ToList();
 
                     questionsForGrade = questionsForGrade.Distinct().ToList();
                     model.TestedCompetences = testedCompetences;
