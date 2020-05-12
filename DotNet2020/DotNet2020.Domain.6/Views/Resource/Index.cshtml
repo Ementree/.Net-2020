@@ -1,43 +1,56 @@
 @{
     Layout = "~/Views/Shared/_Layout6.cshtml";
 }
-@model List<DotNet2020.Domain._6.Models.Resource>
+@model DotNet2020.Domain._6.Models.ViewModels.ResourceViewModel
 
 <link rel="stylesheet" href="~/wwwroot6/css/Capacity.css"/>
 <div class="container">
-    <table class="scroll-table table bottom">
-        <thead>
-        <tr>
-            <th class="align-center">
-                Ресурс
-            </th>
-            <th class="align-center">
-                Группа ресурса
-            </th>
-            <th class="align-center">
-                Тип ресурса
-            </th>
-        </tr>
+    <form method="post" asp-action="Index" asp-controller="Resource">
+        <table class="scroll-table table bottom">
+            <thead>
+            <tr>
+                <th class="align-center">
+                    Ресурс
+                </th>
+                <th class="align-center">
+                    Группа ресурса
+                </th>
+                <th class="align-center">
+                    Тип ресурса
+                </th>
+            </tr>
 
-        </thead>
+            </thead>
 
-        <tbody>
-            @foreach (var resource in Model)
+            <tbody>
+            @foreach (var resource in Model.Resources)
             {
                 <tr>
                     <td>
                         @(resource.Employee.FirstName + " " + resource.Employee.LastName)
                     </td>
                     <td>
-                        @resource.ResourceGroupType.Group
+                        <select name="groups">
+                            @foreach (var group in Model.Groups)
+                            {
+                                <option value="@(resource.Id + ";" + group)" selected="@(resource.ResourceGroupType.Group == group)">@group</option>
+                            }
+                        </select>
                     </td>
                     <td>
-                        @resource.ResourceGroupType.Type
+                        <select name="types">
+                            @foreach (var type in Model.Types)
+                            {
+                                <option value="@(resource.Id + ";" + type)" selected="@(resource.ResourceGroupType.Type == type)">@type</option>
+                            }
+                        </select>
                     </td>
                 </tr>
             }
-        </tbody>
-    </table>
+            </tbody>
+        </table>
+        <button type="submit" class="btn btn-primary">Изменить</button>
+    </form>
     <div class="mb-2">
 
     </div>
