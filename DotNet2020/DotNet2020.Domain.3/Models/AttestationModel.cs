@@ -13,7 +13,8 @@ namespace DotNet2020.Domain._3.Models
         GradeChose,
         AttestationByCompetences,
         AttestationByGrade,
-        Finished
+        Finished,
+        NotEnoughQuestion
     }
     public class AttestationModel
     {

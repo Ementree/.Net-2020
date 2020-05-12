@@ -427,7 +427,7 @@ namespace DotNet2020.Domain._3.Controllers
                         }
                         model.Grades.Add(currentGrade);
                     }
-                    
+
                     break;
 
                 case AttestationAction.AttestationByCompetences: //вывести окно аттестации по компетенциям
@@ -476,7 +476,8 @@ namespace DotNet2020.Domain._3.Controllers
                     }
                     else
                     {
-                        return RedirectToAction("Index");
+                        model.Action = AttestationAction.NotEnoughQuestion;
+                        return View(model);
                     }
 
                     break;
@@ -522,7 +523,8 @@ namespace DotNet2020.Domain._3.Controllers
 
                     if (!isValid)
                     {
-                        return RedirectToAction("Attestsation");
+                        model.Action = AttestationAction.NotEnoughQuestion;
+                        return View(model);
                     }
 
                     if (_context.Set<AttestationModel>().Any(x => x.WorkerId == model.WorkerId))
@@ -567,7 +569,7 @@ namespace DotNet2020.Domain._3.Controllers
 
                     model.TestedCompetences = testedCompetences;
                     model.Questions = questionsForGrade;
-                    
+
                     break;
 
                 case AttestationAction.Finished: //сохранить результаты
@@ -582,7 +584,7 @@ namespace DotNet2020.Domain._3.Controllers
                                 .FirstOrDefault());
                         }
                     }
-                    
+
                     model.Grades = GetLoadedGrades();
                     var tuple = GetProblemsAndAnswers(model);
                     model.Problems = tuple.Item1;
@@ -632,7 +634,11 @@ namespace DotNet2020.Domain._3.Controllers
                     _context.SaveChanges();
 
                     return RedirectToAction("AttestationList");
+
+                case AttestationAction.NotEnoughQuestion:
+                    return View(model);
             }
+
             return View(model);
         }
         #endregion
