@@ -23,12 +23,14 @@ namespace DotNet2020.Domain._6.Controllers
         [HttpGet("getAbsences")]
         public Dictionary<string, Dictionary<string, int>> GetAbsences(int year)
         {
-            var hardcode = new Dictionary<string,Dictionary<string,int>>();
+            /*var hardcode = new Dictionary<string,Dictionary<string,int>>();
             
             hardcode["Артур Саттаров"] = new Dictionary<string, int>();
-            hardcode["Артур Саттаров"]["май"] = 8848;
-
-            return hardcode;
+            hardcode["Артур Саттаров"]["май"] = 8848;*/
+            
+            var result = new FCAbsenceResolverBuilder(_context).Build(year);
+            
+            return result;
         }
 
         // GET

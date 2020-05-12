@@ -52,18 +52,11 @@ namespace DotNet2020.Domain._6.Services
                 
                 var fromDataTuple = GetSuitableMonthDay(e.From, year);
                 var toDataTuple = GetSuitableMonthDay(e.To, year);
-
-                if (fromDataTuple.Item1 == -1 && toDataTuple.Item1 != -1)
-                {
-                    var monthAbsenceWorkDaysDict =
-                        GetWorkDaysCountWhenMRigth(new DateTime(year, toDataTuple.Item1, toDataTuple.Item2));
-                    MergeDicts(result,monthAbsenceWorkDaysDict,name);
-                }
-                else if (fromDataTuple.Item1 != -1 && toDataTuple.Item1 == -1)
-                {
-                    
-                }
-
+                
+                var monthAbsenceWorkDaysDict =
+                    GetWorkDaysCountFromDataRange(fromDataTuple,toDataTuple,year);
+                MergeDicts(result,monthAbsenceWorkDaysDict,name);
+                
             }
 
             return result;
@@ -81,26 +74,60 @@ namespace DotNet2020.Domain._6.Services
             }
         }
 
-        private Dictionary<string, int> GetWorkDaysCountWhenMRigth(DateTime mRigth)
+        private Dictionary<string, int> GetWorkDaysCountFromDataRange(Tuple<int,int> fromDataTuple,Tuple<int,int> toDataTuple,int year)
         {
+            var startDay = 0;
+            var endDay = 0;
+            var startMonth = 0;
+            var endMonth = 0;
             var result = new Dictionary<string,int>();
-            var monthNumber = mRigth.Month;
-            var monthName = "";
-            var lastDay = 0;
 
-            for (int i = 1; i <= monthNumber;i++)
+            if (fromDataTuple.Item1 == -1 && toDataTuple.Item1 != -1)
             {
-                monthName = mRigth.GetMonthName().ToLower();
+                startMonth = 1;
+                startDay = 1;
+                endMonth = toDataTuple.Item1;
+                endDay = toDataTuple.Item2;
+            }
+            else if(fromDataTuple.Item1 != -1 && toDataTuple.Item1 == -1)
+            {
+                startMonth = fromDataTuple.Item1;
+                startDay = fromDataTuple.Item2;
+                endMonth = 12;
+                endDay = 31;
+            }
+            else
+            {
+                startMonth = fromDataTuple.Item1;
+                startDay = fromDataTuple.Item2;
+                endMonth = toDataTuple.Item1;
+                endDay = toDataTuple.Item2;
+            }
+            
 
-                if (i == monthNumber)
-                    lastDay = monthNumber;
+            for (int i = startMonth; i <= endMonth;i++)
+            {
+                string monthName = new DateTime(year,i,1).GetMonthName().ToLower();
+
+                var lastDay = 0;
+                if (i == endMonth)
+                    lastDay = endDay;
                 else
-                    lastDay = DateTime.DaysInMonth(mRigth.Year,i);
+                    lastDay = DateTime.DaysInMonth(year,i);
 
-                var allWorkDays = GetWorkDaysCountInMonth(mRigth.Year, i, -1);
-                var workDaysWithAbsence = GetWorkDaysCountInMonth(mRigth.Year, i, lastDay);
+                var firstDay = 0;
+                if (i != startMonth)
+                    firstDay = 1;
+                else
+                {
+                    firstDay = startDay;
+                }
                 
-                int value = Convert.ToInt32((((double)(allWorkDays - workDaysWithAbsence))/(double) allWorkDays * 100));
+                
+                var allWorkDays = GetWorkDaysCountInMonth(year, i, 1,DateTime.DaysInMonth(year,i));
+                var workDaysWithAbsence = GetWorkDaysCountInMonth(year, i, firstDay,lastDay);
+
+                int value = Convert.ToInt32((((double)(workDaysWithAbsence))/(double) allWorkDays * 100));
 
                 if (!result.ContainsKey(monthName))
                     result[monthName] = 0;
@@ -111,16 +138,15 @@ namespace DotNet2020.Domain._6.Services
             return result;
         }
 
-        private int GetWorkDaysCountInMonth(int year, int month,int lastDay)
+        private int GetWorkDaysCountInMonth(int year, int month,int monthStartDay,int monthEndDay)
         {
-            var days= lastDay == -1? DateTime.DaysInMonth(year, month) : lastDay;
             int counter = 0;
             
-            for (int i = 1; i <= days; i++)
+            for (int i = monthStartDay; i <= monthEndDay; i++)
             {
                 var date = new DateTime(year,month,i);
 
-                if (date.DayOfWeek != DayOfWeek.Saturday && date.DayOfWeek != DayOfWeek.Saturday)
+                if (date.DayOfWeek != DayOfWeek.Saturday && date.DayOfWeek != DayOfWeek.Sunday)
                     counter++;
             }
 
