@@ -9,17 +9,18 @@ namespace DotNet2020.Domain._6.Services
     public class CapacityWithAbsenceService
     {
         private static List<ResourceCapacity> _capacity;
-        private static List<ResourceCapacity> _capacityWithAbsences;
         private static Dictionary<int, int> _startCapacity;
+        private static Dictionary<int, double> _tempCapacity;
 
         public CapacityWithAbsenceService(List<ResourceCapacity> capacity)
         {
             _capacity = capacity;
-            _capacityWithAbsences = new List<ResourceCapacity>(capacity);
             _startCapacity = new Dictionary<int, int>();
+            _tempCapacity = new Dictionary<int, double>();
             foreach (var cap in _capacity)
             {
                 _startCapacity.Add(cap.Id, cap.Capacity);
+                _tempCapacity.Add(cap.Id, cap.Capacity);
             }
         }
         
@@ -31,32 +32,40 @@ namespace DotNet2020.Domain._6.Services
 
                 foreach (var day in days)
                 {
-                    ModifyCapacity(day, absence.CalendarEmployeeId);
+                    CalculateCapacity(day, absence.CalendarEmployeeId);
                 }
             }
-
+            ModifyCapacity();
             return _capacity;
         }
 
-        private static void ModifyCapacity(DateTime day, int resourceId)
+        private static void ModifyCapacity()
+        {
+            foreach (var cap in _tempCapacity)
+
+            {
+                var res = _capacity.FirstOrDefault(c => c.Id == cap.Key);
+                if (res != default)
+                { 
+                    res.Capacity = Convert.ToInt32(Math.Floor(cap.Value));  
+                }
+                
+            }
+        }
+        private static void CalculateCapacity(DateTime day, int resourceId)
         {
             if (day.DayOfWeek != DayOfWeek.Saturday && day.DayOfWeek != DayOfWeek.Sunday)
             {
-                _capacityWithAbsences = _capacityWithAbsences
-                    .Where(x => 
-                        x.ResourceId == resourceId &&
-                        x.Period.Start.Month == day.Month &&
-                        x.Period.Start.Year == day.Year)
-                    .Select(x =>
-                    {
-                        double capacity = _startCapacity[x.Id];
-                        Console.WriteLine(capacity);
-                        x.Capacity -= Convert.ToInt32(Math.Round(capacity/20));
-                        Console.WriteLine(x.Capacity);
-                        if (x.Capacity < 0) throw new Exception("capacity < 0");
-                        return x;
-                    })
-                    .ToList();
+                var res = _capacity.FirstOrDefault(x =>
+                    x.ResourceId == resourceId &&
+                    x.Period.Start.Month == day.Month &&
+                    x.Period.Start.Year == day.Year);
+                if (res != default)
+                {
+                  double capacity = _startCapacity[res.Id];
+                  _tempCapacity[res.Id] -= capacity / 20.0;           
+                  if (_tempCapacity[res.Id] < 0) throw new Exception("capacity < 0");
+                }
             }
         }
         private static List<DateTime> SplitTimespanToDays(DateTime from, DateTime to)
@@ -85,6 +94,7 @@ namespace DotNet2020.Domain._6.Services
 
             var last = days.Last();
             if (last.Day != to.Day || last.Month != to.Month || last.Year != to.Year) throw new Exception("Wrong split");
+            
             return days;
         }
         private static int CountOfDaysByMonth(int month, bool leap)
