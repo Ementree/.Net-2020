@@ -8,42 +8,50 @@
 }
 
 @model FunctionalCapacityViewModel
-    <script src="~/wwwroot6/js/FunctionalCapacity.js"></script>
-    <link rel="stylesheet" href="~/wwwroot6/css/FunctionalCapacity.css" />
+<script src="~/wwwroot6/js/FunctionalCapacity.js"></script>
+<link rel="stylesheet" href="~/wwwroot6/css/FunctionalCapacity.css" />
 
-    <form id="changeYearForm" asp-action="Index" class="form-width-control">
-        <div class="input-group mb-3">
-            <div class="input-group-prepend">
-                <label class="input-group-text" for="inputGroupSelect01">Год -</label>
-            </div>
-            <select id="changeYearSelector" class="custom-select align-center" name="year">
-                @for (int i = Model.YearsRange.Item1; i <= Model.YearsRange.Item2; i++)
-                {
-                    if (i == Model.CurrentYear)
-                    {
-                        <option class="align-center" value="@(i)" selected="selected">@(i)</option>
-                    }
-                    else
-                    {
-                        <option class="align-center" value="@(i)">@(i)</option>
-                    }
-                    <option value="2020">2021</option>
-                }
-            </select>
+<form id="changeYearForm" asp-action="Index" class="form-width-control">
+    <div class="input-group mb-3">
+        <div class="input-group-prepend">
+            <label class="input-group-text" for="inputGroupSelect01">Год -</label>
         </div>
-        @*<div class="mb-2">
+        <select id="changeYearSelector" class="custom-select align-center" name="year">
+            @for (int i = Model.YearsRange.Item1; i <= Model.YearsRange.Item2; i++)
+            {
+                if (i == Model.CurrentYear)
+                {
+                    <option class="align-center" value="@(i)" selected="selected">@(i)</option>
+                }
+                else
+                {
+                    <option class="align-center" value="@(i)">@(i)</option>
+                }
+            }
+        </select>
+    </div>
+    @*<div class="mb-2">
             <partial name="YearChangerPartial" />
         </div>*@
-    </form>
+</form>
 
-    <form id="" class="form-width-control">
-        <div class="input-group mb-3">
-            <div class="input-group-prepend">
-                <span class="input-group-text" id="basic-addon1">Погрешность,%</span>
-            </div>
-            <input id="accuracy-input" type="number" class="form-control" value="@Model.CurrentAccuracy" size="2" aria-describedby="basic-addon1">
+<form id="" class="form-width-control">
+    <div class="input-group mb-3">
+        <div class="input-group-prepend">
+            <span class="input-group-text" id="basic-addon1">Погрешность,%</span>
         </div>
-    </form>
+        <input id="accuracy-input" type="number" class="form-control" value="@Model.CurrentAccuracy" size="2" aria-describedby="basic-addon1">
+    </div>
+</form>
+
+<form>
+    <div class="ml">
+        <input id="absence-checkbox" type="checkbox">
+        <label>Учитывать пропуски?</label>
+    </div>
+</form>
+
+
 <div class="fcwrapper">
     <div class="fcscroller1">
         <table class="fcscroll-table table bottom">
@@ -81,15 +89,15 @@
 
                     CureentGroupCommonBothCapacityCount = new List<int[]>();
 
-                    for(int i = 0; i < 12;i++)
+                    for (int i = 0; i < 12; i++)
                     {
                         CureentGroupCommonBothCapacityCount.Add(new int[2]);
                     }
 
-                <tr>
-                    <td class="fcsticky-col1 left h45">
-                        <h6>@pair.Key</h6>
-                    </td>
+                    <tr>
+                        <td class="fcsticky-col1 main-column-js left h45">
+                            <h6>@pair.Key</h6>
+                        </td>
 
                         @for (int i = 0; i < 12; i++)
                         {
@@ -98,15 +106,15 @@
                             <td class="month-column-right-border h45">
                             </td>
                         }
-                </tr>
+                    </tr>
 
                     @foreach (var m in pair.Value)
                     {
                         <tr>
-                            <td class="fcsticky-col1 left h45">
+                            <td class="fcsticky-col1 left h45 main-column-js absence-for-js">
                                 @(m.Resource.Employee.FirstName + " " + m.Resource.Employee.LastName)
                             </td>
-                            @{ 
+                            @{
                                 int counter = 0;
                             }
                             @foreach (var capacItem in m.YearItemsDict[Model.CurrentYear])
@@ -114,13 +122,13 @@
 
                                 <td class="right align-center h45 month-column-left-border for-js-selecor">
                                     @capacItem.PlannedCapacity%
-                                    @{ 
+                                    @{
                                         CureentGroupCommonBothCapacityCount[counter][0] += capacItem.PlannedCapacity;
                                     }
                                 </td>
-                                <td class="month-column-right-border align-center h45 for-js-selecor">
+                                <td class="month-column-right-border align-center absence-for-js h45 for-js-selecor">
                                     @capacItem.CurrentCapacity%
-                                    @{ 
+                                    @{
                                         CureentGroupCommonBothCapacityCount[counter][1] += capacItem.CurrentCapacity;
                                         counter++;
                                     }
@@ -130,18 +138,18 @@
                     }
 
                     <tr class="total">
-                        <td class="fcsticky-col1 left h45 total-highlight">
+                        <td class="fcsticky-col1 left h45 main-column-js total-highlight">
                             <h6>Всего(@(pair.Key))</h6>
                         </td>
-                            @for(int i =0; i < 12; i++)
-                            {
-                                <td class="right align-center h45 total-sum-js month-column-left-border for-js-selecor">
-                                    @CureentGroupCommonBothCapacityCount[i][0]%
-                                </td>
-                                <td class="month-column-right-border align-center h45 total-sum-js for-js-selecor">
-                                    @CureentGroupCommonBothCapacityCount[i][1]%
-                                </td>
-                            }
+                        @for (int i = 0; i < 12; i++)
+                        {
+                            <td class="right align-center h45 total-sum-js month-column-left-border for-js-selecor">
+                                @CureentGroupCommonBothCapacityCount[i][0]%
+                            </td>
+                            <td class="month-column-right-border align-center h45 total-sum-js for-js-selecor">
+                                @CureentGroupCommonBothCapacityCount[i][1]%
+                            </td>
+                        }
                     </tr>
                 }
             </tbody>
