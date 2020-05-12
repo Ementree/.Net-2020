@@ -54,7 +54,6 @@ namespace DotNet2020.Data
         
         public virtual DbSet<AbstractCalendarEntry> AbstractCalendarEntries { get; set; }
         
-
         public virtual DbSet<Employee> Employee { get; set; }
 
         public virtual DbSet<GradeToGradeModel> GradeToGrade { get; set; }
@@ -62,7 +61,10 @@ namespace DotNet2020.Data
         public virtual DbSet<EmployeeCalendar> EmployeeCalendar { get; set; }
 
         public virtual DbSet<QuestionModel> Questions { get; set; }
+        
         public virtual DbSet<CompetenceQuestionsModel> CompetenceQuestions { get; set; }
+        
+        public virtual DbSet<QuestionComplexityModel> QuestionComplexity { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
