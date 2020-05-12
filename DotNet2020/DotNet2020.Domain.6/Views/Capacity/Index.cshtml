@@ -1,20 +1,41 @@
 @{
     Layout = "~/Views/Shared/_Layout6.cshtml";
-    var months = ViewBag.Months;
     var date = DateTime.Now;
     var year = ViewBag.Year;
 }
 @using DotNet2020.Domain._6.Models.ViewModels
-@model Dictionary<string, List<ViewModelCapacity>>
+@model CapacityViewModel
 
 <link rel="stylesheet" href="~/wwwroot6/css/Capacity.css"/>
 <div class="form-inline">
-    <form asp-controller="Capacity" asp-action="Index">
+    <form asp-controller="Capacity" asp-action="Index" class="form-inline">
         <div class="mb-2">
             <partial name="YearChangerPartial"/>
         </div>
-    </form> 
-    <button class="btn btn-primary mb-2 ml-2">Без учета отсутствий</button>
+        <div class="mb-2">
+            @if (Model.WithAbsence)
+            {
+                <button
+                    class="btn btn-primary ml-2"
+                    asp-route-withAbsence="@(!Model.WithAbsence)"
+                    asp-route-year="@(year)"
+                    onclick="this.form.submit()">
+                    Показать без учета отсутствий
+                </button>
+            }
+            else
+            {
+                <button
+                    class="btn btn-primary ml-2"
+                    asp-route-withAbsence="@(!Model.WithAbsence)"
+                    asp-route-year="@(year)"
+                    onclick="this.form.submit()">
+                    Показать с учетом отсутствий
+                </button>
+            }
+        </div>
+    </form>
+
 </div>
 
 <div class="wrapper">
@@ -32,14 +53,14 @@
                 {
                     var color = (date.Month == i + 1 && year == ViewBag.CurrentYear) ? "month-highlight" : "";
                     <th class="right @color">
-                        @months[i]
+                        @Model.Months[i]
                     </th>
                 }
             </tr>
             </thead>
 
             <tbody>
-            @foreach (var resources in Model)
+            @foreach (var resources in Model.Data)
             {
                 <tr>
                     <th class="sticky-col1 left h45 total-sum-highlight" style="width: 20%;">
@@ -66,17 +87,35 @@
                         </td>
                         @for (int i = 1; i < 13; i++)
                         {
-                            if (resource.Capacity.ContainsKey(i))
+                            if (Model.WithAbsence)
                             {
-                                <td style="padding: 7px;" id="@(resource.ResourceId.ToString() + ';' + i.ToString() + ';' + year)" class="right align-center" ondblclick="handle(this)">
-                                    @resource.Capacity[i]%
-                                </td>
+                                if (resource.Capacity.ContainsKey(i))
+                                {
+                                    <td style="padding: 7px;" id="@(resource.ResourceId.ToString() + ';' + i.ToString() + ';' + year)" class="right align-center" ondblclick="">
+                                        @resource.Capacity[i]%
+                                    </td>
+                                }
+                                else
+                                {
+                                    <td style="padding: 7px;" id="@(resource.ResourceId.ToString() + ';' + i.ToString() + ';' + year)" class="right h45 align-center" ondblclick="">
+    
+                                    </td>
+                                }                            
                             }
                             else
                             {
-                                <td style="padding: 7px;" id="@(resource.ResourceId.ToString() + ';' + i.ToString() + ';' + year)" class="right h45 align-center" ondblclick="handle(this)">
-
-                                </td>
+                                if (resource.Capacity.ContainsKey(i))
+                                {
+                                    <td style="padding: 7px;" id="@(resource.ResourceId.ToString() + ';' + i.ToString() + ';' + year)" class="right align-center" ondblclick="handle(this)">
+                                        @resource.Capacity[i]%
+                                    </td>
+                                }
+                                else
+                                {
+                                    <td style="padding: 7px;" id="@(resource.ResourceId.ToString() + ';' + i.ToString() + ';' + year)" class="right h45 align-center" ondblclick="handle(this)">
+    
+                                    </td>
+                                }  
                             }
                         }
                     </tr>

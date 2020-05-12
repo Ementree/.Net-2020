@@ -38,7 +38,7 @@ namespace DotNet2020.Domain._6.Services.Absences
 
         private string GetResourceName(Resource resource)
         {
-            return $"{resource.Employee.FirstName} {resource.Employee.LastName} {resource.Employee.MiddleName}";
+            return $"{resource.Employee.FirstName} {resource.Employee.LastName}";
         }
         
         private Dictionary<string, (List<bool>, List<int>)> GetResourceAbsencesDictionary(string group)

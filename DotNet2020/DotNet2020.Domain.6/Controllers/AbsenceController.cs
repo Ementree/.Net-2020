@@ -19,8 +19,11 @@ namespace DotNet2020.Domain._6.Controllers
         public IActionResult Index(int year = 2020)
         {
             ViewBag.Year = year;
-
-            var absences = _context.Set<AbstractCalendarEntry>().ToList();
+            
+            var absences = _context.Set<AbstractCalendarEntry>()
+                .Include(abs=>abs.CalendarEmployee)
+                .ThenInclude(e=>e.Employee)
+                .ToList();
 
             var resourcesCapacity = _context.Set<ResourceCapacity>()
                 .Include(res => res.Resource)
@@ -45,7 +48,5 @@ namespace DotNet2020.Domain._6.Controllers
 
             return View(model);
         }
-
-
     }  
 }
