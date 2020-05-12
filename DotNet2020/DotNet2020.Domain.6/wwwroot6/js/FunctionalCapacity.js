@@ -167,17 +167,15 @@ function AmountResolver() {
     var prev = 0;
     for (var _i = 0, rangeList_1 = rangeList; _i < rangeList_1.length; _i++) {
         var index = rangeList_1[_i];
-        console.log("итерация:" + index);
         var array = InitYearAmountArray();
-        for (var i = prev * 24; i < index * 24; i++) {
-            console.log(cells[i].innerText);
+        for (var i = prev * 24; i < (prev + index) * 24; i++) {
             var value = GetNumberFromCell(cells[i]);
             array[i % 24] += value;
         }
-        for (var i = index * 24; i < index * 24 + 24; i++) {
+        for (var i = (prev + index) * 24; i < (prev + index) * 24 + 24; i++) {
             WriteNumberToCell(cells[i], array[i % 24]);
         }
-        prev = index;
+        prev = index + prev;
     }
 }
 function GetNumberFromCell(cell) {
