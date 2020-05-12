@@ -33,48 +33,55 @@ namespace DotNet2020.Domain._3.Services
             var questionsIds = _context.Set<CompetenceQuestionsModel>().Where(x => x.CompetenceId == compentence.Id).Select(x => x.QuestionId).ToList();
             var questions = _context.Set<QuestionModel>().Where(x => questionsIds.Contains(x.Id)).ToList();
 
-            var result = new List<QuestionModel>
-            {
-                GetRandomQuestion(questions, Easy),
-                GetRandomQuestion(questions, Medium),
-                GetRandomQuestion(questions, Hard)
-            };
+            var result = new List<QuestionModel>();
+            result.AddRange(GetRandomQuestion(questions, Easy));
+            result.AddRange(GetRandomQuestion(questions, Medium));
+            result.AddRange(GetRandomQuestion(questions, Hard));
+
             if (result.Count < 3)
                 isValid = false;
             return result;
         }
 
-        public QuestionModel GetRandomQuestion(List<QuestionModel> questions, string difficulty)
+        public List<QuestionModel> GetRandomQuestion(List<QuestionModel> questions, string difficulty)
         {
+            var result = new List<QuestionModel>();
             var rnd = new Random();
             var complexityId = _context.Set<QuestionComplexityModel>().Where(x => x.Value == difficulty).Select(x => x.Id).FirstOrDefault();
             var neededQuestions = questions
                 .Where(q => q.ComplexityId == complexityId)
                 .ToList();
+            if (neededQuestions.Count == 0)
+            {
+                return result;
+            }
             var number = rnd.Next(0, neededQuestions.Count());
-            return neededQuestions[number];
+            result.Add(neededQuestions[number]);
+            return result;
         }
 
         public List<QuestionModel> GetPreviousAttestationQuestions(AttestationModel attestation)
         {
-            var questions = _context.Set<QuestionModel>();
-            var attestationToAnswer = _context.Set<AttestationAnswerModel>();
-            var answers = _context.Set<AnswerModel>();
+            var questions = _context.Set<QuestionModel>().ToList();
+            var attestationToAnswer = _context.Set<AttestationAnswerModel>().ToList();
+            var answers = _context.Set<AnswerModel>().ToList();
 
             var answerIds = attestationToAnswer
                 .Where(x => x.AttestationId == attestation.Id)
-                .Select(x => x.AnswerId);
+                .Select(x => x.AnswerId)
+                .ToList();
 
             var neededQuestions = new List<QuestionModel>();
             foreach (var id in answerIds)
             {
-                var answer = answers.FirstOrDefault(a => a.AnswerId == id && a.IsRight == true);
+                var answer = answers.Where(x => !x.IsRight).FirstOrDefault(a => a.AnswerId == id);
+
                 if (answer == default) continue;
                 var question = questions.FirstOrDefault(q => q.Question == answer.Question);
                 if (question != default)
                     neededQuestions.Add(question);
             }
-            
+
             var rnd = new Random();
             var result = neededQuestions
                 .OrderBy(x => rnd.Next())

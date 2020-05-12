@@ -235,8 +235,38 @@
                             <br />
                             <br />
 
-                            <p><input type="checkbox" name="IsGotGrade" value="true" /> Получил ли сотрудник грейд? </p>
-                            <input name="GradeId" value="@Model.GradeId" hidden />
+                            @if (ViewBag.ReAttestation)
+                            {
+                                <input name="ReAttestation" value="true" hidden/>
+                                <p>Список компетенций по которым проходила переаттестация</p>
+
+                                <table class="table">
+                                    <thead class="thead">
+                                        <tr>
+                                            <th>Получил?</th>
+                                            <th>Компетенции</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var element in Model.TestedCompetences)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    <input type="checkbox" value="@element.Id" name="GotCompetences" />
+                                                </td>
+                                                <td>@element.Competence</td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            }
+                            else
+                            {
+                                <p><input type="checkbox" name="IsGotGrade" value="true" /> Получил ли сотрудник грейд? </p>
+                                <input name="GradeId" value="@Model.GradeId" hidden />
+                            }
+
+
 
                             <p>Обратная связь</p>
                             <textarea style="border:none;border-top:groove;border-left:groove;" name="Feedback" cols="100" required></textarea>

@@ -28,6 +28,8 @@ namespace DotNet2020.Domain._3.Models
 
         public List<long> IdsTestedCompetences { get; set; }
         [NotMapped]
+        public bool ReAttestation { get; set; }
+        [NotMapped]
         public List<CompetencesModel> TestedCompetences { get; set; }
         [NotMapped]
         public List<AttestationAnswerModel> AttestationAnswer { get; set; } = new List<AttestationAnswerModel>();

@@ -378,6 +378,8 @@ namespace DotNet2020.Domain._3.Controllers
         public IActionResult Attestation(AttestationModel model)
         {
             var questionService = new QuestionService(_context);
+            DateTime lastDate;
+            AttestationModel attestation;
             switch (model.Action)
             {
                 case AttestationAction.Choosing: //вывести окно выбора
@@ -410,17 +412,26 @@ namespace DotNet2020.Domain._3.Controllers
                     }
 
                     var workerGrades = GetWorkerGrades(workerCompetences, model.Grades, _context.Set<GradeToGradeModel>().ToList());
-
-                    foreach (var element in workerGrades)
+                    if (workerGrades.Count() != 0)
                     {
-                        if (model.Grades.Contains(element))
+                        var max = workerGrades.Max(x => x.GradesCompetences.Count());
+
+                        var currentGrade = workerGrades.Where(x => x.GradesCompetences.Count() == max).FirstOrDefault();
+
+                        foreach (var element in workerGrades)
                         {
-                            model.Grades.Remove(element);
+                            if (model.Grades.Contains(element))
+                            {
+                                model.Grades.Remove(element);
+                            }
                         }
+                        model.Grades.Add(currentGrade);
                     }
+                    
                     break;
 
                 case AttestationAction.AttestationByCompetences: //вывести окно аттестации по компетенциям
+                    bool isValid = true;
                     worker = GetLoadedWorkers().Where(x => x.Id == model.WorkerId).FirstOrDefault();
                     workerCompetences = new List<CompetencesModel>();
 
@@ -437,19 +448,48 @@ namespace DotNet2020.Domain._3.Controllers
                             testedCompetences.Add(competence);
                         }
                     }
-                    questions = questionService.GetCompetencesAttestationQuestions(testedCompetences).Select(x => x.Question).ToList();
+                    questions = questionService.GetCompetencesAttestationQuestions(testedCompetences, out isValid).Select(x => x.Question).ToList();
+                    if (isValid)
+                    {
+                        questions = questions.Distinct().ToList();
+                        if (_context.Set<AttestationModel>().Any(x => x.WorkerId == model.WorkerId))
+                        {
+                            lastDate = _context
+                           .Set<AttestationModel>()
+                           .Where(x => x.WorkerId == model.WorkerId)
+                           .Max(x => x.Date);
+                            attestation = _context
+                                .Set<AttestationModel>()
+                                .Where(x => x.WorkerId == model.WorkerId && x.Date == lastDate)
+                                .FirstOrDefault();
+                            if (attestation != null)
+                            {
+                                questions
+                                    .AddRange(questionService.GetPreviousAttestationQuestions(attestation)
+                                    .Select(x => x.Question));
+                            }
+                        }
 
-                    questions = questions.Distinct().ToList();
-                    model.Questions = questions;
-                    model.TestedCompetences = testedCompetences;
+
+                        model.Questions = questions;
+                        model.TestedCompetences = testedCompetences;
+                    }
+                    else
+                    {
+                        return RedirectToAction("Index");
+                    }
+
                     break;
 
                 case AttestationAction.AttestationByGrade: //вывести окно аттестации по грейдам
+                    var grades = GetLoadedGrades();
+                    ViewBag.ReAttestation = false;
                     worker = GetLoadedWorkers().Where(x => x.Id == model.WorkerId).FirstOrDefault();
+                    var gradeToGrades = _context.Set<GradeToGradeModel>().ToList();
                     var questionsForGrade = new List<string>();
                     var gradeId = model.GradeId.Value;
-
                     var testedGradeCompetences = _context.Set<GradeCompetencesModel>().Where(x => x.GradeId == gradeId).ToList();
+
                     testedCompetences = new List<CompetencesModel>();
 
                     workerCompetences = new List<CompetencesModel>();
@@ -465,15 +505,84 @@ namespace DotNet2020.Domain._3.Controllers
                             testedCompetences.Add(competence);
                         }
                     }
-                    questionsForGrade = questionService.GetCompetencesAttestationQuestions(testedCompetences).Select(x => x.Question).ToList();
+                    workerGrades = GetWorkerGrades(workerCompetences, grades, _context.Set<GradeToGradeModel>().ToList());
+
+                    if (workerGrades.Count() != 0)
+                    {
+                        var max = workerGrades.Max(x => x.GradesCompetences.Count());
+                        var currentGrade = workerGrades.Where(x => x.GradesCompetences.Count() == max).FirstOrDefault();
+
+                        if (currentGrade.Id == model.GradeId.Value)
+                        {
+                            ViewBag.ReAttestation = true;
+                        }
+                    }
+
+                    questionsForGrade = questionService.GetCompetencesAttestationQuestions(testedCompetences, out isValid).Select(x => x.Question).ToList();
+
+                    if (!isValid)
+                    {
+                        return RedirectToAction("Attestsation");
+                    }
+
+                    if (_context.Set<AttestationModel>().Any(x => x.WorkerId == model.WorkerId))
+                    {
+                        lastDate = _context
+                            .Set<AttestationModel>()
+                            .Where(x => x.WorkerId == model.WorkerId)
+                            .Max(x => x.Date);
+                        attestation = _context
+                            .Set<AttestationModel>()
+                            .Where(x => x.WorkerId == model.WorkerId && x.Date == lastDate)
+                            .FirstOrDefault();
+                        if (attestation != null)
+                        {
+                            questionsForGrade
+                                .AddRange(questionService.GetPreviousAttestationQuestions(attestation)
+                                .Select(x => x.Question));
+                        }
+                    }
 
                     questionsForGrade = questionsForGrade.Distinct().ToList();
+
+                    if (ViewBag.ReAttestation)
+                    {
+                        if (!gradeToGrades.Where(x => x.NextGradeId == gradeId).Any())
+                        {
+                            var grade = grades.Where(x => x.Id == gradeId).FirstOrDefault();
+                            testedCompetences.AddRange(grade.GradesCompetences.Select(x => x.Competence));
+                        }
+                        else
+                        {
+                            var previousGradesIds = gradeToGrades
+                                .Where(x => x.NextGradeId == gradeId)
+                                .Select(x => x.GradeId);
+                            var previousGrades = grades
+                                .Where(x => previousGradesIds.Contains(x.Id))
+                                .ToList();
+                            var previousCompetences = previousGrades.SelectMany(x => x.GradesCompetences).Select(x => x.Competence).ToList();
+                            testedCompetences.AddRange(previousCompetences);
+                        }
+                    }
+
                     model.TestedCompetences = testedCompetences;
                     model.Questions = questionsForGrade;
-
+                    
                     break;
 
                 case AttestationAction.Finished: //сохранить результаты
+                    if (model.ReAttestation)
+                    {
+                        var specificWorkerCompetences = _context.Set<SpecificWorkerCompetencesModel>();
+                        foreach (var competenceid in model.IdsTestedCompetences)
+                        {
+                            specificWorkerCompetences
+                                .Remove(_context.Set<SpecificWorkerCompetencesModel>()
+                                .Where(x => x.CompetenceId == competenceid)
+                                .FirstOrDefault());
+                        }
+                    }
+                    
                     model.Grades = GetLoadedGrades();
                     var tuple = GetProblemsAndAnswers(model);
                     model.Problems = tuple.Item1;
@@ -634,6 +743,11 @@ namespace DotNet2020.Domain._3.Controllers
         {
             var specificWorkerModel = _context.Set<SpecificWorkerCompetencesModel>().Where(x => x.WorkerId == model.WorkerId).ToList();
             var newSpecificWorkerCompetences = new List<SpecificWorkerCompetencesModel>();
+
+            if (model.GotCompetences == null)
+            {
+                model.GotCompetences = new List<long>();
+            }
 
             foreach (var competence in model.GotCompetences)
             {
