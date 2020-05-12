@@ -1,0 +1,44 @@
+@{
+    Layout = "~/Views/Shared/_Layout6.cshtml";
+}
+@model List<DotNet2020.Domain._6.Models.Resource>
+
+<link rel="stylesheet" href="~/wwwroot6/css/Capacity.css"/>
+<div class="container">
+    <table class="scroll-table table bottom">
+        <thead>
+        <tr>
+            <th class="align-center">
+                Ресурс
+            </th>
+            <th class="align-center">
+                Группа ресурса
+            </th>
+            <th class="align-center">
+                Тип ресурса
+            </th>
+        </tr>
+
+        </thead>
+
+        <tbody>
+            @foreach (var resource in Model)
+            {
+                <tr>
+                    <td>
+                        @(resource.Employee.FirstName + " " + resource.Employee.LastName)
+                    </td>
+                    <td>
+                        @resource.ResourceGroupType.Group
+                    </td>
+                    <td>
+                        @resource.ResourceGroupType.Type
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <div class="mb-2">
+
+    </div>
+</div>

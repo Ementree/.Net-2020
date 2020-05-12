@@ -140,7 +140,6 @@ namespace DotNet2020.Domain._6.Services
                     countOfWorkDays++;
                 }
             }
-            Console.WriteLine(countOfWorkDays);
             return countOfWorkDays;
         }
     }
