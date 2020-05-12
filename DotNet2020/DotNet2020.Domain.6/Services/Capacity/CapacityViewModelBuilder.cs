@@ -9,25 +9,31 @@ namespace DotNet2020.Domain._6.Services
     {
         private readonly List<Resource> _resources;
         private readonly List<ResourceCapacity> _resourceCapacities;
+        private readonly int _year;
+        private readonly bool _withAbsence;
+        
 
-        public CapacityViewModelBuilder(List<Resource> resources, List<ResourceCapacity> resourceCapacities)
+        public CapacityViewModelBuilder(List<Resource> resources, List<ResourceCapacity> resourceCapacities, int year, bool withAbsence)
         {
             _resources = resources;
             _resourceCapacities = resourceCapacities;
+            _year = year;
+            _withAbsence = withAbsence;
         }
 
-        public Dictionary<string, List<ViewModelCapacity>> Build()
+        public CapacityViewModel Build()
         {
             var capacities = GroupByResource();
             var viewModelList = MakeViewModelList(capacities);
-            var model = GroupCapacityByGroup(viewModelList);
+            var data = GroupCapacityByGroup(viewModelList);
+            var model = new CapacityViewModel(data, MonthGeneratorService.GetAllMonths(_year), _withAbsence);
             
             return model;
         }
 
-        private List<ViewModelCapacity> MakeViewModelList(Dictionary<int, Dictionary<int, int>> capacities)
+        private List<CapacityViewModelData> MakeViewModelList(Dictionary<int, Dictionary<int, int>> capacities)
         {
-            var viewModelList = new List<ViewModelCapacity>();
+            var viewModelList = new List<CapacityViewModelData>();
             foreach (var resource in _resources)
             {
                 var capacity = new Dictionary<int, int>();
@@ -36,7 +42,7 @@ namespace DotNet2020.Domain._6.Services
                     capacity = capacities[resource.Id];
                 }
 
-                viewModelList.Add(new ViewModelCapacity(
+                viewModelList.Add(new CapacityViewModelData(
                     resource.Id,
                     resource.Employee.FirstName + ' ' + resource.Employee.LastName,
                     resource.ResourceGroupType.Type,
@@ -61,9 +67,9 @@ namespace DotNet2020.Domain._6.Services
             return capacities;
         }
 
-        private Dictionary<string, List<ViewModelCapacity>> GroupCapacityByGroup(List<ViewModelCapacity> viewModelList)
+        private Dictionary<string, List<CapacityViewModelData>> GroupCapacityByGroup(List<CapacityViewModelData> viewModelList)
         {
-            var model = new Dictionary<string, List<ViewModelCapacity>>();
+            var model = new Dictionary<string, List<CapacityViewModelData>>();
             foreach (var viewModel in viewModelList)
             {
                 if (model.ContainsKey(viewModel.Group))
@@ -72,7 +78,7 @@ namespace DotNet2020.Domain._6.Services
                 }
                 else
                 {
-                    model.Add(viewModel.Group, new List<ViewModelCapacity>() {viewModel});
+                    model.Add(viewModel.Group, new List<CapacityViewModelData>() {viewModel});
                 }
             }
 
