@@ -1,5 +1,4 @@
-﻿using DotNet2020.Data;
-using DotNet2020.Domain.Core.Models;
+﻿using DotNet2020.Domain.Core.Models;
 
 namespace DotNet2020.Domain._6.Models
 {

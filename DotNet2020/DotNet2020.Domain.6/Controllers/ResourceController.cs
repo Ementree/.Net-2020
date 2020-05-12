@@ -41,22 +41,20 @@ namespace DotNet2020.Domain._6.Controllers
 
                 var resource = resources.FirstOrDefault(res => res.Id == resourceId);
                 if (resource == default) throw new Exception("Resource not found");
-                
-                
+
+
                 var changed = false;
                 if (resource.ResourceGroupType.Group != group || resource.ResourceGroupType.Type != type)
                 {
                     var resourceGroupType = groupsAndTypes.FirstOrDefault(gt => gt.Group == group && gt.Type == type);
-                    if (resourceGroupType == default) throw  new Exception("Pair doesn't exist");
+                    if (resourceGroupType == default) throw new Exception("Pair doesn't exist");
                     var id = resourceGroupType.Id;
                     resource.UpdateGroupAndType(id);
                     changed = true;
                 }
 
                 if (changed)
-                {
                     _context.SaveChanges();
-                }
             }
 
             var model = new ResourceViewModel(_context);
