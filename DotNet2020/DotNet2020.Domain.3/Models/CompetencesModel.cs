@@ -13,8 +13,6 @@ namespace DotNet2020.Domain._3.Models
 
         public List<string> Content { get; set; } = new List<string>();
 
-        public List<string> Questions { get; set; } = new List<string>();
-
         public List<GradeCompetencesModel> GradesCompetences { get; set; } = new List<GradeCompetencesModel>();
         public List<SpecificWorkerCompetencesModel> SpecificWorkerCompetencesModels { get; set; } = new List<SpecificWorkerCompetencesModel>();
 

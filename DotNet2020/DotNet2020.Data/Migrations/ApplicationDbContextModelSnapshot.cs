@@ -277,6 +277,19 @@ namespace DotNet2020.Data.Migrations
                     b.ToTable("Attestations");
                 });
 
+            modelBuilder.Entity("DotNet2020.Domain._3.Models.CompetenceQuestionsModel", b =>
+                {
+                    b.Property<long>("CompetenceId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("QuestionId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("CompetenceId", "QuestionId");
+
+                    b.ToTable("CompetenceQuestions");
+                });
+
             modelBuilder.Entity("DotNet2020.Domain._3.Models.CompetencesModel", b =>
                 {
                     b.Property<long>("Id")
@@ -288,9 +301,6 @@ namespace DotNet2020.Data.Migrations
                         .HasColumnType("text");
 
                     b.Property<List<string>>("Content")
-                        .HasColumnType("text[]");
-
-                    b.Property<List<string>>("Questions")
                         .HasColumnType("text[]");
 
                     b.HasKey("Id");
@@ -339,6 +349,21 @@ namespace DotNet2020.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Grades");
+                });
+
+            modelBuilder.Entity("DotNet2020.Domain._3.Models.QuestionModel", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<string>("Question")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Questions");
                 });
 
             modelBuilder.Entity("DotNet2020.Domain._3.Models.SpecificWorkerCompetencesModel", b =>
@@ -643,12 +668,10 @@ namespace DotNet2020.Data.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
                     b.Property<string>("LoginProvider")
-                        .HasColumnType("character varying(128)")
-                        .HasMaxLength(128);
+                        .HasColumnType("text");
 
                     b.Property<string>("ProviderKey")
-                        .HasColumnType("character varying(128)")
-                        .HasMaxLength(128);
+                        .HasColumnType("text");
 
                     b.Property<string>("ProviderDisplayName")
                         .HasColumnType("text");
@@ -685,12 +708,10 @@ namespace DotNet2020.Data.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("LoginProvider")
-                        .HasColumnType("character varying(128)")
-                        .HasMaxLength(128);
+                        .HasColumnType("text");
 
                     b.Property<string>("Name")
-                        .HasColumnType("character varying(128)")
-                        .HasMaxLength(128);
+                        .HasColumnType("text");
 
                     b.Property<string>("Value")
                         .HasColumnType("text");
