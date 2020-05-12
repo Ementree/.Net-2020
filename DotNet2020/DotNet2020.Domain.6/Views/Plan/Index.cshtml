@@ -91,7 +91,7 @@
                                 keyValuePair.Key.Start.Month == i)
                                 .ToList();
                             var highlight = funcCapacityProjHighlight.FirstOrDefault(fcproj =>
-                                fcproj.PeriodId == i && fcproj.ProjectId == pair.Key.Id);
+                                fcproj.Period.Start.Month == i && fcproj.ProjectId == pair.Key.Id);
                             var color = highlight != default ? highlight.Color : "total-sum-highlight";
                             <th id="fcp;@i;@ViewBag.Year;@pair.Key.Id" class="resource_capacity_plan @color">
                                 @(fcp != default ? fcp.FunctioningCapacity.ToString() : " ")

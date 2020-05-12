@@ -1,10 +1,9 @@
 using System;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
 using System.Linq;
+using DotNet2020.Domain._4.Models;
 using DotNet2020.Domain._6.Models;
 using Microsoft.EntityFrameworkCore;
-using DotNet2020.Domain._6.Models.ViewModels;
 using DotNet2020.Domain._6.Services;
 
 
@@ -19,7 +18,7 @@ namespace DotNet2020.Domain._6.Controllers
             _context = context;
         }
 
-        public IActionResult Index(int year = 2020)
+        public IActionResult Index(int year = 2020, bool withAbsence = true)
         {
             var resources = _context.Set<Resource>()
                 .Include(res => res.Employee)
@@ -31,9 +30,17 @@ namespace DotNet2020.Domain._6.Controllers
                 .Include(x => x.Period)
                 .Where(x => x.Period.Start.Year == year)
                 .ToList();
-
-            var builder = new CapacityViewModelBuilder(resources, resourceCapacities);
+            var absence = _context.Set<AbstractCalendarEntry>().ToList();
+            
+            if (withAbsence)
+            {
+                var capacityWithAbsenceService = new CapacityWithAbsenceService(resourceCapacities);
+                resourceCapacities = capacityWithAbsenceService.GetCapacityWithAbsence(absence);
+            }
+            
+            var builder = new CapacityViewModelBuilder(resources, resourceCapacities, year, withAbsence);
             var model = builder.Build();
+            
 
             ViewBag.CurrentYear = DateTime.Now.Year;
             ViewBag.Year = year;
@@ -43,7 +50,7 @@ namespace DotNet2020.Domain._6.Controllers
         }
 
         [HttpPost("/changeCapacity")]
-        public void ChangeCapacity([FromBody] string data)
+        public void SetCapacity([FromBody] string data)
         {
             var dataArr = data.Split(';');
 
