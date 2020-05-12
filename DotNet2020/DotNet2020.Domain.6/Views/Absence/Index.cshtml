@@ -1,8 +1,9 @@
 ﻿@{
     Layout = "~/Views/Shared/_Layout6.cshtml";
+    var months = ViewBag.Months;
 }
 @using DotNet2020.Domain._6.Models.ViewModels
-@model AbsencesViewModel
+@model Dictionary<string,AbsencesViewModel>
 <!DOCTYPE html>
     <div class="container-fluid mb-2 d-inline-flex">
         <form asp-action="Index" asp-controller="Absence">
@@ -15,31 +16,36 @@
                 <thead>
                     <tr>
                         <th class="sticky-col1">  </th>
-                        @foreach (var period in Model.Months)
+                        @foreach (var month in months)
                         {
-                            <th>@period</th>
+                            <th>@month</th>
                         }
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var resource in Model.ResourceAbsences)
+                @foreach(var group in Model.Keys)
+                {
+                    <tr style="height: 44px;">
+                        <th class="sticky-col1">@group</th>
+                    </tr>
+                    @foreach (var (res, (capacityFlag, countAbs)) in Model[group].ResourceAbsences)
                     {
                         <tr>
-                            <td class="sticky-col1">@resource.Key</td>
-                            @for (int i = 0; i < resource.Value.Item1.Count; i++)
+                            <td class="sticky-col1">@res</td>
+                            @for (var i = 0; i < capacityFlag.Count; i++)
                             {
-                                if (resource.Value.Item1[i])
+                                if (capacityFlag[i])
                                 {
-                                    <td class="red-highlight">@resource.Value.Item2[i]</td>
+                                    <td class="red-highlight">@countAbs[i]</td>
                                 }
                                 else
                                 {
-                                    <td>@resource.Value.Item2[i]</td>
+                                    <td>@countAbs[i]</td>
                                 }
                             }
-
                         </tr>
                     }
+                }
                 </tbody>
             </table>
         </div>
