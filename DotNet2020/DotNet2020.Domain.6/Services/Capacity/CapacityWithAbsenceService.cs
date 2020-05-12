@@ -12,6 +12,9 @@ namespace DotNet2020.Domain._6.Services
         private static Dictionary<int, int> _startCapacity;
         private static Dictionary<int, double> _tempCapacity;
 
+        private static bool IsWeekend(DateTime day) =>
+            day.DayOfWeek != DayOfWeek.Saturday && day.DayOfWeek != DayOfWeek.Sunday;
+
         public CapacityWithAbsenceService(List<ResourceCapacity> capacity)
         {
             _capacity = capacity;
@@ -23,7 +26,7 @@ namespace DotNet2020.Domain._6.Services
                 _tempCapacity.Add(cap.Id, cap.Capacity);
             }
         }
-        
+
         public List<ResourceCapacity> GetCapacityWithAbsence(List<AbstractCalendarEntry> absences)
         {
             foreach (var absence in absences)
@@ -35,6 +38,7 @@ namespace DotNet2020.Domain._6.Services
                     CalculateCapacity(day, absence.CalendarEmployeeId);
                 }
             }
+
             ModifyCapacity();
             return _capacity;
         }
@@ -46,15 +50,16 @@ namespace DotNet2020.Domain._6.Services
             {
                 var res = _capacity.FirstOrDefault(c => c.Id == cap.Key);
                 if (res != default)
-                { 
-                    res.Capacity = Convert.ToInt32(Math.Floor(cap.Value));  
+                {
+                    res.Capacity = Convert.ToInt32(Math.Floor(cap.Value));
                 }
-                
+
             }
         }
+
         private static void CalculateCapacity(DateTime day, int resourceId)
         {
-            if (day.DayOfWeek != DayOfWeek.Saturday && day.DayOfWeek != DayOfWeek.Sunday)
+            if (IsWeekend(day))
             {
                 var res = _capacity.FirstOrDefault(x =>
                     x.ResourceId == resourceId &&
@@ -62,12 +67,13 @@ namespace DotNet2020.Domain._6.Services
                     x.Period.Start.Year == day.Year);
                 if (res != default)
                 {
-                  double capacity = _startCapacity[res.Id];
-                  _tempCapacity[res.Id] -= capacity / 20.0;           
-                  if (_tempCapacity[res.Id] < 0) throw new Exception("capacity < 0");
+                    double capacity = _startCapacity[res.Id];
+                    _tempCapacity[res.Id] -= capacity / CountOfWorkDaysInMonth(day.Month, day.Year);
+                    if (_tempCapacity[res.Id] < 0) throw new Exception("capacity < 0");
                 }
             }
         }
+
         private static List<DateTime> SplitTimespanToDays(DateTime from, DateTime to)
         {
             var daysCount = (to - from).Days;
@@ -93,10 +99,12 @@ namespace DotNet2020.Domain._6.Services
             }
 
             var last = days.Last();
-            if (last.Day != to.Day || last.Month != to.Month || last.Year != to.Year) throw new Exception("Wrong split");
-            
+            if (last.Day != to.Day || last.Month != to.Month || last.Year != to.Year)
+                throw new Exception("Wrong split");
+
             return days;
         }
+
         private static int CountOfDaysByMonth(int month, bool leap)
         {
             switch (month)
@@ -118,6 +126,22 @@ namespace DotNet2020.Domain._6.Services
                 default:
                     throw new Exception("Undefined month");
             }
+        }
+
+        private static int CountOfWorkDaysInMonth(int month, int year)
+        {
+            var countOfWorkDays = 0;
+            var countOfDays = CountOfDaysByMonth(month, DateTime.IsLeapYear(year));
+            for (int i = 1; i < countOfDays; i++)
+            {
+                var day = new DateTime(year, month, i);
+                if (IsWeekend(day))
+                {
+                    countOfWorkDays++;
+                }
+            }
+            Console.WriteLine(countOfWorkDays);
+            return countOfWorkDays;
         }
     }
 }
