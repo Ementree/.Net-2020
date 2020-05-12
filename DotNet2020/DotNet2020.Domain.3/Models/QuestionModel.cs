@@ -4,6 +4,6 @@
     {
         public long Id { get; set; }
         public string Question { get; set; }
-        public QuestionComplexityModel Complexity { get; set; }
+        public long ComplexityId { get; set; }
     }
 }

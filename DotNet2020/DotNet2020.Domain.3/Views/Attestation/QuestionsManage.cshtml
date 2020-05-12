@@ -34,6 +34,15 @@
             <p>Введите вопрос</p>
             <textarea style="border:none;border-top:groove;border-left:groove;" name="NewQuestion" cols="100" required></textarea>
             <input type="text" hidden name="Action" value="AddQuestion" />
+            <br />
+            <p>Выберите сложность вопроса</p>
+            <br />
+            <select name="Complexity">
+                @foreach (var complexity in Model.Complexities)
+                {
+                    <option>@complexity</option>
+                }
+            </select>
             <p><input type="submit" value="Добавить" /></p>
         </form>
 

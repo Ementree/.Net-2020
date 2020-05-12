@@ -351,6 +351,21 @@ namespace DotNet2020.Data.Migrations
                     b.ToTable("Grades");
                 });
 
+            modelBuilder.Entity("DotNet2020.Domain._3.Models.QuestionComplexityModel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<string>("Value")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("QuestionComplexity");
+                });
+
             modelBuilder.Entity("DotNet2020.Domain._3.Models.QuestionModel", b =>
                 {
                     b.Property<long>("Id")
@@ -358,10 +373,18 @@ namespace DotNet2020.Data.Migrations
                         .HasColumnType("bigint")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
+                    b.Property<long?>("CompetencesModelId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("ComplexityId")
+                        .HasColumnType("bigint");
+
                     b.Property<string>("Question")
                         .HasColumnType("text");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CompetencesModelId");
 
                     b.ToTable("Questions");
                 });
@@ -823,6 +846,13 @@ namespace DotNet2020.Data.Migrations
                         .HasForeignKey("GradeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("DotNet2020.Domain._3.Models.QuestionModel", b =>
+                {
+                    b.HasOne("DotNet2020.Domain._3.Models.CompetencesModel", null)
+                        .WithMany("Questions")
+                        .HasForeignKey("CompetencesModelId");
                 });
 
             modelBuilder.Entity("DotNet2020.Domain._3.Models.SpecificWorkerCompetencesModel", b =>

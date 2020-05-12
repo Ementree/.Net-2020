@@ -25,6 +25,8 @@
     <Compile Remove="Migrations\20200512084800_QuestionUpdate.Designer.cs" />
     <Compile Remove="Migrations\20200512114326_questionupdate.cs" />
     <Compile Remove="Migrations\20200512114326_questionupdate.Designer.cs" />
+    <Compile Remove="Migrations\20200512124204_updateComplexity.cs" />
+    <Compile Remove="Migrations\20200512124204_updateComplexity.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

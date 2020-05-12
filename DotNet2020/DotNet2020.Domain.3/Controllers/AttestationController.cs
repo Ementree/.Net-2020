@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 using DotNet2020.Data;
 using Microsoft.EntityFrameworkCore;
 using DotNet2020.Domain.Core.Models;
+using DotNet2020.Domain._3.ViewModels;
 
 namespace DotNet2020.Domain._3.Controllers
 {
@@ -279,15 +280,24 @@ namespace DotNet2020.Domain._3.Controllers
         public IActionResult Questions()
         {
             var competences = _context.Set<CompetencesModel>();
-            return View(competences);
+            var competenceQuestionsViewModels = new List<CompetenceQuestionsViewModel>();
+            var competenceQuestions = _context.Set<CompetenceQuestionsModel>().ToList();
+            var questions = _context.Set<QuestionModel>().ToList();
+            foreach (var competence in competences)
+            {
+                var viewModel = new CompetenceQuestionsViewModel(competence, competenceQuestions, questions);
+                competenceQuestionsViewModels.Add(viewModel);
+            }
+            return View(competenceQuestionsViewModels);
         }
 
         public IActionResult QuestionsManage(long id)
         {
-            //var questions = _context.Set<CompetencesModel>().Find(id).Questions;
-            //var questionUpdateModel = new QuestionUpdateModel { Questions = questions };
-            //return View(questionUpdateModel);
-            return View();
+            var questionIds = _context.Set<CompetenceQuestionsModel>().Where(x => x.CompetenceId == id).Select(x => x.QuestionId).ToList();
+            var questions = _context.Set<QuestionModel>().Where(x => questionIds.Contains(x.Id)).Select(x => x.Question).ToList();
+            var questionUpdateModel = new QuestionUpdateModel { Complexities = _context.Set<QuestionComplexityModel>().Select(x=>x.Value).ToList(), 
+                Questions = questions };
+            return View(questionUpdateModel);
         }
 
         [HttpPost]
@@ -299,15 +309,32 @@ namespace DotNet2020.Domain._3.Controllers
                 case QuestionActions.RemoveQuestions:
                     foreach (var question in questionUpdateModel.QuestionsToRemove)
                     {
-                        //competence.Questions.Remove(question);
+                        var neededToDeleteQuestionModels = _context.Set<QuestionModel>().Where(x=>x.Question == question);
+                        var neededToDeleteIds = neededToDeleteQuestionModels.Select(x => x.Id).ToList();
+                        var relatedDataToDelete = _context.Set<CompetenceQuestionsModel>().
+                            Where(x => x.CompetenceId == id && neededToDeleteIds.Contains(x.QuestionId)).ToList();
+
+                        _context.Set<QuestionModel>().RemoveRange(neededToDeleteQuestionModels);
+                        _context.Set<CompetenceQuestionsModel>().RemoveRange(relatedDataToDelete);
                     }
                     break;
                 case QuestionActions.AddQuestion:
-                    //competence.Questions.Add(questionUpdateModel.NewQuestion);
+                    var newQuestion = new QuestionModel { Question = questionUpdateModel.NewQuestion, 
+                        ComplexityId = _context
+                        .Set<QuestionComplexityModel>()
+                        .Where(x=>x.Value==questionUpdateModel.Complexity)
+                        .Select(x=>x.Id)
+                        .FirstOrDefault() };
+                    _context.Set<QuestionModel>().Add(newQuestion);
+                    _context.SaveChanges();
+                    _context.Set<CompetenceQuestionsModel>().Add(new CompetenceQuestionsModel { CompetenceId = id, QuestionId = newQuestion.Id });
                     break;
             }
             _context.SaveChanges();
-            //questionUpdateModel.Questions = competence.Questions;
+            var questionIds = _context.Set<CompetenceQuestionsModel>().Where(x => x.CompetenceId == id).Select(x => x.QuestionId).ToList();
+            var questions = _context.Set<QuestionModel>().Where(x => questionIds.Contains(x.Id)).Select(x => x.Question).ToList();
+            questionUpdateModel.Complexities = _context.Set<QuestionComplexityModel>().Select(x => x.Value).ToList();
+            questionUpdateModel.Questions = questions;
             return View(questionUpdateModel);
         }
 
