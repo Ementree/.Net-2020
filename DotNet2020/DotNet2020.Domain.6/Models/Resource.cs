@@ -1,5 +1,4 @@
-﻿using DotNet2020.Data;
-using DotNet2020.Domain.Core.Models;
+﻿using DotNet2020.Domain.Core.Models;
 
 namespace DotNet2020.Domain._6.Models
 {
@@ -12,5 +11,10 @@ namespace DotNet2020.Domain._6.Models
         
         public virtual ResourceGroupType ResourceGroupType { get; protected set; }
         public virtual Employee Employee { get; protected set; }
+
+        public void UpdateGroupAndType(int id)
+        {
+            ResourceGroupTypeId = id;
+        }
     }
 }
