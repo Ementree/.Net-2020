@@ -51,7 +51,7 @@ namespace DotNet2020.Domain._6.Services
                 var res = _capacity.FirstOrDefault(c => c.Id == cap.Key);
                 if (res != default)
                 {
-                    res.Capacity = Convert.ToInt32(Math.Floor(cap.Value));
+                    res.Capacity = Convert.ToInt32(cap.Value);
                 }
 
             }

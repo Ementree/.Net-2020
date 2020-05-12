@@ -13,10 +13,14 @@ namespace DotNet2020.Domain._6.Services
     public class FCAbsenceResolverBuilder
     {
         private readonly DbContext _context;
+        private readonly List<Period> Periods;
+        private readonly List<ResourceCapacity> Capacities;
 
         public FCAbsenceResolverBuilder(DbContext context)
         {
             _context = context;
+            Periods = _context.Set<Period>().ToList();
+            Capacities = _context.Set<ResourceCapacity>().ToList();
         }
 
         public Dictionary<string, Dictionary<string, int>> Build(int year)
@@ -44,7 +48,6 @@ namespace DotNet2020.Domain._6.Services
             foreach (var e in calendarEntries)
             {
                 var name = e.CalendarEmployee.Employee.FirstName + " " + e.CalendarEmployee.Employee.LastName;
-
                 if (!result.ContainsKey(name))
                 {
                     result[name] = new Dictionary<string, int>();
@@ -54,12 +57,26 @@ namespace DotNet2020.Domain._6.Services
                 var toDataTuple = GetSuitableMonthDay(e.To, year);
                 
                 var monthAbsenceWorkDaysDict =
-                    GetWorkDaysCountFromDataRange(fromDataTuple,toDataTuple,year);
+                    GetWorkDaysCountFromDataRange(fromDataTuple,toDataTuple,year,e);
                 MergeDicts(result,monthAbsenceWorkDaysDict,name);
                 
             }
 
             return result;
+        }
+
+        private int GetCoefficient(AbstractCalendarEntry e,int year,int month)
+        {
+            var periodId = Periods
+                .First(p => p.Start.Year == year && p.Start.Month == month)
+                .Id;
+            
+            var resourceId = e.CalendarEmployee.Employee.Id;
+
+            return Capacities
+                .First(rc => rc.ResourceId == resourceId && rc.PeriodId == periodId)
+                .Capacity;
+
         }
 
         private void MergeDicts(Dictionary<string, Dictionary<string, int>> result, Dictionary<string, int> source,
@@ -74,7 +91,7 @@ namespace DotNet2020.Domain._6.Services
             }
         }
 
-        private Dictionary<string, int> GetWorkDaysCountFromDataRange(Tuple<int,int> fromDataTuple,Tuple<int,int> toDataTuple,int year)
+        private Dictionary<string, int> GetWorkDaysCountFromDataRange(Tuple<int,int> fromDataTuple,Tuple<int,int> toDataTuple,int year,AbstractCalendarEntry e)
         {
             var startDay = 0;
             var endDay = 0;
@@ -108,6 +125,7 @@ namespace DotNet2020.Domain._6.Services
             for (int i = startMonth; i <= endMonth;i++)
             {
                 string monthName = new DateTime(year,i,1).GetMonthName().ToLower();
+                var coef = GetCoefficient(e,year, i);
 
                 var lastDay = 0;
                 if (i == endMonth)
@@ -127,7 +145,7 @@ namespace DotNet2020.Domain._6.Services
                 var allWorkDays = GetWorkDaysCountInMonth(year, i, 1,DateTime.DaysInMonth(year,i));
                 var workDaysWithAbsence = GetWorkDaysCountInMonth(year, i, firstDay,lastDay);
 
-                int value = Convert.ToInt32((((double)(workDaysWithAbsence))/(double) allWorkDays * 100));
+                int value = Convert.ToInt32((((double)(workDaysWithAbsence))/(double) allWorkDays * coef));
 
                 if (!result.ContainsKey(monthName))
                     result[monthName] = 0;
