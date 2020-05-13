@@ -1,67 +1,46 @@
 ﻿@model DotNet2020.Domain._3.Models.CompetenceUpdateModel
-<!doctype html>
-<html class="no-js" lang="en">
 
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="shortcut icon" href="favicon.ico" />
-    <link rel="stylesheet" href="/css/QWERTYstyles.css">
-</head>
+@{
+    Layout = "QwertyHeader";
+}
 
-<body>
-    <input type="checkbox" id="nav-toggle" hidden>
-    <nav class="nav nav-slp">
-        <label for="nav-toggle" class="nav-toggle" onclick></label>
-        <ul>
-            <li>@Html.ActionLink("Главная страница", "Index", "Attestation")
-            <li>@Html.ActionLink("Сотрудники", "Workers", "Attestation")
-            <li>@Html.ActionLink("Компетенции", "Competences", "Attestation")
-            <li>@Html.ActionLink("Грейды", "Grades", "Attestation")
-            <li>@Html.ActionLink("Вопросы", "Questions", "Attestation")
-            <li>@Html.ActionLink("Аттестация", "Attestation", "Attestation")
-            <li>@Html.ActionLink("Выгрузка", "Output", "Attestation")
-        </ul>
-    </nav>
-    <main role="main">
-        <h1>Управление компетенций</h1>
-        <h2>Добавление содержимого</h2>
-        <p>@Html.ActionLink("Компетенции", "Competences", "Attestation")</p>
+<div class="container">
+    <h1>Управление компетенций</h1>
+    <p>@Html.ActionLink("Компетенции", "Competences", "Attestation")</p>
+    <br />
 
-        <form method="post">
-            <p>Название содержимого</p>
-            <input type="text" name="Content" required />
-            <input type="text" hidden name="Action" value="AddContent" />
-            <p><input type="submit" value="Добавить" /></p>
-        </form>
+    <form method="post">
+        <h3>Добавление содержимого</h3>
+        <p></p>
+        <input type="text" name="Content" required />
+        <p></p>
+        <input type="text" hidden name="Action" value="AddContent" />
+        <p><button type="submit" class="btn btn-primary">Добавить</button></p>
+    </form>
 
-        <br />
-
-        <form method="post">
-            <p>Удаление компетенции</p>
-            <input type="text" hidden name="Action" value="RemoveCompetence" />
-            <input type="submit" value="Удалить компетенцию" />
-        </form>
-
-        <br />
-
-        <form method="post">
-            <p>Удаление содержимого компетенции</p>
-            <input type="text" hidden name="Action" value="RemoveContent" />
-            @if (Model.Competence.Content.Count == 0)
+    <br />
+    <form method="post">
+        <h3>Удаление содержимого компетенции</h3>
+        <input type="text" hidden name="Action" value="RemoveContent" />
+        @if (Model.Competence.Content.Count == 0)
+        {
+            <p>Список содержимого пуст!</p>
+        }
+        else
+        {
+            @for (var i = 0; i < Model.Competence.Content.Count; i++)
             {
-                <p>Список содержимого пуст!</p>
+                <p><input type="checkbox" name="Checkboxes" value="@i" /> @Model.Competence.Content[i] </p>
             }
-            else
-            {
-                @for (var i = 0; i < Model.Competence.Content.Count; i++)
-                {
-                    <p><input type="checkbox" name="Checkboxes" value="@i" /> @Model.Competence.Content[i] </p>
-                }
-                <input type="submit" value="Удалить выбранные" />
-            }
-        </form>
-    </main>
-</body>
-</html>
+            <p><button type="submit" class="btn btn-primary">Удалить выбранные</button></p>
+        }
+    </form>
+
+
+    <br />
+    <form method="post">
+        <h3>Удаление компетенции</h3>
+        <input type="text" hidden name="Action" value="RemoveCompetence" />
+        <p><button type="submit" style="background-color:red" class="btn btn-primary">Удалить компетенцию</button></p>
+    </form>
+</div>

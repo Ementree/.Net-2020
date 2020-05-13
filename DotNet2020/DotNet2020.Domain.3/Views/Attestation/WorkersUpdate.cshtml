@@ -1,73 +1,56 @@
 ﻿@model DotNet2020.Domain._3.Models.WorkerUpdateModel
 
-<!doctype html>
-<html class="no-js" lang="en">
-
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="shortcut icon" href="favicon.ico" />
-    <link rel="stylesheet" href="/css/QWERTYstyles.css">
-</head>
-
-<body>
-    <input type="checkbox" id="nav-toggle" hidden>
-    <nav class="nav nav-slp">
-        <label for="nav-toggle" class="nav-toggle" onclick></label>
-        <ul>
-            <li>@Html.ActionLink("Главная страница", "Index", "Attestation")
-            <li>@Html.ActionLink("Сотрудники", "Workers", "Attestation")
-            <li>@Html.ActionLink("Компетенции", "Competences", "Attestation")
-            <li>@Html.ActionLink("Грейды", "Grades", "Attestation")
-            <li>@Html.ActionLink("Вопросы", "Questions", "Attestation")
-            <li>@Html.ActionLink("Аттестация", "Attestation", "Attestation")
-            <li>@Html.ActionLink("Выгрузка", "Output", "Attestation")
-        </ul>
-    </nav>
-    <main role="main">
-        <form method="post">
-            <input type="text" hidden name="Worker.Email" value="@Model.Worker.Email" />
-            <p>Фамилия</p>
+@{
+    Layout = "QwertyHeader";
+}
+<div class="container">
+    <form method="post">
+        <input type="text" hidden name="Worker.Email" value="@Model.Worker.Email" />
+        <p>
+            <b>Фамилия</b><br />
             <input type="text" required name="Worker.LastName" value="@Model.Worker.LastName" />
-            <p>Имя</p>
+        <p>
+            <b>Имя</b><br />
             <input type="text" required name="Worker.FirstName" value="@Model.Worker.FirstName" />
-            <p>Отчество</p>
+        <p>
+            <b>Отчество</b><br />
             <input type="text" required name="Worker.MiddleName" value="@Model.Worker.MiddleName" />
-            <p>Должность</p>
+        <p>
+            <b>Должность</b><br />
             <input type="text" required name="Worker.Position.Name" value="@Model.Worker.Position.Name" />
-            <p>Оклад</p>
+        <p>
+            <b>Оклад</b><br />
             <input type="number" required name="Worker.Salary" step="0.01" value="@Model.Worker.Salary" />
-            <p>Премия</p>
+        <p>
+            <b>Премия</b><br />
             <input type="number" required name="Worker.Bonus" step="0.01" value="@Model.Worker.Bonus" />
             <input type="number" hidden value="@Model.Worker.Position.Id" name="Worker.Position.Id" />
-            <p>Компетенции</p>
-
+        <p>
+            <b>Компетенции</b><br />
             @foreach (var element in Model.Competences)
             {
-                <p>
-                    @if (Model.Worker.SpecificWorkerCompetencesModels.Any(x => x.CompetenceId == element.Id))
-                    {
-                        <input type="checkbox" value="@element.Id" checked name="NewCompetencesIds">
-                    }
-                    else
-                    {
-                        <input type="checkbox" value="@element.Id" name="NewCompetencesIds">
-                    }
-                    @element.Competence
-                </p>
-            }
-            <p>Комментарий</p>
-            <textarea style="border:none;border-top:groove;border-left:groove;" name="Worker.Commentary" required cols="100">@Model.Worker.Commentary</textarea>
-            <p>Предыдущие места работы</p>
-            <textarea style="border:none;border-top:groove;border-left:groove;" name="Worker.PreviousWorkPlaces" required cols="100">@Model.Worker.PreviousWorkPlaces</textarea>
-            <p>Общий стаж</p>
-            <textarea style="border:none;border-top:groove;border-left:groove;" name="Worker.Experience" required cols="100">@Model.Worker.Experience</textarea>
-            <br />
-            <input type="submit" value="Обновить" />
+            <p>
+                @if (Model.Worker.SpecificWorkerCompetencesModels.Any(x => x.CompetenceId == element.Id))
+                {
+                    <input type="checkbox" value="@element.Id" checked name="NewCompetencesIds">
+                }
+                else
+                {
+                    <input type="checkbox" value="@element.Id" name="NewCompetencesIds">
+                }
+                @element.Competence
+            </p>
+        }
+            <p>
+                <b>Комментарий</b><br />
+                <textarea style="border:none;border-top:groove;border-left:groove;" name="Worker.Commentary" required cols="100">@Model.Worker.Commentary</textarea>
+            <p>
+                <b>Предыдущие места работы</b><br />
+                <textarea style="border:none;border-top:groove;border-left:groove;" name="Worker.PreviousWorkPlaces" required cols="100">@Model.Worker.PreviousWorkPlaces</textarea>
+            <p>
+                <b>Общий стаж</b><br />
+                <textarea style="border:none;border-top:groove;border-left:groove;" name="Worker.Experience" required cols="100">@Model.Worker.Experience</textarea>
+                <br />
+                <button type="submit" class="btn btn-primary">Обновить</button>
         </form>
-    </main>
-</body>
-</html>
-
-
+    </div>
