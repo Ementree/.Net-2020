@@ -5,6 +5,7 @@ using DotNet2020.Domain._5.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace DotNet2020.Domain._5.Controllers
@@ -22,6 +23,26 @@ namespace DotNet2020.Domain._5.Controllers
             _storage = new Storage(db);
             _timeTrackingService = new YouTrackService();
             _chartService = new ChartService();
+        }
+
+        public IActionResult AvailableReports()
+        {
+            var model = new AvailableReportsModel
+            {
+                Reports = new List<Report>{ new Report("Adas", "New Project", null),
+                    new Report("Ne Adas", "Old Project", "No"),
+                    new Report("Ne Adas", "Old Project", ""),
+                    new Report("Ne Adas", "Old Project", "No"),
+                    new Report("Ne Adas", "Oldadsasfadadsadfsasdfadsf", "No"),
+                    new Report("Ne Adas", "Old Project", "No"),
+                    new Report("Ne Adas", "Old Project", "Noqweqerew"),
+                    new Report("Ne Adas", "Old Project", "No"),
+                    new Report("Ne Adas", "Old Project", "Noasdasfasdsadfds"),
+                    new Report("Ne Adas", "Old Project", "No"),
+                    new Report("Ne Adsdfdsafdasas", "Old Project", "No"),
+                    new Report("Ne Adas", "Old Project", "")}
+            };
+            return View(model);
         }
 
         [HttpGet]
