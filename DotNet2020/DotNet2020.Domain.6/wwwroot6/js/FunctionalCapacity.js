@@ -178,7 +178,7 @@ function AmountResolver() {
         }
         console.log("perv  bilo " + prev);
         prev = index + prev + 1;
-        console.log("perv stalo" + prev);
+        console.log("perv stalo " + prev);
     }
 }
 function GetNumberFromCell(cell) {
