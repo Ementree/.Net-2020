@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using DotNet2020.Domain._3.Models;
+using DotNet2020.Domain._3.ViewModels;
 using Microsoft.EntityFrameworkCore;
 
 namespace DotNet2020.Domain._3.Services
@@ -88,6 +89,93 @@ namespace DotNet2020.Domain._3.Services
                 .Take(neededQuestions.Count / 2)
                 .ToList();
             return result;
+        }
+
+        public List<CompetenceQuestionsViewModel> GetQuestions()
+        {
+            var competences = _context.Set<CompetencesModel>();
+            var competenceQuestionsViewModels = new List<CompetenceQuestionsViewModel>();
+            var competenceQuestions = _context.Set<CompetenceQuestionsModel>().ToList();
+            var questions = _context.Set<QuestionModel>().ToList();
+            foreach (var competence in competences)
+            {
+                var viewModel = new CompetenceQuestionsViewModel(competence, competenceQuestions, questions);
+                competenceQuestionsViewModels.Add(viewModel);
+            }
+            return competenceQuestionsViewModels;
+        }
+
+        public QuestionUpdateModel GetQuestionUpdateModel(long id)
+        {
+            var questionIds = _context.Set<CompetenceQuestionsModel>()
+                .Where(x => x.CompetenceId == id)
+                .Select(x => x.QuestionId)
+                .ToList();
+
+            var questions = _context.Set<QuestionModel>()
+                .Where(x => questionIds.Contains(x.Id))
+                .Select(x => x.Question)
+                .ToList();
+
+            var questionUpdateModel = new QuestionUpdateModel
+            {
+                Complexities = _context.Set<QuestionComplexityModel>()
+                .Select(x => x.Value)
+                .ToList(),
+                Questions = questions
+            };
+            return questionUpdateModel;
+        }
+
+        public void RemoveQuestions(long id, QuestionUpdateModel questionUpdateModel)
+        {
+            foreach (var question in questionUpdateModel.QuestionsToRemove)
+            {
+                var neededToDeleteQuestionModels = _context.Set<QuestionModel>().Where(x => x.Question == question);
+                var neededToDeleteIds = neededToDeleteQuestionModels.Select(x => x.Id).ToList();
+                var relatedDataToDelete = _context.Set<CompetenceQuestionsModel>().
+                    Where(x => x.CompetenceId == id && neededToDeleteIds.Contains(x.QuestionId)).ToList();
+
+                _context.Set<QuestionModel>().RemoveRange(neededToDeleteQuestionModels);
+                _context.Set<CompetenceQuestionsModel>().RemoveRange(relatedDataToDelete);
+            }
+            _context.SaveChanges();
+        }
+
+        public void AddNewQuestion(long id, QuestionUpdateModel questionUpdateModel)
+        {
+            var newQuestion = new QuestionModel
+            {
+                Question = questionUpdateModel.NewQuestion,
+                ComplexityId = _context
+                        .Set<QuestionComplexityModel>()
+                        .Where(x => x.Value == questionUpdateModel.Complexity)
+                        .Select(x => x.Id)
+                        .FirstOrDefault()
+            };
+            _context.Set<QuestionModel>().Add(newQuestion);
+            _context.SaveChanges();
+            _context.Set<CompetenceQuestionsModel>().Add(new CompetenceQuestionsModel { CompetenceId = id, QuestionId = newQuestion.Id });
+            _context.SaveChanges();
+        }
+
+        public List<string> GetFiftyPercentOfWrongQuestionsFromlastAttestation(AttestationModel attestation)
+        {
+            var questions = new List<string>();
+
+            var lastDate = _context.Set<AttestationModel>()
+                            .Where(x => x.WorkerId == attestation.WorkerId)
+                            .Max(x => x.Date);
+
+            var lastAttestation = _context.Set<AttestationModel>()
+                .Where(x => x.WorkerId == attestation.WorkerId && x.Date == lastDate)
+                .FirstOrDefault();
+
+            if (lastAttestation != null)
+            {
+                questions.AddRange(GetPreviousAttestationQuestions(lastAttestation).Select(x => x.Question));
+            }
+            return questions;
         }
     }
 }

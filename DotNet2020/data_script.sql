@@ -93,7 +93,7 @@ VALUES
            'Знание гибких методологий разработки: Scrum / Kanban'])
 ON CONFLICT ("Id") DO UPDATE
 SET "Competence" = excluded."Competence",
-    "Content" = excluded."Content",
+    "Content" = excluded."Content";
 SELECT setval('"Competences_Id_seq"', (SELECT Max("Competences"."Id") FROM "Competences"));
 
 
@@ -138,6 +138,7 @@ VALUES
 ON CONFLICT ("Id") DO UPDATE
 SET "Question"=excluded."Question",
     "ComplexityId"=excluded."ComplexityId";
+SELECT setval('"Questions_Id_seq"', (SELECT Max("Questions"."Id") FROM "Questions"));
 
 INSERT INTO "CompetenceQuestions" ("CompetenceId", "QuestionId")
 VALUES
