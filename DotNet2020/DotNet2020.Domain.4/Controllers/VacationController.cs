@@ -13,6 +13,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DotNet2020.Domain._4.Controllers
 {
+    [Authorize]
     public class VacationController : Controller
     {
         private readonly DbContext _dbContext;
@@ -23,14 +24,12 @@ namespace DotNet2020.Domain._4.Controllers
         }
         
         [HttpGet]
-        [Authorize]
         public IActionResult Add()
         {
             return View();
         }
 
         [HttpPost]
-        [Authorize]
         [ValidationFilter]
         public IActionResult Add(VacationViewModel viewModel)
         {
@@ -47,22 +46,28 @@ namespace DotNet2020.Domain._4.Controllers
             var hollidays = _dbContext.Set<Holiday>().Where(u => 
                 u.Date >= viewModel.From && u.Date <= viewModel.To).ToList();
             
-            #warning Используйте DataAnnotations аттрибуты
-            if (employeeCalendar.TotalDayOfVacation < DomainLogic.GetWorkDay(days, hollidays))
+            var _vacation = _dbContext.Set<Vacation>()
+                .FirstOrDefault(s =>
+                      s.CalendarEmployeeId == employeeCalendar.Id &&
+                      s.To >= viewModel.From && s.From <= viewModel.To);
+            if (_vacation != null)
             {
-                ModelState.AddModelError("Error2", "Количество запрашеваемых дней отпуска превышает количество доступных вам");
+                ModelState.AddModelError("Error", "Вы уже выбирали отпуск на эти даты, нельзя так!");
                 return View(viewModel);
             }
-            if (viewModel.From >= viewModel.To)
+            
+            if (viewModel.IsPaid && employeeCalendar.TotalDayOfVacation < DomainLogic.GetWorkDay(days, hollidays))
             {
-                ModelState.AddModelError("Error", "Дата начала больничного должна быть меньше даты конца");
+                ModelState.AddModelError("Error2", "Количество запрашеваемых дней отпуска превышает количество доступных вам");
                 return View(viewModel);
             }
 
             var vacation = new Vacation(
                 viewModel.From ?? throw new NullReferenceException(), 
                 viewModel.To ?? throw new NullReferenceException(),
-                employeeCalendar);
+                employeeCalendar,
+                viewModel.IsPaid);
+                
             _dbContext.Set<AbstractCalendarEntry>().Add(vacation);
             _dbContext.SaveChanges();
             return RedirectToAction("Index", "Calendar");
