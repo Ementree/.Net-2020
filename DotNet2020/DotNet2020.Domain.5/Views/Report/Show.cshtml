@@ -56,7 +56,7 @@
                 pts = data.points[i].x;
             }
             var start = pts - @Model.Charts[i].Tick.ToString();
-            window.open(`https://localhost:44354/ReportView/ShowRange?reportId=${id}&start=${start}&end=${pts}&graphType=${d}`)
+            window.open(`https://localhost:44354/Issue/ShowRange?reportId=${id}&start=${start}&end=${pts}&graphId=${d}`)
             });
             </script>
         </div>

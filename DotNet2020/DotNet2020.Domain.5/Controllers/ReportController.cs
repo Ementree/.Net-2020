@@ -79,20 +79,49 @@ namespace DotNet2020.Domain._5.Controllers
         [HttpPost]
         public IActionResult Show(CreateReportModel model)
         {
+            // Get issues
             var issues = _timeTrackingService.GetIssues(model.ProjectName, model.IssueFilter)
-                .Where(i => i.EstimatedTime.HasValue && i.SpentTime.HasValue)
                 .ToList();
 
+            // Save report
             var report = new Report(model.ReportName, model.ProjectName, model.IssueFilter, issues);
             _storage.SaveReport(report);
 
+            // Get saved report with id
             var reportResult = _storage.GetReport(report.Name);
             if (!reportResult.IsSuccess)
                 return RedirectToAction("Error");
 
+            // Filter issues
+            var issuesToShow = issues
+                .Where(i => i.SpentTime.HasValue && i.EstimatedTime.HasValue)
+                .ToList();
+
+            // Get and fill charts
             var charts = _chartService.GetAllCharts();
             foreach (var chart in charts.Values)
-                chart.SetData(issues, 5);
+                chart.SetData(issuesToShow, 5);
+
+            return View(new ChartModel(reportResult.Result.ReportId, charts.Values.ToList()));
+        }
+
+        [HttpGet]
+        public IActionResult Show(int reportId)
+        {
+            // Get report
+            var reportResult = _storage.GetReport(reportId);
+            if (!reportResult.IsSuccess)
+                return RedirectToAction("Error");
+
+            // Filter issues
+            var issuesToShow = reportResult.Result.Issues
+                .Where(i => i.SpentTime.HasValue && i.EstimatedTime.HasValue)
+                .ToList();
+
+            // Get and fill charts
+            var charts = _chartService.GetAllCharts();
+            foreach (var chart in charts.Values)
+                chart.SetData(issuesToShow, 5);
 
             return View(new ChartModel(reportResult.Result.ReportId, charts.Values.ToList()));
         }

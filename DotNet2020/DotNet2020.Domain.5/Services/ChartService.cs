@@ -23,7 +23,7 @@ namespace DotNet2020.Domain._5.Services
                 i => i.GetErrorCoef()));
 
             _charts.Add(4, new Chart(4, "Ошибка в часах",
-                i => (double)i.GetErrorHours()));
+                i => i.GetErrorHours()));
 
         }
 

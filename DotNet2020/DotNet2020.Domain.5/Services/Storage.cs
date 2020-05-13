@@ -17,18 +17,6 @@ namespace DotNet2020.Domain._5.Services
             _db = db;
         }
 
-        //protected override void OnModelCreating(ModelBuilder modelBuilder)
-        //{
-        //    modelBuilder.Entity<Issue>()
-        //        .HasMany(i => i.WorkItems)
-        //        .WithOne()
-        //        .HasForeignKey(w => w.IssueId);
-        //    modelBuilder.Entity<Report>()
-        //        .HasMany(r => r.Issues)
-        //        .WithOne()
-        //        .HasForeignKey(i => i.ReportId);
-        //}
-
         RequestResult IStorage.SaveReport(Report report)
         {
             return RequestResult.SaveExecute(() =>
@@ -43,6 +31,10 @@ namespace DotNet2020.Domain._5.Services
             return RequestResult<Report>.SaveExecute(() =>
             {
                 var report = _reports.Find(reportId);
+                _db.Entry(report)
+                    .Collection(r => r.Issues).Load();
+                report.Issues
+                    .ForEach(i => _db.Entry(i).Collection(issue => issue.WorkItems).Load());
                 return report;
             });
         }
@@ -52,6 +44,10 @@ namespace DotNet2020.Domain._5.Services
             return RequestResult<Report>.SaveExecute(() =>
             {
                 var report = _reports.FirstOrDefault(r => r.Name == reportName);
+                _db.Entry(report)
+                    .Collection(r => r.Issues).Load();
+                report.Issues
+                    .ForEach(i => _db.Entry(i).Collection(issue => issue.WorkItems).Load());
                 return report;
             });
         }

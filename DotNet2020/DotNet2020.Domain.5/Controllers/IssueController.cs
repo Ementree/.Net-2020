@@ -25,23 +25,8 @@ namespace DotNet2020.Domain._5.Controllers
         }
 
         [HttpGet]
-        public IActionResult ShowColumn(int reportId, int start, int end, int graphId)
+        public IActionResult ShowRange(int reportId, int start, int end, int graphId)
         {
-            //var issues = new Issue[]
-            //{
-            //    new Issue("ADAS-81", "Нарисовать аниме", 1, null, "arsol.plex@gmail.com",
-            //    "akihito.subaru@japan.jp", "ADAS", @"https://kpfu-net.myjetbrains.com/youtrack/issue/ADAS-81"),
-
-            //    new Issue("ADAS-98", "Сделать хорошее дело", null, 1, "arsol.plex@gmail.com",
-            //    "arsol.plex@gmail.com", "ADAS", @"https://kpfu-net.myjetbrains.com/youtrack/issue/ADAS-98"),
-
-            //    new Issue("ADAS-99", "Сломать проект", 4, null, "arsol.plex@gmail.com",
-            //    "azamat@russia.ru", "ADAS", @"https://kpfu-net.myjetbrains.com/youtrack/issue/ADAS-99"),
-
-            //    new Issue("ADAS-100", "Нарисовать аниме", 4, null, "arsol.plex@gmail.com",
-            //    "somedude@mail.ru", "ADAS", @"https://kpfu-net.myjetbrains.com/youtrack/issue/ADAS-100")
-            //};
-
             var reportResult = _storage.GetReport(reportId);
             if (!reportResult.IsSuccess)
                 return RedirectToAction("Error");
@@ -52,7 +37,7 @@ namespace DotNet2020.Domain._5.Controllers
             return View("Show", new ShowIssuesModel() { Issues = issues });
         }
 
-        [HttpPost]
+        [HttpGet]
         public IActionResult Show()
         {
             var issues = new List<Issue>

@@ -3,6 +3,7 @@ using DotNet2020.Data;
 using DotNet2020.Domain._3.Controllers;
 using DotNet2020.Domain._4.Controllers;
 using DotNet2020.Domain._4.Models;
+using DotNet2020.Domain._5.Controllers;
 using DotNet2020.Domain._6.Controllers;
 using DotNet2020.Domain.Core.Controllers;
 using Microsoft.AspNetCore.Builder;
@@ -44,6 +45,7 @@ namespace DotNet2020
             var domain4Assembly = typeof(CalendarController).Assembly;
             var assembly = typeof(DemoController).Assembly;
             var domain6Assembly = typeof(PlanController).Assembly;
+            var domain5Assembly = typeof(ReportController).Assembly;
 
             services.Configure<MvcRazorRuntimeCompilationOptions>(
                 options =>
@@ -52,6 +54,8 @@ namespace DotNet2020
                         new EmbeddedFileProvider(domain4Assembly));
                     options.FileProviders.Add(
                         new EmbeddedFileProvider(domain6Assembly));
+                    options.FileProviders.Add(
+                        new EmbeddedFileProvider(domain5Assembly));
                     options.FileProviders.Add(
                         new EmbeddedFileProvider(assembly));
 

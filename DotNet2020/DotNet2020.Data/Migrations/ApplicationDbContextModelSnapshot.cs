@@ -406,6 +406,91 @@ namespace DotNet2020.Data.Migrations
                     b.ToTable("Recommendations");
                 });
 
+            modelBuilder.Entity("DotNet2020.Domain._5.Entities.Issue", b =>
+                {
+                    b.Property<int>("IssueId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<string>("AssigneeName")
+                        .HasColumnType("text");
+
+                    b.Property<string>("CreatorName")
+                        .HasColumnType("text");
+
+                    b.Property<int?>("EstimatedTime")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Link")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ProjectName")
+                        .HasColumnType("text");
+
+                    b.Property<int>("ReportId")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("SpentTime")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("text");
+
+                    b.HasKey("IssueId");
+
+                    b.HasIndex("ReportId");
+
+                    b.ToTable("Issue");
+                });
+
+            modelBuilder.Entity("DotNet2020.Domain._5.Entities.Report", b =>
+                {
+                    b.Property<int>("ReportId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<string>("IssueFilter")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ProjectName")
+                        .HasColumnType("text");
+
+                    b.HasKey("ReportId");
+
+                    b.ToTable("Reports");
+                });
+
+            modelBuilder.Entity("DotNet2020.Domain._5.Entities.WorkItem", b =>
+                {
+                    b.Property<int>("WorkItemId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<int>("IssueId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("SpentTime")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("UserName")
+                        .HasColumnType("text");
+
+                    b.HasKey("WorkItemId");
+
+                    b.HasIndex("IssueId");
+
+                    b.ToTable("WorkItem");
+                });
+
             modelBuilder.Entity("DotNet2020.Domain._6.Models.CalendarEntry", b =>
                 {
                     b.Property<int>("Id")
@@ -651,10 +736,12 @@ namespace DotNet2020.Data.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
                     b.Property<string>("LoginProvider")
-                        .HasColumnType("text");
+                        .HasColumnType("character varying(128)")
+                        .HasMaxLength(128);
 
                     b.Property<string>("ProviderKey")
-                        .HasColumnType("text");
+                        .HasColumnType("character varying(128)")
+                        .HasMaxLength(128);
 
                     b.Property<string>("ProviderDisplayName")
                         .HasColumnType("text");
@@ -691,10 +778,12 @@ namespace DotNet2020.Data.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("LoginProvider")
-                        .HasColumnType("text");
+                        .HasColumnType("character varying(128)")
+                        .HasMaxLength(128);
 
                     b.Property<string>("Name")
-                        .HasColumnType("text");
+                        .HasColumnType("character varying(128)")
+                        .HasMaxLength(128);
 
                     b.Property<string>("Value")
                         .HasColumnType("text");
@@ -828,6 +917,24 @@ namespace DotNet2020.Data.Migrations
                     b.HasOne("DotNet2020.Domain.Models.EmployeeCalendar", "CalendarEmployee")
                         .WithMany()
                         .HasForeignKey("CalendarEmployeeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("DotNet2020.Domain._5.Entities.Issue", b =>
+                {
+                    b.HasOne("DotNet2020.Domain._5.Entities.Report", null)
+                        .WithMany("Issues")
+                        .HasForeignKey("ReportId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("DotNet2020.Domain._5.Entities.WorkItem", b =>
+                {
+                    b.HasOne("DotNet2020.Domain._5.Entities.Issue", null)
+                        .WithMany("WorkItems")
+                        .HasForeignKey("IssueId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

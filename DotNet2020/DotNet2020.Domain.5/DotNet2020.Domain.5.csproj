@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <Folder Include="Controllers" />
+    <Folder Include="Views" />
   </ItemGroup>
 
   <ItemGroup>
@@ -20,6 +21,8 @@
     <EmbeddedResource Include="Views\Report\Show.cshtml">
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Report\Create.cshtml">
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\Report\Edit.cshtml">
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Issue\Show.cshtml">
     </EmbeddedResource>
