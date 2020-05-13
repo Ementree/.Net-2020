@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using DotNet2020.Domain._4.Models;
 using DotNet2020.Domain._6.Models;
@@ -85,7 +86,7 @@ namespace DotNet2020.Domain._6.Services.Absences
             
             for (var i = 0; i < _periods.Count; i++)
             {
-                var period = _periods[i];
+                var period = GetNormalizedPeriod(_periods[i]);
                 foreach (var absence in _absences.Where(absence => absence.To >= period.Start && absence.From <= period.End))
                 {
                     if (resourceAbsences.ContainsKey(absence.UserName))
@@ -106,33 +107,42 @@ namespace DotNet2020.Domain._6.Services.Absences
                 ResourceAbsences = GetResourceAbsencesDictionary(group)
             };
         }
+        
         private int CalculateAbsences(Period period,AbstractCalendarEntry entry)
         {
-            if (!(entry.To >= period.Start && entry.From <= period.End))
+            var p = GetNormalizedPeriod(period);
+            
+            if (!(entry.To >= p.Start && entry.From <= p.End))
             {
                 return 0;
             }
 
-            if (entry.From >= period.Start && entry.To <= period.End)
+            if (entry.From >= p.Start && entry.To <= p.End)
             {
-                return entry.To.Day - entry.From.Day;
+                return entry.To.Day - entry.From.Day + 1;
             }
 
-            if (entry.From <= period.Start && entry.To >= period.End)
+            if (entry.From <= p.Start && entry.To >= p.End)
             {
-                return period.End.Day - period.Start.Day + 1;
+                return p.End.Day - p.Start.Day + 1;
             }
 
-            if (entry.From <= period.Start && entry.To <= period.End)
+            if (entry.From <= p.Start && entry.To <= p.End)
             {
-                return entry.To.Day - period.Start.Day;
+                return entry.To.Day - p.Start.Day + 1;
             }
 
-            if (entry.From >= period.Start && entry.To >= period.End)
+            if (entry.From >= p.Start && entry.To >= p.End)
             {
-                return period.End.Day - entry.From.Day;
+                return p.End.Day - entry.From.Day + 1;
             }
             return 0;
+        }
+
+        private Period GetNormalizedPeriod(Period period)
+        {
+            var endDay = DateTime.DaysInMonth(period.Start.Year, period.Start.Month);
+            return new Period(period.Start,new DateTime(period.End.Year,period.End.Month,endDay));
         }
     }
 }
