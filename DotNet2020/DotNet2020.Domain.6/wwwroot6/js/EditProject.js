@@ -250,7 +250,7 @@ function generateMonth(period) {
         });
         document.getElementById('editRemoveResourceButton' + baseId).disabled = false;
     });
-    removeResBtn.addEventListener('dblclick', function () {
+    removeResBtn.addEventListener('click', function () {
         var baseId = idBase;
         var container = document.getElementById('editAddResource' + baseId);
         container.removeChild(container.lastChild);
