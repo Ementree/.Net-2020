@@ -5,7 +5,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace DotNet2020.Data.Migrations
 {
-    public partial class SnapShot : Migration
+    public partial class NewInit : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -57,21 +57,6 @@ namespace DotNet2020.Data.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Attestations", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "CalendarEntries",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    From = table.Column<DateTime>(nullable: false),
-                    To = table.Column<DateTime>(nullable: false),
-                    UserName = table.Column<string>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_CalendarEntries", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -184,6 +169,18 @@ namespace DotNet2020.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "YearOfVacations",
+                columns: table => new
+                {
+                    Year = table.Column<int>(nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_YearOfVacations", x => x.Year);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "AspNetRoleClaims",
                 columns: table => new
                 {
@@ -261,6 +258,7 @@ namespace DotNet2020.Data.Migrations
                     FirstName = table.Column<string>(maxLength: 255, nullable: false),
                     LastName = table.Column<string>(maxLength: 255, nullable: false),
                     MiddleName = table.Column<string>(maxLength: 255, nullable: true),
+                    Email = table.Column<string>(nullable: true),
                     PositionId = table.Column<int>(nullable: true),
                     Discriminator = table.Column<string>(nullable: false),
                     Salary = table.Column<double>(nullable: true),
@@ -319,16 +317,34 @@ namespace DotNet2020.Data.Migrations
                     LockoutEnd = table.Column<DateTimeOffset>(nullable: true),
                     LockoutEnabled = table.Column<bool>(nullable: false),
                     AccessFailedCount = table.Column<int>(nullable: false),
-                    EmployeeId = table.Column<int>(nullable: true),
-                    Test = table.Column<string>(nullable: true),
-                    TotalDayOfVacation = table.Column<int>(nullable: false),
-                    IsLastVacationApproved = table.Column<bool>(nullable: false)
+                    EmployeeId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
                     table.ForeignKey(
                         name: "FK_AspNetUsers_Employee_EmployeeId",
+                        column: x => x.EmployeeId,
+                        principalTable: "Employee",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "EmployeeCalendar",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    EmployeeId = table.Column<int>(nullable: true),
+                    TotalDayOfVacation = table.Column<int>(nullable: false),
+                    IsLastVacationApproved = table.Column<bool>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_EmployeeCalendar", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_EmployeeCalendar_Employee_EmployeeId",
                         column: x => x.EmployeeId,
                         principalTable: "Employee",
                         principalColumn: "Id",
@@ -413,31 +429,6 @@ namespace DotNet2020.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "AbstractCalendarEntries",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    From = table.Column<DateTime>(nullable: false),
-                    To = table.Column<DateTime>(nullable: false),
-                    AbsenceType = table.Column<int>(nullable: false),
-                    UserId = table.Column<string>(nullable: true),
-                    IsApproved = table.Column<bool>(nullable: true),
-                    Vacation_IsApproved = table.Column<bool>(nullable: true),
-                    IsPaid = table.Column<bool>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AbstractCalendarEntries", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_AbstractCalendarEntries_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "AspNetUserClaims",
                 columns: table => new
                 {
@@ -462,8 +453,8 @@ namespace DotNet2020.Data.Migrations
                 name: "AspNetUserLogins",
                 columns: table => new
                 {
-                    LoginProvider = table.Column<string>(maxLength: 128, nullable: false),
-                    ProviderKey = table.Column<string>(maxLength: 128, nullable: false),
+                    LoginProvider = table.Column<string>(nullable: false),
+                    ProviderKey = table.Column<string>(nullable: false),
                     ProviderDisplayName = table.Column<string>(nullable: true),
                     UserId = table.Column<string>(nullable: false)
                 },
@@ -507,8 +498,8 @@ namespace DotNet2020.Data.Migrations
                 columns: table => new
                 {
                     UserId = table.Column<string>(nullable: false),
-                    LoginProvider = table.Column<string>(maxLength: 128, nullable: false),
-                    Name = table.Column<string>(maxLength: 128, nullable: false),
+                    LoginProvider = table.Column<string>(nullable: false),
+                    Name = table.Column<string>(nullable: false),
                     Value = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
@@ -520,6 +511,45 @@ namespace DotNet2020.Data.Migrations
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AbstractCalendarEntries",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    From = table.Column<DateTime>(nullable: false),
+                    To = table.Column<DateTime>(nullable: false),
+                    AbsenceType = table.Column<int>(nullable: false),
+                    CalendarEmployeeId = table.Column<int>(nullable: false),
+                    IsApproved = table.Column<bool>(nullable: true),
+                    AgreeingId = table.Column<int>(nullable: true),
+                    Vacation_IsApproved = table.Column<bool>(nullable: true),
+                    IsPaid = table.Column<bool>(nullable: true),
+                    Vacation_AgreeingId = table.Column<int>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AbstractCalendarEntries", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AbstractCalendarEntries_EmployeeCalendar_CalendarEmployeeId",
+                        column: x => x.CalendarEmployeeId,
+                        principalTable: "EmployeeCalendar",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_AbstractCalendarEntries_Employee_AgreeingId",
+                        column: x => x.AgreeingId,
+                        principalTable: "Employee",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_AbstractCalendarEntries_Employee_Vacation_AgreeingId",
+                        column: x => x.Vacation_AgreeingId,
+                        principalTable: "Employee",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -584,9 +614,19 @@ namespace DotNet2020.Data.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_AbstractCalendarEntries_UserId",
+                name: "IX_AbstractCalendarEntries_CalendarEmployeeId",
                 table: "AbstractCalendarEntries",
-                column: "UserId");
+                column: "CalendarEmployeeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AbstractCalendarEntries_AgreeingId",
+                table: "AbstractCalendarEntries",
+                column: "AgreeingId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AbstractCalendarEntries_Vacation_AgreeingId",
+                table: "AbstractCalendarEntries",
+                column: "Vacation_AgreeingId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -639,6 +679,11 @@ namespace DotNet2020.Data.Migrations
                 name: "IX_Employee_PositionId",
                 table: "Employee",
                 column: "PositionId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_EmployeeCalendar_EmployeeId",
+                table: "EmployeeCalendar",
+                column: "EmployeeId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_FunctioningCapacityProjects_PeriodId",
@@ -725,9 +770,6 @@ namespace DotNet2020.Data.Migrations
                 name: "AttestationAnswer");
 
             migrationBuilder.DropTable(
-                name: "CalendarEntries");
-
-            migrationBuilder.DropTable(
                 name: "FunctioningCapacityProjects");
 
             migrationBuilder.DropTable(
@@ -747,6 +789,12 @@ namespace DotNet2020.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "SpecificWorkerCompetences");
+
+            migrationBuilder.DropTable(
+                name: "YearOfVacations");
+
+            migrationBuilder.DropTable(
+                name: "EmployeeCalendar");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");

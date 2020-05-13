@@ -69,9 +69,6 @@ namespace DotNet2020.Data.Migrations
                     b.Property<int?>("EmployeeId")
                         .HasColumnType("integer");
 
-                    b.Property<bool>("IsLastVacationApproved")
-                        .HasColumnType("boolean");
-
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("boolean");
 
@@ -97,12 +94,6 @@ namespace DotNet2020.Data.Migrations
 
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("text");
-
-                    b.Property<string>("Test")
-                        .HasColumnType("text");
-
-                    b.Property<int>("TotalDayOfVacation")
-                        .HasColumnType("integer");
 
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("boolean");
@@ -134,6 +125,9 @@ namespace DotNet2020.Data.Migrations
 
                     b.Property<string>("Discriminator")
                         .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Email")
                         .HasColumnType("text");
 
                     b.Property<string>("FirstName")
@@ -418,27 +412,6 @@ namespace DotNet2020.Data.Migrations
                     b.ToTable("Recommendations");
                 });
 
-            modelBuilder.Entity("DotNet2020.Domain._6.Models.CalendarEntry", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
-
-                    b.Property<DateTime>("From")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<DateTime>("To")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<string>("UserName")
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("CalendarEntries");
-                });
-
             modelBuilder.Entity("DotNet2020.Domain._6.Models.FunctioningCapacityProject", b =>
                 {
                     b.Property<int>("Id")
@@ -663,12 +636,10 @@ namespace DotNet2020.Data.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
                     b.Property<string>("LoginProvider")
-                        .HasColumnType("character varying(128)")
-                        .HasMaxLength(128);
+                        .HasColumnType("text");
 
                     b.Property<string>("ProviderKey")
-                        .HasColumnType("character varying(128)")
-                        .HasMaxLength(128);
+                        .HasColumnType("text");
 
                     b.Property<string>("ProviderDisplayName")
                         .HasColumnType("text");
@@ -705,12 +676,10 @@ namespace DotNet2020.Data.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("LoginProvider")
-                        .HasColumnType("character varying(128)")
-                        .HasMaxLength(128);
+                        .HasColumnType("text");
 
                     b.Property<string>("Name")
-                        .HasColumnType("character varying(128)")
-                        .HasMaxLength(128);
+                        .HasColumnType("text");
 
                     b.Property<string>("Value")
                         .HasColumnType("text");
