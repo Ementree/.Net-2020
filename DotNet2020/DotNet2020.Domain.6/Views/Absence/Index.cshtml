@@ -5,6 +5,7 @@
 @using DotNet2020.Domain._6.Models.ViewModels
 @model Dictionary<string,AbsencesViewModel>
 <link rel="stylesheet" href="~/wwwroot6/css/Absence.css"/>
+<partial name="ChangeGroupAndTypeButton"/>
 <div class="container-fluid mb-2 d-inline-flex">
     <form asp-action="Index" asp-controller="Absence">
         <partial name="YearChangerPartial"/>
