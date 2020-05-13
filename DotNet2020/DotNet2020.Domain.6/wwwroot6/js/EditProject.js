@@ -22,7 +22,7 @@ function selectProject() {
     if (years.length == 0) {
         var date = new Date(Date.now());
         currentYear = date.getFullYear() - 1;
-        pastYear = currentYear - 1;
+        pastYear = currentYear;
         firstProjectYear = date.getFullYear();
     }
     else {
