@@ -5,6 +5,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Views\Report\AvailableReports.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="Controllers" />
     <Folder Include="Views" />
   </ItemGroup>
@@ -18,6 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="Views\Report\AvailableReports.cshtml" />
     <EmbeddedResource Include="Views\Report\Show.cshtml">
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Report\Create.cshtml">
