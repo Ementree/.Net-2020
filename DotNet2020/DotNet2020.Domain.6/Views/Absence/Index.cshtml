@@ -4,49 +4,53 @@
 }
 @using DotNet2020.Domain._6.Models.ViewModels
 @model Dictionary<string,AbsencesViewModel>
-<!DOCTYPE html>
-    <div class="container-fluid mb-2 d-inline-flex">
-        <form asp-action="Index" asp-controller="Absence">
-            <partial name="YearChangerPartial"/>
-        </form>
-    </div>
-    <div class="wrapper">
-        <div class="scroller1 scroller">
-            <table class="scroll-table table bottom">
-                <thead>
+<link rel="stylesheet" href="~/wwwroot6/css/Absence.css"/>
+<div class="container-fluid mb-2 d-inline-flex">
+    <form asp-action="Index" asp-controller="Absence">
+        <partial name="YearChangerPartial"/>
+    </form>
+</div>
+<div class="wrapper">
+    <div class="scroller1">
+        <table class="scroll-table table bottom">
+            <thead>
+                <tr>
+                    <th class="sticky-col1">  </th>
+                    @foreach (var month in months)
+                    {
+                        <th class="h45">@month</th>
+                    }
+                </tr>
+            </thead>
+            <tbody>
+            @foreach(var group in Model.Keys)
+            {
+                <tr>
+                    <th class="sticky-col1 h45 total-sum-highlight">@group</th>
+                    @for (var i = 0; i < 12; i++)
+                    {
+                        <td class="right h45 total-sum-highlight"></td>
+                    }
+                </tr>
+                @foreach (var (res, (capacityFlag, countAbs)) in Model[group].ResourceAbsences)
+                {
                     <tr>
-                        <th class="sticky-col1">  </th>
-                        @foreach (var month in months)
+                        <td class="sticky-col1">@res</td>
+                        @for (var i = 0; i < capacityFlag.Count; i++)
                         {
-                            <th>@month</th>
+                            if (capacityFlag[i])
+                            {
+                                <td class="right bottom red-highlight h45 align-center">@countAbs[i]</td>
+                            }
+                            else
+                            {
+                                <td class="right h45 align-center bottom">@countAbs[i]</td>
+                            }
                         }
                     </tr>
-                </thead>
-                <tbody>
-                @foreach(var group in Model.Keys)
-                {
-                    <tr style="height: 44px;">
-                        <th class="sticky-col1">@group</th>
-                    </tr>
-                    @foreach (var (res, (capacityFlag, countAbs)) in Model[group].ResourceAbsences)
-                    {
-                        <tr>
-                            <td class="sticky-col1">@res</td>
-                            @for (var i = 0; i < capacityFlag.Count; i++)
-                            {
-                                if (capacityFlag[i])
-                                {
-                                    <td class="red-highlight">@countAbs[i]</td>
-                                }
-                                else
-                                {
-                                    <td>@countAbs[i]</td>
-                                }
-                            }
-                        </tr>
-                    }
                 }
-                </tbody>
-            </table>
-        </div>
+            }
+            </tbody>
+        </table>
     </div>
+</div>
