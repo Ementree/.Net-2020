@@ -27,6 +27,11 @@
     </nav>
     <main role="main">
         <form method="post">
+            @if (!ViewBag.IsRegistering)
+            {
+                <p>Введите почту</p>
+                <input type="text" required name="Email" />
+            }
             <p>Фамилия</p>
             <input type="text" required name="LastName" />
             <p>Имя</p>
