@@ -217,6 +217,7 @@ function AmountResolver(){
     
     for (let index of rangeList){
         let array = InitYearAmountArray();
+        console.log(index);
         
         for(let i = prev*24; i < (prev + index)*24; i++){
             let value = GetNumberFromCell(cells[i]);
@@ -226,8 +227,9 @@ function AmountResolver(){
         for(let i =(prev + index)*24; i < (prev + index)*24+24;i++){
             WriteNumberToCell(cells[i],array[i%24]);
         }    
-        
-        prev = index + prev;
+        console.log("perv  bilo " + prev);
+        prev = index + prev +1;
+        console.log("perv stalo "  + prev);
     }
 }
 
