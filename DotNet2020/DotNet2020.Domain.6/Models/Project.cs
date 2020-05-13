@@ -12,5 +12,11 @@
         public string Name { get; protected set; }
         public int ProjectStatusId { get; protected set; }
         public virtual ProjectStatus ProjectStatus { get; protected set; }
+
+        public void UpdateProjectInfo(string newName, int newProjectStatusId)
+        {
+            Name = newName;
+            ProjectStatusId = newProjectStatusId;
+        }
     }
 }
