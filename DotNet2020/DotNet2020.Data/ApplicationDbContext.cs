@@ -2,12 +2,9 @@
 using DotNet2020.Domain.Core.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Design;
 using DotNet2020.Domain._4.Models;
-using Microsoft.Extensions.Configuration;
-using System.IO;
-using DotNet2020.Domain._3.Models;
 using DotNet2020.Domain.Models;
+using DotNet2020.Domain._3.Models;
 
 namespace DotNet2020.Data
 {
@@ -54,6 +51,7 @@ namespace DotNet2020.Data
         public virtual DbSet<AbstractCalendarEntry> AbstractCalendarEntries { get; set; }
 
         public virtual DbSet<CalendarEntry> CalendarEntries { get; set; }
+        public virtual DbSet<YearOfVacations> YearOfVacations { get; set; }
 
         public virtual DbSet<Employee> Employee { get; set; }
 
