@@ -135,9 +135,6 @@ namespace DotNet2020.Data.Migrations
                         .HasColumnType("character varying(255)")
                         .HasMaxLength(255);
 
-                    b.Property<string>("Group")
-                        .HasColumnType("text");
-
                     b.Property<string>("LastName")
                         .IsRequired()
                         .HasColumnType("character varying(255)")
@@ -149,9 +146,6 @@ namespace DotNet2020.Data.Migrations
 
                     b.Property<int?>("PositionId")
                         .HasColumnType("integer");
-
-                    b.Property<string>("Type")
-                        .HasColumnType("text");
 
                     b.HasKey("Id");
 

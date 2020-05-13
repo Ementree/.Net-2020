@@ -13,9 +13,11 @@ using Microsoft.EntityFrameworkCore;
 using DotNet2020.Domain.Core.Models;
 using DotNet2020.Domain._3.ViewModels;
 using DotNet2020.Domain._3.Services;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DotNet2020.Domain._3.Controllers
 {
+    [Authorize]
     public class AttestationController : Controller
     {
         private readonly DbContext _context;
@@ -38,6 +40,7 @@ namespace DotNet2020.Domain._3.Controllers
             return View(workers);
         }
 
+        [Authorize(Roles="admin")]
         public IActionResult WorkersUpdate(int id)
         {
             var worker = GetLoadedWorker(id);
@@ -78,7 +81,13 @@ namespace DotNet2020.Domain._3.Controllers
 
         public IActionResult WorkersAdd()
         {
+            ViewBag.IsRegistering = false;
             ViewBag.Competences = _context.Set<CompetencesModel>().ToList(); //для вывода всех компетенций
+            var employee = _context.Set<Employee>().FirstOrDefault(e => e.Email == User.Identity.Name);
+            if (employee == default)
+            {
+                ViewBag.IsRegistering = true;
+            }
             return View();
         }
 
@@ -99,6 +108,13 @@ namespace DotNet2020.Domain._3.Controllers
                 workerModel.SpecificWorkerCompetencesModels.Add(workerCompetences);
             }
 
+            var employee = _context.Set<Employee>().FirstOrDefault(e => e.Email == User.Identity.Name);
+
+            if (employee==default)
+            {
+                workerModel.Email = User.Identity.Name;
+            }
+
             _context.Set<SpecificWorkerModel>().Add(workerModel);
             var user = _context.Set<AppIdentityUser>().FirstOrDefault(u => u.Email == workerModel.Email);
             if (user != default)
@@ -107,6 +123,7 @@ namespace DotNet2020.Domain._3.Controllers
             }
 
             _context.SaveChanges();
+
             return RedirectToAction("Workers");
         }
 
@@ -121,6 +138,7 @@ namespace DotNet2020.Domain._3.Controllers
         #endregion
         #region Competences
 
+        [Authorize(Roles = "admin")]
         public IActionResult Competences()
         {
             var competences = _context.Set<CompetencesModel>();
@@ -181,7 +199,7 @@ namespace DotNet2020.Domain._3.Controllers
         #endregion
         #region Grades
 
-
+        [Authorize(Roles = "admin")]
         public IActionResult Grades()
         {
             var grades = _context.Set<GradesModel>().ToList();
