@@ -12,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DotNet2020.Domain._4.Controllers
 {
+    [Authorize]
     public class SickDayController : Controller
     {
         private readonly DbContext _dbContext;
@@ -22,14 +23,12 @@ namespace DotNet2020.Domain._4.Controllers
         }
         
         [HttpGet]
-        [Authorize]
         public IActionResult Add()
         {
             return View();
         }
         
         [HttpPost]
-        [Authorize]
         [ValidationFilter]
         public IActionResult Add(SickDayViewModel viewModel)
         {
@@ -38,6 +37,13 @@ namespace DotNet2020.Domain._4.Controllers
                 .FirstOrDefault(u => u.Id == User.FindFirstValue(ClaimTypes.NameIdentifier)).Employee;
             var employeeCalendar = _dbContext.Set<EmployeeCalendar>()
                 .FirstOrDefault(u => u.Employee == employee);
+            var sickday = _dbContext.Set<SickDay>()
+                .FirstOrDefault(s => s.From == viewModel.Day && s.CalendarEmployeeId == employeeCalendar.Id);
+            if (sickday != null)
+            {
+                ModelState.AddModelError("Error", "Вы уже выбирали sickDay на эту дату, нельзя так!");
+                return View(viewModel);
+            }
 
             var sickDay = new SickDay(
                 viewModel.Day ?? throw new NullReferenceException(),
