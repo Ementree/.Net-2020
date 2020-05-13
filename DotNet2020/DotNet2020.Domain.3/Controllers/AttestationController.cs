@@ -329,8 +329,8 @@ namespace DotNet2020.Domain._3.Controllers
                     break;
 
                 case AttestationAction.AttestationByGrade: //вывести окно аттестации по грейдам
-                    ViewBag.ReAttestation = false;
-                    attestation = _attestationService.CreateAttestationByGrades(attestation, ViewBag.ReAttestation);
+                    attestation = _attestationService.CreateAttestationByGrades(attestation, out var isReattistation);
+                    ViewBag.ReAttestation = isReattistation;
                     break;
 
                 case AttestationAction.Finished: //сохранить результаты
