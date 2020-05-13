@@ -298,16 +298,6 @@ namespace DotNet2020.Domain._3.Services
 
         public void FinishAttestation(AttestationModel attestation)
         {
-            if (attestation.ReAttestation) //если происходила реаттестация
-            {
-                var specificWorkerCompetences = _context.Set<SpecificWorkerCompetencesModel>(); //удаляем все тестируемые компетенции у работника
-                var needToRemoveCompetences = specificWorkerCompetences.
-                    Where(x => x.WorkerId == attestation.WorkerId && attestation.IdsTestedCompetences.
-                    Contains(x.CompetenceId)).
-                    ToList();
-                specificWorkerCompetences.RemoveRange(needToRemoveCompetences);
-            }
-
             attestation.Grades = _gradeService.GetLoadedGrades(); //получаем все грейды
 
             var tuple = GetProblemsAndAnswers(attestation); //получаем выявленные проблемы и ответы
@@ -327,11 +317,23 @@ namespace DotNet2020.Domain._3.Services
 
             var newCompetences = GetNewCompetences(attestation); //возвращает заполненный новыми компетенциями лист связей работника и компетений
 
-            foreach (var newCompetence in newCompetences)
+            if (attestation.ReAttestation)
             {
-                _context.Set<SpecificWorkerCompetencesModel>().Add(newCompetence); //привязка компетенций сотруднику
-                gotCompetencesIds.Add(newCompetence.CompetenceId); //добавление в лист полученных id
+                var lostedCompetencesIds = attestation.IdsTestedCompetences.Except(attestation.GotCompetences);
+                var lostedCompetences = _context.Set<SpecificWorkerCompetencesModel>()
+                    .Where(x => lostedCompetencesIds.Contains(x.CompetenceId) && x.WorkerId == attestation.WorkerId);
+                _context.Set<SpecificWorkerCompetencesModel>().RemoveRange(lostedCompetences);
             }
+            else
+            {
+                foreach (var newCompetence in newCompetences)
+                {
+                    _context.Set<SpecificWorkerCompetencesModel>().Add(newCompetence); //привязка компетенций сотруднику
+                    gotCompetencesIds.Add(newCompetence.CompetenceId); //добавление в лист полученных id
+                }
+            }
+
+
 
             var workerCompetences = new List<CompetencesModel>(); //компетенции работника
 
