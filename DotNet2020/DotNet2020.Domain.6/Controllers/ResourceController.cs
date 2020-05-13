@@ -37,7 +37,7 @@ namespace DotNet2020.Domain._6.Controllers
                 var resourceId = int.Parse(groups[i].Split(';')[0]);
                 var group = groups[i].Split(';')[1];
                 if (resourceId != int.Parse(types[i].Split(';')[0])) throw new Exception("Resources didn't match");
-                var type = types[1].Split(';')[1];
+                var type = types[i].Split(';')[1];
 
                 var resource = resources.FirstOrDefault(res => res.Id == resourceId);
                 if (resource == default) throw new Exception("Resource not found");
