@@ -168,6 +168,7 @@ function AmountResolver() {
     for (var _i = 0, rangeList_1 = rangeList; _i < rangeList_1.length; _i++) {
         var index = rangeList_1[_i];
         var array = InitYearAmountArray();
+        console.log(index);
         for (var i = prev * 24; i < (prev + index) * 24; i++) {
             var value = GetNumberFromCell(cells[i]);
             array[i % 24] += value;
@@ -175,7 +176,9 @@ function AmountResolver() {
         for (var i = (prev + index) * 24; i < (prev + index) * 24 + 24; i++) {
             WriteNumberToCell(cells[i], array[i % 24]);
         }
-        prev = index + prev;
+        console.log("perv  bilo " + prev);
+        prev = index + prev + 1;
+        console.log("perv stalo " + prev);
     }
 }
 function GetNumberFromCell(cell) {
