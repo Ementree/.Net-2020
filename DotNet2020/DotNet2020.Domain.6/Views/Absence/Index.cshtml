@@ -35,7 +35,7 @@
                 @foreach (var (res, (capacityFlag, countAbs)) in Model[group].ResourceAbsences)
                 {
                     <tr>
-                        <td class="sticky-col1">@res</td>
+                        <td class="sticky-col1 bottom">@res</td>
                         @for (var i = 0; i < capacityFlag.Count; i++)
                         {
                             if (capacityFlag[i])
