@@ -29,7 +29,9 @@ namespace DotNet2020.Domain._1
                     OneFileOneClass.Rule,
                     LanguageAnalyzer.RussianRule,
                     LanguageAnalyzer.EnglishRule,
-                    SelectAnalyzer.Rule);
+                    SelectAnalyzer.Rule,
+                    PutDeleteAnalyzer.DeleteRule,
+                    PutDeleteAnalyzer.PutRule);
             }
         }
 
@@ -47,6 +49,7 @@ namespace DotNet2020.Domain._1
             context.RegisterSyntaxNodeAction(LanguageAnalyzer.AnalyzeXML, SyntaxKind.SingleLineDocumentationCommentTrivia);
             context.RegisterSyntaxTreeAction(LanguageAnalyzer.Analyze);
             context.RegisterSyntaxNodeAction(SelectAnalyzer.Analyze, SyntaxKind.SimpleMemberAccessExpression);
+            context.RegisterSyntaxNodeAction(PutDeleteAnalyzer.Analyze, SyntaxKind.MethodDeclaration);
         }
     }
 }
