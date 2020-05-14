@@ -35,7 +35,7 @@ namespace DotNet2020.Domain._1
 
             if (predifinedType != null)
             {
-                var hasBool = predifinedType.ChildTokens().FirstOrDefault(t => t.IsKind(SyntaxKind.BoolKeyword));
+                var hasBool = predifinedType.ChildTokens().First(t => t.IsKind(SyntaxKind.BoolKeyword));
 
                 if (hasBool != null)
                 {

@@ -59,8 +59,14 @@ namespace DotNet2020.Domain._1
             var modifiedSetter = setAccessor
                 .WithModifiers(SyntaxFactory.TokenList(protectedModifier));
 
+            var getAccessor = property.AccessorList.Accessors
+                .FirstOrDefault(acc => acc.IsKind(SyntaxKind.GetAccessorDeclaration));
+            // getter without modifiers
+            var modifiedGetter = getAccessor.WithModifiers(SyntaxFactory.TokenList());
+
             var modifiedProperty = property
                 .ReplaceNode(setAccessor, modifiedSetter)
+                .ReplaceNode(getAccessor, modifiedGetter)
                 .WithModifiers(SyntaxFactory.TokenList(SyntaxFactory.Token(SyntaxKind.PublicKeyword)));
 
             var newRoot = root.ReplaceNode(property, modifiedProperty);
