@@ -15,7 +15,8 @@
 <div class="row">
     <div id="CenterBlock">
         <div class="col-md-4">
-            <form asp-action="Show" method="post">
+            <form asp-action="Edit" method="post">
+                <input asp-for="ReportId" value="@Model.ReportId" hidden/>
                 <div class="form-group">
                     <label for="EditReport">Название отчета:</label>
                     <input asp-for="ReportName" class="form-control" />

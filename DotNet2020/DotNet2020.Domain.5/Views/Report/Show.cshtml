@@ -43,22 +43,22 @@
             showlegend: false
             };
 
+
             Plotly.newPlot('@chartId', data, layout, { staticPlot: false });
 
-
-            var d = @Json.Serialize(Model.Charts[i].Id)
-
             myPlot.on('plotly_click', function (data) {
+
             var pts = '';
             for (var i = 0; i < data.points.length; i++){
             pts = data.points[i].x;
             }
             var start = pts - @Model.Charts[i].Tick.ToString();
-            window.open(`https://localhost:44354/ReportView/ShowRange?reportId=${id}&start=${start}&end=${pts}&graphType=${@Json.Serialize(Model.Charts[i].Id)}`)
+            window.open(`https://localhost:44354/Issue/ShowRange?reportId=${id}&start=${start}&end=${pts}&graphId=${@Json.Serialize(Model.Charts[i].Id)}`)
+
             });
             </script>
             <form method="get">
-                <button asp-action="Edit" asp-route-id="@Model.Charts[i].Id">Edit</button>
+                <button asp-action="Edit" asp-route-id="@Model.ReportId">Edit</button>
             </form>
         </div>
     }

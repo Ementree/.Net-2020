@@ -1,0 +1,75 @@
+﻿@model DotNet2020.Domain._5.Models.AvailableReportsModel
+<style type="text/css">
+    a {
+        color: inherit; 
+        text-decoration: inherit;
+    }
+
+    .reports {
+        margin: 10px 0 0 10px;
+        position: relative;
+        width: 75%;
+        height: 100%;
+        left: 30%;
+    }
+
+    .textblock {
+        margin: 10px 0 10px 10px;
+        display: inline-block;
+    }
+
+    .td {
+        border-right: 1px solid #c4c4c4;
+        border-bottom: 1px solid #c4c4c4;
+    }
+
+    .tdlast {
+        border-bottom: 1px solid #c4c4c4;
+    }
+
+    .tditem {
+        margin: 8px 10px 5px 10px;
+    }
+
+    .tdboldtext {
+        border-right: 1px solid #c4c4c4;
+        border-bottom: 1px solid #c4c4c4;
+        font-weight: 700;
+    }
+
+    .tdboldtextlast {
+        border-bottom: 1px solid #c4c4c4;
+        font-weight: 700;
+    }
+</style>
+<div class="text-center">
+    <h2>Доступные отчеты</h2>
+</div>
+<div class="reports">
+    <div class="textblock">
+        <table>
+            <tr>
+                <td class="tdboldtext"><p class="tditem">Название отчета</p></td>
+                <td class="tdboldtext"><p class="tditem">Проект</p></td>
+                <td class="tdboldtextlast"><p class="tditem">Фильтр</p></td>
+            </tr>
+            @foreach (var report in Model.Reports)
+             {
+                <tr>
+                    <td class="td"><a method = "get" asp-action="Show" asp-route-id="@report.ReportId" class="tditem">@report.Name</a></td>
+                    <td class="td"><p class="tditem">@report.ProjectName</p></td>
+                    <td class="tdlast">
+                        @if (String.IsNullOrEmpty(report.IssueFilter))
+                         {
+                            <p class="tditem">Нет</p>
+                         }
+                        else
+                        {
+                            <p class="tditem" title="@report.IssueFilter">Есть</p>
+                        }
+                    </td>
+                </tr>
+             }
+        </table>
+    </div>
+</div>
