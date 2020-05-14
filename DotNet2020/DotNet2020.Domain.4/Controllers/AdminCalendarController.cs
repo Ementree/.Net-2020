@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DotNet2020.Domain._4.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "admin")]
     public class AdminCalendarController : Controller
     {
         private readonly DbContext _dbContext;
