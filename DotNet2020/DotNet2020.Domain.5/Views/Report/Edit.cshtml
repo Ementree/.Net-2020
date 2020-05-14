@@ -1,58 +1,50 @@
 ﻿@model DotNet2020.Domain._5.Models.EditReportModel
 <style type="text/css">
-    #CenterBlock {
-        width: 75%;
-        height: 100%;
-        position: absolute;
-        top: 57%;
-        left: 52.5%;
-        margin: -200px 0 0 -200px;
+    .container4 {
+        margin: 0 auto;
     }
 </style>
 <div class="text-center">
     <h2>Редактировать отчет</h2>
 </div>
+<br>
 <div class="row">
-    <div id="CenterBlock">
-        <div class="col-md-4">
-            <form asp-action="Edit" method="post">
-                <input asp-for="ReportId" value="@Model.ReportId" hidden/>
-                <div class="form-group">
-                    <label for="EditReport">Название отчета:</label>
-                    <input asp-for="ReportName" class="form-control" />
-                    <span asp-validation-for="ReportName" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label for="EditReport">Проект: @Model.ProjectName</label>
-                </div>
-                <div class="form-group">
-                    <div class="button-group">
-                        <label for="EditReport">Пользователи:</label>
-                        <button type="button" class="btn btn-default btn-sm dropdown-toggle" asp-for="UserName" data-toggle="dropdown"><span class="glyphicon glyphicon-cog"></span> <span class="caret"></span></button>
-                        <ul class="dropdown-menu">
-                            @foreach (var user in Model.UserFilter)
-                            {
-                                <li data-value="@user"><input type="checkbox" />&nbsp;@user</li>
-                            }
-                        </ul>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="EditReport">Режим работы:</label>
-                    <br>
-                    <div class="text-center">
-                        <input class="form-check-input" type="radio" name="EditReport" asp-for="IsAssignee" value="IsAssignee" checked>
-                        <label for="EditReport">Assignee&emsp;&emsp;</label>
-                        <input class="form-check-input" type="radio" name="EditReport" asp-for="IsWorkItems" value="IsWorkItems">
-                        <label for="EditReport">Work Items</label>
-                    </div>
-                </div>
+    <div class="container4">
+        <form asp-action="Edit" method="post">
+            <input asp-for="ReportId" value="@Model.ReportId" hidden />
+            <div class="form-group">
+                <label for="EditReport">Название отчета:</label>
+                <input asp-for="ReportName" class="form-control" />
+                <span asp-validation-for="ReportName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label for="EditReport">Проект: @Model.ProjectName</label>
+            </div>
+            <div class="form-group">
+                <label for="EditReport">Пользователи:</label>
                 <br>
+                <select asp-for="UserName" multiple size="2">
+                    @foreach (var user in Model.UserFilter)
+                    {
+                        <option value="@user">@user</option>
+                    }
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="EditReport">Режим работы:</label>
                 <br>
                 <div class="text-center">
-                    <button type="submit" class="btn btn-success btn-lg">Редактировать</button>
+                    <input class="form-check-input" type="radio" name="EditReport" asp-for="IsAssignee" value="IsAssignee" checked>
+                    <label for="EditReport">Assignee&emsp;&emsp;</label>
+                    <input class="form-check-input" type="radio" name="EditReport" asp-for="IsWorkItems" value="IsWorkItems">
+                    <label for="EditReport">Work Items</label>
                 </div>
-            </form>
-        </div>
+            </div>
+            <br>
+            <br>
+            <div class="text-center">
+                <button type="submit" class="btn btn-success btn-lg">Редактировать</button>
+            </div>
+        </form>
     </div>
 </div>
