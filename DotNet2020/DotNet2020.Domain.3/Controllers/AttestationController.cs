@@ -134,10 +134,12 @@ namespace DotNet2020.Domain._3.Controllers
         public IActionResult WorkersRemove(int id)
         {
             var worker = _context.Set<SpecificWorkerModel>().Find(id);
-
+           
             if (worker != null)
+            {
+                _context.Set<AppIdentityUser>().Where(x => x.Email == worker.Email).FirstOrDefault().Employee = null;
                 _context.Set<SpecificWorkerModel>().Remove(worker);
-
+            }
             _context.SaveChanges();
             return RedirectToAction("Workers");
         }
