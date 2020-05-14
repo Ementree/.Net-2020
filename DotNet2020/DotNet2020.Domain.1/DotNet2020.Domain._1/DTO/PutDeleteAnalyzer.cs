@@ -7,8 +7,6 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.CodeAnalysis.CodeFixes;
-using Microsoft.CodeAnalysis.CodeActions;
-using System.Collections.Immutable;
 using Microsoft.CodeAnalysis.Rename;
 using System.Threading;
 
@@ -19,8 +17,10 @@ namespace DotNet2020.Domain._1
     /// </summary>
     internal class PutDeleteAnalyzer
     {
-        public const string DiagnosticId = "PutDeleteId";
-        public const string CodeFixTitle = "Put/Delete warning";
+        public const string DiagnosticPutId = "PutId";
+        public const string DiagnosticDeleteId = "DeleteId";
+        public const string CodeFixPutTitle = "Fix put method name";
+        public const string CodeFixDeleteTitle = "Fix delete method name";
         private const string Title = "Put/Delete warning";
         private const string DeleteMessageFormat =
             "Delete method name should start with 'Delete'";
@@ -28,10 +28,10 @@ namespace DotNet2020.Domain._1
             "Put method name should start with 'Put'";
         private const string Category = "DTO";
         public static DiagnosticDescriptor DeleteRule =
-            new DiagnosticDescriptor(DiagnosticId, Title, DeleteMessageFormat,
+            new DiagnosticDescriptor(DiagnosticDeleteId, Title, DeleteMessageFormat,
                 Category, DiagnosticSeverity.Warning, isEnabledByDefault: true);
         public static DiagnosticDescriptor PutRule =
-            new DiagnosticDescriptor(DiagnosticId, Title, PutMessageFormat,
+            new DiagnosticDescriptor(DiagnosticPutId, Title, PutMessageFormat,
                 Category, DiagnosticSeverity.Warning, isEnabledByDefault: true);
 
         internal static void Analyze(SyntaxNodeAnalysisContext context)
@@ -72,10 +72,49 @@ namespace DotNet2020.Domain._1
             return attribute != null && attribute != default;
         }
 
-        public static async Task<Solution> ChangeSolution(Document document,
+        public static async Task<Solution> PutCodeFix(Document document, 
             CodeFixContext context, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            return await CodeFix(document, context, "Put", cancellationToken).ConfigureAwait(false);
+        }
+
+        public static async Task<Solution> DeleteCodeFix(Document document,
+            CodeFixContext context, CancellationToken cancellationToken)
+        {
+            return await CodeFix(document, context, "Delete", cancellationToken).ConfigureAwait(false);
+        }
+
+        private static async Task<Solution> CodeFix(Document document, CodeFixContext context, 
+            string text, CancellationToken cancellationToken)
+        {
+            var root = await context
+                            .Document
+                            .GetSyntaxRootAsync(context.CancellationToken)
+                            .ConfigureAwait(false);
+
+            var diagnostic = context
+                .Diagnostics
+                .First();
+            var diagnosticSpan = diagnostic.Location.SourceSpan;
+
+            var localDecl = (MethodDeclarationSyntax)root.FindNode(diagnosticSpan);
+
+            var identifierTokenName = localDecl.Identifier.Text;
+
+            var newName = text + char.ToUpperInvariant(identifierTokenName[0])
+                               + identifierTokenName.Substring(1, identifierTokenName.Length - 1);
+
+            var semanticModel = await document.GetSemanticModelAsync(cancellationToken);
+            var typeSymbol = semanticModel.GetDeclaredSymbol(localDecl, cancellationToken);
+
+            var originalSolution = document.Project.Solution;
+            var optionSet = originalSolution.Workspace.Options;
+            var newSolution =
+                await Renamer
+                .RenameSymbolAsync(document.Project.Solution, typeSymbol, newName, optionSet, cancellationToken)
+                .ConfigureAwait(false);
+
+            return newSolution;
         }
     }
 }
