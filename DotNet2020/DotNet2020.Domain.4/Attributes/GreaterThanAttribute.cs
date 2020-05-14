@@ -41,7 +41,7 @@ namespace DotNet2020.Domain._4.Attributes
                 {
                     return ValidationResult.Success;
                 }
-                else if ((DateTime)value > (DateTime)propertyTestedValue)
+                else if ((DateTime)value >= (DateTime)propertyTestedValue)
                 {
                     return ValidationResult.Success;
                 }
