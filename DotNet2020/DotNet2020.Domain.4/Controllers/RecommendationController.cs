@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DotNet2020.Domain._4.Controllers
 {
+    [Authorize]
     public class RecommendationController : Controller
     {
         private readonly DbContext _dbContext;
@@ -17,14 +18,12 @@ namespace DotNet2020.Domain._4.Controllers
         }
         
         [HttpGet]
-        [Authorize]
         public IActionResult Update()
         {
             return View();
         }
 
         [HttpPost]
-        [Authorize]
         [ValidationFilter]
         public IActionResult Update(Recommendation recommendation)
         {

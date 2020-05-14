@@ -2,14 +2,11 @@
 using DotNet2020.Domain.Core.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Design;
 using DotNet2020.Domain._4.Models;
-using Microsoft.Extensions.Configuration;
-using System.IO;
-using DotNet2020.Domain._3.Models;
 using DotNet2020.Domain.Models;
 using DotNet2020.Domain._5.Entities;
 using System;
+using DotNet2020.Domain._3.Models;
 
 namespace DotNet2020.Data
 {
@@ -54,8 +51,8 @@ namespace DotNet2020.Data
         public virtual DbSet<Recommendation> Recommendations { get; set; }
         
         public virtual DbSet<AbstractCalendarEntry> AbstractCalendarEntries { get; set; }
-
-        public virtual DbSet<CalendarEntry> CalendarEntries { get; set; }
+        
+        public virtual DbSet<YearOfVacations> YearOfVacations { get; set; }
 
         public virtual DbSet<Employee> Employee { get; set; }
 
@@ -124,6 +121,17 @@ namespace DotNet2020.Data
                     (AbsenceType.SickDay)
                 .HasValue<Illness>
                     (AbsenceType.Illness);
+
+            modelBuilder.Entity<EmployeeCalendar>()
+                .HasOne<Employee>(e => e.Employee)
+                .WithOne()
+                .HasForeignKey(typeof(EmployeeCalendar), "EmployeeId")
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<AbstractCalendarEntry>()
+                .HasOne<EmployeeCalendar>(_event => _event.CalendarEmployee)
+                .WithMany(e => e.CalendarEntries)
+                .OnDelete(DeleteBehavior.Cascade);
         }
 
         private void OnModelCreating5(ModelBuilder builder)

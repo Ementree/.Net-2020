@@ -8,8 +8,8 @@ namespace DotNet2020.Domain._4.Models
     public abstract class AbstractCalendarEntry
     {
         public int Id { get; set; }
-        public DateTime From { get; protected set; }
-        public DateTime To { get; protected set; }
+        public DateTime From { get; private set; }
+        public DateTime To { get; private set; }
         public AbsenceType AbsenceType { get; set; }
         public int CalendarEmployeeId { get; set; }
         public EmployeeCalendar CalendarEmployee { get; set; }
@@ -24,7 +24,6 @@ namespace DotNet2020.Domain._4.Models
         
         protected AbstractCalendarEntry(){}
 
-        #warning Если есть этот метод, то From и To нужно сделать приватные setter'ы
         public void ChangeDate(DateTime from, DateTime to)
         {
             if (to < from) throw new ArgumentException("You are trying set incorrect data period!" +

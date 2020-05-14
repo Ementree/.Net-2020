@@ -26,7 +26,8 @@ VALUES
     (2, 'Подрядчик', 'Подрядчик'),
     (3, 'Сотрудник', 'Студент'),
     (4, 'Сотрудник', 'Подрядчик'),
-    (5, 'Подрядчик', 'Студент')
+    (5, 'Подрядчик', 'Студент'),
+    (6, 'Подрядчик', 'Специалист')
 ON CONFLICT ("Id") DO UPDATE
 SET "Type" = excluded."Type",
     "Group" = excluded."Group";
@@ -44,19 +45,19 @@ SET
 SELECT setval('"Position_Id_seq"',(SELECT Max("Position"."Id") FROM "Position"));
 
 
-INSERT INTO "Employee" ("Id", "FirstName", "LastName", "MiddleName", "PositionId", "Salary", "Bonus", "Commentary", "PreviousWorkPlaces", "Experience", "Discriminator")
+INSERT INTO "Employee" ("Id", "FirstName", "LastName", "MiddleName", "PositionId", "Salary", "Bonus", "Commentary", "PreviousWorkPlaces", "Experience", "Discriminator", "Email")
 VALUES
-       (1, 'Дмитрий', 'Чемкин', 'Николаевич',1, 1, 76547, 'Хорошо верстает', 'Нет', 'Нет', 'SpecificWorkerModel'),
-       (2, 'Дмитрий', 'Орлов', 'Павлович',2,2, 56437, 'Не верстает', 'Нет', 'Нет', 'SpecificWorkerModel'),
-       (3, 'Игорь', 'Квасников', 'Константинович',3, 3, 76747, 'Не верстает', 'Нет', 'Нет', 'SpecificWorkerModel'),
-       (4, 'Мухаммад', 'Мукиев', 'Мухаммадович', 3, 500000, 0, 'начинающий аналитик', 'coderlar', '1 коммерческий проект', 'SpecificWorkerModel'),
-       (5, 'Яков', 'Григорьев', 'Александрович',2, 2, 45673, 'Не верстает', 'Нет', 'Нет', 'SpecificWorkerModel'),
-       (6, 'Анна', 'Федорова', 'Эдуардовна', 2, 2, 76747, 'Делает бд', 'Нет', 'Нет', 'SpecificWorkerModel'),
-       (7, 'Тагмир', 'Гилязов', 'Радикович', 1, 2, 76747, 'Знает ангуляр', 'Нет', 'Нет', 'SpecificWorkerModel'),
-       (8, 'Артур', 'Саттаров', 'Рустамович', 2, 2, 76747, 'Главный специалист по рефакторингу', 'Нет', 'Нет', 'SpecificWorkerModel'),
-       (9, 'Егор', 'Малышкин', 'Андреевич', 3, 2, 76747, 'Делает отсутсвия', 'Нет', 'Нет', 'SpecificWorkerModel'),
-       (10, 'Айдар', 'Габдрахманов', 'Ренатович', 1, 2, 76747, 'Наверно верстает', 'Нет', 'Нет', 'SpecificWorkerModel'),
-       (11, 'Равиль', 'Насыбуллин', 'Эдуардович', 3, 2, 76747, 'Наверно не верстает', 'Нет', 'Нет', 'SpecificWorkerModel')
+       (1, 'Дмитрий', 'Чемкин', 'Николаевич',1, 1, 76547, 'Хорошо верстает', 'Нет', 'Нет', 'SpecificWorkerModel', 'DCh@gmail.com'),
+       (2, 'Дмитрий', 'Орлов', 'Павлович',2,2, 56437, 'Не верстает', 'Нет', 'Нет', 'SpecificWorkerModel', 'DO@gmail.com'),
+       (3, 'Игорь', 'Квасников', 'Константинович',3, 3, 76747, 'Не верстает', 'Нет', 'Нет', 'SpecificWorkerModel', 'IK@gmail.com'),
+       (4, 'Мухаммад', 'Мукиев', 'Мухаммадович', 3, 500000, 0, 'начинающий аналитик', 'coderlar', '1 коммерческий проект', 'SpecificWorkerModel', 'MM@gmail.com'),
+       (5, 'Яков', 'Григорьев', 'Александрович',2, 2, 45673, 'Не верстает', 'Нет', 'Нет', 'SpecificWorkerModel', 'YG@gmail.com'),
+       (6, 'Анна', 'Федорова', 'Эдуардовна', 2, 2, 76747, 'Делает бд', 'Нет', 'Нет', 'SpecificWorkerModel', 'AF@gmail.com'),
+       (7, 'Тагмир', 'Гилязов', 'Радикович', 1, 2, 76747, 'Знает ангуляр', 'Нет', 'Нет', 'SpecificWorkerModel', 'TG@gmail.com'),
+       (8, 'Артур', 'Саттаров', 'Рустамович', 2, 2, 76747, 'Главный специалист по рефакторингу', 'Нет', 'Нет', 'SpecificWorkerModel', 'AS@gmail.com'),
+       (9, 'Егор', 'Малышкин', 'Андреевич', 3, 2, 76747, 'Делает отсутсвия', 'Нет', 'Нет', 'SpecificWorkerModel', 'EM@gmail.com'),
+       (10, 'Айдар', 'Габдрахманов', 'Ренатович', 1, 2, 76747, 'Наверно верстает', 'Нет', 'Нет', 'SpecificWorkerModel', 'AG@gmail.com'),
+       (11, 'Равиль', 'Насыбуллин', 'Эдуардович', 3, 2, 76747, 'Наверно не верстает', 'Нет', 'Нет', 'SpecificWorkerModel', 'RN@gmail.com')
 
 ON CONFLICT ("Id") DO UPDATE
 SET

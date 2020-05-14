@@ -3,7 +3,6 @@ using System.Security.Claims;
 using DotNet2020.Data;
 using DotNet2020.Domain._4.Domain;
 using DotNet2020.Domain._4.Models;
-using DotNet2020.Domain.Core.Models;
 using DotNet2020.Domain.Models;
 using DotNet2020.Domain.Models.ModelView;
 using Microsoft.AspNetCore.Authorization;
@@ -12,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DotNet2020.Domain._4.Controllers
 {
+    [Authorize]
     public class CalendarController : Controller
     {
         private readonly DbContext _dbContext;
@@ -22,7 +22,6 @@ namespace DotNet2020.Domain._4.Controllers
         }
 
         [HttpGet]
-        [Authorize]
         public IActionResult Index()
         {
             var employee = _dbContext.Set<AppIdentityUser>()
@@ -42,7 +41,6 @@ namespace DotNet2020.Domain._4.Controllers
         }
 
         [HttpGet]
-        [Authorize]
         public IActionResult AddEvent()
         {
             return View();

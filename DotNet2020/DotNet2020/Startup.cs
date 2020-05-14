@@ -1,4 +1,6 @@
+using System;
 using System.IO;
+using System.Threading.Tasks;
 using DotNet2020.Data;
 using DotNet2020.Domain._3.Controllers;
 using DotNet2020.Domain._4.Controllers;
@@ -8,6 +10,7 @@ using DotNet2020.Domain._6.Controllers;
 using DotNet2020.Domain.Core.Controllers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -33,8 +36,10 @@ namespace DotNet2020
                 options.UseNpgsql(
                     Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddDefaultIdentity<AppIdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-                .AddEntityFrameworkStores<ApplicationDbContext>();
+            services.AddIdentity<AppIdentityUser, AppIdentityRole>(options => options.SignIn.RequireConfirmedAccount = false)
+                .AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddDefaultTokenProviders()
+                 .AddDefaultUI();
 
             services.AddControllersWithViews();
             services.AddRazorPages();
@@ -71,7 +76,7 @@ namespace DotNet2020
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider serviceProvider)
         {
             if (env.IsDevelopment())
             {
@@ -109,6 +114,44 @@ namespace DotNet2020
                     "{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapRazorPages();
             });
+
+            CreateRolesAndAdminIfNotExists(serviceProvider).Wait();
+        }
+
+        public async Task CreateRolesAndAdminIfNotExists(IServiceProvider serviceProvider)
+        {
+            var RoleManager = serviceProvider.GetRequiredService<RoleManager<AppIdentityRole>>();
+            var UserManager = serviceProvider.GetRequiredService<UserManager<AppIdentityUser>>();
+            string[] roleNames = { "admin" };
+            IdentityResult roleResult;
+
+            foreach (var roleName in roleNames)
+            {
+                var roleExist = await RoleManager.RoleExistsAsync(roleName);
+                if (!roleExist)
+                {
+                    roleResult = await RoleManager.CreateAsync(new AppIdentityRole { Name = roleName });
+                }
+            }
+
+            var admin = new AppIdentityUser()
+            {
+                Email = Configuration["AdminLogin"],
+                UserName = Configuration["AdminLogin"]
+            };
+
+            string adminPassword = Configuration["AdminPassword"];
+
+            var createdAdmin = await UserManager.FindByNameAsync(Configuration["AdminLogin"]);
+
+            if (createdAdmin == null)
+            {
+                var createPowerUser = await UserManager.CreateAsync(admin, adminPassword);
+                if (createPowerUser.Succeeded)
+                {
+                    await UserManager.AddToRoleAsync(admin, "admin");
+                }
+            }
         }
     }
 }
