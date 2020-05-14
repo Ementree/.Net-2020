@@ -137,7 +137,10 @@ namespace DotNet2020.Domain._3.Controllers
            
             if (worker != null)
             {
-                _context.Set<AppIdentityUser>().Where(x => x.Email == worker.Email).FirstOrDefault().Employee = null;
+                var identityUser = _context.Set<AppIdentityUser>().Where(x => x.Email == worker.Email).FirstOrDefault();
+                if (identityUser != null)
+                    identityUser.Employee = null;
+                
                 _context.Set<SpecificWorkerModel>().Remove(worker);
             }
             _context.SaveChanges();
