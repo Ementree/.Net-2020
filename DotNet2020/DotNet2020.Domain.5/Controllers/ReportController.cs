@@ -25,22 +25,15 @@ namespace DotNet2020.Domain._5.Controllers
             _chartService = new ChartService();
         }
 
-        public IActionResult AvailableReports()
+        [HttpGet]
+        public IActionResult Available()
         {
-            var model = new AvailableReportsModel
+            var reportsResult = _storage.GetAllReports();
+            if (!reportsResult.IsSuccess)
+                return RedirectToAction("Error");
+            var model = new AvailableReportsModel()
             {
-                Reports = new List<Report>{ new Report("Adas", "New Project", null),
-                    new Report("Ne Adas", "Old Project", "No"),
-                    new Report("Ne Adas", "Old Project", ""),
-                    new Report("Ne Adas", "Old Project", "No"),
-                    new Report("Ne Adas", "Oldadsasfadadsadfsasdfadsf", "No"),
-                    new Report("Ne Adas", "Old Project", "No"),
-                    new Report("Ne Adas", "Old Project", "Noqweqerew"),
-                    new Report("Ne Adas", "Old Project", "No"),
-                    new Report("Ne Adas", "Old Project", "Noasdasfasdsadfds"),
-                    new Report("Ne Adas", "Old Project", "No"),
-                    new Report("Ne Adsdfdsafdasas", "Old Project", "No"),
-                    new Report("Ne Adas", "Old Project", "")}
+                Reports = reportsResult.Result.ToList()
             };
             return View(model);
         }
