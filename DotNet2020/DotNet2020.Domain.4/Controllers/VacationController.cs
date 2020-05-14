@@ -46,13 +46,13 @@ namespace DotNet2020.Domain._4.Controllers
             var hollidays = _dbContext.Set<Holiday>().Where(u => 
                 u.Date >= viewModel.From && u.Date <= viewModel.To).ToList();
             
-            var _vacation = _dbContext.Set<Vacation>()
+            var events = _dbContext.Set<AbstractCalendarEntry>()
                 .FirstOrDefault(s =>
                       s.CalendarEmployeeId == employeeCalendar.Id &&
                       s.To >= viewModel.From && s.From <= viewModel.To);
-            if (_vacation != null)
+            if (events != null)
             {
-                ModelState.AddModelError("Error", "Вы уже выбирали отпуск на эти даты, нельзя так!");
+                ModelState.AddModelError("Error", "Выбранная вами дата пересекается с уже имеющимися в календаре событиями");
                 return View(viewModel);
             }
             

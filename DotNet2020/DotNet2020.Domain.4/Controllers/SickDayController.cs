@@ -37,11 +37,21 @@ namespace DotNet2020.Domain._4.Controllers
                 .FirstOrDefault(u => u.Id == User.FindFirstValue(ClaimTypes.NameIdentifier)).Employee;
             var employeeCalendar = _dbContext.Set<EmployeeCalendar>()
                 .FirstOrDefault(u => u.Employee == employee);
-            var sickday = _dbContext.Set<SickDay>()
-                .FirstOrDefault(s => s.From == viewModel.Day && s.CalendarEmployeeId == employeeCalendar.Id);
-            if (sickday != null)
+            //var sickday = _dbContext.Set<SickDay>()
+            //    .FirstOrDefault(s => s.From == viewModel.Day && s.CalendarEmployeeId == employeeCalendar.Id);
+            //if (sickday != null)
+            //{
+            //    ModelState.AddModelError("Error", "Вы уже выбирали sickDay на эту дату, нельзя так!");
+            //    return View(viewModel);
+            //}
+
+            var events = _dbContext.Set<AbstractCalendarEntry>()
+                .FirstOrDefault(s =>
+                      s.CalendarEmployeeId == employeeCalendar.Id &&
+                      s.To >= viewModel.Day && s.From <= viewModel.Day);
+            if (events != null)
             {
-                ModelState.AddModelError("Error", "Вы уже выбирали sickDay на эту дату, нельзя так!");
+                ModelState.AddModelError("Error", "Выбранная вами дата пересекается с уже имеющимися в календаре событиями");
                 return View(viewModel);
             }
 
