@@ -65,6 +65,8 @@ namespace DotNet2020.Domain._4.Controllers
         {
             var calendarEntry =  _dbContext.Set<AbstractCalendarEntry>().Find(id);
             var user = _dbContext.Set<EmployeeCalendar>().FirstOrDefault(u => u.Id == calendarEntry.CalendarEmployeeId);
+            if (calendarEntry is Vacation vacation && vacation.IsPaid)
+                user.TotalDayOfVacation += (calendarEntry.To - calendarEntry.From).Days + 1;
             user?.Reject();
             _dbContext.Set<AbstractCalendarEntry>().Remove(calendarEntry);
             _dbContext.SaveChanges();

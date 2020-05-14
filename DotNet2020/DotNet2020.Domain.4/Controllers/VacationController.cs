@@ -55,12 +55,19 @@ namespace DotNet2020.Domain._4.Controllers
                 ModelState.AddModelError("Error", "Выбранная вами дата пересекается с уже имеющимися в календаре событиями");
                 return View(viewModel);
             }
-            
-            if (viewModel.IsPaid && employeeCalendar.TotalDayOfVacation < DomainLogic.GetWorkDay(days, hollidays))
-            {
-                ModelState.AddModelError("Error2", "Количество запрашеваемых дней отпуска превышает количество доступных вам");
-                return View(viewModel);
-            }
+
+            var vacationDays = DomainLogic.GetWorkDay(days, hollidays);
+            if (viewModel.IsPaid)
+                if (employeeCalendar.TotalDayOfVacation < vacationDays)
+                {
+                    ModelState.AddModelError("Error2", "Количество запрашеваемых дней отпуска превышает количество доступных вам");
+                    return View(viewModel);
+                }
+                else
+                {
+                    employeeCalendar.TotalDayOfVacation -= vacationDays;
+                    _dbContext.SaveChanges();
+                }
 
             var vacation = new Vacation(
                 viewModel.From ?? throw new NullReferenceException(), 
