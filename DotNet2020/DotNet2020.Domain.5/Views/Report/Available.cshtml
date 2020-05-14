@@ -6,15 +6,11 @@
     }
 
     .reports {
-        margin: 10px 0 0 10px;
         position: relative;
-        width: 75%;
-        height: 100%;
-        left: 30%;
+        text-align:center;
     }
 
     .textblock {
-        margin: 10px 0 10px 10px;
         display: inline-block;
     }
 
@@ -56,7 +52,7 @@
             @foreach (var report in Model.Reports)
              {
                 <tr>
-                    <td class="td"><a method = "get" asp-action="Show" asp-route-id="@report.ReportId" class="tditem">@report.Name</a></td>
+                    <td class="td"><a method="get" asp-action="Show" asp-route-id="@report.ReportId" class="tditem">@report.Name</a></td>
                     <td class="td"><p class="tditem">@report.ProjectName</p></td>
                     <td class="tdlast">
                         @if (String.IsNullOrEmpty(report.IssueFilter))

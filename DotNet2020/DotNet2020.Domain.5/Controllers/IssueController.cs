@@ -29,7 +29,7 @@ namespace DotNet2020.Domain._5.Controllers
         {
             var reportResult = _storage.GetReport(reportId);
             if (!reportResult.IsSuccess)
-                return RedirectToAction("Error");
+                return Error("Ошибка обращения к БД!", reportResult.Error.Message);
 
             var chart = _chartService.GetChart(graphId);
             chart.SetData(reportResult.Result.Issues, 6);
@@ -38,24 +38,20 @@ namespace DotNet2020.Domain._5.Controllers
         }
 
         [HttpGet]
-        public IActionResult Show()
+        public IActionResult Show(int id)
         {
-            var issues = new List<Issue>
-            {
-                new Issue("ADAS-81", "Нарисовать аниме", 1, null, "arsol.plex@gmail.com",
-                "akihito.subaru@japan.jp", "ADAS", @"https://kpfu-net.myjetbrains.com/youtrack/issue/ADAS-81"),
+            var reportResult = _storage.GetReport(id);
+            if (!reportResult.IsSuccess)
+                return Error("Ошибка обращения к БД!", reportResult.Error.Message);
 
-                new Issue("ADAS-98", "Сделать хорошее дело", null, 1, "arsol.plex@gmail.com",
-                "arsol.plex@gmail.com", "ADAS", @"https://kpfu-net.myjetbrains.com/youtrack/issue/ADAS-98"),
-
-                new Issue("ADAS-99", "Сломать проект", 4, null, "arsol.plex@gmail.com",
-                "azamat@russia.ru", "ADAS", @"https://kpfu-net.myjetbrains.com/youtrack/issue/ADAS-99"),
-
-                new Issue("ADAS-100", "Нарисовать аниме", 4, null, "arsol.plex@gmail.com",
-                "somedude@mail.ru", "ADAS", @"https://kpfu-net.myjetbrains.com/youtrack/issue/ADAS-100")
-            };
+            var issues = reportResult.Result.Issues;
 
             return View("Show", new ShowIssuesModel() { Issues = issues });
+        }
+
+        private IActionResult Error(string title = "Упс...", string message = "Что-то пошло не так :(")
+        {
+            return View("Error", new ErrorModel(title, message));
         }
     }
 }
