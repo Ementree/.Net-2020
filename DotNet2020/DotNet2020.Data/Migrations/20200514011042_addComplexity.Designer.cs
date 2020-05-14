@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DotNet2020.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20200507091536_gradetogradeTable")]
-    partial class gradetogradeTable
+    [Migration("20200514011042_addComplexity")]
+    partial class addComplexity
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -71,9 +71,6 @@ namespace DotNet2020.Data.Migrations
                     b.Property<int?>("EmployeeId")
                         .HasColumnType("integer");
 
-                    b.Property<bool>("IsLastVacationApproved")
-                        .HasColumnType("boolean");
-
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("boolean");
 
@@ -99,12 +96,6 @@ namespace DotNet2020.Data.Migrations
 
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("text");
-
-                    b.Property<string>("Test")
-                        .HasColumnType("text");
-
-                    b.Property<int>("TotalDayOfVacation")
-                        .HasColumnType("integer");
 
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("boolean");
@@ -138,10 +129,16 @@ namespace DotNet2020.Data.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<string>("Email")
+                        .HasColumnType("text");
+
                     b.Property<string>("FirstName")
                         .IsRequired()
                         .HasColumnType("character varying(255)")
                         .HasMaxLength(255);
+
+                    b.Property<string>("Group")
+                        .HasColumnType("text");
 
                     b.Property<string>("LastName")
                         .IsRequired()
@@ -154,6 +151,9 @@ namespace DotNet2020.Data.Migrations
 
                     b.Property<int?>("PositionId")
                         .HasColumnType("integer");
+
+                    b.Property<string>("Type")
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
@@ -179,6 +179,29 @@ namespace DotNet2020.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Position");
+                });
+
+            modelBuilder.Entity("DotNet2020.Domain.Models.EmployeeCalendar", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<int?>("EmployeeId")
+                        .HasColumnType("integer");
+
+                    b.Property<bool>("IsLastVacationApproved")
+                        .HasColumnType("boolean");
+
+                    b.Property<int>("TotalDayOfVacation")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EmployeeId");
+
+                    b.ToTable("EmployeeCalendar");
                 });
 
             modelBuilder.Entity("DotNet2020.Domain._3.Models.AnswerModel", b =>
@@ -256,6 +279,19 @@ namespace DotNet2020.Data.Migrations
                     b.ToTable("Attestations");
                 });
 
+            modelBuilder.Entity("DotNet2020.Domain._3.Models.CompetenceQuestionsModel", b =>
+                {
+                    b.Property<long>("CompetenceId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("QuestionId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("CompetenceId", "QuestionId");
+
+                    b.ToTable("CompetenceQuestions");
+                });
+
             modelBuilder.Entity("DotNet2020.Domain._3.Models.CompetencesModel", b =>
                 {
                     b.Property<long>("Id")
@@ -267,9 +303,6 @@ namespace DotNet2020.Data.Migrations
                         .HasColumnType("text");
 
                     b.Property<List<string>>("Content")
-                        .HasColumnType("text[]");
-
-                    b.Property<List<string>>("Questions")
                         .HasColumnType("text[]");
 
                     b.HasKey("Id");
@@ -320,6 +353,46 @@ namespace DotNet2020.Data.Migrations
                     b.ToTable("Grades");
                 });
 
+            modelBuilder.Entity("DotNet2020.Domain._3.Models.QuestionComplexityModel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<string>("Value")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("QuestionComplexity");
+                });
+
+            modelBuilder.Entity("DotNet2020.Domain._3.Models.QuestionModel", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<long?>("CompetencesModelId")
+                        .HasColumnType("bigint");
+
+                    b.Property<int?>("ComplexityId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Question")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CompetencesModelId");
+
+                    b.HasIndex("ComplexityId");
+
+                    b.ToTable("Questions");
+                });
+
             modelBuilder.Entity("DotNet2020.Domain._3.Models.SpecificWorkerCompetencesModel", b =>
                 {
                     b.Property<int>("WorkerId")
@@ -345,18 +418,18 @@ namespace DotNet2020.Data.Migrations
                     b.Property<int>("AbsenceType")
                         .HasColumnType("integer");
 
+                    b.Property<int>("CalendarEmployeeId")
+                        .HasColumnType("integer");
+
                     b.Property<DateTime>("From")
                         .HasColumnType("timestamp without time zone");
 
                     b.Property<DateTime>("To")
                         .HasColumnType("timestamp without time zone");
 
-                    b.Property<string>("UserId")
-                        .HasColumnType("text");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("CalendarEmployeeId");
 
                     b.ToTable("AbstractCalendarEntries");
 
@@ -396,27 +469,6 @@ namespace DotNet2020.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Recommendations");
-                });
-
-            modelBuilder.Entity("DotNet2020.Domain._6.Models.CalendarEntry", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
-
-                    b.Property<DateTime>("From")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<DateTime>("To")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<string>("UserName")
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("CalendarEntries");
                 });
 
             modelBuilder.Entity("DotNet2020.Domain._6.Models.FunctioningCapacityProject", b =>
@@ -643,12 +695,10 @@ namespace DotNet2020.Data.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
                     b.Property<string>("LoginProvider")
-                        .HasColumnType("character varying(128)")
-                        .HasMaxLength(128);
+                        .HasColumnType("text");
 
                     b.Property<string>("ProviderKey")
-                        .HasColumnType("character varying(128)")
-                        .HasMaxLength(128);
+                        .HasColumnType("text");
 
                     b.Property<string>("ProviderDisplayName")
                         .HasColumnType("text");
@@ -685,12 +735,10 @@ namespace DotNet2020.Data.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("LoginProvider")
-                        .HasColumnType("character varying(128)")
-                        .HasMaxLength(128);
+                        .HasColumnType("text");
 
                     b.Property<string>("Name")
-                        .HasColumnType("character varying(128)")
-                        .HasMaxLength(128);
+                        .HasColumnType("text");
 
                     b.Property<string>("Value")
                         .HasColumnType("text");
@@ -767,6 +815,13 @@ namespace DotNet2020.Data.Migrations
                         .HasForeignKey("PositionId");
                 });
 
+            modelBuilder.Entity("DotNet2020.Domain.Models.EmployeeCalendar", b =>
+                {
+                    b.HasOne("DotNet2020.Domain.Core.Models.Employee", "Employee")
+                        .WithMany()
+                        .HasForeignKey("EmployeeId");
+                });
+
             modelBuilder.Entity("DotNet2020.Domain._3.Models.AttestationAnswerModel", b =>
                 {
                     b.HasOne("DotNet2020.Domain._3.Models.AnswerModel", "Answer")
@@ -797,6 +852,17 @@ namespace DotNet2020.Data.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("DotNet2020.Domain._3.Models.QuestionModel", b =>
+                {
+                    b.HasOne("DotNet2020.Domain._3.Models.CompetencesModel", null)
+                        .WithMany("Questions")
+                        .HasForeignKey("CompetencesModelId");
+
+                    b.HasOne("DotNet2020.Domain._3.Models.QuestionComplexityModel", "Complexity")
+                        .WithMany()
+                        .HasForeignKey("ComplexityId");
+                });
+
             modelBuilder.Entity("DotNet2020.Domain._3.Models.SpecificWorkerCompetencesModel", b =>
                 {
                     b.HasOne("DotNet2020.Domain._3.Models.CompetencesModel", "Competence")
@@ -814,9 +880,11 @@ namespace DotNet2020.Data.Migrations
 
             modelBuilder.Entity("DotNet2020.Domain._4.Models.AbstractCalendarEntry", b =>
                 {
-                    b.HasOne("DotNet2020.Data.AppIdentityUser", "User")
+                    b.HasOne("DotNet2020.Domain.Models.EmployeeCalendar", "CalendarEmployee")
                         .WithMany()
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("CalendarEmployeeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("DotNet2020.Domain._6.Models.FunctioningCapacityProject", b =>
