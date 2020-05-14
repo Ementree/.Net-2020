@@ -1,107 +1,64 @@
-﻿@model List<DotNet2020.Domain._5.Entities.Issue>
+﻿@using DotNet2020.Domain._5.Models;
+@model ChartModel
+
 <head>
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
 </head>
 
-<div id='myDiv' style="position:absolute; left:10%; top:10%; width:500px; height:350px"></div>
 <script>
-    @{
-        var massiveX = new int[Model.Count];
-        var massiveY = new int?[Model.Count];
-     }
-    @for (int i = 0; i<Model.Count; i++)
-    {
-        massiveY[i] = Model[i].EstimatedTime;
-        massiveX[i] = i;
-    }
-    var arrY = @Json.Serialize(massiveY);
-    var arrX = @Json.Serialize(massiveX);
-
-    var data = [
-        {
-            x: arrX,
-            y: arrY,
-            type: 'bar'
-        }
-    ];
-    var layout = {
-        title: 'Запланированное время',
-        showlegend: false
-    };
-
-    Plotly.newPlot('myDiv', data, layout, { staticPlot: true });
+    (function () {
+        $("#myTab2 li:eq(0) a").tab('show');
+    });
 </script>
-<div id='myDiv1' style="position:absolute; right:10%; top:10%; width:500px; height:350px"></div>
-<script>
-    @for (int i = 0; i<Model.Count; i++)
+<ul id="myTab2" class="nav nav-tabs">
+    @for (int i = 0; i < Model.Charts.Count; i++)
     {
-        massiveY[i] = Model[i].SpentTime;
+    <li><a data-toggle="tab" href="#@i">@Model.Charts[i].Name</a></li>
+    <li><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p></li>
     }
-    var arrY = @Json.Serialize(massiveY);
-    var arrX = @Json.Serialize(massiveX);
-
-    var data = [
-        {
-            x: arrX,
-            y: arrY,
-            type: 'bar'
-        }
-    ];
-    var layout = {
-        title: 'Потраченное время',
-        showlegend: false
-    };
-
-    Plotly.newPlot('myDiv1', data, layout, { staticPlot: true });
-</script>
-<div id='myDiv2' style="position:absolute; left:10%; top:50%; width:500px; height:350px"></div>
-<script>
-    @{
-        var massY = new double?[Model.Count];
-    }
-    @for (int i = 0; i<Model.Count; i++)
+</ul>
+@{
+    var mas = new int[Model.Charts.Count];
+    for (int i = 0; i < mas.Length; i++)
     {
-        massY[i] = Model[i].GetErrorCoef();
+        mas[i] = -i;
     }
-    var arrY = @Json.Serialize(massY);
-    var arrX = @Json.Serialize(massiveX);
-
-    var data = [
-        {
-            x: arrX,
-            y: arrY,
-            type: 'bar'
-        }
-    ];
-    var layout = {
-        title: 'Ошибка в процентах',
-        showlegend: false
-    };
-
-    Plotly.newPlot('myDiv2', data, layout, { staticPlot: true });
-</script>
-<div id='myDiv3' style="position:absolute; right:10%; top:50%; width:500px; height:350px"></div>
-<script>
-    @for (int i = 0; i<Model.Count; i++)
+}
+<div class="tab-content">
+    @for (int i = 0; i < Model.Charts.Count; i++)
     {
-        massiveY[i] = Model[i].GetErrorHours();
-        massiveX[i] = i;
+        <div id='@i' class="tab-pane fade in active">
+            <div id='@mas[i]' style="height:auto"></div>
+            <form method="get">
+                <button asp-action="Edit" asp-route-id="@Model.ReportId">Edit</button>
+            </form>
+            <script>
+            var myPlot = document.getElementById(`@Json.Serialize(mas[i])`);
+            var data = [
+                {
+                    x: @Json.Serialize(Model.Charts[i].YAxis),
+                    y: @Json.Serialize(Model.Charts[i].XAxis),
+                    type: 'bar'
+                }
+            ];
+            var layout = {
+                title: '@Json.Serialize(Model.Charts[i].Name)',
+                showlegend: false
+            };
+            Plotly.newPlot(`@Json.Serialize(mas[i])`, data, layout);
+            var d = '@Json.Serialize(Model.Charts[i].Id)'
+            var id = @Json.Serialize(Model.ReportId);
+            myPlot.on('plotly_click', function(data) {
+            var pts = '';
+            for (var i = 0; i < data.points.length; i++)
+            {
+                pts = data.points[i].x;
+            }
+            var start = pts - @Model.Charts[i].Tick.ToString();
+            window.open(`https://localhost:44354/Issue/ShowRange?reportId=${id}&start=${start}&end=${pts}&graphId=${d}`)
+            });
+            </script>
+        </div>
     }
-    var arrY = @Json.Serialize(massiveY);
-    var arrX = @Json.Serialize(massiveX);
-
-    var data = [
-        {
-            x: arrX,
-            y: arrY,
-            type: 'bar'
-        }
-    ];
-    var layout = {
-        title: 'Ошибка в часах',
-        showlegend: false
-    };
-
-    Plotly.newPlot('myDiv3', data, layout, { staticPlot: true });
-</script>
-
+</div>

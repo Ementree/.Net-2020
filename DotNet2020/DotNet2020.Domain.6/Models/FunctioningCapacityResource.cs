@@ -6,16 +6,12 @@ namespace DotNet2020.Domain._6.Models
 {
     public class FunctioningCapacityResource
     {
-        public FunctioningCapacityResource(int id, int projectId, int resourceId, int functionCapacity, int periodId, Project project, Resource resource, Period period)
+        public FunctioningCapacityResource(int projectId, int resourceId, int functionCapacity, int periodId)
         {
-            Id = id;
             ProjectId = projectId;
             ResourceId = resourceId;
             FunctionCapacity = functionCapacity;
             PeriodId = periodId;
-            Project = project;
-            Resource = resource;
-            Period = period;
         }
 
         protected FunctioningCapacityResource() : base() { }

@@ -1,4 +1,5 @@
 ﻿using DotNet2020.Domain._5.Entities;
+using System.Collections.Generic;
 
 namespace DotNet2020.Domain._5.Services.Interfaces
 {
@@ -16,7 +17,7 @@ namespace DotNet2020.Domain._5.Services.Interfaces
         /// </summary>
         /// <param name="projectName">Project name</param>
         /// <param name="issueFilter">Issue filter</param>
-        Issue[] GetIssues(string projectName, string issueFilter = "");
+        List<Issue> GetIssues(string projectName, string issueFilter = "");
 
         /// <summary>
         /// Get all project names

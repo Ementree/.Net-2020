@@ -1,0 +1,15 @@
+﻿@model DotNet2020.Domain._4_.Models.ModelView.SickDayViewModel
+    <div class="text-danger">@Html.ValidationMessage("Error")</div>
+    <div class="text-danger">@Html.ValidationMessage("Error1")</div>
+<div>
+    @using (Html.BeginForm("Add", "SickDay", FormMethod.Post))
+    {
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <p>Выберите день болезни</p>
+        <p>
+            <span asp-validation-for="Day" class="text-danger"></span><br/>
+            <input asp-for="Day" type="date"/>
+        </p>
+        <p><input type="submit" value="Добавить" /></p>
+    }
+</div>

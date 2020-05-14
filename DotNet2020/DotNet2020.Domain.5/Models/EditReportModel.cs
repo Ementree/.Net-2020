@@ -4,6 +4,7 @@ namespace DotNet2020.Domain._5.Models
 {
     public class EditReportModel
     {
+        public int ReportId { get; set; }
         [MaxLength(50)]
         public string ReportName { get; set; }
         public string ProjectName { get; set; }
