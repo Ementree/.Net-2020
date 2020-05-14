@@ -1,0 +1,24 @@
+﻿@{
+    ViewData["Title"] = "Добавить Рекомендацию";
+}
+@model DotNet2020.Domain._4.Models.Recommendation
+<div class="text-center">
+    <h1 class="display-4">Добавьте рекомендацию</h1>
+</div>
+<div class="container-fluid">
+    <form method="post">
+        <div class="row">
+            <div class="col-lg-12">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <label asp-for="RecommendationText">Текст рекомендации:</label><br />
+                <textarea class="w-100" rows="8" asp-for="RecommendationText" placeholder="Введите рекомендацию..."></textarea><br/>
+                <span asp-validation-for="RecommendationText" class="text-danger"></span>
+                <input type="submit" value="Добавить" /><br />
+            </div>
+        </div>
+    </form>
+</div>
+@* ReSharper disable once Razor.SectionNotResolved *@
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

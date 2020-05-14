@@ -2,17 +2,15 @@
 {
     public class Project
     {
-        public Project(int id, string name, int statusId, ProjectStatus projectStatus)
+        public Project(string name, int projectStatusId)
         {
-            Id = id;
             Name = name;
-            StatusId = statusId;
-            ProjectStatus = projectStatus;
+            ProjectStatusId = projectStatusId;
         }
         protected Project() : base() { }
         public int Id { get; protected set; }
         public string Name { get; protected set; }
-        public int StatusId { get; protected set; }
+        public int ProjectStatusId { get; protected set; }
         public virtual ProjectStatus ProjectStatus { get; protected set; }
     }
 }

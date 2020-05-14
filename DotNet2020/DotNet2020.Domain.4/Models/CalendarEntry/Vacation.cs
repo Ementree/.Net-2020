@@ -1,18 +1,23 @@
 ﻿using System;
+using System.Collections.Generic;
+using DotNet2020.Domain._4.Domain;
+using DotNet2020.Domain.Core.Models;
+using DotNet2020.Domain.Models;
 
 namespace DotNet2020.Domain._4.Models
 {
-    public class Vacation : AbstractCalendarEntry
+    public class Vacation : AbstractCalendarEntry, IApprovableEvent
     {
         public bool IsApproved { get; private set; }
         public bool IsPaid { get; private set; }
+        public Employee Agreeing { get; set; }
 
-        public Vacation(DateTime from, DateTime to, string userName)
+        protected Vacation() { }
+
+        public Vacation(DateTime from, DateTime to, EmployeeCalendar user, bool isPaid)
+            : base(from, to, user, AbsenceType.Vacation) 
         {
-            From = from;
-            To = to;
-            AbsenceType = AbsenceType.Vacation;
-            UserName = userName;
+            IsPaid = isPaid;
         }
 
         public void Pay()
@@ -20,9 +25,16 @@ namespace DotNet2020.Domain._4.Models
             IsPaid = true;
         }
 
-        public void Approve()
+        #warning добавить согласующего
+        public void Approve(List<Holiday> holidays, Employee agreeing)
         {
+            if(CalendarEmployee == null) throw new NullReferenceException();
+            Agreeing = agreeing;
+            var days = DomainLogic.GetDatesFromInterval(From, To);
+            var total = DomainLogic.GetWorkDay(days, holidays);
+            CalendarEmployee.TotalDayOfVacation = CalendarEmployee.TotalDayOfVacation - total;
             IsApproved = true;
+            CalendarEmployee.Approve();
         }
     }
 }

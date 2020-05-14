@@ -1,0 +1,167 @@
+﻿body {
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.container {
+    max-width: 1300px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.recommendations {
+    display: flex;
+    justify-content: space-between;
+}
+
+    .recommendations .block-rec {
+        width: 40%;
+    }
+
+        .recommendations .block-rec .box {
+            border: 1px solid black;
+            padding: 10px;
+        }
+
+.frame {
+    border: 1px solid black;
+    padding: 10px;
+}
+
+.vacation h2 {
+    margin: 0;
+    width: 55%;
+}
+
+.vacation button {
+    margin: 30px 0 0 0;
+    padding: 15px 10px 15px 10px;
+    border: 1px solid black;
+    border-radius: 10px;
+    box-shadow: 0;
+    background: #fff;
+    cursor: pointer;
+}
+
+.adminrecomadd button {
+    margin: 10px 0 0 0;
+    padding: 15px 10px 15px 10px;
+    border: 1px solid black;
+    border-radius: 10px;
+    box-shadow: 0;
+    background: #fff;
+    cursor: pointer;
+}
+
+    .vacation button:hover {
+        box-shadow: 3px 3px 0px 0px #000;
+        transition: .3s;
+    }
+
+    .adminrecomadd button:hover {
+        box-shadow: 3px 3px 0px 0px #000;
+        transition: .3s;
+    }
+
+.last-vacation h1 {
+    border-bottom: 1px solid black;
+    width: max-content;
+    padding-bottom: 15px;
+}
+
+@media screen and (max-width: 900px) {
+    .recommendations {
+        display: block;
+    }
+
+    .vacation h2 {
+        width: 80%;
+    }
+
+    .last-vacation h1 {
+        padding-bottom: unset;
+    }
+
+
+    .recommendations .block-rec {
+        width: unset;
+    }
+
+    .vacation h2 {
+        margin: unset;
+        width: 100%;
+    }
+
+    .last-vacation h1 {
+        font-size: 1em;
+        width: 100%;
+    }
+
+    .vacation {
+        margin: 50px 0px;
+    }
+
+}
+
+.k-scheduler-table td {
+    border-width: 0 1px 1px 1px !important;
+}
+
+.k-scheduler-times {
+    border-bottom-color: #e0e0e0;
+}
+
+.approve-reject-buttons {
+    display: flex;
+    padding-bottom: 10px;
+}
+
+form.approve {
+    margin: auto;
+}
+
+form.reject {
+    margin: auto;
+}
+
+.legend {
+    display: flex;
+    padding: 10px 0 10px 0;
+    font-weight: 600;
+    font-size: 13px;
+}
+
+.color-box {
+    width: 90px;
+    height: 40px;
+    border-radius: 5px;
+    text-align: center;
+    margin-right: 16px;
+}
+
+.legend-item-holiday {
+    background-color: #ff7f7f;
+    padding-top: 9px;
+}
+
+.legend-item-vacation {
+    background-color: #ff4242;
+}
+
+.legend-item-vacation-approved {
+    background-color: #59d27c;
+    padding-top: 9px;
+}
+
+.legend-item-illness {
+    background-color: #ffff92;
+}
+
+.legend-item-illness-approved {
+    background-color: #6e84fe;
+    padding-top: 9px;
+}
+
+.legend-item-sickday {
+    background-color: #95c8fd;
+    padding-top: 9px;
+}

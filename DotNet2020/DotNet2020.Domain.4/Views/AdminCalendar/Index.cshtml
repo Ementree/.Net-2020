@@ -1,0 +1,124 @@
+﻿@{
+    ViewData["Title"] = "Calendar";
+}
+@using DotNet2020.Domain._4.Models
+@{ var events = ViewBag.Events as IEnumerable<DotNet2020.Domain._4.Models.AbstractCalendarEntry>;}
+<link rel="stylesheet" href="~/css/calendar.css">
+
+@if (TempData["message"] != null)
+{
+    <div class="alert alert-success">@TempData["message"]</div>
+}
+<div class="calendar">
+    <h1>Календарь</h1>
+    @Html.Partial("../Calendar.cshtml")
+</div>
+<div class="container-fluid">
+    <hr />
+    <div class="row">
+        <div class="col-lg-12">
+            <h3>Запросы на отпуск</h3>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <table border="1" class="w-100">
+                <tbody align="center">
+                    @if (events.Any())
+                    {
+                        <tr>
+                            <td>Пользователь</td>
+                            <td>Сроки</td>
+                            <td>Тип отсутствия</td>
+                            <td></td>
+                        </tr>
+                    }
+                    @foreach (var calendarEntry in events)
+                    {
+                        @if (calendarEntry is Vacation vacation && !vacation.IsApproved)
+                        {
+                            <tr>
+                                <td>@vacation.UserName</td>
+                                <td>От @vacation.From.Day/@vacation.From.Month/@vacation.From.Year до @vacation.To.Day/@vacation.To.Month/@vacation.To.Year</td>
+                                @{
+                                    var isPaidText = vacation.IsPaid ? "Оплачиваемый" : "Неоплачиваемый";
+                                }
+                                <td>@isPaidText отпуск</td>
+                                <td style="width: 400px">
+                                    <div class="approve-reject-buttons">
+                                        <form class="approve" asp-action="Approve" asp-controller="AdminCalendar" method="post" asp-route-id="@calendarEntry.Id">
+                                            <div class="adminrecomadd">
+                                                <button type="submit">Согласовать</button>
+                                            </div>
+                                        </form>
+                                        <form class="reject" asp-action="Reject" asp-controller="AdminCalendar" method="post" asp-route-id="@calendarEntry.Id">
+                                            <div class="adminrecomadd">
+                                                <button type="submit">Отклонить</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                        @if (calendarEntry is Illness illness && !illness.IsApproved)
+                        {
+                            <tr>
+                                <td>@illness.UserName</td>
+                                <td>От @illness.From.Day/@illness.From.Month/@illness.From.Year до @illness.To.Day/@illness.To.Month/@illness.To.Year</td>
+                                @{ var daysCount = (illness.To - illness.From).Days; }
+                                <td>Больничный</td>
+                                <td style="width: 400px">
+                                    <div class="approve-reject-buttons">
+                                        <form class="approve" asp-action="Approve" asp-controller="AdminCalendar" method="post" asp-route-id="@calendarEntry.Id">
+                                            <div class="adminrecomadd">
+                                                <button type="submit">Согласовать</button>
+                                            </div>
+                                        </form>
+                                        <form class="reject" asp-action="Reject" asp-controller="AdminCalendar" method="post" asp-route-id="@calendarEntry.Id">
+                                            <div class="adminrecomadd">
+                                                <button type="submit">Отклонить</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <hr />
+    <div class="row">
+        <div class="col-lg-6">
+            <form asp-action="Update" asp-controller="Recommendation" method="get">
+                <div class="adminrecomadd">
+                    <button type="submit">Обновить рекомендацию</button>
+                </div>
+            </form>
+            <br />
+            <form asp-action="Add" asp-controller="Holiday" method="get">
+                <div class="adminrecomadd">
+                    <button type="submit">Добавить праздничный день</button>
+                </div>
+            </form>
+            <form asp-action="Remove" asp-controller="Holiday" method="get">
+                <div class="adminrecomadd">
+                    <button type="submit">Удалить праздничный день</button>
+                </div>
+            </form>
+            <form asp-action="Refresh" asp-controller="AdminCalendar" method="post">
+                <div class="adminrecomadd">
+                    <button type="submit">Пересчитать оплачиваемые отпуска</button>
+                </div>
+            </form>
+        </div>
+        <div class="col-lg-6">
+            <h3>Рекомендация для всех</h3>
+            @if (ViewBag.Recommendation != null)
+            {
+                <p class="frame">@ViewBag.Recommendation.RecommendationText</p>
+            }
+        </div>
+    </div>
+</div>
