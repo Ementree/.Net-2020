@@ -88,6 +88,7 @@ namespace DotNet2020.Domain._4.Domain
         public static List<UserViewModel> GetAllUsers(this DbContext context)
         {
             var users = context.Set<EmployeeCalendar>()
+                .Include(u => u.Employee)
                 .OrderBy(x => x.Employee.FirstName)
                 .Select(u =>
                     new UserViewModel()

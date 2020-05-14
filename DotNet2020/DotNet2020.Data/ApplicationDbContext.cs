@@ -49,8 +49,7 @@ namespace DotNet2020.Data
         public virtual DbSet<Recommendation> Recommendations { get; set; }
         
         public virtual DbSet<AbstractCalendarEntry> AbstractCalendarEntries { get; set; }
-
-        public virtual DbSet<CalendarEntry> CalendarEntries { get; set; }
+        
         public virtual DbSet<YearOfVacations> YearOfVacations { get; set; }
 
         public virtual DbSet<Employee> Employee { get; set; }
