@@ -10,7 +10,6 @@ namespace DotNet2020.Domain._5.Services.Interfaces
         /// </summary>
         /// <param name="projectName">Project name</param>
         /// <param name="issueName">Issue name</param>
-        /// <returns></returns>
         Issue GetIssue(string projectName, string issueName);
 
         /// <summary>
@@ -18,13 +17,16 @@ namespace DotNet2020.Domain._5.Services.Interfaces
         /// </summary>
         /// <param name="projectName">Project name</param>
         /// <param name="issueFilter">Issue filter</param>
-        /// <returns></returns>
         List<Issue> GetIssues(string projectName, string issueFilter = "");
 
         /// <summary>
         /// Get all project names
         /// </summary>
-        /// <returns></returns>
         string[] GetAllProjects();
+
+        /// <summary>
+        /// Get all project users in project
+        /// </summary>
+        string[] GetAllUsers(string projectName);
     }
 }
