@@ -24,6 +24,15 @@ namespace DotNet2020.Domain._5.Entities
 
         public void SetData(List<Issue> issues, int count)
         {
+            XAxis = new List<double>();
+            YAxis = new List<double>();
+
+            if (issues == null || issues.Count == 0)
+            {
+                _issues = new List<Issue>();
+                return;
+            }
+
             _issues = issues;
             var chart = issues
                 .Select(_selector)
@@ -31,8 +40,9 @@ namespace DotNet2020.Domain._5.Entities
                 .Select(d => d.Value)
                 .OrderBy(d => d);
 
-            XAxis = new List<double>();
-            YAxis = new List<double>();
+            if (!chart.Any())
+                return;
+
             var dict = new Dictionary<double, int>();
             Tick = Math.Ceiling((chart.Last() - chart.First()) / count);
             var min = chart.First() + Tick;

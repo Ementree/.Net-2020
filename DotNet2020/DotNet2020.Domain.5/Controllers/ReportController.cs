@@ -25,6 +25,11 @@ namespace DotNet2020.Domain._5.Controllers
             _chartService = new ChartService();
         }
 
+        public IActionResult Index()
+        {
+            return View();
+        }
+
         [HttpGet]
         public IActionResult Available()
         {
