@@ -137,6 +137,18 @@ namespace DotNet2020.Data
                     (AbsenceType.SickDay)
                 .HasValue<Illness>
                     (AbsenceType.Illness);
+
+            modelBuilder.Entity<EmployeeCalendar>()
+                .HasOne<Employee>(e => e.Employee)
+                .WithOne()
+                .HasForeignKey(typeof(EmployeeCalendar), "EmployeeId")
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<AbstractCalendarEntry>()
+                .HasOne<EmployeeCalendar>(_event => _event.CalendarEmployee)
+                .WithMany(e => e.CalendarEntries)
+                .OnDelete(DeleteBehavior.Cascade);
         }
+        
     }
 }
