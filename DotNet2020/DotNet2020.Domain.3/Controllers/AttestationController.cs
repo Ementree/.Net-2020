@@ -130,6 +130,7 @@ namespace DotNet2020.Domain._3.Controllers
             return RedirectToAction("Workers");
         }
 
+        [Authorize(Roles = "admin")]
         public IActionResult WorkersRemove(int id)
         {
             var worker = _context.Set<SpecificWorkerModel>().Find(id);
@@ -150,6 +151,7 @@ namespace DotNet2020.Domain._3.Controllers
             return View(competences);
         }
 
+        [Authorize(Roles = "admin")]
         public IActionResult CompetencesAdd()
         {
             return View();
@@ -164,6 +166,7 @@ namespace DotNet2020.Domain._3.Controllers
             return RedirectToAction("CompetencesManage", new { id = competenceModel.Id });
         }
 
+        [Authorize(Roles = "admin")]
         public IActionResult CompetencesManage(long id)
         {
             var competence = _context.Set<CompetencesModel>().Find(id);
@@ -212,6 +215,7 @@ namespace DotNet2020.Domain._3.Controllers
             return View(grades);
         }
 
+        [Authorize(Roles = "admin")]
         public IActionResult GradesAdd()
         {
             return View();
@@ -225,6 +229,7 @@ namespace DotNet2020.Domain._3.Controllers
             return RedirectToAction("GradesManage", new { id = gradeModel.Id });
         }
 
+        [Authorize(Roles = "admin")]
         public IActionResult GradesManage(long id)
         {
             var gradeUpdateModel = _gradeService.GetGradeUpdateModelFor(id);
@@ -255,12 +260,14 @@ namespace DotNet2020.Domain._3.Controllers
 
         #endregion
         #region Questions
+        [Authorize(Roles = "admin")]
         public IActionResult Questions()
         {
             var competenceQuestionsViewModels = _questionService.GetQuestions();
             return View(competenceQuestionsViewModels);
         }
 
+        [Authorize(Roles = "admin")]
         public IActionResult QuestionsManage(long id)
         {
             var questionUpdateModel = _questionService.GetQuestionUpdateModel(id);
@@ -286,6 +293,7 @@ namespace DotNet2020.Domain._3.Controllers
 
         #endregion
         #region Attestation
+        [Authorize(Roles = "admin")]
         public IActionResult Attestation()
         {
             AttestationModel attestation = new AttestationModel();
@@ -345,6 +353,7 @@ namespace DotNet2020.Domain._3.Controllers
         }
         #endregion
 
+        [Authorize(Roles = "admin")]
         public IActionResult AttestationList()
         {
             List<AttestationListModel> attestationListModels = new List<AttestationListModel>();
@@ -358,6 +367,7 @@ namespace DotNet2020.Domain._3.Controllers
             return View(attestationListModels);
         }
 
+        [Authorize(Roles = "admin")]
         public IActionResult Output()
         {
             var workers = _workerService.GetLoadedWorkers();
@@ -371,6 +381,7 @@ namespace DotNet2020.Domain._3.Controllers
             return File(stream, "application/pdf", "workers.pdf");
         }
 
+        [Authorize(Roles = "admin")]
         public IActionResult DownloadAttestation(long id)
         {
             PdfHelper.GetPdfOfAttestation(id, _context);

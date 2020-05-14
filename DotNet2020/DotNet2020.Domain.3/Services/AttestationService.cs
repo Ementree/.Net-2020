@@ -76,12 +76,12 @@ namespace DotNet2020.Domain._3.Services
 
         public AttestationModel CreateCompetenceTable(AttestationModel attestation)
         {
-            attestation.Workers = _workerService.GetLoadedWorkers(); //работники
-            attestation.Competences = _context.Set<CompetencesModel>().ToList(); //компетенции
+            attestation.Workers = _workerService.GetLoadedWorkers();
+            attestation.Competences = _context.Set<CompetencesModel>().ToList();
 
-            var worker = attestation.Workers.Where(x => x.Id == attestation.WorkerId).FirstOrDefault(); //получаем работника
+            var worker = attestation.Workers.Where(x => x.Id == attestation.WorkerId).FirstOrDefault();
 
-            foreach (var workerCompetence in worker.SpecificWorkerCompetencesModels) //вывести все компетенции, кроме тех, что есть у работника
+            foreach (var workerCompetence in worker.SpecificWorkerCompetencesModels)
             {
                 attestation.Competences.Remove(workerCompetence.Competence);
             }
@@ -93,49 +93,49 @@ namespace DotNet2020.Domain._3.Services
             attestation.Workers = _workerService.GetLoadedWorkers();
             attestation.Grades = _gradeService.GetLoadedGrades();
 
-            var worker = _workerService.GetWorker((int)attestation.WorkerId); //получаем работника
+            var worker = _workerService.GetWorker((int)attestation.WorkerId);
 
-            var workerCompetences = new List<CompetencesModel>(); //лист из компетенций работника
+            var workerCompetences = new List<CompetencesModel>();
 
             foreach (var item in worker.SpecificWorkerCompetencesModels)
             {
                 workerCompetences.Add(item.Competence);
             } //заполняем его
 
-            var workerGrades = _gradeService.GetWorkerGrades(workerCompetences, attestation.Grades, _context.Set<GradeToGradeModel>().ToList()); //список имеющихся грейдов
+            var workerGrades = _gradeService.GetWorkerGrades(workerCompetences, attestation.Grades, _context.Set<GradeToGradeModel>().ToList());
 
-            if (workerGrades.Count() != 0) //если список не пустой
+            if (workerGrades.Count() != 0)
             {
-                var max = workerGrades.Max(x => x.GradesCompetences.Count()); //определяем максимальное количество компетенций у имеющихся грейдов
+                var max = workerGrades.Max(x => x.GradesCompetences.Count());
 
-                var currentGrade = workerGrades.Where(x => x.GradesCompetences.Count() == max).FirstOrDefault(); //получаем грейд с максимальным количеством компетенций
+                var currentGrade = workerGrades.Where(x => x.GradesCompetences.Count() == max).FirstOrDefault();
 
-                foreach (var element in workerGrades) //на выход имеем список грейдов, которых нет у сотрудника
+                foreach (var element in workerGrades)
                 {
                     if (attestation.Grades.Contains(element))
                     {
                         attestation.Grades.Remove(element);
                     }
                 }
-                attestation.Grades.Add(currentGrade); //добавить текущий грейд для переаттестации
+                attestation.Grades.Add(currentGrade);
             }
             return attestation;
         }
 
         public AttestationModel CreateAttestationByCompetences(AttestationModel attestation)
         {
-            bool isValid = true; //возможно ли вообще провести аттестацию (имеется как минимум 1 вопрос каждой сложности)
-            var worker = _workerService.GetWorker((int)attestation.WorkerId); //получаем работника
-            var workerCompetences = new List<CompetencesModel>(); //получаем компетенции работника
+            bool isValid = true;
+            var worker = _workerService.GetWorker((int)attestation.WorkerId);
+            var workerCompetences = new List<CompetencesModel>();
 
             foreach (var item in worker.SpecificWorkerCompetencesModels)
-                workerCompetences.Add(item.Competence); //заполняем этот лист
+                workerCompetences.Add(item.Competence);
 
-            var questions = new List<string>(); //лист для вопросов к аттестации
+            var questions = new List<string>();
 
-            var testedCompetences = new List<CompetencesModel>(); //лист тестируемых компетенций
+            var testedCompetences = new List<CompetencesModel>();
 
-            foreach (var competenceId in attestation.IdsTestedCompetences) //заполняем лист тестируемых аттестаций
+            foreach (var competenceId in attestation.IdsTestedCompetences)
             {
                 var competence = _context.Set<CompetencesModel>().Find(competenceId);
                 if (!workerCompetences.Contains(competence))
@@ -147,20 +147,20 @@ namespace DotNet2020.Domain._3.Services
             questions = _questionService
                 .GetCompetencesAttestationQuestions(testedCompetences, out isValid)
                 .Select(x => x.Question)
-                .ToList(); //получаем вопросы к тестируемым компетенциям, и isValid
+                .ToList();
 
-            if (isValid) //если возможно провести аттестацию
+            if (isValid)
             {
-                questions = questions.Distinct().ToList(); //убираем повторяющиеся
-                if (_context.Set<AttestationModel>().Any(x => x.WorkerId == attestation.WorkerId)) //если у работника до этого были аттестации
+                questions = questions.Distinct().ToList();
+                if (_context.Set<AttestationModel>().Any(x => x.WorkerId == attestation.WorkerId))
                 {
                     questions.AddRange(_questionService.GetFiftyPercentOfWrongQuestionsFromlastAttestation(attestation));
                 }
 
-                attestation.Questions = questions; //вопросы, которые будут выведены
-                attestation.TestedCompetences = testedCompetences; //лист компетенций, по которым проходит аттестация
+                attestation.Questions = questions;
+                attestation.TestedCompetences = testedCompetences;
             }
-            else //случай, когда нельзя провести аттестацию
+            else
             {
                 attestation.Action = AttestationAction.NotEnoughQuestion;
                 return attestation;
@@ -171,26 +171,26 @@ namespace DotNet2020.Domain._3.Services
         public AttestationModel CreateAttestationByGrades(AttestationModel attestation, out bool IsReattestation)
         {
             bool isValid = true;
-            var grades = _gradeService.GetLoadedGrades(); //получаем все грейды
-            IsReattestation = false; //переменная, проверяющая, проходит ли переаттестация
+            var grades = _gradeService.GetLoadedGrades();
+            IsReattestation = false;
 
-            var worker = _workerService.GetWorker((int)attestation.WorkerId); //получаем работника
+            var worker = _workerService.GetWorker((int)attestation.WorkerId);
 
-            var gradeToGrades = _context.Set<GradeToGradeModel>().ToList(); //получаем список связей грейдов
-            var questionsForGrade = new List<string>(); //создаем список для вопросов
-            var gradeId = attestation.GradeId.Value; //получаем id тестируемого грейда
+            var gradeToGrades = _context.Set<GradeToGradeModel>().ToList();
+            var questionsForGrade = new List<string>();
+            var gradeId = attestation.GradeId.Value;
             var testedGradeCompetences = _context.Set<GradeCompetencesModel>()
                 .Where(x => x.GradeId == gradeId)
-                .ToList(); //лист связей грейдов и компетенций, состоящий только из связей текущего грейда
+                .ToList();
 
-            var testedCompetences = new List<CompetencesModel>(); //тестируемые компетенции
+            var testedCompetences = new List<CompetencesModel>();
 
-            var workerCompetences = new List<CompetencesModel>(); //текущие компетенции
+            var workerCompetences = new List<CompetencesModel>();
 
             foreach (var item in worker.SpecificWorkerCompetencesModels)
-                workerCompetences.Add(item.Competence); //получаем текущие компетенции
+                workerCompetences.Add(item.Competence);
 
-            foreach (var testedGradeCompetence in testedGradeCompetences) //добавляем в тестируемые компетенции все, кроме тех, что есть у работника
+            foreach (var testedGradeCompetence in testedGradeCompetences)
             {
                 var competence = _context.Set<CompetencesModel>().Find(testedGradeCompetence.CompetenceId);
                 if (!workerCompetences.Contains(competence))
@@ -199,60 +199,60 @@ namespace DotNet2020.Domain._3.Services
                 }
             }
 
-            var workerGrades = _gradeService.GetWorkerGrades(workerCompetences, grades, _context.Set<GradeToGradeModel>().ToList()); //список грейдов, которые есть у работника
+            var workerGrades = _gradeService.GetWorkerGrades(workerCompetences, grades, _context.Set<GradeToGradeModel>().ToList());
 
-            if (workerGrades.Count() != 0) //если не пустой
+            if (workerGrades.Count() != 0)
             {
                 var max = workerGrades.Max(x => x.GradesCompetences.Count());
-                var currentGrade = workerGrades.Where(x => x.GradesCompetences.Count() == max).FirstOrDefault(); //кладём "максимальный" грейд
+                var currentGrade = workerGrades.Where(x => x.GradesCompetences.Count() == max).FirstOrDefault();
 
-                if (currentGrade.Id == attestation.GradeId.Value) //если тестируемый грейд совпадает с максимальным грейдом, тогда происходит реаттетсация
+                if (currentGrade.Id == attestation.GradeId.Value)
                     IsReattestation = true;
             }
 
-            if (IsReattestation) //если происходит реаттестация
+            if (IsReattestation)
             {
-                if (!gradeToGrades.Where(x => x.NextGradeId == gradeId).Any()) //если выбранный грейд "первый"(перед этим грейдом нет других)
+                if (!gradeToGrades.Where(x => x.NextGradeId == gradeId).Any())
                 {
-                    var grade = grades.Where(x => x.Id == gradeId).FirstOrDefault(); //получаем этот грейд
-                    testedCompetences.AddRange(grade.GradesCompetences.Select(x => x.Competence)); //и кладём в тестируемые компетенции компетенции этого грейда
+                    var grade = grades.Where(x => x.Id == gradeId).FirstOrDefault();
+                    testedCompetences.AddRange(grade.GradesCompetences.Select(x => x.Competence));
                 }
-                else //если выбранный грейд не первый
+                else
                 {
-                    var previousGradesIds = gradeToGrades //получаем id предыдущих грейдов от текущего грейда
+                    var previousGradesIds = gradeToGrades
                         .Where(x => x.NextGradeId == gradeId)
                         .Select(x => x.GradeId)
                         .ToList();
 
-                    var previousGrades = grades //получаем предыдущие грейды от текущего грейда
+                    var previousGrades = grades
                         .Where(x => previousGradesIds.Contains(x.Id))
                         .ToList();
 
-                    var previousCompetences = previousGrades //получаем не повторяющиеся предыдущие компетенции предыдущих грейдов 
+                    var previousCompetences = previousGrades
                         .SelectMany(x => x.GradesCompetences)
                         .Select(x => x.Competence)
                         .Distinct()
                         .ToList();
 
-                    List<CompetencesModel> needToReattestateCompetences = new List<CompetencesModel>(); //лист компетенций для реаттестаций
+                    List<CompetencesModel> needToReattestateCompetences = new List<CompetencesModel>();
 
-                    if (previousGrades.Count == 1) //если только 1 предыдущий грейд
+                    if (previousGrades.Count == 1)
                     {
-                        needToReattestateCompetences = workerCompetences //тогда кладём в лист все предыдущие компетенции
+                        needToReattestateCompetences = workerCompetences
                             .Where(x => !previousCompetences
                             .Any(y => x.Id == y.Id))
                             .ToList();
                     }
-                    else //если больше 1 предыдущего
+                    else
                     {
-                        Dictionary<CompetencesModel, int> dict = new Dictionary<CompetencesModel, int>(); //словарь компетенции и количества вхождений
+                        Dictionary<CompetencesModel, int> dict = new Dictionary<CompetencesModel, int>();
 
-                        foreach (var previousCompetence in previousCompetences) //каждой компетенции присваиваем 0 вхождений
+                        foreach (var previousCompetence in previousCompetences)
                         {
                             dict[previousCompetence] = 0;
                         }
 
-                        foreach (var previousGrade in previousGrades) //считаем количество компетенций предыдущих грейдов
+                        foreach (var previousGrade in previousGrades)
                         {
                             var competences = previousGrade.GradesCompetences.Select(x => x.Competence).ToList();
                             foreach (var competence in competences)
@@ -261,7 +261,7 @@ namespace DotNet2020.Domain._3.Services
                             }
                         }
 
-                        foreach (var element in dict) //добавляем все компетенцие, которые вошли менее КОЛИЧЕСТВА грейдов раз
+                        foreach (var element in dict)
                         {
                             if (element.Value != previousGrades.Count())
                             {
@@ -269,53 +269,53 @@ namespace DotNet2020.Domain._3.Services
                             }
                         }
                     }
-                    testedCompetences.AddRange(needToReattestateCompetences); //добавляем их в список компетенций для переаттестации
+                    testedCompetences.AddRange(needToReattestateCompetences);
                 }
             }
 
-            questionsForGrade = _questionService //получаем вопросы для грейда исходя из тестируемых компетенций и проверяем возможность проведения
+            questionsForGrade = _questionService
                 .GetCompetencesAttestationQuestions(testedCompetences, out isValid)
                 .Select(x => x.Question)
                 .ToList();
 
-            if (!isValid) //если нельзя провести, не проводим
+            if (!isValid)
             {
                 attestation.Action = AttestationAction.NotEnoughQuestion;
                 return attestation;
             }
 
-            if (_context.Set<AttestationModel>().Any(x => x.WorkerId == attestation.WorkerId)) //если есть предыдущие аттестации, добавляем 50% от неправильных
+            if (_context.Set<AttestationModel>().Any(x => x.WorkerId == attestation.WorkerId))
             {
                 questionsForGrade.AddRange(_questionService.GetFiftyPercentOfWrongQuestionsFromlastAttestation(attestation));
             }
 
-            questionsForGrade = questionsForGrade.Distinct().ToList(); //удаляем повторения
+            questionsForGrade = questionsForGrade.Distinct().ToList();
 
-            attestation.TestedCompetences = testedCompetences; //выводим
+            attestation.TestedCompetences = testedCompetences;
             attestation.Questions = questionsForGrade;
             return attestation;
         }
 
         public void FinishAttestation(AttestationModel attestation)
         {
-            attestation.Grades = _gradeService.GetLoadedGrades(); //получаем все грейды
+            attestation.Grades = _gradeService.GetLoadedGrades();
 
-            var tuple = GetProblemsAndAnswers(attestation); //получаем выявленные проблемы и ответы
+            var tuple = GetProblemsAndAnswers(attestation);
             attestation.Problems = tuple.Item1;
             var answers = tuple.Item2;
             attestation.Date = DateTime.Today;
 
-            if (attestation.GradeId != null) //если мы проводили аттестацию про грейду
+            if (attestation.GradeId != null)
             {
                 if (attestation.IsGotGrade != null)
-                    attestation.GotCompetences = attestation.IdsTestedCompetences; //если грейд получен, добавляем все полученные id 
+                    attestation.GotCompetences = attestation.IdsTestedCompetences;
                 else
-                    attestation.GotCompetences = new List<long>(); //нежели обнуляем его
+                    attestation.GotCompetences = new List<long>();
             }
 
-            var gotCompetencesIds = new List<long>(); //список id полученных компетенций
+            var gotCompetencesIds = new List<long>();
 
-            var newCompetences = GetNewCompetences(attestation); //возвращает заполненный новыми компетенциями лист связей работника и компетений
+            var newCompetences = GetNewCompetences(attestation);
 
             if (attestation.ReAttestation)
             {
@@ -328,25 +328,25 @@ namespace DotNet2020.Domain._3.Services
             {
                 foreach (var newCompetence in newCompetences)
                 {
-                    _context.Set<SpecificWorkerCompetencesModel>().Add(newCompetence); //привязка компетенций сотруднику
-                    gotCompetencesIds.Add(newCompetence.CompetenceId); //добавление в лист полученных id
+                    _context.Set<SpecificWorkerCompetencesModel>().Add(newCompetence);
+                    gotCompetencesIds.Add(newCompetence.CompetenceId);
                 }
             }
 
 
 
-            var workerCompetences = new List<CompetencesModel>(); //компетенции работника
+            var workerCompetences = new List<CompetencesModel>();
 
-            var worker = _workerService.GetWorker((int)attestation.WorkerId); //сам работник
+            var worker = _workerService.GetWorker((int)attestation.WorkerId);
 
-            foreach (var item in worker.SpecificWorkerCompetencesModels.Union(newCompetences)) //добавляем в компетенции работника старые и новые компетенции
+            foreach (var item in worker.SpecificWorkerCompetencesModels.Union(newCompetences))
             {
                 workerCompetences.Add(item.Competence);
             }
 
-            var workerGrades = _gradeService.GetWorkerGrades(workerCompetences, attestation.Grades, _context.Set<GradeToGradeModel>().ToList()); //получить все грейды работника
+            var workerGrades = _gradeService.GetWorkerGrades(workerCompetences, attestation.Grades, _context.Set<GradeToGradeModel>().ToList());
 
-            foreach (var element in workerGrades) //удаляем из списка грейдов имеющиеся грейды
+            foreach (var element in workerGrades)
             {
                 if (attestation.Grades.Contains(element))
                 {
@@ -354,11 +354,11 @@ namespace DotNet2020.Domain._3.Services
                 }
             }
 
-            attestation.NextMoves = _gradeService.GetNextGrades(attestation.Grades); //получаем следующие грейды, которые может получить работник
+            attestation.NextMoves = _gradeService.GetNextGrades(attestation.Grades);
 
-            attestation.GotCompetences = gotCompetencesIds; //список полученных компетенций
+            attestation.GotCompetences = gotCompetencesIds;
 
-            _answerService.AddAnswers(answers, attestation); //добавляем ответы
+            _answerService.AddAnswers(answers, attestation);
 
             _context.Add(attestation);
             _context.SaveChanges();
