@@ -3,6 +3,7 @@ using System.Security.Claims;
 using DotNet2020.Data;
 using DotNet2020.Domain._4.Domain;
 using DotNet2020.Domain._4.Models;
+using DotNet2020.Domain.Filters;
 using DotNet2020.Domain.Models;
 using DotNet2020.Domain.Models.ModelView;
 using Microsoft.AspNetCore.Authorization;
@@ -12,9 +13,10 @@ using Microsoft.EntityFrameworkCore;
 namespace DotNet2020.Domain._4.Controllers
 {
     [Authorize]
+    [EmployeeFilter]
     public class CalendarController : Controller
     {
-        private readonly DbContext _dbContext;
+        public readonly DbContext _dbContext;
 
         public CalendarController(DbContext dbContext)
         {
