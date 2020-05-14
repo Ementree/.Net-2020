@@ -13,7 +13,7 @@
 <ul id="myTab2" class="nav nav-tabs">
     @for (int i = 0; i < Model.Charts.Count; i++)
     {
-        var href = $"panely{i}";
+        var href = $"#panely{i}";
         <li><a data-toggle="tab" href="@href">@Model.Charts[i].Name</a></li>
         <li><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p></li>
     }
@@ -25,7 +25,7 @@
         var tabId = $"panely{i}";
         var chartId = $"chart{i}";
         <div id="@tabId" class="tab-pane fade in active">
-            <div id='@chartId' style="height:auto"></div>
+            <div id='@chartId' style="height:auto; width:70%"></div>
             <script>
             var myPlot = document.getElementById('@chartId');
             var arrY = @Json.Serialize(Model.Charts[i].YAxis);
@@ -53,7 +53,7 @@
             pts = data.points[i].x;
             }
             var start = pts - @Model.Charts[i].Tick.ToString();
-            window.open(`https://localhost:44354/Issue/ShowRange?reportId=${id}&start=${start}&end=${pts}&graphId=${@Json.Serialize(Model.Charts[i].Id)}`)
+            window.open(`/Issue/ShowRange?reportId=${@Json.Serialize(Model.ReportId)}&start=${start}&end=${pts}&graphId=${@Json.Serialize(Model.Charts[i].Id)}`)
 
             });
             </script>
