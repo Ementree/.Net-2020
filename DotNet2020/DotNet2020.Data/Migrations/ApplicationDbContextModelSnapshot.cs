@@ -191,7 +191,8 @@ namespace DotNet2020.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("EmployeeId");
+                    b.HasIndex("EmployeeId")
+                        .IsUnique();
 
                     b.ToTable("EmployeeCalendar");
                 });
@@ -636,12 +637,10 @@ namespace DotNet2020.Data.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
                     b.Property<string>("LoginProvider")
-                        .HasColumnType("character varying(128)")
-                        .HasMaxLength(128);
+                        .HasColumnType("text");
 
                     b.Property<string>("ProviderKey")
-                        .HasColumnType("character varying(128)")
-                        .HasMaxLength(128);
+                        .HasColumnType("text");
 
                     b.Property<string>("ProviderDisplayName")
                         .HasColumnType("text");
@@ -678,12 +677,10 @@ namespace DotNet2020.Data.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("LoginProvider")
-                        .HasColumnType("character varying(128)")
-                        .HasMaxLength(128);
+                        .HasColumnType("text");
 
                     b.Property<string>("Name")
-                        .HasColumnType("character varying(128)")
-                        .HasMaxLength(128);
+                        .HasColumnType("text");
 
                     b.Property<string>("Value")
                         .HasColumnType("text");
@@ -774,8 +771,9 @@ namespace DotNet2020.Data.Migrations
             modelBuilder.Entity("DotNet2020.Domain.Models.EmployeeCalendar", b =>
                 {
                     b.HasOne("DotNet2020.Domain.Core.Models.Employee", "Employee")
-                        .WithMany()
-                        .HasForeignKey("EmployeeId");
+                        .WithOne()
+                        .HasForeignKey("DotNet2020.Domain.Models.EmployeeCalendar", "EmployeeId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("DotNet2020.Domain._3.Models.AttestationAnswerModel", b =>
@@ -826,7 +824,7 @@ namespace DotNet2020.Data.Migrations
             modelBuilder.Entity("DotNet2020.Domain._4.Models.AbstractCalendarEntry", b =>
                 {
                     b.HasOne("DotNet2020.Domain.Models.EmployeeCalendar", "CalendarEmployee")
-                        .WithMany()
+                        .WithMany("CalendarEntries")
                         .HasForeignKey("CalendarEmployeeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using DotNet2020.Domain._4.Models;
 using DotNet2020.Domain.Core.Models;
 
 namespace DotNet2020.Domain.Models
@@ -10,6 +12,8 @@ namespace DotNet2020.Domain.Models
 
         public int TotalDayOfVacation { get; set; }
         public bool IsLastVacationApproved { get; private set; }
+
+        public List<AbstractCalendarEntry> CalendarEntries { get; set; }
 
         public void Approve()
         {

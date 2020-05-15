@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DotNet2020.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20200510105301_CalendarEntryEmployee")]
-    partial class CalendarEntryEmployee
+    [Migration("20200514011039_OnDeleteCascade")]
+    partial class OnDeleteCascade
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -71,9 +71,6 @@ namespace DotNet2020.Data.Migrations
                     b.Property<int?>("EmployeeId")
                         .HasColumnType("integer");
 
-                    b.Property<bool>("IsLastVacationApproved")
-                        .HasColumnType("boolean");
-
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("boolean");
 
@@ -99,12 +96,6 @@ namespace DotNet2020.Data.Migrations
 
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("text");
-
-                    b.Property<string>("Test")
-                        .HasColumnType("text");
-
-                    b.Property<int>("TotalDayOfVacation")
-                        .HasColumnType("integer");
 
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("boolean");
@@ -136,6 +127,9 @@ namespace DotNet2020.Data.Migrations
 
                     b.Property<string>("Discriminator")
                         .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Email")
                         .HasColumnType("text");
 
                     b.Property<string>("FirstName")
@@ -199,9 +193,22 @@ namespace DotNet2020.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("EmployeeId");
+                    b.HasIndex("EmployeeId")
+                        .IsUnique();
 
                     b.ToTable("EmployeeCalendar");
+                });
+
+            modelBuilder.Entity("DotNet2020.Domain.Models.YearOfVacations", b =>
+                {
+                    b.Property<int>("Year")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.HasKey("Year");
+
+                    b.ToTable("YearOfVacations");
                 });
 
             modelBuilder.Entity("DotNet2020.Domain._3.Models.AnswerModel", b =>
@@ -406,27 +413,6 @@ namespace DotNet2020.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Recommendations");
-                });
-
-            modelBuilder.Entity("DotNet2020.Domain._6.Models.CalendarEntry", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
-
-                    b.Property<DateTime>("From")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<DateTime>("To")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<string>("UserName")
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("CalendarEntries");
                 });
 
             modelBuilder.Entity("DotNet2020.Domain._6.Models.FunctioningCapacityProject", b =>
@@ -732,8 +718,13 @@ namespace DotNet2020.Data.Migrations
                 {
                     b.HasBaseType("DotNet2020.Domain._4.Models.AbstractCalendarEntry");
 
+                    b.Property<int?>("AgreeingId")
+                        .HasColumnType("integer");
+
                     b.Property<bool>("IsApproved")
                         .HasColumnType("boolean");
+
+                    b.HasIndex("AgreeingId");
 
                     b.HasDiscriminator().HasValue(1);
                 });
@@ -749,12 +740,18 @@ namespace DotNet2020.Data.Migrations
                 {
                     b.HasBaseType("DotNet2020.Domain._4.Models.AbstractCalendarEntry");
 
+                    b.Property<int?>("AgreeingId")
+                        .HasColumnName("Vacation_AgreeingId")
+                        .HasColumnType("integer");
+
                     b.Property<bool>("IsApproved")
                         .HasColumnName("Vacation_IsApproved")
                         .HasColumnType("boolean");
 
                     b.Property<bool>("IsPaid")
                         .HasColumnType("boolean");
+
+                    b.HasIndex("AgreeingId");
 
                     b.HasDiscriminator().HasValue(2);
                 });
@@ -776,8 +773,9 @@ namespace DotNet2020.Data.Migrations
             modelBuilder.Entity("DotNet2020.Domain.Models.EmployeeCalendar", b =>
                 {
                     b.HasOne("DotNet2020.Domain.Core.Models.Employee", "Employee")
-                        .WithMany()
-                        .HasForeignKey("EmployeeId");
+                        .WithOne()
+                        .HasForeignKey("DotNet2020.Domain.Models.EmployeeCalendar", "EmployeeId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("DotNet2020.Domain._3.Models.AttestationAnswerModel", b =>
@@ -828,7 +826,7 @@ namespace DotNet2020.Data.Migrations
             modelBuilder.Entity("DotNet2020.Domain._4.Models.AbstractCalendarEntry", b =>
                 {
                     b.HasOne("DotNet2020.Domain.Models.EmployeeCalendar", "CalendarEmployee")
-                        .WithMany()
+                        .WithMany("CalendarEntries")
                         .HasForeignKey("CalendarEmployeeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -958,6 +956,20 @@ namespace DotNet2020.Data.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("DotNet2020.Domain._4.Models.Illness", b =>
+                {
+                    b.HasOne("DotNet2020.Domain.Core.Models.Employee", "Agreeing")
+                        .WithMany()
+                        .HasForeignKey("AgreeingId");
+                });
+
+            modelBuilder.Entity("DotNet2020.Domain._4.Models.Vacation", b =>
+                {
+                    b.HasOne("DotNet2020.Domain.Core.Models.Employee", "Agreeing")
+                        .WithMany()
+                        .HasForeignKey("AgreeingId");
                 });
 #pragma warning restore 612, 618
         }
