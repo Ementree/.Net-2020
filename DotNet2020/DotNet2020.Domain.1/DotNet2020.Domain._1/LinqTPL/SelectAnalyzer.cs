@@ -75,34 +75,7 @@ namespace DotNet2020.Domain._1
         public static async Task<Solution> CodeFix( Document document, 
             CodeFixContext context, CancellationToken cancellationToken)
         {
-            var root = await context
-                               .Document
-                               .GetSyntaxRootAsync(context.CancellationToken)
-                               .ConfigureAwait(false);
-            var diagnostic = context.Diagnostics.First();
-            var diagnosticSpan = diagnostic.Location.SourceSpan;
-
-            var interpolation = (InterpolatedStringExpressionSyntax)root.FindNode(diagnosticSpan);
-
-            var stringLiteral = LiteralExpression(SyntaxKind.StringLiteralExpression);
-
-            foreach (var token in interpolation.DescendantTokens())
-            {
-                if (token.IsKind(SyntaxKind.InterpolatedStringTextToken))
-                    stringLiteral.Update(Literal(token.Text).WithTrailingTrivia(Space));
-                else if (token.IsKind(SyntaxKind.IdentifierToken))
-                {
-                   // stringLiteral.Update(IdentifierName())
-                }
-            }
-
-            var newRoot = root.ReplaceNode(interpolation, stringLiteral);
-
-            var f = 2;
-            var efe = new List<int>()
-                .Select(h => "" + f + "");
-
-            return document.WithSyntaxRoot(newRoot).Project.Solution;
+            throw new NotImplementedException();
         }
     }
 }
