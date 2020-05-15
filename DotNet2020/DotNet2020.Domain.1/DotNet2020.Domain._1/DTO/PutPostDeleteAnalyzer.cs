@@ -69,7 +69,33 @@ namespace DotNet2020.Domain._1
         public static async Task<Solution> 
             CodeFix(Document document, CodeFixContext context, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            var root = await context
+                            .Document
+                            .GetSyntaxRootAsync(context.CancellationToken)
+                            .ConfigureAwait(false);
+
+            var diagnostic = context
+                .Diagnostics
+                .First();
+            var diagnosticSpan = diagnostic.Location.SourceSpan;
+
+            var localDecl = (IdentifierNameSyntax)root.FindNode(diagnosticSpan);
+
+            var identifierTokenName = localDecl.Identifier.Text;
+
+            var newName = identifierTokenName.Substring(0, identifierTokenName.Length - 3);
+
+            var semanticModel = await document.GetSemanticModelAsync(cancellationToken);
+            var typeSymbol = semanticModel.GetDeclaredSymbol(localDecl, cancellationToken);
+
+            var originalSolution = document.Project.Solution;
+            var optionSet = originalSolution.Workspace.Options;
+            var newSolution =
+                await Renamer
+                .RenameSymbolAsync(document.Project.Solution, typeSymbol, newName, optionSet, cancellationToken)
+                .ConfigureAwait(false);
+
+            return newSolution;
         }
     }
 }
