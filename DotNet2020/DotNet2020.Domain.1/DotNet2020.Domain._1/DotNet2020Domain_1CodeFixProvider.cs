@@ -24,8 +24,8 @@ namespace DotNet2020.Domain._1
             {
                 return ImmutableArray.Create(
                     PropertyModifiersAnalyzer.DiagnosticId,
-                    PutDeleteAnalyzer.DiagnosticPutId,
-                    PutDeleteAnalyzer.DiagnosticDeleteId);
+                    PutPostDeleteAnalyzer.DiagnosticId,
+                    SelectAnalyzer.DiagnosticId);
             }
         }
 
@@ -48,20 +48,20 @@ namespace DotNet2020.Domain._1
                             equivalenceKey: PropertyModifiersAnalyzer.CodeFixTitle),
                         diagnostic);
                     break;
-                case PutDeleteAnalyzer.DiagnosticPutId:
+                case PutPostDeleteAnalyzer.DiagnosticId:
                     context.RegisterCodeFix(
                         CodeAction.Create(
-                            title: PutDeleteAnalyzer.CodeFixPutTitle,
-                            createChangedSolution: c => PutDeleteAnalyzer.PutCodeFix(context.Document, context, c),
-                            equivalenceKey: PutDeleteAnalyzer.CodeFixPutTitle),
+                            title: PutPostDeleteAnalyzer.CodeFixTitle,
+                            createChangedSolution: c => PutPostDeleteAnalyzer.CodeFix(context.Document, context, c),
+                            equivalenceKey: PutPostDeleteAnalyzer.CodeFixTitle),
                         diagnostic);
                     break;
-                case PutDeleteAnalyzer.DiagnosticDeleteId:
+                case SelectAnalyzer.DiagnosticId:
                     context.RegisterCodeFix(
                         CodeAction.Create(
-                            title: PutDeleteAnalyzer.CodeFixDeleteTitle,
-                            createChangedSolution: c => PutDeleteAnalyzer.DeleteCodeFix(context.Document, context, c),
-                            equivalenceKey: PutDeleteAnalyzer.CodeFixDeleteTitle),
+                            title: SelectAnalyzer.CodeFixTitle,
+                            createChangedSolution: c => SelectAnalyzer.CodeFix(context.Document, context, c),
+                            equivalenceKey: SelectAnalyzer.CodeFixTitle),
                         diagnostic);
                     break;
             }
