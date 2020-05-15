@@ -11,9 +11,15 @@ using Microsoft.CodeAnalysis.CodeActions;
 using System.Collections.Immutable;
 using Microsoft.CodeAnalysis.Rename;
 using System.Threading;
+using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
+using static System.Console;
 
 namespace DotNet2020.Domain._1
 {
+    /// <summary>
+    /// Не используйте $”{интерполяцию}” в Select и AutoMapper.
+    /// Эти конструкции транслируются без .Where или .OrderBy, но падают с ними.
+    /// </summary>
     internal class SelectAnalyzer
     {
         public const string DiagnosticId = "SelectDiagnosticId";
@@ -29,42 +35,74 @@ namespace DotNet2020.Domain._1
         internal static void Analyze (SyntaxNodeAnalysisContext context)
         {
             var expression = context.Node as MemberAccessExpressionSyntax;
-            var selectToken = expression
+            SyntaxToken selectToken = FindSelectToken(expression);
+
+            if (selectToken == null || selectToken == default) return;
+            
+            var interpolations = FindInterpolations(selectToken);
+            foreach (var i in interpolations)
+                context.ReportDiagnostic(Diagnostic.Create(Rule, i.GetLocation()));
+            
+        }
+
+        private static SyntaxToken FindSelectToken(MemberAccessExpressionSyntax expression)
+        {
+            return expression
                 .ChildNodes()
                 .Where(n => n.IsKind(SyntaxKind.IdentifierName))
                 .Select(n => n
                     .ChildTokens()
-                    .FirstOrDefault(t => 
+                    .FirstOrDefault(t =>
                     t.IsKind(SyntaxKind.IdentifierToken) && t.Text == "Select"))
                 .Where(t => t != default)
                 .FirstOrDefault();
-
-            if (selectToken != null)
-            {
-                var interpolations = FindInterpolations(selectToken);
-
-                foreach (var i in interpolations)
-                    context.ReportDiagnostic(
-                        Diagnostic.Create(Rule, i.GetLocation()));
-            }
         }
 
-        private static IEnumerable<SyntaxNode> FindInterpolations(SyntaxToken sToken)
+        private static List<InterpolatedStringExpressionSyntax> FindInterpolations(SyntaxToken selectToken)
         {
-            return sToken
-                .Parent
-                .Parent
-                .Parent
-                .ChildNodes()
-                .FirstOrDefault(n => n.IsKind(SyntaxKind.ArgumentList))
+            return selectToken
+               .Parent
+               .Parent
+               .Parent
+               .ChildNodes()
+               .FirstOrDefault(n => n.IsKind(SyntaxKind.ArgumentList))
                 .DescendantNodes()
-                .Where(n => n.IsKind(SyntaxKind.InterpolatedStringExpression));
+                .Where(n => n.IsKind(SyntaxKind.InterpolatedStringExpression))
+                .Select(i => (InterpolatedStringExpressionSyntax)i)
+                .ToList();
         }
 
-        public static async Task<Solution> ChangeSolution( Document document, 
+        public static async Task<Solution> CodeFix( Document document, 
             CodeFixContext context, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            var root = await context
+                               .Document
+                               .GetSyntaxRootAsync(context.CancellationToken)
+                               .ConfigureAwait(false);
+            var diagnostic = context.Diagnostics.First();
+            var diagnosticSpan = diagnostic.Location.SourceSpan;
+
+            var interpolation = (InterpolatedStringExpressionSyntax)root.FindNode(diagnosticSpan);
+
+            var stringLiteral = LiteralExpression(SyntaxKind.StringLiteralExpression);
+
+            foreach (var token in interpolation.DescendantTokens())
+            {
+                if (token.IsKind(SyntaxKind.InterpolatedStringTextToken))
+                    stringLiteral.Update(Literal(token.Text).WithTrailingTrivia(Space));
+                else if (token.IsKind(SyntaxKind.IdentifierToken))
+                {
+                   // stringLiteral.Update(IdentifierName())
+                }
+            }
+
+            var newRoot = root.ReplaceNode(interpolation, stringLiteral);
+
+            var f = 2;
+            var efe = new List<int>()
+                .Select(h => "" + f + "");
+
+            return document.WithSyntaxRoot(newRoot).Project.Solution;
         }
     }
 }
