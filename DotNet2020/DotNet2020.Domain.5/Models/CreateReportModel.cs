@@ -8,6 +8,7 @@ namespace DotNet2020.Domain._5.Models
         [MaxLength(50)]
         public string ReportName { get; set; }
         public string ProjectName { get; set; }
+        [Required]
         public string[] CreateProject { get; set; }
 
         [MaxLength(1000)]
