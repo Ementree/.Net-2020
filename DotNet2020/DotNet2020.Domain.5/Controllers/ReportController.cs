@@ -70,8 +70,10 @@ namespace DotNet2020.Domain._5.Controllers
 
             var model = new EditReportModel()
             {
+                ReportId = id,
                 ProjectName = projectName,
-                UserFilter = users
+                UserFilter = users,
+                ReportName = reportResult.Result.Name
             };
             return View(model);
         }
@@ -116,6 +118,12 @@ namespace DotNet2020.Domain._5.Controllers
         [HttpPost]
         public IActionResult Show(CreateReportModel model)
         {
+            RequestResult<bool> isContains = _storage.ContainsReport(model.ReportName);
+            if (!isContains.IsSuccess)
+                return Error("Ошибка обращения к БД!", isContains.Error.Message);
+            if (isContains.Result)
+                return Error("Ошибка создания отчета!", "Отчет с таким именем уже существует!");
+
             // Get issues
             var issues = _timeTrackingService.GetIssues(model.ProjectName, model.IssueFilter);
             if (issues == null)

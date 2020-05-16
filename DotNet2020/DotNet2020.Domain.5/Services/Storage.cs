@@ -86,6 +86,7 @@ namespace DotNet2020.Domain._5.Services
                 newReport.ReportId = report.ReportId;
                 report = newReport;
                 _db.SaveChanges();
+                return report;
             });
         }
 
@@ -94,6 +95,22 @@ namespace DotNet2020.Domain._5.Services
             return RequestResult<IQueryable<Report>>.SaveExecute(() =>
             {
                 return _reports;
+            });
+        }
+
+        RequestResult<bool> IStorage.ContainsReport(int reportId)
+        {
+            return RequestResult<bool>.SaveExecute(() =>
+            {
+                return _reports.Find(reportId) != null;
+            });
+        }
+
+        RequestResult<bool> IStorage.ContainsReport(string reportName)
+        {
+            return RequestResult<bool>.SaveExecute(() =>
+            {
+                return _reports.Any(r => r.Name == reportName);
             });
         }
     }
