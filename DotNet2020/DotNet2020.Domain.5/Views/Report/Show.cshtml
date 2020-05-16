@@ -57,8 +57,8 @@
 
             });
             </script>
-            <form method="get">
-                <button asp-action="Edit" asp-route-id="@Model.ReportId">Edit</button>
+            <form asp-action="Edit" asp-route-id="@Model.ReportId" method="post">
+                <button type="submit">Изменить</button>
             </form>
         </div>
     }

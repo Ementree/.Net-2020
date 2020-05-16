@@ -25,6 +25,7 @@ namespace DotNet2020.Domain._5.Controllers
             _chartService = new ChartService();
         }
 
+        [HttpGet]
         public IActionResult Index()
         {
             return View();
@@ -54,10 +55,10 @@ namespace DotNet2020.Domain._5.Controllers
             return View(model);
         }
 
-        [HttpGet]
-        public IActionResult Edit(int reportId)
+        [HttpPost]
+        public IActionResult Edit(int id)
         {
-            var reportResult = _storage.GetReport(reportId);
+            var reportResult = _storage.GetReport(id);
             if (!reportResult.IsSuccess)
                 return Error("Ошибка обращения к БД!", reportResult.Error.Message);
 
@@ -76,7 +77,7 @@ namespace DotNet2020.Domain._5.Controllers
         }
 
         [HttpPost]
-        public IActionResult Edit(EditReportModel model)
+        public IActionResult ProcessEdit(EditReportModel model)
         {
             // Get report
             var reportResult = _storage.GetReport(model.ReportId);
@@ -161,6 +162,15 @@ namespace DotNet2020.Domain._5.Controllers
                 chart.SetData(issuesToShow, 5);
 
             return View(new ChartModel(reportResult.Result.ReportId, charts.Values.ToList()));
+        }
+
+        [HttpPost]
+        public IActionResult Remove(int id)
+        {
+            var result = _storage.RemoveReport(id);
+            if (!result.IsSuccess)
+                return Error("Ошибка обращения к БД!", result.Error.Message);
+            return RedirectToAction("Available");
         }
 
         private IActionResult Error(string title = "Упс...", string message = "Что-то пошло не так :(")
