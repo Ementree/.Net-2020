@@ -33,6 +33,7 @@
 
     .tditem {
         margin: 8px 10px 5px 10px;
+        display: inline-block;
     }
 
     .tdboldtext {
@@ -43,34 +44,76 @@
     .tdtext {
         margin: 15px 10px 5px 10px;
     }
+
+    .sortbutton{
+        display:inline-block;
+        text-align: right;
+    }
 </style>
+<script>
+    function setOrderByValue(value) {
+        document.getElementById("orderby").value = value;
+        document.getElementById("orderbydescending").value = null;
+    }
+    function setOrderByDescendingValue(value) {
+        document.getElementById("orderby").value = null;
+        document.getElementById("orderbydescending").value = value;
+    }
+</script>
 <div class="issues">
     <div class="textblock">
-        <table>
-            <tr>
-                <td class="td"><p class="tditem">Создал</p></td>
-                <td class="td"><p class="tditem">Исполнитель</p></td>
-                <td class="td"><p class="tditem">Расчетное время</p></td>
-                <td class="tdlast"><p class="tditem">Затраченное время</p></td>
-            </tr>
-            <tr><td><p style="height:20px"></p></td></tr>
-            @foreach (var issue in Model.Issues)
-            {
+        <form asp-action="Show" method="post">
+            <table>
                 <tr>
-                    <td colspan="10">
-                        <a href="@issue.Link">
-                            <p style="display:inline" class="tdboldtext">@issue.Name</p>
-                            <p style="display:inline" class="tdtext">@issue.Title</p>
-                        </a>
+                    <td class="td">
+                        <p class="tditem">Создал</p>
+                        <button onclick="setOrderByValue('CreatorName')">@('\u2193')</button>
+                        <button onclick="setOrderByDescendingValue('CreatorName')">@('\u2191')</button>
+                    </td>
+                    <td class="td">
+                        <p class="tditem">Исполнитель</p>
+                        <button onclick="setOrderByValue('AssigneeName')">@('\u2193')</button>
+                        <button onclick="setOrderByDescendingValue('AssigneeName')">@('\u2191')</button>
+                    </td>
+                    <td class="td">
+                        <p class="tditem">Расчетное время</p>
+                        <button onclick="setOrderByValue('SpentTime')">@('\u2193')</button>
+                        <button onclick="setOrderByDescendingValue('SpentTime')">@('\u2191')</button>
+                    </td>
+                    <td class="tdlast">
+                        <p class="tditem">Затраченное время</p>
+                        <button onclick="setOrderByValue('EstimatedTime')">@('\u2193')</button>
+                        <button onclick="setOrderByDescendingValue('EstimatedTime')">@('\u2191')</button>
                     </td>
                 </tr>
                 <tr>
-                    <td class="td"><p class="tditem">@issue.CreatorName</p></td>
-                    <td class="td"><p class="tditem">@issue.AssigneeName</p></td>
-                    <td class="td"><p class="tditem">@(issue.SpentTime.HasValue ? issue.SpentTime.Value + "h" : "?")</p></td>
-                    <td class="tdlast"><p class="tditem">@(issue.EstimatedTime.HasValue ? issue.EstimatedTime.Value + "h" : "?")</p></td>
+                    <td>
+                        <p style="height:14px">
+                            <input asp-for="@Model.SerializedIssues" value="@Json.Serialize(Model.Issues)" hidden />
+                            <input asp-for="@Model.OrderBy" id="orderby" hidden/>
+                            <input asp-for="@Model.OrderByDescending" id="orderbydescending" hidden/>
+                        </p>
+                    </td>
                 </tr>
-            }
-        </table>
+                @for (int i = 0; i < Model.Issues.Count; i++)
+                {
+                    var issue = Model.Issues[i];
+                    <tr>
+                        <td colspan="10">
+                            <a href="@issue.Link">
+                                <p style="display:inline" class="tdboldtext">@issue.Name</p>
+                                <p style="display:inline" class="tdtext">@issue.Title</p>
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="td"><p class="tditem">@issue.CreatorName</p></td>
+                        <td class="td"><p class="tditem">@issue.AssigneeName</p></td>
+                        <td class="td"><p class="tditem">@(issue.SpentTime.HasValue ? issue.SpentTime.Value + "h" : "?")</p></td>
+                        <td class="tdlast"><p class="tditem">@(issue.EstimatedTime.HasValue ? issue.EstimatedTime.Value + "h" : "?")</p></td>
+                    </tr>
+                }
+            </table>
+        </form>
     </div>
 </div>

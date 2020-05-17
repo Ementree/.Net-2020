@@ -2,6 +2,17 @@
 <style type="text/css">
     .container4 {
         margin: 0 auto;
+        white-space: nowrap;
+    }
+    .checkbox {
+    }
+    .checkboxtext{
+        display:inline-block
+    }
+    .multiselect {
+        max-height: 100px;
+        overflow-y: auto;
+        white-space: nowrap;
     }
 </style>
 <div class="text-center">
@@ -23,12 +34,15 @@
             <div class="form-group">
                 <label for="EditReport">Пользователи:</label>
                 <br>
-                <select asp-for="UserName" multiple size="3">
-                    @foreach (var user in Model.UserFilter)
-                    {
-                        <option value="@user">@user</option>
-                    }
-                </select>
+            <div class="multiselect">
+                @for (int i = 0; i < Model.AllUsers.Length; i++)
+                {
+                    <input class="checkbox" type="checkbox" checked="@Model.SelectedUsers[i]" asp-for="@Model.SelectedUsers[i]" />
+                    <input asp-for="@Model.AllUsers[i]" value="@Model.AllUsers[i]" hidden />
+                    <p class="checkboxtext">@Model.AllUsers[i]</p>
+                    <br />
+                }
+            </div>
             </div>
             <div class="form-group">
                 <label for="EditReport">Режим работы:</label>

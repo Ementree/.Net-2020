@@ -68,11 +68,19 @@ namespace DotNet2020.Domain._5.Controllers
             if (users == null)
                 return Error("Ошибка обращения к сервису трекинга!", $"Не удалось получить список пользователей проекта \"{projectName}\".");
 
+            var usersInIssues = reportResult.Result.Issues
+                .Select(i => i.AssigneeName)
+                .ToHashSet();
+            var selectedUsers = new bool[users.Length];
+            for (int i = 0; i < users.Length; i++)
+                selectedUsers[i] = usersInIssues.Contains(users[i]);
+
             var model = new EditReportModel()
             {
                 ReportId = id,
                 ProjectName = projectName,
-                UserFilter = users,
+                AllUsers = users,
+                SelectedUsers = selectedUsers,
                 ReportName = reportResult.Result.Name
             };
             return View(model);
@@ -95,10 +103,15 @@ namespace DotNet2020.Domain._5.Controllers
                     issue.SetTimeByWorkItems();
             }
             // Filter by selected users
-            if (model.UserName != null)
+            if (model.SelectedUsers != null)
             {
+                var users = model.AllUsers
+                    .Zip(model.SelectedUsers)
+                    .Where(i => i.Second)
+                    .Select(i => i.First)
+                    .ToHashSet();
                 issues = issues
-                    .Where(i => model.UserName.Contains(i.AssigneeName))
+                    .Where(i => users.Contains(i.AssigneeName))
                     .ToList();
             }
             // Save new report
