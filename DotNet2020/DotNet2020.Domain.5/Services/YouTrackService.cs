@@ -1,5 +1,7 @@
 ﻿using DotNet2020.Domain._5.Entities;
 using DotNet2020.Domain._5.Services.Interfaces;
+using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using YouTrackSharp;
@@ -48,7 +50,7 @@ namespace DotNet2020.Domain._5.Services
 
         public List<Issue> GetIssues(string projectName, string issueFilter = "")
         {
-            var issues = issueService.GetIssuesInProject(projectName, filter: issueFilter, take: 100).Result;
+            var issues = issueService.GetIssuesInProject(projectName, filter: issueFilter, take: 1000).Result;
             return issues
                 .Select(i => CreateIssue(i, timeService.GetWorkItemsForIssue(i.Id).Result))
                 .ToList();
@@ -56,8 +58,35 @@ namespace DotNet2020.Domain._5.Services
 
         public string[] GetProblematicIssues(string projectName)
         {
+            var issues = issueService.GetIssuesInProject(projectName, take: 1000).Result;
+            return issues
+                .Select(x => Tuple.Create(x.Id, timeService
+                    .GetWorkItemsForIssue(x.Id).Result
+                    .GroupBy(a => a.Author.Login)))
+                .Where(x => x.Item2.Count() > 1)
+                .Select(x => x.Item1)
+                .Concat(issues
+                    .Select(i => Tuple.Create(i.Id, connection.CreateIssuesService()
+                        .GetChangeHistoryForIssue(i.Id).Result))
+                    .Where(x => WasChangedInProgress(x.Item2))
+                    .Select(x => x.Item1))
+                .Distinct()
+                .ToArray();
+        }
 
-            return new string[0];
+        private bool WasChangedInProgress(IEnumerable<YouTrackSharp.Issues.Change> changes)
+        {
+            var isInProgress = false;
+            foreach (var change in changes)
+                foreach (var field in change.Fields)
+                {
+                    if (field.From.Name == "State" && (string)((JArray)field.To.Value).First == "In Progress")
+                        isInProgress = true;
+                    if (field.From.Name == "State" && (string)((JArray)field.From.Value).First == "In Progress")
+                        isInProgress = false;
+                    if (isInProgress && (field.Name == "Estimate" || field.Name == "link")) return true;
+                }
+            return false;
         }
 
         private Issue CreateIssue(YouTrackSharp.Issues.Issue issue, IEnumerable<YouTrackSharp.TimeTracking.WorkItem> workItems)
