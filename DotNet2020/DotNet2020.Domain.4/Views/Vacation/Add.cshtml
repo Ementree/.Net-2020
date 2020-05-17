@@ -1,0 +1,28 @@
+﻿@model DotNet2020.Domain._4_.Models.ModelView.VacationViewModel
+    <div class="text-danger">@Html.ValidationMessage("Error")</div>
+    <div class="text-danger">@Html.ValidationMessage("Error1")</div>
+    <div class="text-danger">@Html.ValidationMessage("Error2")</div>
+<div>
+    @using (Html.BeginForm("Add", "Vacation", FormMethod.Post))
+    {
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <p>Выберите интервал времени</p>
+        <div class="form-group">
+            <p>
+                <span asp-validation-for="From" class="text-danger"></span><br />
+                От: <input asp-for="From" type="date" />
+            </p>
+            <p>
+                <span asp-validation-for="To" class="text-danger"></span><br />
+                До: <input asp-for="To" type="date" />
+            </p>
+            <p>
+                <span asp-validation-for="IsPaid" class="text-danger"></span><br />
+                Оплачиваемый: <input asp-for="IsPaid" type="checkbox" />
+            </p>
+            <p>
+                <input type="submit" value="Добавить" />
+            </p>
+        </div>
+    }
+</div>

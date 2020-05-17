@@ -1,41 +1,92 @@
 ﻿using DotNet2020.Domain._5.Entities;
 using DotNet2020.Domain._5.Models;
 using DotNet2020.Domain._5.Services;
+using DotNet2020.Domain._5.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace DotNet2020.Domain._5.Controllers
 {
     public class IssueController : Controller
     {
         private readonly ILogger<IssueController> _logger;
+        private readonly IStorage _storage;
+        private readonly ITimeTrackingService _timeTrackingService;
+        private readonly IChartService _chartService;
 
-        public IssueController(ILogger<IssueController> logger)
+        public IssueController(ILogger<IssueController> logger, DbContext db)
         {
             _logger = logger;
+            _storage = new Storage(db);
+            _timeTrackingService = new YouTrackService();
+            _chartService = new ChartService();
         }
 
         [HttpGet]
-        public IActionResult Show()
+        public IActionResult ShowRange(int reportId, int start, int end, int graphId)
         {
-            //var issues = new Issue[]
-            //{
-            //    new Issue("ADAS-81", "Нарисовать аниме", 1, null, "arsol.plex@gmail.com",
-            //    "akihito.subaru@japan.jp", "ADAS", @"https://kpfu-net.myjetbrains.com/youtrack/issue/ADAS-81"),
+            var reportResult = _storage.GetReport(reportId);
+            if (!reportResult.IsSuccess)
+                return Error("Ошибка обращения к БД!", reportResult.Error.Message);
 
-            //    new Issue("ADAS-98", "Сделать хорошее дело", null, 1, "arsol.plex@gmail.com",
-            //    "arsol.plex@gmail.com", "ADAS", @"https://kpfu-net.myjetbrains.com/youtrack/issue/ADAS-98"),
+            var chart = _chartService.GetChart(graphId);
+            chart.SetData(reportResult.Result.Issues, 6);
+            var issues = chart.GetIssues(start, end);
+            return View("Show", new ShowIssuesModel() { Issues = issues });
+        }
 
-            //    new Issue("ADAS-99", "Сломать проект", 4, null, "arsol.plex@gmail.com",
-            //    "azamat@russia.ru", "ADAS", @"https://kpfu-net.myjetbrains.com/youtrack/issue/ADAS-99"),
+        [HttpGet]
+        public IActionResult Show(int id)
+        {
+            var reportResult = _storage.GetReport(id);
+            if (!reportResult.IsSuccess)
+                return Error("Ошибка обращения к БД!", reportResult.Error.Message);
 
-            //    new Issue("ADAS-100", "Нарисовать аниме", 4, null, "arsol.plex@gmail.com",
-            //    "somedude@mail.ru", "ADAS", @"https://kpfu-net.myjetbrains.com/youtrack/issue/ADAS-100")
-            //};
+            var issues = reportResult.Result.Issues;
 
-            var ytService = new YouTrackService();
-            var issues = ytService.GetIssues("Adas");
-            return View(new ShowIssuesModel() { Issues = issues });
+            return View("Show", new ShowIssuesModel() { Issues = issues });
+        }
+
+        [HttpPost]
+        public IActionResult Show(ShowIssuesModel model)
+        {
+            if (String.IsNullOrEmpty(model.SerializedIssues))
+                return View("Show", new ShowIssuesModel());
+
+            // Set custom settings (to be able to use private setters)
+            var settings = new JsonSerializerSettings
+            {
+                ContractResolver = new JsonContractResolver()
+            };
+
+            // Deserialize issues
+            var issues = JsonConvert.DeserializeObject<List<Issue>>(model.SerializedIssues, settings);
+            model.Issues = issues;
+            if (String.IsNullOrEmpty(model.OrderBy) && String.IsNullOrEmpty(model.OrderByDescending))
+                return View("Show", model);
+
+            // Get property to order by
+            var property = typeof(Issue).GetProperty(String.IsNullOrEmpty(model.OrderBy) ? model.OrderByDescending : model.OrderBy);
+            if (property == null)
+                return View("Show", model);
+
+            // Order by property
+            if (!String.IsNullOrEmpty(model.OrderBy))
+                issues = model.Issues.OrderBy(i => property.GetValue(i)).ToList();
+            else if (!String.IsNullOrEmpty(model.OrderByDescending))
+                issues = model.Issues.OrderByDescending(i => property.GetValue(i)).ToList();
+
+            return View("Show", new ShowIssuesModel() { Issues = issues });
+        }
+
+        private IActionResult Error(string title = "Упс...", string message = "Что-то пошло не так :(")
+        {
+            return View("Error", new ErrorModel(title, message));
         }
     }
 }

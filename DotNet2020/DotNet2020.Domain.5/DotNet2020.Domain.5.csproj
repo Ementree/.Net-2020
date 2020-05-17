@@ -5,6 +5,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Views\Report\Available.cshtml" />
+    <None Remove="Views\Report\Index.cshtml" />
+    <None Remove="Views\Shared\Error.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="Controllers" />
   </ItemGroup>
 
@@ -17,11 +23,16 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="Views\Report\Index.cshtml" />
+    <EmbeddedResource Include="Views\Report\Available.cshtml" />
     <EmbeddedResource Include="Views\Report\Show.cshtml">
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Report\Create.cshtml">
     </EmbeddedResource>
+    <EmbeddedResource Include="Views\Report\Edit.cshtml">
+    </EmbeddedResource>
     <EmbeddedResource Include="Views\Issue\Show.cshtml">
     </EmbeddedResource>
+    <EmbeddedResource Include="Views\Shared\Error.cshtml" />
   </ItemGroup>
 </Project>

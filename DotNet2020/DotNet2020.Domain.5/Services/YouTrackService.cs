@@ -31,6 +31,13 @@ namespace DotNet2020.Domain._5.Services
             return projects.Select(p => p.Name).ToArray();
         }
 
+        public string[] GetAllUsers(string projectName)
+        {
+            var project = projectService.GetAccessibleProjects(true).Result.Where(p => p.Name == projectName).FirstOrDefault();
+            if (project == null) return new string[0];
+            return project.AssigneesLogin.Select(x => x.Value).ToArray();
+        }
+
         public Issue GetIssue(string projectName, string issueName)
         {
             var issue = issueService.GetIssuesInProject(projectName, filter: issueName).Result.FirstOrDefault();
@@ -39,12 +46,12 @@ namespace DotNet2020.Domain._5.Services
             return CreateIssue(issue, workItems);
         }
 
-        public Issue[] GetIssues(string projectName, string issueFilter = "")
+        public List<Issue> GetIssues(string projectName, string issueFilter = "")
         {
             var issues = issueService.GetIssuesInProject(projectName, filter: issueFilter, take: 100).Result;
             return issues
                 .Select(i => CreateIssue(i, timeService.GetWorkItemsForIssue(i.Id).Result))
-                .ToArray();
+                .ToList();
         }
 
         public string[] GetProblematicIssues(string projectName)

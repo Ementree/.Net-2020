@@ -1,3 +1,129 @@
-@{ 
+@{
     Layout = "~/Views/Shared/_Layout6.cshtml";
+    var date = DateTime.Now;
+    var year = ViewBag.Year;
 }
+@using DotNet2020.Domain._6.Models.ViewModels
+@model CapacityViewModel
+
+<link rel="stylesheet" href="~/wwwroot6/css/Capacity.css"/>
+<partial name="ChangeGroupAndTypeButton"/>
+<div class="form-inline">
+    <form asp-controller="Capacity" asp-action="Index" class="form-inline">
+        <div class="mb-2">
+            <partial name="YearChangerPartial"/>
+        </div>
+        <div class="mb-2">
+            @if (Model.WithAbsence)
+            {
+                <button
+                    class="btn btn-primary ml-2"
+                    asp-route-withAbsence="@(!Model.WithAbsence)"
+                    asp-route-year="@(year)"
+                    onclick="this.form.submit()">
+                    Показать без учета отсутствий
+                </button>
+            }
+            else
+            {
+                <button
+                    class="btn btn-primary ml-2"
+                    asp-route-withAbsence="@(!Model.WithAbsence)"
+                    asp-route-year="@(year)"
+                    onclick="this.form.submit()">
+                    Показать с учетом отсутствий
+                </button>
+            }
+        </div>
+    </form>
+
+</div>
+
+<div class="wrapper">
+    <div class="scroller2 scroller">
+        <table class="scroll-table table bottom">
+            <thead>
+            <tr>
+                <th class="sticky-col1 left" style="width: 20%;">
+                    Ресурс
+                </th>
+                <th class="sticky-col2" style="width: 10%; margin-left: 20%;">
+                    Тип ресурса
+                </th>
+                @for (var i = 0; i < 12; i++)
+                {
+                    var color = (date.Month == i + 1 && year == ViewBag.CurrentYear) ? "month-highlight" : "";
+                    <th class="right @color">
+                        @Model.Months[i]
+                    </th>
+                }
+            </tr>
+            </thead>
+
+            <tbody>
+            @foreach (var resources in Model.Data)
+            {
+                <tr>
+                    <th class="sticky-col1 left h45 total-sum-highlight" style="width: 20%;">
+                        @resources.Key
+                    </th>
+                    <td class="sticky-col2 h45 total-sum-highlight" style="width: 10%; margin-left: 20%;">
+
+                    </td>
+                    @for (var i = 0; i < 12; i++)
+                    {
+                        <td class="right h45 total-sum-highlight">
+
+                        </td>
+                    }
+                </tr>
+                @foreach (var resource in resources.Value)
+                {
+                    <tr>
+                        <td class="sticky-col1 left bottom h45" style="width: 20%;">
+                            @resource.Name
+                        </td>
+                        <td class="sticky-col2 bottom h45" style="width: 10%; margin-left: 20%;">
+                            @resource.Type
+                        </td>
+                        @for (int i = 1; i < 13; i++)
+                        {
+                            if (Model.WithAbsence)
+                            {
+                                if (resource.Capacity.ContainsKey(i))
+                                {
+                                    <td style="padding: 7px;" id="@(resource.ResourceId.ToString() + ';' + i.ToString() + ';' + year)" class="right align-center h45" ondblclick="">
+                                        @resource.Capacity[i]%
+                                    </td>
+                                }
+                                else
+                                {
+                                    <td style="padding: 7px;" id="@(resource.ResourceId.ToString() + ';' + i.ToString() + ';' + year)" class="right h45 align-center" ondblclick="">
+
+                                    </td>
+                                }
+                            }
+                            else
+                            {
+                                if (resource.Capacity.ContainsKey(i))
+                                {
+                                    <td style="padding: 7px;" id="@(resource.ResourceId.ToString() + ';' + i.ToString() + ';' + year)" class="right align-center h45" ondblclick="handle(this)">
+                                        @resource.Capacity[i]%
+                                    </td>
+                                }
+                                else
+                                {
+                                    <td style="padding: 7px;" id="@(resource.ResourceId.ToString() + ';' + i.ToString() + ';' + year)" class="right h45 align-center" ondblclick="handle(this)">
+
+                                    </td>
+                                }
+                            }
+                        }
+                    </tr>
+                }
+            }
+            </tbody>
+        </table>
+    </div>
+</div>
+<script src="~/wwwroot6/js/Capacity.js"></script>

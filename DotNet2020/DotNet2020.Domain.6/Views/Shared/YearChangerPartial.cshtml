@@ -1,0 +1,25 @@
+@{
+    var year = ViewBag.Year;
+}
+
+<div>
+    <div class="btn-group dropleft">
+        <a type="button" 
+           asp-route-year="@(year - 1)"
+           class="btn btn-secondary dropdown-toggle" 
+           onclick="this.form.submit()">
+            @(year - 1)
+        </a>
+    </div>
+    <div class="btn btn-secondary">
+        @ViewBag.Year
+    </div>
+    <div class="btn-group dropright">
+        <a type="button" 
+           asp-route-year="@(year + 1)"
+           class="btn btn-secondary dropdown-toggle" 
+           onclick="this.form.submit()">
+            @(year + 1)
+        </a>
+    </div>
+</div>

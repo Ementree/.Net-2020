@@ -1,3 +1,165 @@
-﻿@{ 
+﻿@{
     Layout = "~/Views/Shared/_Layout6.cshtml";
+    int maxResourceAmount = 0;
+    Dictionary<int, int> projectsCapacity = new Dictionary<int, int>();
+    var functioningCapacityProject = ViewBag.FunctioningCapacityProject as List<FunctioningCapacityProject>;
+    List<FuncCapacityProjHighlight> funcCapacityProjHighlight = ViewBag.FuncCapacityProjHighlight;
+    List<FuncCapacityResourceHighlight> funcCapacityResourceHighlight = ViewBag.FuncCapacityResourceHighlight;
 }
+@using DotNet2020.Domain._6.Models;
+@using DotNet2020.Domain._6.ExtensionMethods;
+@using DotNet2020.Domain._6.Models.ViewModels
+@model Dictionary<string, Dictionary<Project, Dictionary<Period, List<FunctioningCapacityResource>>>>
+@foreach (var projects in Model.Values)
+{
+    foreach (var project  in projects)
+    {
+        var periods = project.Value;
+        foreach (var periodPair in periods)
+        {
+            if (periodPair.Value.Count > maxResourceAmount)
+            {
+                maxResourceAmount = periodPair.Value.Count;
+            }
+        }
+        projectsCapacity.Add(project.Key.Id, maxResourceAmount);
+        maxResourceAmount = 0;
+    }
+}
+<link rel="stylesheet" href="~/wwwroot6/css/monthPartial.css"/>
+<script src="~/wwwroot6/js/AddProject.js"></script>
+<script src="~/wwwroot6/js/EditProject.js"></script>
+<script src="~/wwwroot6/js/PlanModels.js"></script>
+<div class="container-fluid d-inline-flex mb-2">
+    <form asp-action="Index" class="mr-2">
+        <partial name="YearChangerPartial"></partial>
+    </form>
+    <button type="button" class="btn btn-primary mr-2" data-toggle="modal" data-target="#newProject">
+        Добавить проект
+    </button>
+    <button type="button" class="btn btn-primary mr-2" data-toggle="modal" data-target="#editProject">
+        Редактировать проект
+    </button>
+    <partial name="AddProjectPartial"/>
+    <partial name="EditProjectPartial"/>
+</div>
+<div class="wrapper">
+    <div class="scroller1">
+        <table class="scroll-table table">
+            <thead>
+            <tr>
+                <th class="sticky-col1">
+                    Группа \ Проект \\ Месяц
+                </th>
+                @for (int i = 1; i <= 12; i++)
+                {
+                    var period = new DateTime(ViewBag.Year, i, 1);
+                    var color = (i == ViewBag.CurrentDate.Month && ViewBag.Year == ViewBag.CurrentDate.Year) ? "month-highlight" : "";
+                    <th colspan="2" class="border-right @color">
+                        @($"{period.GetMonthName()} {period.Year}")
+                    </th>
+                }
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var group in Model)
+            {
+                <tr>
+                    <th class="sticky-col1 gray">
+                        @group.Key
+                    </th>
+                    @for (int i = 0; i < 12; i++)
+                    {
+                        <th class="gray">Ресурс</th>
+                        <th class="border-right gray">Загрузка</th>
+                    }
+                </tr>
+                foreach (var pair in group.Value)
+                {
+                    var periods = pair.Value;
+                    <tr>
+                        <th class="sticky-col1 total-sum-highlight">
+                            @(pair.Key.Name)
+                        </th>
+                        @for (int i = 1; i <= 12; i++)
+                        {
+                            var fcp = functioningCapacityProject
+                                .FirstOrDefault(project =>
+                                    project.Period.Start.Month == i &&
+                                    project.ProjectId == pair.Key.Id);
+                            var period = periods.Where(keyValuePair =>
+                                keyValuePair.Key.Start.Month == i)
+                                .ToList();
+                            var highlight = funcCapacityProjHighlight.FirstOrDefault(fcproj =>
+                                fcproj.Period.Start.Month == i && fcproj.ProjectId == pair.Key.Id);
+                            var color = highlight != default ? highlight.Color : "total-sum-highlight";
+                            <th id="fcp;@i;@ViewBag.Year;@pair.Key.Id" class="resource_capacity_plan @color">
+                                @(fcp != default ? fcp.FunctioningCapacity.ToString() : " ")
+                            </th>
+                            if (period.Count >= 1)
+                            {
+                                if (period.First().Key == null || period.First().Value.Count()==0)
+                                {
+                                    <th id="sum;@i;@ViewBag.Year;@pair.Key.Id" class="border-right resource_capacity_real @color">@(" ")</th>
+                                }
+                                else
+                                {
+                                    var sum = period.First().Value.Sum(fcres =>
+                                        fcres.FunctionCapacity).ToString();
+                                    <th id="sum;@i;@ViewBag.Year;@pair.Key.Id" class="border-right resource_capacity_real @color">
+                                        @sum
+                                    </th>
+                                }
+                            }
+                            else
+                            {
+                                <th id="sum;@i;@ViewBag.Year;@pair.Key.Id" class="border-right resource_capacity_real @color">@(" ")</th>
+                            }
+                        }
+                    </tr>
+                    for (int i = 0; i < projectsCapacity[pair.Key.Id]; i++)
+                    {
+                        <tr>
+                            <td class="sticky-col1">@(pair.Key.Name)</td>
+                            @for (int j = 1; j <= 12; j++)
+                            {
+                                var keyValuePairs = periods
+                                    .Where(keyValuePair => keyValuePair.Key.Start.Month == j);
+                                if (keyValuePairs.Count() == 0)
+                                {
+                                    <td></td>
+                                    <td class="border-right"></td>
+                                }
+                                else
+                                {
+                                    var fresList = keyValuePairs.First().Value;
+                                    if (fresList.Count - 1 >= i)
+                                    {
+                                        var highlight = funcCapacityResourceHighlight.FirstOrDefault(fcr =>
+                                            fcr.Month == j && fcr.Year == ViewBag.Year && fcr.ProjectId == fresList[i].ProjectId && fcr.ResourceId == fresList[i].ResourceId);
+                                        var color = highlight == default ? "" : highlight.Color;
+                                        <td id="name;@j;@ViewBag.Year;@pair.Key.Id;@fresList[i].ResourceId"
+                                            class="resource_name @color">
+                                            @(fresList[i].Resource.Employee.FirstName) @(fresList[i].Resource.Employee.LastName)
+                                        </td>
+                                        <td
+                                            id="capacity;@j;@ViewBag.Year;@pair.Key.Id;@fresList[i].ResourceId"
+                                            class="border-right resource_capacity @color">
+                                            @fresList[i].FunctionCapacity
+                                        </td>
+                                    }
+                                    else
+                                    {
+                                        <td></td>
+                                        <td class="border-right"></td>
+                                    }
+                                }
+                            }
+                        </tr>
+                    }
+                }
+            }
+            </tbody>
+        </table>
+    </div>
+</div>
