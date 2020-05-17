@@ -6,7 +6,7 @@ using YouTrackSharp;
 
 namespace DotNet2020.Domain._5.Services
 {
-    public class YouTrackService
+    public class YouTrackService : ITimeTrackingService
     {
         private readonly BearerTokenConnection connection;
         private readonly string serverUrl;
@@ -45,6 +45,12 @@ namespace DotNet2020.Domain._5.Services
             return issues
                 .Select(i => CreateIssue(i, timeService.GetWorkItemsForIssue(i.Id).Result))
                 .ToArray();
+        }
+
+        public string[] GetProblematicIssues(string projectName)
+        {
+
+            return new string[0];
         }
 
         private Issue CreateIssue(YouTrackSharp.Issues.Issue issue, IEnumerable<YouTrackSharp.TimeTracking.WorkItem> workItems)
