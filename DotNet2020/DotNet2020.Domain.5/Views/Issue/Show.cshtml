@@ -77,13 +77,23 @@
                     </td>
                     <td class="td">
                         <p class="tditem">Расчетное время</p>
+                        <button onclick="setOrderByValue('EstimatedTime')">@('\u2193')</button>
+                        <button onclick="setOrderByDescendingValue('EstimatedTime')">@('\u2191')</button>
+                    </td>
+                    <td class="td">
+                        <p class="tditem">Затраченное время</p>
                         <button onclick="setOrderByValue('SpentTime')">@('\u2193')</button>
                         <button onclick="setOrderByDescendingValue('SpentTime')">@('\u2191')</button>
                     </td>
+                    <td class="td">
+                        <p class="tditem">Ошибка в часах</p>
+                        <button onclick="setOrderByValue('ErrorInHours')">@('\u2193')</button>
+                        <button onclick="setOrderByDescendingValue('ErrorInHours')">@('\u2191')</button>
+                    </td>
                     <td class="tdlast">
-                        <p class="tditem">Затраченное время</p>
-                        <button onclick="setOrderByValue('EstimatedTime')">@('\u2193')</button>
-                        <button onclick="setOrderByDescendingValue('EstimatedTime')">@('\u2191')</button>
+                        <p class="tditem">Ошибка в процентах</p>
+                        <button onclick="setOrderByValue('ErrorCoef')">@('\u2193')</button>
+                        <button onclick="setOrderByDescendingValue('ErrorCoef')">@('\u2191')</button>
                     </td>
                 </tr>
                 <tr>
@@ -109,8 +119,10 @@
                     <tr>
                         <td class="td"><p class="tditem">@issue.CreatorName</p></td>
                         <td class="td"><p class="tditem">@issue.AssigneeName</p></td>
+                        <td class="td"><p class="tditem">@(issue.EstimatedTime.HasValue ? issue.EstimatedTime.Value + "h" : "?")</p></td>
                         <td class="td"><p class="tditem">@(issue.SpentTime.HasValue ? issue.SpentTime.Value + "h" : "?")</p></td>
-                        <td class="tdlast"><p class="tditem">@(issue.EstimatedTime.HasValue ? issue.EstimatedTime.Value + "h" : "?")</p></td>
+                        <td class="td"><p class="tditem">@(issue.ErrorInHours.HasValue ? issue.ErrorInHours.Value + "h" : "?")</p></td>
+                        <td class="tdlast"><p class="tditem">@(issue.ErrorCoef.HasValue ? Math.Round((issue.ErrorCoef.Value - 1) * 100, 2) + "%" : "?")</p></td>
                     </tr>
                 }
             </table>

@@ -25,24 +25,29 @@
             <input asp-for="ReportId" value="@Model.ReportId" hidden />
             <div class="form-group">
                 <label for="EditReport">Название отчета:</label>
-                <input asp-for="ReportName" class="form-control" value="@Model.ReportName"/>
+                <input asp-for="ReportName" class="form-control" value="@Model.ReportName" />
                 <span asp-validation-for="ReportName" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label for="EditReport">Проект: @Model.ProjectName</label>
             </div>
             <div class="form-group">
+                <label for="EditReport">Фильтр:</label>
+                <input asp-for="IssueFilter" class="form-control" value="@Model.IssueFilter" />
+                <span asp-validation-for="IssueFilter" class="text-danger"></span>
+            </div>
+            <div class="form-group">
                 <label for="EditReport">Пользователи:</label>
                 <br>
-            <div class="multiselect">
-                @for (int i = 0; i < Model.AllUsers.Length; i++)
-                {
-                    <input class="checkbox" type="checkbox" checked="@Model.SelectedUsers[i]" asp-for="@Model.SelectedUsers[i]" />
-                    <input asp-for="@Model.AllUsers[i]" value="@Model.AllUsers[i]" hidden />
-                    <p class="checkboxtext">@Model.AllUsers[i]</p>
-                    <br />
-                }
-            </div>
+                <div class="multiselect">
+                    @for (int i = 0; i < Model.AllUsers.Length; i++)
+                    {
+                        <input class="checkbox" type="checkbox" checked="@Model.SelectedUsers[i]" asp-for="@Model.SelectedUsers[i]" />
+                        <input asp-for="@Model.AllUsers[i]" value="@Model.AllUsers[i]" hidden />
+                        <p class="checkboxtext">@Model.AllUsers[i]</p>
+                        <br />
+                    }
+                </div>
             </div>
             <div class="form-group">
                 <label for="EditReport">Режим работы:</label>

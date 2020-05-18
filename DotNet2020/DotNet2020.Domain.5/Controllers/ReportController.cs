@@ -5,6 +5,7 @@ using DotNet2020.Domain._5.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -47,10 +48,9 @@ namespace DotNet2020.Domain._5.Controllers
         [HttpGet]
         public IActionResult Create()
         {
-            var ytService = new YouTrackService();
             var model = new CreateReportModel()
             {
-                CreateProject = ytService.GetAllProjects()
+                CreateProject = _timeTrackingService.GetAllProjects()
             };
             return View(model);
         }
@@ -81,7 +81,8 @@ namespace DotNet2020.Domain._5.Controllers
                 ProjectName = projectName,
                 AllUsers = users,
                 SelectedUsers = selectedUsers,
-                ReportName = reportResult.Result.Name
+                ReportName = reportResult.Result.Name,
+                IssueFilter = reportResult.Result.IssueFilter
             };
             return View(model);
         }
@@ -89,13 +90,36 @@ namespace DotNet2020.Domain._5.Controllers
         [HttpPost]
         public IActionResult ProcessEdit(EditReportModel model)
         {
+            if (!ModelState.IsValid)
+            {
+                if (String.IsNullOrEmpty(model.ReportName))
+                    return Error("Ошибка редактирования отчета!", "Название отчета должно быть не нулевым!");
+                if (model.ReportName?.Length > 100)
+                    return Error("Ошибка редактирования отчета!", "Название отчета должно быть не длиннее 100 символов!");
+                if (model.IssueFilter?.Length > 1000)
+                    return Error("Ошибка редактирования отчета!", "Фильтр должен быть не длиннее 1000 символов!");
+                return Error("Ошибка редактирования отчета!");
+            }
+
             // Get report
             var reportResult = _storage.GetReport(model.ReportId);
             if (!reportResult.IsSuccess)
                 return Error("Ошибка обращения к БД!", reportResult.Error.Message);
 
+            // Check is name unique
+            if (reportResult.Result.Name != model.ReportName)
+            {
+                var isContains = _storage.ContainsReport(model.ReportName);
+                if (!isContains.IsSuccess)
+                    return Error("Ошибка обращения к БД!", isContains.Error.Message);
+                if (isContains.Result)
+                    return Error("Ошибка редактирования отчета!", "Название отчета должно быть уникальным!");
+            }
+
             // Get issues
-            var issues = _timeTrackingService.GetIssues(reportResult.Result.ProjectName);
+            var issueFilter = model.IssueFilter == null ? "" : model.IssueFilter;
+            var issues = _timeTrackingService.GetIssues(reportResult.Result.ProjectName, model.IssueFilter);
+
             // Change time mode
             if (model.IsWorkItems)
             {
@@ -115,7 +139,7 @@ namespace DotNet2020.Domain._5.Controllers
                     .ToList();
             }
             // Save new report
-            var newReport = new Report(reportResult.Result.Name, reportResult.Result.ProjectName, "", issues);
+            var newReport = new Report(reportResult.Result.Name, reportResult.Result.ProjectName, model.IssueFilter, issues);
             reportResult = _storage.EditReport(reportResult.Result.ReportId, newReport);
             if (!reportResult.IsSuccess)
                 return Error("Ошибка обращения к БД!", reportResult.Error.Message);
@@ -131,6 +155,17 @@ namespace DotNet2020.Domain._5.Controllers
         [HttpPost]
         public IActionResult Show(CreateReportModel model)
         {
+            if (!ModelState.IsValid)
+            {
+                if (String.IsNullOrEmpty(model.ReportName))
+                    return Error("Ошибка создания отчета!", "Название отчета должно быть не нулевым!");
+                if (model.ReportName?.Length > 100)
+                    return Error("Ошибка создания отчета!", "Название отчета должно быть не длиннее 100 символов!");
+                if (model.IssueFilter?.Length > 1000)
+                    return Error("Ошибка создания отчета!", "Фильтр должен быть не длиннее 1000 символов!");
+                return Error("Ошибка создания отчета!");
+            }
+
             RequestResult<bool> isContains = _storage.ContainsReport(model.ReportName);
             if (!isContains.IsSuccess)
                 return Error("Ошибка обращения к БД!", isContains.Error.Message);

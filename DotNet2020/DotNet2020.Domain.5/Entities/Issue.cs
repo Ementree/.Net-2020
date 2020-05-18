@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 
 namespace DotNet2020.Domain._5.Entities
@@ -94,22 +95,19 @@ namespace DotNet2020.Domain._5.Entities
         // <summary>
         /// Получить коэффициент ошибки
         /// </summary>
-        public double? GetErrorCoef()
-        {
-            return EstimatedTime.HasValue && SpentTime.HasValue
-                ? (double)SpentTime / EstimatedTime
-                : null;
-        }
+        [NotMapped]
+        public double? ErrorCoef => EstimatedTime.HasValue && SpentTime.HasValue && EstimatedTime != 0
+            ? (double)SpentTime / EstimatedTime
+            : null;
 
         /// <summary>
-        /// Получить ошибку в часах
+        /// Ошибка в часах
         /// </summary>
-        public int? GetErrorHours()
-        {
-            return EstimatedTime.HasValue && SpentTime.HasValue
-                ? SpentTime - EstimatedTime
-                : null;
-        }
+        [NotMapped]
+        public int? ErrorInHours => 
+            EstimatedTime.HasValue && SpentTime.HasValue
+            ? SpentTime - EstimatedTime
+            : null;
 
         /// <summary>
         /// Установить потраченное время по work items

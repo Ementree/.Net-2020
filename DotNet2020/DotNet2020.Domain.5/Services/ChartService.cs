@@ -20,10 +20,10 @@ namespace DotNet2020.Domain._5.Services
                 i => i.SpentTime));
 
             _charts.Add(3, new Chart(3, "Ошибка в процентах",
-                i => (i.GetErrorCoef() - 1) * 100));
+                i => (i.ErrorCoef - 1) * 100));
 
             _charts.Add(4, new Chart(4, "Ошибка в часах",
-                i => i.GetErrorHours()));
+                i => i.ErrorInHours));
 
         }
 

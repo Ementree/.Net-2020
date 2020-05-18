@@ -60,6 +60,9 @@
             <form asp-action="Edit" asp-route-id="@Model.ReportId" method="post">
                 <button type="submit">Изменить</button>
             </form>
+            <form asp-controller="Issue" asp-action="Show" asp-route-id="@Model.ReportId" method="get">
+                <button type="submit">Открыть список задач</button>
+            </form>
         </div>
     }
 </div>
