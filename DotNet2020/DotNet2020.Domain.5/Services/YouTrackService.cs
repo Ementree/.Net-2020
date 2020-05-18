@@ -35,6 +35,7 @@ namespace DotNet2020.Domain._5.Services
 
         public string[] GetAllUsers(string projectName)
         {
+            if (projectName == null) return new string[0];
             var project = projectService.GetAccessibleProjects(true).Result.Where(p => p.Name == projectName).FirstOrDefault();
             if (project == null) return new string[0];
             return project.AssigneesLogin.Select(x => x.Value).ToArray();
@@ -42,6 +43,7 @@ namespace DotNet2020.Domain._5.Services
 
         public Issue GetIssue(string projectName, string issueName)
         {
+            if (projectName == null || issueName == null) return null;
             var issue = issueService.GetIssuesInProject(projectName, filter: issueName).Result.FirstOrDefault();
             if (issue == null) return null;
             var workItems = timeService.GetWorkItemsForIssue(issue.Id).Result;
@@ -50,7 +52,9 @@ namespace DotNet2020.Domain._5.Services
 
         public List<Issue> GetIssues(string projectName, string issueFilter = "")
         {
+            if (projectName == null || issueFilter == null) return new List<Issue>();
             var issues = issueService.GetIssuesInProject(projectName, filter: issueFilter, take: 1000).Result;
+            if (issues == null) return new List<Issue>();
             return issues
                 .Select(i => CreateIssue(i, timeService.GetWorkItemsForIssue(i.Id).Result))
                 .ToList();
@@ -58,7 +62,9 @@ namespace DotNet2020.Domain._5.Services
 
         public string[] GetProblematicIssues(string projectName)
         {
+            if (projectName == null) return new string[0];
             var issues = issueService.GetIssuesInProject(projectName, take: 1000).Result;
+            if (issues == null) return new string[0];
             return issues
                 .Select(x => Tuple.Create(x.Id, timeService
                     .GetWorkItemsForIssue(x.Id).Result
@@ -66,8 +72,7 @@ namespace DotNet2020.Domain._5.Services
                 .Where(x => x.Item2.Count() > 1)
                 .Select(x => x.Item1)
                 .Concat(issues
-                    .Select(i => Tuple.Create(i.Id, connection.CreateIssuesService()
-                        .GetChangeHistoryForIssue(i.Id).Result))
+                    .Select(i => Tuple.Create(i.Id, issueService.GetChangeHistoryForIssue(i.Id).Result))
                     .Where(x => WasChangedInProgress(x.Item2))
                     .Select(x => x.Item1))
                 .Distinct()
