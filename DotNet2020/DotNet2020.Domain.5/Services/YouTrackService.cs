@@ -72,7 +72,8 @@ namespace DotNet2020.Domain._5.Services
                 .Where(x => x.Item2.Count() > 1)
                 .Select(x => x.Item1)
                 .Concat(issues
-                    .Select(i => Tuple.Create(i.Id, issueService.GetChangeHistoryForIssue(i.Id).Result))
+                    .Select(i => Tuple.Create(i.Id,
+                        issueService.GetChangeHistoryForIssue(i.Id).Result ?? new List<YouTrackSharp.Issues.Change>()))
                     .Where(x => WasChangedInProgress(x.Item2))
                     .Select(x => x.Item1))
                 .Distinct()
