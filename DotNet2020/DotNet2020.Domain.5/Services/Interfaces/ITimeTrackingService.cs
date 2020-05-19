@@ -25,6 +25,11 @@ namespace DotNet2020.Domain._5.Services.Interfaces
         string[] GetAllProjects();
 
         /// <summary>
+        /// Get issues that were tracked by
+        /// </summary>
+        string[] GetProblematicIssues(string projectName);
+
+        /// <summary>
         /// Get all project users in project
         /// </summary>
         string[] GetAllUsers(string projectName);
