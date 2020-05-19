@@ -52,7 +52,8 @@ namespace DotNet2020.Domain._5.Services
 
         public List<Issue> GetIssues(string projectName, string issueFilter = "")
         {
-            if (projectName == null || issueFilter == null) return new List<Issue>();
+            if (projectName == null) return new List<Issue>();
+            if (issueFilter == null) issueFilter = "";
             var issues = issueService.GetIssuesInProject(projectName, filter: issueFilter, take: 1000).Result;
             if (issues == null) return new List<Issue>();
             return issues
@@ -60,9 +61,9 @@ namespace DotNet2020.Domain._5.Services
                 .ToList();
         }
 
-        public Issue[] GetProblemIssues(Issue[] issues)
+        public List<Issue> GetProblemIssues(List<Issue> issues)
         {
-            if (issues == null) return new Issue[0];
+            if (issues == null) return new List<Issue>();
             return issues
                 .Select(x => Tuple.Create(x, x.WorkItems
                     .GroupBy(a => a.UserName)))
@@ -74,7 +75,7 @@ namespace DotNet2020.Domain._5.Services
                     .Where(x => WasChangedInProgress(x.Item2))
                     .Select(x => x.Item1))
                 .Distinct()
-                .ToArray();
+                .ToList();
         }
 
         private bool WasChangedInProgress(IEnumerable<YouTrackSharp.Issues.Change> changes)

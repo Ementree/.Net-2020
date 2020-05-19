@@ -28,6 +28,18 @@ namespace DotNet2020.Domain._5.Controllers
         }
 
         [HttpGet]
+        public IActionResult ShowProblematic(int id)
+        {
+            var reportResult = _storage.GetReport(id);
+            if (!reportResult.IsSuccess)
+                return Error("Ошибка обращения к БД!", reportResult.Error.Message);
+
+            var issues = _timeTrackingService.GetProblemIssues(reportResult.Result.Issues);
+
+            return View("Show", new ShowIssuesModel() { Issues = issues });
+        }
+
+        [HttpGet]
         public IActionResult ShowRange(int reportId, int start, int end, int graphId)
         {
             var reportResult = _storage.GetReport(reportId);
