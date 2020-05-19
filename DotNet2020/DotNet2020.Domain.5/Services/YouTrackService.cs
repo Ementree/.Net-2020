@@ -60,20 +60,18 @@ namespace DotNet2020.Domain._5.Services
                 .ToList();
         }
 
-        public Issue[] GetProblematicIssues(string projectName)
+        public Issue[] GetProblemIssues(Issue[] issues)
         {
-            if (projectName == null) return new Issue[0];
-            var issues = issueService.GetIssuesInProject(projectName, take: 1000).Result;
             if (issues == null) return new Issue[0];
             return issues
-                .Select(x => Tuple.Create(CreateIssue(x), timeService
-                    .GetWorkItemsForIssue(x.Id).Result
+                .Select(x => Tuple.Create(x, timeService
+                    .GetWorkItemsForIssue(x.Name).Result
                     .GroupBy(a => a.Author.Login)))
                 .Where(x => x.Item2.Count() > 1)
                 .Select(x => x.Item1)
                 .Concat(issues
-                    .Select(i => Tuple.Create(CreateIssue(i),
-                        issueService.GetChangeHistoryForIssue(i.Id).Result ?? new List<YouTrackSharp.Issues.Change>()))
+                    .Select(i => Tuple.Create(i,
+                        issueService.GetChangeHistoryForIssue(i.Name).Result ?? new List<YouTrackSharp.Issues.Change>()))
                     .Where(x => WasChangedInProgress(x.Item2))
                     .Select(x => x.Item1))
                 .Distinct()
