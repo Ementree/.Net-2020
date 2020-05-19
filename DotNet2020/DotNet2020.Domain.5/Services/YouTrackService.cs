@@ -64,9 +64,8 @@ namespace DotNet2020.Domain._5.Services
         {
             if (issues == null) return new Issue[0];
             return issues
-                .Select(x => Tuple.Create(x, timeService
-                    .GetWorkItemsForIssue(x.Name).Result
-                    .GroupBy(a => a.Author.Login)))
+                .Select(x => Tuple.Create(x, x.WorkItems
+                    .GroupBy(a => a.UserName)))
                 .Where(x => x.Item2.Count() > 1)
                 .Select(x => x.Item1)
                 .Concat(issues
