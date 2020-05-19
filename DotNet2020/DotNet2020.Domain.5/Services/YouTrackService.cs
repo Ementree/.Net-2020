@@ -47,7 +47,7 @@ namespace DotNet2020.Domain._5.Services
             var issue = issueService.GetIssuesInProject(projectName, filter: issueName).Result.FirstOrDefault();
             if (issue == null) return null;
             var workItems = timeService.GetWorkItemsForIssue(issue.Id).Result;
-            return CreateIssue(issue, workItems);
+            return CreateIssue(issue);
         }
 
         public List<Issue> GetIssues(string projectName, string issueFilter = "")
@@ -56,24 +56,21 @@ namespace DotNet2020.Domain._5.Services
             var issues = issueService.GetIssuesInProject(projectName, filter: issueFilter, take: 1000).Result;
             if (issues == null) return new List<Issue>();
             return issues
-                .Select(i => CreateIssue(i, timeService.GetWorkItemsForIssue(i.Id).Result))
+                .Select(i => CreateIssue(i))
                 .ToList();
         }
 
-        public string[] GetProblematicIssues(string projectName)
+        public Issue[] GetProblemIssues(Issue[] issues)
         {
-            if (projectName == null) return new string[0];
-            var issues = issueService.GetIssuesInProject(projectName, take: 1000).Result;
-            if (issues == null) return new string[0];
+            if (issues == null) return new Issue[0];
             return issues
-                .Select(x => Tuple.Create(x.Id, timeService
-                    .GetWorkItemsForIssue(x.Id).Result
-                    .GroupBy(a => a.Author.Login)))
+                .Select(x => Tuple.Create(x, x.WorkItems
+                    .GroupBy(a => a.UserName)))
                 .Where(x => x.Item2.Count() > 1)
                 .Select(x => x.Item1)
                 .Concat(issues
-                    .Select(i => Tuple.Create(i.Id,
-                        issueService.GetChangeHistoryForIssue(i.Id).Result ?? new List<YouTrackSharp.Issues.Change>()))
+                    .Select(i => Tuple.Create(i,
+                        issueService.GetChangeHistoryForIssue(i.Name).Result ?? new List<YouTrackSharp.Issues.Change>()))
                     .Where(x => WasChangedInProgress(x.Item2))
                     .Select(x => x.Item1))
                 .Distinct()
@@ -95,8 +92,9 @@ namespace DotNet2020.Domain._5.Services
             return false;
         }
 
-        private Issue CreateIssue(YouTrackSharp.Issues.Issue issue, IEnumerable<YouTrackSharp.TimeTracking.WorkItem> workItems)
+        private Issue CreateIssue(YouTrackSharp.Issues.Issue issue)
         {
+            var workItems = timeService.GetWorkItemsForIssue(issue.Id).Result;
             return new Issue(
                 issue.Id,
                 issue.Summary,
