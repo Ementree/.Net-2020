@@ -23,9 +23,7 @@ namespace DotNet2020.Domain._1
             get
             {
                 return ImmutableArray.Create(
-                    PropertyModifiersAnalyzer.DiagnosticId,
-                    PutPostDeleteAnalyzer.DiagnosticId,
-                    SelectAnalyzer.DiagnosticId);
+                    PropertyModifiersAnalyzer.DiagnosticId);
             }
         }
 
@@ -46,22 +44,6 @@ namespace DotNet2020.Domain._1
                             title: PropertyModifiersAnalyzer.CodeFixTitle,
                             createChangedSolution: c => PropertyModifiersAnalyzer.CodeFix(context.Document, context, c),
                             equivalenceKey: PropertyModifiersAnalyzer.CodeFixTitle),
-                        diagnostic);
-                    break;
-                case PutPostDeleteAnalyzer.DiagnosticId:
-                    context.RegisterCodeFix(
-                        CodeAction.Create(
-                            title: PutPostDeleteAnalyzer.CodeFixTitle,
-                            createChangedSolution: c => PutPostDeleteAnalyzer.CodeFix(context.Document, context, c),
-                            equivalenceKey: PutPostDeleteAnalyzer.CodeFixTitle),
-                        diagnostic);
-                    break;
-                case SelectAnalyzer.DiagnosticId:
-                    context.RegisterCodeFix(
-                        CodeAction.Create(
-                            title: SelectAnalyzer.CodeFixTitle,
-                            createChangedSolution: c => SelectAnalyzer.CodeFix(context.Document, context, c),
-                            equivalenceKey: SelectAnalyzer.CodeFixTitle),
                         diagnostic);
                     break;
             }
