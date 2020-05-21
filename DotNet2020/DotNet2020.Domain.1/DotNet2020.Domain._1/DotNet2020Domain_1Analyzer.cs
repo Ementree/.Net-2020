@@ -22,6 +22,7 @@ namespace DotNet2020.Domain._1
                     FluentAnalyzer.Rule,
                     PropertyModifiersAnalyzer.Rule,
                     MethodParamsAnalyzer.Rule,
+                    Entity—onstructorAnalyzer.Rule,
                     BooleanPropsNameAnalyzer.Rule,
                     MethodBodyAnalyze.Rule,
                     SimpleInterfaceAnalizer.Rule,
@@ -33,13 +34,13 @@ namespace DotNet2020.Domain._1
                     PutPostDeleteAnalyzer.Rule,
                     OneFileOneCore.Rule,
                     NestedEnumAndClass.Rule,
-                    ToSelectOptimization.Rule
-                  );
+                    ToSelectOptimization.Rule);
             }
         }
 
         public override void Initialize(AnalysisContext context)
         {
+            context.RegisterSyntaxNodeAction(Entity—onstructorAnalyzer.Analyze, SyntaxKind.ClassDeclaration);
             context.RegisterSyntaxTreeAction(LineLengthAnalyzer.AnalyzeTree);
             context.RegisterSyntaxNodeAction(FluentAnalyzer.Analyze, SyntaxKind.SimpleMemberAccessExpression);
             context.RegisterSyntaxNodeAction(PropertyModifiersAnalyzer.Analyze, SyntaxKind.PropertyDeclaration);
