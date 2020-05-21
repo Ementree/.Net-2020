@@ -1,0 +1,25 @@
+﻿@model DotNet2020.Domain._5.Models.ErrorModel
+<style>
+    .mainblock {
+        position: relative;
+        text-align: center;
+    }
+
+    .titleblock {
+        display: inline-block;
+        margin-bottom: 15px;
+    }
+
+    .textblock {
+        display: inline-block;
+        width: 40%;
+        height: auto;
+        border: 2px solid #c4c4c4;
+        border-radius: 10px 10px;
+    }
+</style>
+<div class="mainblock">
+    <div class="titleblock"><h2>@Model.Title</h2></div>
+    <br />
+    <div class="textblock"><p>@Model.Message</p></div>
+</div>

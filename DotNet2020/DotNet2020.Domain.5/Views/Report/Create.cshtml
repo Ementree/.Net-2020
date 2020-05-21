@@ -1,11 +1,16 @@
-﻿@model DotNet2020.Domain._5.Models.CreateReport
-
-<h2>Создать отчет</h2>
-<br>
+﻿@model DotNet2020.Domain._5.Models.CreateReportModel
+<style type="text/css">
+    .container4 {
+        margin: 0 auto;
+    }
+</style> 
+<div class="text-center">
+    <h2> Создать отчет</h2>
+</div>
 <br>
 <div class="row">
-    <div class="col-md-4">
-        <form asp-action="CreateReport">
+    <div class="container4">
+        <form asp-action="Show" method="post">
             <div class="form-group">
                 <label for="CreateReport">Название отчета:</label>
                 <input asp-for="ReportName" class="form-control" />
@@ -13,8 +18,13 @@
             </div>
             <div class="form-group">
                 <label for="CreateReport">Проект:</label>
-                <input asp-for="Project" class="form-control" />
-                <span asp-validation-for="Project" class="text-danger"></span>
+                <br>
+                <select asp-for="ProjectName">
+                    @foreach (var project in Model.CreateProject)
+                    {
+                        <option value="@project">@project</option>
+                    }
+                </select>
             </div>
             <div class="form-group">
                 <label for="CreateReport">Фильтр:</label>
@@ -23,7 +33,9 @@
             </div>
             <br>
             <br>
-            <button type="button" class="btn btn-success btn-lg">Создать</button>
+            <div class="text-center">
+                <button type="submit" class="btn btn-success btn-lg">Создать</button>
+            </div>
         </form>
     </div>
 </div>

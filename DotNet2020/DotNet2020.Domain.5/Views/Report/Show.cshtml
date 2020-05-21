@@ -1,0 +1,71 @@
+﻿@using DotNet2020.Domain._5.Models;
+@model ChartModel
+<head>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+</head>
+
+<script>
+    $(function () {
+        $("#myTab2 li:eq(0) a").tab('show');
+    });
+</script>
+<ul id="myTab2" class="nav nav-tabs">
+    @for (int i = 0; i < Model.Charts.Count; i++)
+    {
+        var href = $"#panely{i}";
+        <li><a data-toggle="tab" href="@href">@Model.Charts[i].Name</a></li>
+        <li><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p></li>
+    }
+</ul>
+
+<div class="tab-content">
+    @for (int i = 0; i < Model.Charts.Count; i++)
+    {
+        var tabId = $"panely{i}";
+        var chartId = $"chart{i}";
+    <div id="@tabId" class="tab-pane fade in active">
+        <div id='@chartId' style="height:auto; width:70%"></div>
+        <script>
+            var myPlot = document.getElementById('@chartId');
+            var arrY = @Json.Serialize(Model.Charts[i].YAxis);
+            var arrX = @Json.Serialize(Model.Charts[i].XAxis);
+
+            var data = [
+                {
+                 x: arrX,
+                 y: arrY,
+                 type: 'bar'
+                }
+            ];
+            var layout = {
+            title: @Json.Serialize(Model.Charts[i].Name),
+            showlegend: false
+            };
+
+
+            Plotly.newPlot('@chartId', data, layout, { staticPlot: false });
+
+            myPlot.on('plotly_click', function (data) {
+
+            var pts = '';
+            for (var i = 0; i < data.points.length; i++){
+            pts = data.points[i].x;
+            }
+            var start = pts - @Model.Charts[i].Tick.ToString();
+            window.open(`/Issue/ShowRange?reportId=${@Json.Serialize(Model.ReportId)}&start=${start}&end=${pts}&graphId=${@Json.Serialize(Model.Charts[i].Id)}`)
+
+            });
+        </script>
+        <form asp-action="Edit" asp-route-id="@Model.ReportId" method="post">
+            <button type="submit">Изменить</button>
+        </form>
+        <form asp-controller="Issue" asp-action="Show" asp-route-id="@Model.ReportId" method="get">
+            <button type="submit">Посмотреть все задачи</button>
+        </form>
+        <form asp-controller="Issue" asp-action="ShowProblematic" asp-route-id="@Model.ReportId" method="get">
+            <button type="submit">Посмотреть проблемные задачи</button>
+        </form>
+    </div>
+    }
+</div>

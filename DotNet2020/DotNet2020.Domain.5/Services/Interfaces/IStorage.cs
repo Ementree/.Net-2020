@@ -46,5 +46,15 @@ namespace DotNet2020.Domain._5.Services.Interfaces
         /// Get all reports
         /// </summary>
         RequestResult<IQueryable<Report>> GetAllReports();
+
+        /// <summary>
+        /// Is report exists
+        /// </summary>
+        RequestResult<bool> ContainsReport(int reportId);
+
+        /// <summary>
+        /// Is report exists
+        /// </summary>
+        RequestResult<bool> ContainsReport(string reportName);
     }
 }
