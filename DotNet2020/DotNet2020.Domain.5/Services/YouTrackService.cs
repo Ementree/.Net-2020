@@ -1,5 +1,6 @@
 ﻿using DotNet2020.Domain._5.Entities;
 using DotNet2020.Domain._5.Services.Interfaces;
+using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -16,11 +17,11 @@ namespace DotNet2020.Domain._5.Services
         private readonly YouTrackSharp.TimeTracking.ITimeTrackingService timeService;
         private readonly YouTrackSharp.Projects.IProjectsService projectService;
 
-        public YouTrackService()
+        public YouTrackService(IConfiguration configuration)
         {
-            serverUrl = "https://kpfu-net.myjetbrains.com/youtrack";
+            serverUrl = configuration.GetConnectionString("YouTrackUrl");
             connection = new BearerTokenConnection(serverUrl,
-                "perm:YW5nZWxh.NTUtMw==.PBKFTDQmoWvoxdzM7t5TPWPtKrTeOI");
+                configuration.GetConnectionString("YouTrackToken"));
             issueService = connection.CreateIssuesService();
             timeService = connection.CreateTimeTrackingService();
             projectService = connection.CreateProjectsService();

@@ -4,6 +4,7 @@ using DotNet2020.Domain._5.Services;
 using DotNet2020.Domain._5.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System;
@@ -19,11 +20,11 @@ namespace DotNet2020.Domain._5.Controllers
         private readonly ITimeTrackingService _timeTrackingService;
         private readonly IChartService _chartService;
 
-        public IssueController(ILogger<IssueController> logger, DbContext db)
+        public IssueController(IConfiguration configuration, ILogger<IssueController> logger, DbContext db)
         {
             _logger = logger;
             _storage = new Storage(db);
-            _timeTrackingService = new YouTrackService();
+            _timeTrackingService = new YouTrackService(configuration);
             _chartService = new ChartService();
         }
 
