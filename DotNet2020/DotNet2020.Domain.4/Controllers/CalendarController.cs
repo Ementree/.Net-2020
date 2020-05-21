@@ -38,7 +38,6 @@ namespace DotNet2020.Domain._4.Controllers
             var allVacations = _dbContext.GetAllVacations();
             var users = _dbContext.GetAllUsers();
             var holidays = _dbContext.GetAllHolidays();
-
             return View(new IndexViewModel() { Events = allVacations, Users = users, Holidays=holidays });
         }
 
