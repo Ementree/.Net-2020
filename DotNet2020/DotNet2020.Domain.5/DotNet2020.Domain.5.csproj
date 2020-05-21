@@ -2,15 +2,37 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <RootNamespace>DotNet2020.Domain._5</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Telerik.UI.for.AspNet.Core.Trial" Version="2020.1.406" />
+    <None Remove="Views\Report\Available.cshtml" />
+    <None Remove="Views\Report\Index.cshtml" />
+    <None Remove="Views\Shared\Error.cshtml" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Controllers" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="YouTrackSharp" Version="2020.1.0" />
+  </ItemGroup>
+  
   <ItemGroup>
     <ProjectReference Include="..\DotNet2020.Domain.Core\DotNet2020.Domain.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <EmbeddedResource Include="Views\Report\Index.cshtml" />
+    <EmbeddedResource Include="Views\Report\Available.cshtml" />
+    <EmbeddedResource Include="Views\Report\Show.cshtml">
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\Report\Create.cshtml">
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\Report\Edit.cshtml">
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\Issue\Show.cshtml">
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\Shared\Error.cshtml" />
+  </ItemGroup>
 </Project>

@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using DotNet2020.Domain._4.Models;
 using DotNet2020.Domain.Models;
+using DotNet2020.Domain._5.Entities;
+using System;
 using DotNet2020.Domain._3.Models;
 using Npgsql;
 
@@ -65,6 +67,8 @@ namespace DotNet2020.Data
         
         public virtual DbSet<QuestionComplexityModel> QuestionComplexity { get; set; }
 
+        public virtual DbSet<Report> Reports { get; set; }
+
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
@@ -76,6 +80,7 @@ namespace DotNet2020.Data
             base.OnModelCreating(builder);
             OnModelCreating3(builder);
             OnModelCreating4(builder);
+            OnModelCreating5(builder);
         }
 
         private void OnModelCreating3(ModelBuilder modelBuilder)
@@ -149,6 +154,17 @@ namespace DotNet2020.Data
                 .WithMany(e => e.CalendarEntries)
                 .OnDelete(DeleteBehavior.Cascade);
         }
-        
+
+        private void OnModelCreating5(ModelBuilder builder)
+        {
+            builder.Entity<Issue>()
+                .HasMany(i => i.WorkItems)
+                .WithOne()
+                .HasForeignKey(w => w.IssueId);
+            builder.Entity<Report>()
+                .HasMany(r => r.Issues)
+                .WithOne()
+                .HasForeignKey(i => i.ReportId);
+        }
     }
 }
