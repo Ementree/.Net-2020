@@ -7,6 +7,12 @@ namespace DotNet2020.Domain._1
 {
     class WarningsExample
     {
+        /// <summary>
+        /// какой-то комментарий
+        /// some comment
+        /// комментарий with latin and cyrillic
+        /// comment с латиницей и кириллицей
+        /// </summary>
         void LinqChainAndLineLength()
         {
             var col = new List<int>() { 1, 2 };
