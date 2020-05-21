@@ -32,14 +32,14 @@ namespace DotNet2020.Domain._6.Services
         {
             var year = options.Year;
             var currentAccuracy = options.Accuracy;
-
             //Предварительно стягивание с бд ResourceGroupType позволяет избежать .Include() в нескольких запросах
             var resourceType = _context.Set<ResourceGroupType>().ToList();
 
             var resourceWithCurrentPeriodCapacityDict = GetDataFromResourceCapacityTable();
             var resourcePeriodWithPlannedCapacityDict = GetDataFromFunctioningCapacityResourceTable();
 
-            var tableLinePreformList = ComposeDataFromTables(resourceWithCurrentPeriodCapacityDict, resourcePeriodWithPlannedCapacityDict);
+            var tableLinePreformList = ComposeDataFromTables(resourceWithCurrentPeriodCapacityDict,
+                resourcePeriodWithPlannedCapacityDict);
             var resourceWithBothPeriodCapacityDict = GetResourceWithBithCapcacityListDict(tableLinePreformList);
 
             var viewModel = GetViewModel(resourceWithBothPeriodCapacityDict);
@@ -52,12 +52,12 @@ namespace DotNet2020.Domain._6.Services
             return viewModel;
         }
 
-        Tuple<int,int> GetYearRange(List<Period> periods)
+        Tuple<int, int> GetYearRange(List<Period> periods)
         {
             var minYear = int.MaxValue;
             var maxYear = 0;
 
-            foreach(var p in periods)
+            foreach (var p in periods)
             {
                 if (p.Start.Year < minYear)
                     minYear = p.Start.Year;
@@ -73,11 +73,11 @@ namespace DotNet2020.Domain._6.Services
         {
             var result = new List<FCPeriodWithBothCapacity>();
 
-            for(int i = 0; i < 12; i++)
+            for (int i = 0; i < 12; i++)
             {
                 result.Add(new FCPeriodWithBothCapacity()
                 {
-                    Period = new Period(new DateTime(year, i + 1, 1), new DateTime(year,i + 1,28)),
+                    Period = new Period(new DateTime(year, i + 1, 1), new DateTime(year, i + 1, 28)),
                     CurrentCapacity = 0,
                     PlannedCapacity = 0
                 });
@@ -86,7 +86,7 @@ namespace DotNet2020.Domain._6.Services
             return result;
         }
 
-        Dictionary<int,List<FCPeriodWithBothCapacity>> CreateDictWithDefaultList(Tuple<int,int> yearsRangeTuple)
+        Dictionary<int, List<FCPeriodWithBothCapacity>> CreateDictWithDefaultList(Tuple<int, int> yearsRangeTuple)
         {
             var yearsDict = new Dictionary<int, List<FCPeriodWithBothCapacity>>();
 
@@ -98,12 +98,13 @@ namespace DotNet2020.Domain._6.Services
             return yearsDict;
         }
 
-        void AddPeriodWithBothCapacityInDict(Dictionary<int,List<FCPeriodWithBothCapacity>> yearItemsDict,List<FCPeriodWithBothCapacity> items)
+        void AddPeriodWithBothCapacityInDict(Dictionary<int, List<FCPeriodWithBothCapacity>> yearItemsDict,
+            List<FCPeriodWithBothCapacity> items)
         {
-            foreach(var i in items)
+            foreach (var i in items)
             {
                 var itemYear = i.Period.Start.Year;
-                for(int j = 0; j < yearItemsDict[itemYear].Count; j++)
+                for (int j = 0; j < yearItemsDict[itemYear].Count; j++)
                 {
                     if (yearItemsDict[itemYear][j].Period.Start.Month == i.Period.Start.Month)
                         yearItemsDict[itemYear][j] = i;
@@ -134,9 +135,9 @@ namespace DotNet2020.Domain._6.Services
             var allPeriods = GetAllPeriods(viewModel);
             var yearsRangeTuple = GetYearRange(allPeriods);
 
-            foreach(var pair in viewModel.GroupedResources)
+            foreach (var pair in viewModel.GroupedResources)
             {
-                foreach(var resource in pair.Value)
+                foreach (var resource in pair.Value)
                 {
                     var dict = CreateDictWithDefaultList(yearsRangeTuple);
 
@@ -147,7 +148,7 @@ namespace DotNet2020.Domain._6.Services
             }
         }
 
-        Tuple<int,int> GetViewModelYearRange(FunctionalCapacityViewModel viewModel)
+        Tuple<int, int> GetViewModelYearRange(FunctionalCapacityViewModel viewModel)
         {
             var allPeriods = GetAllPeriods(viewModel);
 
@@ -156,7 +157,7 @@ namespace DotNet2020.Domain._6.Services
             return yearsRangeTuple;
         }
 
-        int ValidateCurrentYear(FunctionalCapacityViewModel viewModel,int currentYear)
+        int ValidateCurrentYear(FunctionalCapacityViewModel viewModel, int currentYear)
         {
             var range = GetViewModelYearRange(viewModel);
             var validatedYear = currentYear;
@@ -172,7 +173,8 @@ namespace DotNet2020.Domain._6.Services
             return currentAccuracy < 0 ? 0 : currentAccuracy;
         }
 
-        FunctionalCapacityViewModel GetViewModel(Dictionary<Resource, List<FCPeriodWithBothCapacity>> resourceWithBothPeriodCapacityDict)
+        FunctionalCapacityViewModel GetViewModel(
+            Dictionary<Resource, List<FCPeriodWithBothCapacity>> resourceWithBothPeriodCapacityDict)
         {
             var resourceWithTableDataListPreform = new List<FCResourceWithTableData>();
             var viewModel = new FunctionalCapacityViewModel();
@@ -193,7 +195,8 @@ namespace DotNet2020.Domain._6.Services
             return viewModel;
         }
 
-        Dictionary<string, List<FCResourceWithTableData>> GetSortedOnGroupsResources(List<FCResourceWithTableData> resourceWithTableDataListPreform)
+        Dictionary<string, List<FCResourceWithTableData>> GetSortedOnGroupsResources(
+            List<FCResourceWithTableData> resourceWithTableDataListPreform)
         {
             var groupedResources = new Dictionary<string, List<FCResourceWithTableData>>();
 
@@ -210,47 +213,55 @@ namespace DotNet2020.Domain._6.Services
             return groupedResources;
         }
 
-        Dictionary<Resource, List<FCPeriodWithBothCapacity>> GetResourceWithBithCapcacityListDict(List<FCTableLinePreform> tableLinePreformList)
+        Dictionary<Resource, List<FCPeriodWithBothCapacity>> GetResourceWithBithCapcacityListDict(
+            List<FCTableLinePreform> tableLinePreformList)
         {
             return tableLinePreformList
                 .GroupBy(vm => vm.Resource)
                 .ToDictionary(gr => gr.Key, gr => gr
-                   .Select(vm =>
-                       new FCPeriodWithBothCapacity
-                       {
-                           Period = vm.Period,
-                           PlannedCapacity = vm.plannedCapacity,
-                           CurrentCapacity = vm.currentCapacity
-                       }).OrderBy(t => t.Period.Start)
-                            .ToList());
+                    .Select(vm =>
+                        new FCPeriodWithBothCapacity
+                        {
+                            Period = vm.Period,
+                            PlannedCapacity = vm.plannedCapacity,
+                            CurrentCapacity = vm.currentCapacity
+                        }).OrderBy(t => t.Period.Start)
+                    .ToList());
         }
 
         Dictionary<Resource, List<CurrentPeriodCapacity>> GetDataFromResourceCapacityTable()
         {
-            return _context.Set<ResourceCapacity>()
-                .Include(rc => rc.Period)
-                .Include(rc => rc.Resource)
-                .ThenInclude(res => res.Employee)
-                .ToList()
+            var a = _context.Set<ResourceCapacity>()
+                    .Include(rc => rc.Period)
+                    .Include(rc => rc.Resource)
+                    .ThenInclude(res => res.Employee)
+                    .ToList()
+                ;
+            var b = a
                 .GroupBy(rc => rc.Resource)
                 .ToDictionary(rc => rc.Key, rc => rc
-                    .Select(g => new CurrentPeriodCapacity { Capacity = g.Capacity, Period = g.Period })
-                        .ToList());
+                    .Select(g => new CurrentPeriodCapacity {Capacity = g.Capacity, Period = g.Period})
+                    .ToList());
+            return b;
         }
 
         Dictionary<ResourcePeriodKey, int> GetDataFromFunctioningCapacityResourceTable()
         {
-            return _context.Set<FunctioningCapacityResource>()
+            var a =  _context.Set<FunctioningCapacityResource>()
                 .Include(fcr => fcr.Resource)
+                .ThenInclude(res=>res.Employee)
                 .Include(fcr => fcr.Period)
-                .ToList()
-                .GroupBy(fcr => new ResourcePeriodKey { Resource = fcr.Resource, Period = fcr.Period })
+                .ToList();
+            var b = a
+                .GroupBy(fcr => new ResourcePeriodKey {Resource = fcr.Resource, Period = fcr.Period})
                 .ToDictionary(group => group.Key, group => group
                     .Select(fcr => fcr.FunctionCapacity)
-                        .Sum());
+                    .Sum());
+            return b;
         }
 
-        List<FCTableLinePreform> ComposeDataFromTables(Dictionary<Resource, List<CurrentPeriodCapacity>> resourceWithCurrentPeriodCapacityDict,
+        List<FCTableLinePreform> ComposeDataFromTables(
+            Dictionary<Resource, List<CurrentPeriodCapacity>> resourceWithCurrentPeriodCapacityDict,
             Dictionary<ResourcePeriodKey, int> resourcePeriodWithPlannedCapacityDict)
         {
             var tableLinePreformList = new List<FCTableLinePreform>();
@@ -280,7 +291,7 @@ namespace DotNet2020.Domain._6.Services
                 var plannedCapacity = p.Value;
                 int index;
 
-                if(ContainsInPreformList(tableLinePreformList,p.Key,out index))
+                if (ContainsInPreformList(tableLinePreformList, p.Key, out index))
                 {
                     tableLinePreformList[index].plannedCapacity = plannedCapacity;
                 }
@@ -301,12 +312,13 @@ namespace DotNet2020.Domain._6.Services
             return tableLinePreformList;
         }
 
-        public bool ContainsInPreformList(List<FCTableLinePreform> preformList,ResourcePeriodKey resourcePeriodKey,out int index)
+        public bool ContainsInPreformList(List<FCTableLinePreform> preformList, ResourcePeriodKey resourcePeriodKey,
+            out int index)
         {
             index = -1;
-            for(int i = 0; i < preformList.Count(); i++) 
-            { 
-                if(preformList[i].Resource.Id == resourcePeriodKey.Resource.Id 
+            for (int i = 0; i < preformList.Count(); i++)
+            {
+                if (preformList[i].Resource.Id == resourcePeriodKey.Resource.Id
                     && preformList[i].Period.Id == resourcePeriodKey.Period.Id)
                 {
                     index = i;

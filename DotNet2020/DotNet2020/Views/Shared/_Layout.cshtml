@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -30,6 +31,27 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbar6Dropdown"
+                               role="button" data-toggle="dropdown"
+                               aria-haspopup="true" aria-expanded="false">
+                                Domain6
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbar6Dropdown">
+                                <a class="dropdown-item" asp-controller="Absence" asp-action="Index">
+                                    Отсутствия
+                                </a>
+                                <a class="dropdown-item" asp-controller="FunctionalCapacity" asp-action="Index">
+                                    Загрузка ресурсов
+                                </a>
+                                <a class="dropdown-item" asp-controller="Capacity" asp-action="Index">
+                                    Мощность ресурсов
+                                </a>
+                                <a class="dropdown-item" asp-controller="Plan" asp-action="Index">
+                                    План
+                                </a>
+                            </div>
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -41,11 +63,6 @@
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2020 - DotNet2020 - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
-    </footer>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @RenderSection("Scripts", required: false)

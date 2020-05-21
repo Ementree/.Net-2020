@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using DotNet2020.Domain._4.Models;
 using DotNet2020.Domain._6.Models;
 using DotNet2020.Domain._6.Models.ViewModels;
 
@@ -11,15 +12,21 @@ namespace DotNet2020.Domain._6.Services
         private readonly List<ResourceCapacity> _capacity;
         private readonly List<FunctioningCapacityProject> _funcCapacityProject;
         private readonly List<FunctioningCapacityResource> _funcCapacityResource;
-        
+        private readonly List<Period> _periods;
+
         public PlanHighlightService(
             List<ResourceCapacity> capacity, 
             List<FunctioningCapacityProject> funcCapacityProject, 
-            List<FunctioningCapacityResource> funcCapacityResource)
+            List<FunctioningCapacityResource> funcCapacityResource,
+            List<AbstractCalendarEntry> absences,
+            List<Period> periods)
+        
         {
-            _capacity = capacity;
+            var capacityWithAbsenceService = new CapacityWithAbsenceService(capacity);
+            _capacity = capacityWithAbsenceService.GetCapacityWithAbsence(absences);
             _funcCapacityProject = funcCapacityProject;
             _funcCapacityResource = funcCapacityResource;
+            _periods = periods;
         }
 
         public List<FuncCapacityProjHighlight> GetFuncCapacityProjHighlight()
@@ -36,7 +43,13 @@ namespace DotNet2020.Domain._6.Services
                 var color = "green-highlight";
                 if (sum != fcp.FunctioningCapacity)
                     color = "red-highlight";
-                funcCapacityProjHighlight.Add(new FuncCapacityProjHighlight() {PeriodId = fcp.PeriodId, ProjectId = fcp.ProjectId, Color = color});
+                funcCapacityProjHighlight.Add(new FuncCapacityProjHighlight()
+                {
+                    Period = _periods.FirstOrDefault(p => p.Id == fcp.PeriodId),
+                    PeriodId = fcp.PeriodId, 
+                    ProjectId = fcp.ProjectId, 
+                    Color = color
+                });
             }
             
             return funcCapacityProjHighlight;

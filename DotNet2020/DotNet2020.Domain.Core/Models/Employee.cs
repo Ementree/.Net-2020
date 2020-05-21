@@ -12,6 +12,7 @@ namespace DotNet2020.Domain.Core.Models
 
         [StringLength(Strings.DefaultLength)]
         public string MiddleName { get; set; }
+        public string Email { get; set; }
 
         public Position Position { get; set; }
     }

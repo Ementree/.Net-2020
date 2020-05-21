@@ -22,7 +22,7 @@ namespace DotNet2020.Domain._1
                     FluentAnalyzer.Rule,
                     PropertyModifiersAnalyzer.Rule,
                     MethodParamsAnalyzer.Rule,
-                    Entity—onstructorAnalyzer.Rule,
+                    EntityConstructorAnalyzer.Rule,
                     BooleanPropsNameAnalyzer.Rule,
                     MethodBodyAnalyze.Rule,
                     SimpleInterfaceAnalizer.Rule,
@@ -40,7 +40,7 @@ namespace DotNet2020.Domain._1
 
         public override void Initialize(AnalysisContext context)
         {
-            context.RegisterSyntaxNodeAction(Entity—onstructorAnalyzer.Analyze, SyntaxKind.ClassDeclaration);
+            context.RegisterSyntaxNodeAction(EntityConstructorAnalyzer.Analyze, SyntaxKind.ClassDeclaration);
             context.RegisterSyntaxTreeAction(LineLengthAnalyzer.AnalyzeTree);
             context.RegisterSyntaxNodeAction(FluentAnalyzer.Analyze, SyntaxKind.SimpleMemberAccessExpression);
             context.RegisterSyntaxNodeAction(PropertyModifiersAnalyzer.Analyze, SyntaxKind.PropertyDeclaration);
