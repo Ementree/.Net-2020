@@ -30,7 +30,10 @@ namespace DotNet2020.Domain._1
                     LanguageAnalyzer.RussianRule,
                     LanguageAnalyzer.EnglishRule,
                     SelectAnalyzer.Rule,
-                    PutPostDeleteAnalyzer.Rule);
+                    PutPostDeleteAnalyzer.Rule,
+                    OneFileOneCore.Rule,
+                    NestedEnumAndClass.Rule
+                  );
             }
         }
 
@@ -49,6 +52,8 @@ namespace DotNet2020.Domain._1
             context.RegisterSyntaxTreeAction(LanguageAnalyzer.Analyze);
             context.RegisterSyntaxNodeAction(SelectAnalyzer.Analyze, SyntaxKind.SimpleMemberAccessExpression);
             context.RegisterSyntaxNodeAction(PutPostDeleteAnalyzer.Analyze, SyntaxKind.MethodDeclaration);
+            context.RegisterSyntaxNodeAction(OneFileOneCore.Analyze, SyntaxKind.NamespaceDeclaration);
+            context.RegisterSyntaxNodeAction(NestedEnumAndClass.Analyze, SyntaxKind.ClassDeclaration);
         }
     }
 }
