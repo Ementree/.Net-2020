@@ -16,7 +16,6 @@ namespace DotNet2020.Domain._1
         public const string CodeFixTitle = "make the line shorter";
         const int MaxLength = 80;
         const string Title = "line is too long";
-        //static string mesFormat = $"line should be shorter than {MaxLength} symbols";
         const string MessageFormat = "line should be shorter than 80 symbols";
         const string Category = "Stylistic";
         const string Description = "line should be shorter than 80 symbols";

@@ -22,6 +22,7 @@ namespace DotNet2020.Domain._1
                     FluentAnalyzer.Rule,
                     PropertyModifiersAnalyzer.Rule,
                     MethodParamsAnalyzer.Rule,
+                    EntityConstructorAnalyzer.Rule,
                     BooleanPropsNameAnalyzer.Rule,
                     MethodBodyAnalyze.Rule,
                     SimpleInterfaceAnalizer.Rule,
@@ -30,13 +31,16 @@ namespace DotNet2020.Domain._1
                     LanguageAnalyzer.RussianRule,
                     LanguageAnalyzer.EnglishRule,
                     SelectAnalyzer.Rule,
-                    PutDeleteAnalyzer.DeleteRule,
-                    PutDeleteAnalyzer.PutRule);
+                    PutPostDeleteAnalyzer.Rule,
+                    OneFileOneCore.Rule,
+                    NestedEnumAndClass.Rule,
+                    ToSelectOptimization.Rule);
             }
         }
 
         public override void Initialize(AnalysisContext context)
         {
+            context.RegisterSyntaxNodeAction(EntityConstructorAnalyzer.Analyze, SyntaxKind.ClassDeclaration);
             context.RegisterSyntaxTreeAction(LineLengthAnalyzer.AnalyzeTree);
             context.RegisterSyntaxNodeAction(FluentAnalyzer.Analyze, SyntaxKind.SimpleMemberAccessExpression);
             context.RegisterSyntaxNodeAction(PropertyModifiersAnalyzer.Analyze, SyntaxKind.PropertyDeclaration);
@@ -49,7 +53,10 @@ namespace DotNet2020.Domain._1
             context.RegisterSyntaxNodeAction(LanguageAnalyzer.AnalyzeXML, SyntaxKind.SingleLineDocumentationCommentTrivia);
             context.RegisterSyntaxTreeAction(LanguageAnalyzer.Analyze);
             context.RegisterSyntaxNodeAction(SelectAnalyzer.Analyze, SyntaxKind.SimpleMemberAccessExpression);
-            context.RegisterSyntaxNodeAction(PutDeleteAnalyzer.Analyze, SyntaxKind.MethodDeclaration);
+            context.RegisterSyntaxNodeAction(PutPostDeleteAnalyzer.Analyze, SyntaxKind.MethodDeclaration);
+            context.RegisterSyntaxNodeAction(OneFileOneCore.Analyze, SyntaxKind.NamespaceDeclaration);
+            context.RegisterSyntaxNodeAction(NestedEnumAndClass.Analyze, SyntaxKind.ClassDeclaration);
+            context.RegisterSyntaxNodeAction(ToSelectOptimization.Analyze, SyntaxKind.InvocationExpression);
         }
     }
 }
