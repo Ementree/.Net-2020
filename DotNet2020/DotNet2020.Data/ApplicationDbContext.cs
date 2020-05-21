@@ -7,6 +7,7 @@ using DotNet2020.Domain.Models;
 using DotNet2020.Domain._5.Entities;
 using System;
 using DotNet2020.Domain._3.Models;
+using Npgsql;
 
 namespace DotNet2020.Data
 {
@@ -56,13 +57,22 @@ namespace DotNet2020.Data
 
         public virtual DbSet<Employee> Employee { get; set; }
 
+        public virtual DbSet<GradeToGradeModel> GradeToGrade { get; set; }
+
         public virtual DbSet<EmployeeCalendar> EmployeeCalendar { get; set; }
+
+        public virtual DbSet<QuestionModel> Questions { get; set; }
+        
+        public virtual DbSet<CompetenceQuestionsModel> CompetenceQuestions { get; set; }
+        
+        public virtual DbSet<QuestionComplexityModel> QuestionComplexity { get; set; }
 
         public virtual DbSet<Report> Reports { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
+            
         }
 
         protected override void OnModelCreating(ModelBuilder builder)
@@ -75,26 +85,36 @@ namespace DotNet2020.Data
 
         private void OnModelCreating3(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<GradeToGradeModel>()
+                .HasKey(x => new { x.GradeId, x.NextGradeId });
+
+            modelBuilder.Entity<CompetenceQuestionsModel>()
+                .HasKey(x => new { x.CompetenceId, x.QuestionId });
+
             modelBuilder.Entity<SpecificWorkerCompetencesModel>()
                 .HasKey(e => new { e.WorkerId, e.CompetenceId });
+
             modelBuilder.Entity<GradeCompetencesModel>()
                 .HasKey(e => new { e.GradeId, e.CompetenceId });
-            modelBuilder.Entity<AttestationAnswerModel>()
 
+            modelBuilder.Entity<AttestationAnswerModel>()
                 .HasKey(e => new { e.AttestationId, e.AnswerId });
+
             modelBuilder.Entity<SpecificWorkerCompetencesModel>()
                 .HasOne<SpecificWorkerModel>(e => e.Worker)
                 .WithMany(p => p.SpecificWorkerCompetencesModels)
                 .OnDelete(DeleteBehavior.Cascade);
+
             modelBuilder.Entity<SpecificWorkerCompetencesModel>()
                 .HasOne<CompetencesModel>(e => e.Competence)
                 .WithMany(p => p.SpecificWorkerCompetencesModels)
                 .OnDelete(DeleteBehavior.Cascade);
-            modelBuilder.Entity<GradeCompetencesModel>()
 
+            modelBuilder.Entity<GradeCompetencesModel>()
                 .HasOne<GradesModel>(e => e.Grade)
                 .WithMany(p => p.GradesCompetences)
                 .OnDelete(DeleteBehavior.Cascade);
+
             modelBuilder.Entity<GradeCompetencesModel>()
                 .HasOne<CompetencesModel>(e => e.Competence)
                 .WithMany(p => p.GradesCompetences)
@@ -104,6 +124,7 @@ namespace DotNet2020.Data
                 .HasOne<AttestationModel>(e => e.Attestation)
                 .WithMany(p => p.AttestationAnswer)
                 .OnDelete(DeleteBehavior.Cascade);
+
             modelBuilder.Entity<AttestationAnswerModel>()
                 .HasOne<AnswerModel>(e => e.Answer)
                 .WithMany(p => p.AttestationAnswer)

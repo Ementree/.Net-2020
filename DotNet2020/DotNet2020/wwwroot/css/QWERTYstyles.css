@@ -1,5 +1,14 @@
-﻿@charset "UTF-8";
-@import url(https://fonts.googleapis.com/css?family=Open+Sans:400,300&subset=latin,cyrillic);
+﻿.btn-primary {
+    color: #fff;
+    background-color: #00a086;
+    border-color: #007e86;
+}
+
+.btn-primary:hover {
+    color: #fff;
+    background-color: #366345;
+    border-color: #007e86;
+}
 
 
 .nav-slp {
@@ -46,7 +55,7 @@
     */
     background: inherit;
     /* цвет текста */
-    color: #dadada;
+    color: #ffffff;
     /* вид курсора */
     cursor: pointer;
     /* размер шрифта */
@@ -61,9 +70,6 @@
 }
 
 
-    /* определяем текст кнопки 
- * символ Unicode (TRIGRAM FOR HEAVEN)
-*/
 
     .nav-toggle:after {
         content: '\2630';
@@ -71,30 +77,17 @@
     }
 
 
-    /* цвет текста при наведении */
 
     .nav-toggle:hover {
         color: #f4f4f4;
     }
 
 
-/**
- * Скрытый чекбокс (флажок)
- * невидим и недоступен :)
- * имя селектора атрибут флажка
- */
-
 [id='nav-toggle'] {
     position: absolute;
     display: none;
 }
 
-
-    /**
- * изменение положения переключателя 
- * при просмотре на мобильных устройствах
- * когда навигация раскрыта, распологаем внутри панели
-*/
 
     [id='nav-toggle']:checked ~ .nav > .nav-toggle {
         left: auto;
@@ -103,10 +96,6 @@
     }
 
 
-    /**
- * Когда флажок установлен, открывается панель
- * используем псевдокласс:checked
- */
 
     [id='nav-toggle']:checked ~ .nav {
         left: 0;
@@ -117,11 +106,6 @@
     }
 
 
-    /* 
- * смещение контента страницы
- * на размер ширины панели,
- * фишка необязательная, на любителя
-*/
 
     [id='nav-toggle']:checked ~ main > article {
         -webkit-transform: translateX(320px);
@@ -130,110 +114,20 @@
     }
 
 
-    /*
- * изменение символа переключателя,
- * привычный крестик (MULTIPLICATION X), 
- * вы можете испльзовать любой другой значок
-*/
 
     [id='nav-toggle']:checked ~ .nav > .nav-toggle:after {
         content: '\2715';
     }
 
 
-/**
- * профиксим баг в Android <= 4.1.2
- * см: http://timpietrusky.com/advanced-checkbox-hack
- */
-
-body {
-    -webkit-animation: bugfix infinite 1s;
-}
-
-@-webkit-keyframes bugfix {
-    to {
-        padding: 0;
-    }
-}
-
-
-/**
- * позаботьтимся о средних и маленьких экранах
- * мобильных устройств
- */
-
-@media screen and (min-width: 320px) {
-    html,
-    body {
-        margin: 0;
-        overflow-x: hidden;
-    }
-}
-
-@media screen and (max-width: 320px) {
-    html,
-    body {
-        margin: 0;
-        overflow-x: hidden;
+    [id='nav-toggle']:checked ~ .nav h2 {
+        opacity: 1;
+        transform: scale(1, 1);
+        -ms-transform: scale(1, 1);
+        -moz-transform: scale(1, 1);
+        -webkit-transform: scale(1, 1);
     }
 
-    .nav {
-        width: 100%;
-        box-shadow: none
-    }
-}
-
-
-/**
- * Формируем стиль заголовка (логотип) панели 
-*/
-
-.nav h2 {
-    width: 90%;
-    padding: 0;
-    margin: 10px 0;
-    text-align: center;
-    text-shadow: rgba(255, 255, 255, .1) -1px -1px 1px, rgba(0, 0, 0, .5) 1px 1px 1px;
-    font-size: 1.3em;
-    line-height: 1.3em;
-    opacity: 0;
-    transform: scale(0.1, 0.1);
-    -ms-transform: scale(0.1, 0.1);
-    -moz-transform: scale(0.1, 0.1);
-    -webkit-transform: scale(0.1, 0.1);
-    transform-origin: 0% 0%;
-    -ms-transform-origin: 0% 0%;
-    -moz-transform-origin: 0% 0%;
-    -webkit-transform-origin: 0% 0%;
-    transition: opacity 0.8s, transform 0.8s;
-    -ms-transition: opacity 0.8s, -ms-transform 0.8s;
-    -moz-transition: opacity 0.8s, -moz-transform 0.8s;
-    -webkit-transition: opacity 0.8s, -webkit-transform 0.8s;
-}
-
-    .nav h2 a {
-        color: #dadada;
-        text-decoration: none;
-        text-transform: uppercase;
-    }
-
-
-/*плавное появление заголовка (логотипа) при раскрытии панели */
-
-[id='nav-toggle']:checked ~ .nav h2 {
-    opacity: 1;
-    transform: scale(1, 1);
-    -ms-transform: scale(1, 1);
-    -moz-transform: scale(1, 1);
-    -webkit-transform: scale(1, 1);
-}
-
-
-/**
- * формируем непосредственно само меню
- * используем неупорядоченный список для пунктов меню
- * прикрутим трансфомации и плавные переходы
- */
 
 .nav > ul {
     display: block;
@@ -263,8 +157,6 @@ body {
     transform: translateX(0);
 }
 
-
-/* определяем интервалы появления пунктов меню */
 
 .nav > ul > li:nth-child(2) {
     -webkit-transition: opacity .5s .2s, -webkit-transform .5s .2s;
@@ -297,10 +189,6 @@ body {
 }
 
 
-/**
- * оформление ссылок пунктов меню
- */
-
 .nav > ul > li > a {
     display: inline-block;
     position: relative;
@@ -308,7 +196,7 @@ body {
     font-family: 'Open Sans', sans-serif;
     font-weight: 300;
     font-size: 1.2em;
-    color: #dadada;
+    color: #ffffff;
     width: 100%;
     text-decoration: none;
     /* плавный переход */
@@ -318,20 +206,12 @@ body {
 }
 
 
-    /**
- * состояние ссылок меню при наведении
- */
-
     .nav > ul > li > a:hover,
     .nav > ul > li > a:focus {
         color: white;
         padding-left: 15px;
     }
 
-
-    /**
- * линия подчеркивания ссылок меню
- */
 
     .nav > ul > li > a:before {
         content: '';
@@ -359,11 +239,6 @@ body {
     }
 
 
-    /**
- * анимируем линию подчеркивания 
- * ссылок при наведении
- */
-
     .nav > ul > li > a:hover:before {
         width: 0%;
         background: #3bc1a0;
@@ -379,182 +254,6 @@ body {
     }
 
 
-/* фон затемнения на основной контент 
- * при этом элементы блокируютя
- * спорная такая фича, если оно вам надо
- * просто раскомментируйте
-*/
-
-/*
-.mask-content {
-    display: block;
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 1000;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.4);
-    visibility: hidden;
-    opacity: 0;
-}
-
-[id='nav-toggle']:checked ~ .mask-content {
-    visibility: visible;
-    opacity: 1;
-    -webkit-transition: opacity .5s, visibility .5s;
-    transition: opacity .5s, visibility .5s;
-}
-*/
-
-
 * {
     box-sizing: border-box;
-}
-
-/**
- * Максимальная высота базового контейнера
- */
-html {
-    font-size: 100%;
-}
-html,
-body {
-    margin: 0;
-    padding: 0;
-    width: 100%;
-    height: 100%;
-}
-
-body {
-    color: #333;
-    font: 1em 'Open Sans', sans-serif;
-    background-color: #f1f1f1;
-}
-
-
-/* изменяем полоcу прокрутки */
-
-::-webkit-scrollbar {
-    width: .65em;
-}
-
-::-webkit-scrollbar-track {
-    background-color: rgba(217, 217, 217, 0.75);
-}
-
-::-webkit-scrollbar-thumb {
-    background: rgba(170, 170, 170, 0.6);
-    border-radius: 5px;
-    box-shadow: inset 0.05em 0.05em 0 rgba(0, 0, 0, 0.1), inset 0 -0.05em 0 rgba(0, 0, 0, 0.07);
-}
-
-main {
-    max-width: 1024px;
-    margin: 0 auto
-}
-
-article {
-    margin: 0 1em;
-    padding: 0 22px;
-    -webkit-transition: -webkit-transform .3s;
-    -moz-transition: : -moz-transform .3s;
-    transition: transform .3s;
-}
-
-header {
-    margin: 0;
-    padding: 0;
-    text-align: center;
-}
-
-footer {
-    font-size: 14px;
-    text-align: center
-}
-
-p {
-    margin-bottom: 16px;
-}
-
-hr {
-    margin: 22px 0;
-    height: 1px;
-    border: 0;
-    background-image: -webkit-linear-gradient(left, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0));
-    background-image: -moz-linear-gradient(left, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0));
-    background-image: -ms-linear-gradient(left, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0));
-    background-image: linear-gradient(left, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0));
-}
-
-h1,
-h2 {
-    margin-bottom: 22px;
-    color: #191919;
-    font-weight: 300;
-}
-
-h1 {
-    font-size: 32px;
-    line-height: 32px;
-}
-
-h2 {
-    color: #565d66;
-    font-size: 26px;
-    line-height: 26px;
-}
-
-a {
-    color: #006b05;
-    text-decoration: none;
-}
-.btn {
-    -webkit-border-radius: 10em;
-    -moz-border-radius: 10em;
-    -ms-border-radius: 10em;
-    -o-border-radius: 10em;
-    border-radius: 10em;
-    border: 0;
-    color: #fff!important;
-    margin: 6px;
-    white-space: normal!important;
-    word-wrap: break-word;
-		display: inline-block;
-    line-height: 1.25;
-    text-align: center;
-    vertical-align: middle;
-    cursor: pointer;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-    padding: .5rem 1rem;
-    font-size: 1rem;
-    font-weight: 400;
-    -webkit-box-shadow: 0 2px 5px 0 rgba(0,0,0,.16),0 2px 10px 0 rgba(0,0,0,.12);
-    -moz-box-shadow: 0 2px 5px 0 rgba(0,0,0,.16),0 2px 10px 0 rgba(0,0,0,.12);
-    box-shadow: 0 2px 5px 0 rgba(0,0,0,.16),0 2px 10px 0 rgba(0,0,0,.12);
-}
-.btn {
-	  -webkit-transition: box-shadow .2s ease-out;
-	  -moz-transition: box-shadow .2s ease-out;
-		-ms-transition: box-shadow .2s ease-out;
-    transition: box-shadow .2s ease-out;
-}
-.btn:hover {
-	  -webkit-box-shadow: 0 5px 11px 0 rgba(0,0,0,.18),0 4px 15px 0 rgba(0,0,0,.15);
-	  -moz-box-shadow: 0 5px 11px 0 rgba(0,0,0,.18),0 4px 15px 0 rgba(0,0,0,.15);
-	  box-shadow: 0 5px 11px 0 rgba(0,0,0,.18),0 4px 15px 0 rgba(0,0,0,.15);
-}
-.btn-primary {
-	  border: 2px solid #2BBBAD;
-    color: #00695c!important;
-    background-color: transparent;
-}
-
-.btn-secondary {
-    border: 2px solid #00C851;
-    color: #007E33!important;
-    background-color: transparent;
 }

@@ -33,6 +33,15 @@ SET "Type" = excluded."Type",
     "Group" = excluded."Group";
 SELECT setval('"ResourceGroupsTypes_Id_seq"', (SELECT Max("Id") FROM "ResourceGroupsTypes"));
 
+INSERT INTO "GradeToGrade" as p
+VALUES
+       (1,2),
+       (1,3),
+       (2,4),
+       (3,4),
+       (4,5)
+       ON CONFLICT ("GradeId", "NextGradeId") DO NOTHING;
+
 
 INSERT INTO "Position" as p
 VALUES
@@ -75,30 +84,126 @@ SELECT setval('"Employee_Id_seq"', (SELECT Max("Employee"."Id") FROM "Employee")
 
 INSERT INTO "Competences" as W
 VALUES
-       (1, 'Базовое программирование', ARRAY['Алгоритмы и структуры данных', 'Знание C# или JavaScript'], ARRAY['Что такое АИСД', 'Что такое var'] ),
-       (2, 'Базовый backend', ARRAY['ASPNET MVC', ' ASPNET WEBAPI', 'ASPNET MVC CORE', 'LINQ', 'EF'], ARRAY['Что такое EF', 'Что такое WEBAPI', 'Что такое MVC'] ),
-       (3, 'Базовый frontend', ARRAY['Базовые знания HTML, CSS, JS, Jquery', 'Node.js, npm'], ARRAY['Что такое npm', 'Что такое JS'] ),
-       (4, 'Продвинутый backend', ARRAY['SOLID', 'GOF', 'REST', 'HTTP', 'CQRS', 'TPL'], ARRAY['Что такое TPL', 'Что такое REST', 'Что такое HTTP'] ),
-       (5, 'Продвинутый frontend', ARRAY['ES6 / TypeScript', 'Webpack', 'React + Redux / Angular + rxjs'], ARRAY['Что такое rxjs', 'Что такое webpack', 'Что такое es6'] ),
+       (1, 'Базовое программирование', ARRAY['Алгоритмы и структуры данных', 'Знание C# или JavaScript']),
+       (2, 'Базовый backend', ARRAY['ASPNET MVC', ' ASPNET WEBAPI', 'ASPNET MVC CORE', 'LINQ', 'EF'] ),
+       (3, 'Базовый frontend', ARRAY['Базовые знания HTML, CSS, JS, Jquery', 'Node.js, npm'] ),
+       (4, 'Продвинутый backend', ARRAY['SOLID', 'GOF', 'REST', 'HTTP', 'CQRS', 'TPL' ] ),
+       (5, 'Продвинутый frontend', ARRAY['ES6 / TypeScript', 'Webpack', 'React + Redux / Angular + rxjs'] ),
        (6, 'Управление командной разработки', ARRAY['Опыт управление командой разработки (не менее 3 разработчиков) от 1 года',
-           'Знание гибких методологий разработки: Scrum / Kanban'], ARRAY['Что такое scrum', 'Что такое kanban', 'Что такое youtrack'] )
+           'Знание гибких методологий разработки: Scrum / Kanban']),
+        (7, '1 семестр', ARRAY['1 семестр'] )
 ON CONFLICT ("Id") DO UPDATE
 SET "Competence" = excluded."Competence",
-    "Content" = excluded."Content",
-    "Questions" = excluded."Questions";
+    "Content" = excluded."Content";
 SELECT setval('"Competences_Id_seq"', (SELECT Max("Competences"."Id") FROM "Competences"));
 
 
 INSERT INTO "Grades" as W
 VALUES
        (1, 'D1'),
-       (2, 'D2(BACKEND)'),
-       (3, 'D2(FRONTEND)'),
-       (4, 'D3(FULL-STACK)'),
-       (5, 'TL(TEAM-LEAD)')
+       (2, 'D2 (BACKEND)'),
+       (3, 'D2 (FRONTEND)'),
+       (4, 'D3 (FULL-STACK)'),
+       (5, 'TL (TEAM-LEAD)'),
+       (6, '1 семестр')
 ON CONFLICT ("Id") DO UPDATE
 SET "Grade"= excluded."Grade";
 SELECT setval('"Grades_Id_seq"', (SELECT Max("Grades"."Id") FROM "Grades"));
+
+INSERT INTO "QuestionComplexity" as q
+VALUES
+       (1, 'легкий'),
+       (2, 'средний'),
+       (3, 'тяжелый')
+       ON CONFLICT ("Id") DO UPDATE
+SET "Value"=excluded."Value";
+
+INSERT INTO "Questions" ("Id", "Question", "ComplexityId")
+VALUES
+       (1, 'Что такое базовое программирование', 1),
+       (2, 'что такое var', 2),
+       (3, 'как объявить переменную типа string', 3),
+       (4, 'что такое алгоритм?', 1),
+       (5, 'что такое asp net', 1),
+       (6, 'Что такое web api', 2),
+       (7, 'Что такое rest api', 3),
+       (8, 'что такое сервер', 2),
+       (9, 'Что такое html', 1),
+       (10, 'Что такое css', 2),
+       (11, 'Что такое typescript', 3),
+       (12, 'Что такое SOLID', 1),
+       (13, 'Что такое async await', 2),
+       (14, 'Что такое expressionTrees?', 3),
+       (15, 'Как управлять проектом?', 1),
+       (16, 'Что такое youtrack', 2),
+       (17, 'Что такое покер планирование?', 3),
+       (18, 'Что такое middleware', 3),
+       (19, 'Что такое покер планирование?', 1),
+       (20, 'Разница между IEnumerable и IQueryable', 2),
+       (21, 'Что такое монада', 3),
+       (22, 'что выдаст where при вызове от IEnumerable и IQueryable', 3),
+       (23, 'stand up', 1),
+       (24, 'Как работает async/await? Во что компилируется тело метода после вызова await? Если await только один? Если в теле метода более одного await?', 3),
+       (25, 'String - это Value Type или Reference Type? Что необычного в этом типе?', 1),
+       (26, 'Какого размера может достигать ошибка оценки разных этапах готовности требований?', 1),
+       (27, 'Какой этап оценки продукта подходит для взятия обязательств?', 1),
+       (28, 'На проекте работает 10 человек. Проект опаздывает на 4 недели. В течение какого времени удастся сдать продукт, если добавить в команду разработки еще 10 человек?', 1),
+       (29, 'В чем отличие Value Type от Reference Type? В каком случае предпочтительнее использовать Value Type, а в каком - Reference Type?', 2),
+       (30, 'Какие методы улучшения качества оценки вы знаете?', 2),
+       (31, 'Какие данные необходимы для того, чтобы узнать календарную данную окончания проекта? Какими инструментами можно воспользоваться?', 2),
+       (32, 'Перечислите 4 ценности и 2-3 принципа Agile Manifesto. Как вы их понимаете?', 1),
+       (33, 'Опишите Scrum и Kanban. В чем основное отличие?', 2),
+       (34, 'Перечислите основные отличия функциональных языков от императивных', 3),
+       (35, 'Опишите паттерн MVC. За что отвечает каждая из букв в паттерне?', 1),
+       (36, 'Перечислите коды ответов протокола HTTP. Что каждый из них означает?', 2),
+       (37, 'К каким типам можно применять ключевое слово await?', 1),
+       (38, 'Опишите тип Expression. Как можно объявить переменную типа Expression?', 2)
+ON CONFLICT ("Id") DO UPDATE
+SET "Question"=excluded."Question",
+    "ComplexityId"=excluded."ComplexityId";
+SELECT setval('"Questions_Id_seq"', (SELECT Max("Questions"."Id") FROM "Questions"));
+
+INSERT INTO "CompetenceQuestions" ("CompetenceId", "QuestionId")
+VALUES
+       (1,1),
+       (1,2),
+       (1,3),
+       (1,4),
+       (2,5),
+       (2,6),
+       (2,7),
+       (2,8),
+       (3,9),
+       (3,10),
+       (3,11),
+       (4,12),
+       (4,13),
+       (4,14),
+       (6,15),
+       (6,16),
+       (6,17),
+       (7,18),
+       (7,19),
+       (7,20),
+       (7,21),
+       (7,22),
+       (7,23),
+       (7,24),
+       (7,25),
+       (7,26),
+       (7,27),
+       (7,28),
+       (7,29),
+       (7,30),
+       (7,31),
+       (7,32),
+       (7,33),
+       (7,34),
+       (7,35),
+       (7,36),
+       (7,37),
+       (7,38)
+ON CONFLICT DO NOTHING;
 
 
 INSERT INTO "GradeCompetences" as W
