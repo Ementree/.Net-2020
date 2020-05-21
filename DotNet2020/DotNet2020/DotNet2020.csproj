@@ -40,4 +40,6 @@
         <ProjectReference Include="..\DotNet2020.Domain.3\DotNet2020.Domain.3.csproj" />
     </ItemGroup>
 
+    <ProjectExtensions><VisualStudio><UserProperties appsettings_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>
+
 </Project>

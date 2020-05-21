@@ -4,6 +4,12 @@
     border-color: #007e86;
 }
 
+.btn-primary:hover {
+    color: #fff;
+    background-color: #366345;
+    border-color: #007e86;
+}
+
 
 .nav-slp {
     /*  ширна произвольная, не стесняйтесь экспериментировать */
