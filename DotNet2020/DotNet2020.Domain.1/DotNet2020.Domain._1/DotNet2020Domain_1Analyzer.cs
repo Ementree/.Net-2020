@@ -32,7 +32,8 @@ namespace DotNet2020.Domain._1
                     SelectAnalyzer.Rule,
                     PutPostDeleteAnalyzer.Rule,
                     OneFileOneCore.Rule,
-                    NestedEnumAndClass.Rule
+                    NestedEnumAndClass.Rule,
+                    ToSelectOptimization.Rule
                   );
             }
         }
@@ -54,6 +55,7 @@ namespace DotNet2020.Domain._1
             context.RegisterSyntaxNodeAction(PutPostDeleteAnalyzer.Analyze, SyntaxKind.MethodDeclaration);
             context.RegisterSyntaxNodeAction(OneFileOneCore.Analyze, SyntaxKind.NamespaceDeclaration);
             context.RegisterSyntaxNodeAction(NestedEnumAndClass.Analyze, SyntaxKind.ClassDeclaration);
+            context.RegisterSyntaxNodeAction(ToSelectOptimization.Analyze, SyntaxKind.InvocationExpression);
         }
     }
 }
