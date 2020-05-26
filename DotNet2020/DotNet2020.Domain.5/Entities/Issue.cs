@@ -86,6 +86,7 @@ namespace DotNet2020.Domain._5.Entities
             AssigneeName = assigneeName;
             ProjectName = projectName;
             Link = link;
+            CreationTime = creationTime;
             WorkItems = workItems;
         }
 

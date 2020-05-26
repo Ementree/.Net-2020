@@ -484,6 +484,9 @@ namespace DotNet2020.Data.Migrations
                     b.Property<string>("AssigneeName")
                         .HasColumnType("text");
 
+                    b.Property<DateTime>("CreationTime")
+                        .HasColumnType("timestamp without time zone");
+
                     b.Property<string>("CreatorName")
                         .HasColumnType("text");
 

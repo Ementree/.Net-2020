@@ -4,11 +4,14 @@
         margin: 0 auto;
         white-space: nowrap;
     }
+
     .checkbox {
     }
-    .checkboxtext{
-        display:inline-block
+
+    .checkboxtext {
+        display: inline-block
     }
+
     .multiselect {
         max-height: 100px;
         overflow-y: auto;
@@ -66,4 +69,9 @@
             </div>
         </form>
     </div>
+</div>
+<div>
+    <form asp-action="Show" asp-route-id="@Model.ReportId" method="get">
+        <button type="submit" style="position:absolute; bottom:10px; left:10px">Назад</button>
+    </form>
 </div>

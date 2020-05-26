@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DotNet2020.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20200521164448_updateReport")]
-    partial class updateReport
+    [Migration("20200526120850_updateIssue")]
+    partial class updateIssue
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -485,6 +485,9 @@ namespace DotNet2020.Data.Migrations
 
                     b.Property<string>("AssigneeName")
                         .HasColumnType("text");
+
+                    b.Property<DateTime>("CreationTime")
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("CreatorName")
                         .HasColumnType("text");

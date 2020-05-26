@@ -14,5 +14,6 @@ namespace DotNet2020.Domain._5.Models
         public string OrderBy { get; set; }
         public string OrderByDescending { get; set; }
         public string SerializedIssues { get; set; }
+        public int ReportId { get; set; }
     }
 }

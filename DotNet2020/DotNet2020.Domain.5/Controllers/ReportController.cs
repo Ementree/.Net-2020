@@ -79,8 +79,14 @@ namespace DotNet2020.Domain._5.Controllers
             var issues = _timeTrackingService.GetIssues(model.ProjectName, model.IssueFilter);
 
             // Filter issues
-            issues = issues.Where(i => i.CreationTime >= model.Start && i.CreationTime <= model.End)
+            issues = issues
+                .Where(i => i.CreationTime >= model.Start && i.CreationTime <= model.End)
                 .ToList();
+            if (!String.IsNullOrEmpty(model.UserName))
+                issues = issues
+                    .Where(i => i.AssigneeName == model.UserName)
+                    .ToList();
+
             if (issues == null)
                 issues = new List<Issue>();
 
@@ -93,7 +99,7 @@ namespace DotNet2020.Domain._5.Controllers
             if (!reportResult.IsSuccess)
                 return Error("Ошибка обращения к БД!", reportResult.Error.Message);
 
-            return RedirectToAction("Show", reportResult.Result.ReportId);
+            return RedirectToAction("Show", new { id = reportResult.Result.ReportId });
         }
 
         [HttpPost]
@@ -185,12 +191,7 @@ namespace DotNet2020.Domain._5.Controllers
             if (!reportResult.IsSuccess)
                 return Error("Ошибка обращения к БД!", reportResult.Error.Message);
 
-            // Get charts
-            var charts = _chartService.GetAllCharts();
-            foreach (var chart in charts.Values)
-                chart.SetData(reportResult.Result.Issues, 5);
-
-            return View("Show", new ChartModel(reportResult.Result.ReportId, charts.Values.ToList()));
+            return RedirectToAction("Show", new { id = reportResult.Result.ReportId });
         }
 
         [HttpGet]

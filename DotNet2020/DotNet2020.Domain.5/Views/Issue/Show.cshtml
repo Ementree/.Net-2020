@@ -45,8 +45,8 @@
         margin: 15px 10px 5px 10px;
     }
 
-    .sortbutton{
-        display:inline-block;
+    .sortbutton {
+        display: inline-block;
         text-align: right;
     }
 </style>
@@ -100,8 +100,8 @@
                     <td>
                         <p style="height:14px">
                             <input asp-for="@Model.SerializedIssues" value="@Json.Serialize(Model.Issues)" hidden />
-                            <input asp-for="@Model.OrderBy" id="orderby" hidden/>
-                            <input asp-for="@Model.OrderByDescending" id="orderbydescending" hidden/>
+                            <input asp-for="@Model.OrderBy" id="orderby" hidden />
+                            <input asp-for="@Model.OrderByDescending" id="orderbydescending" hidden />
                         </p>
                     </td>
                 </tr>
@@ -128,4 +128,9 @@
             </table>
         </form>
     </div>
+</div>
+<div>
+    <form asp-controller="Report" asp-action="Show" asp-route-id="@Model.ReportId" method="get">
+        <button type="submit" style="position:absolute; bottom:10px; left:10px">Назад</button>
+    </form>
 </div>

@@ -37,7 +37,7 @@ namespace DotNet2020.Domain._5.Controllers
 
             var issues = _timeTrackingService.GetProblemIssues(reportResult.Result.Issues);
 
-            return View("Show", new ShowIssuesModel() { Issues = issues });
+            return View("Show", new ShowIssuesModel() { Issues = issues, ReportId = id });
         }
 
         [HttpGet]
@@ -50,7 +50,7 @@ namespace DotNet2020.Domain._5.Controllers
             var chart = _chartService.GetChart(graphId);
             chart.SetData(reportResult.Result.Issues, 6);
             var issues = chart.GetIssues(start, end);
-            return View("Show", new ShowIssuesModel() { Issues = issues });
+            return View("Show", new ShowIssuesModel() { Issues = issues, ReportId = reportId });
         }
 
         [HttpGet]
@@ -60,9 +60,12 @@ namespace DotNet2020.Domain._5.Controllers
             if (!reportResult.IsSuccess)
                 return Error("Ошибка обращения к БД!", reportResult.Error.Message);
 
-            var issues = reportResult.Result.Issues;
+            // Filter issues
+            var issuesToShow = reportResult.Result.Issues
+                .Where(i => i.SpentTime.HasValue && i.EstimatedTime.HasValue)
+                .ToList();
 
-            return View("Show", new ShowIssuesModel() { Issues = issues });
+            return View("Show", new ShowIssuesModel() { Issues = issuesToShow, ReportId = id });
         }
 
         [HttpPost]
@@ -94,7 +97,7 @@ namespace DotNet2020.Domain._5.Controllers
             else if (!String.IsNullOrEmpty(model.OrderByDescending))
                 issues = model.Issues.OrderByDescending(i => property.GetValue(i)).ToList();
 
-            return View("Show", new ShowIssuesModel() { Issues = issues });
+            return View("Show", new ShowIssuesModel() { Issues = issues, ReportId = model.ReportId });
         }
 
         private IActionResult Error(string title = "Упс...", string message = "Что-то пошло не так :(")

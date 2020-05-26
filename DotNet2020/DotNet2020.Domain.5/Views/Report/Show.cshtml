@@ -24,9 +24,9 @@
     {
         var tabId = $"panely{i}";
         var chartId = $"chart{i}";
-    <div id="@tabId" class="tab-pane fade in active">
-        <div id='@chartId' style="height:auto; width:70%"></div>
-        <script>
+        <div id="@tabId" class="tab-pane fade in active">
+            <div id='@chartId' style="height:auto; width:70%"></div>
+            <script>
             var myPlot = document.getElementById('@chartId');
             var arrY = @Json.Serialize(Model.Charts[i].YAxis);
             var arrX = @Json.Serialize(Model.Charts[i].XAxis);
@@ -56,16 +56,21 @@
             window.open(`/Issue/ShowRange?reportId=${@Json.Serialize(Model.ReportId)}&start=${start}&end=${pts}&graphId=${@Json.Serialize(Model.Charts[i].Id)}`)
 
             });
-        </script>
-        <form asp-action="Edit" asp-route-id="@Model.ReportId" method="post">
-            <button type="submit">Изменить</button>
-        </form>
-        <form asp-controller="Issue" asp-action="Show" asp-route-id="@Model.ReportId" method="get">
-            <button type="submit">Посмотреть все задачи</button>
-        </form>
-        <form asp-controller="Issue" asp-action="ShowProblematic" asp-route-id="@Model.ReportId" method="get">
-            <button type="submit">Посмотреть проблемные задачи</button>
-        </form>
-    </div>
+            </script>
+            <form asp-action="Edit" asp-route-id="@Model.ReportId" method="post">
+                <button type="submit">Изменить</button>
+            </form>
+            <form asp-controller="Issue" asp-action="Show" asp-route-id="@Model.ReportId" method="get">
+                <button type="submit">Посмотреть все задачи</button>
+            </form>
+            <form asp-controller="Issue" asp-action="ShowProblematic" asp-route-id="@Model.ReportId" method="get">
+                <button type="submit">Посмотреть проблемные задачи</button>
+            </form>
+            <form asp-action="Available" method="get">
+                <button type="submit">Назад</button>
+            </form>
+        </div>
     }
+</div>
+<div>
 </div>
