@@ -279,6 +279,19 @@ namespace DotNet2020.Data.Migrations
                     b.ToTable("Attestations");
                 });
 
+            modelBuilder.Entity("DotNet2020.Domain._3.Models.CompetenceQuestionsModel", b =>
+                {
+                    b.Property<long>("CompetenceId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("QuestionId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("CompetenceId", "QuestionId");
+
+                    b.ToTable("CompetenceQuestions");
+                });
+
             modelBuilder.Entity("DotNet2020.Domain._3.Models.CompetencesModel", b =>
                 {
                     b.Property<long>("Id")
@@ -290,9 +303,6 @@ namespace DotNet2020.Data.Migrations
                         .HasColumnType("text");
 
                     b.Property<List<string>>("Content")
-                        .HasColumnType("text[]");
-
-                    b.Property<List<string>>("Questions")
                         .HasColumnType("text[]");
 
                     b.HasKey("Id");
@@ -315,6 +325,19 @@ namespace DotNet2020.Data.Migrations
                     b.ToTable("GradeCompetences");
                 });
 
+            modelBuilder.Entity("DotNet2020.Domain._3.Models.GradeToGradeModel", b =>
+                {
+                    b.Property<long>("GradeId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("NextGradeId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("GradeId", "NextGradeId");
+
+                    b.ToTable("GradeToGrade");
+                });
+
             modelBuilder.Entity("DotNet2020.Domain._3.Models.GradesModel", b =>
                 {
                     b.Property<long>("Id")
@@ -328,6 +351,44 @@ namespace DotNet2020.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Grades");
+                });
+
+            modelBuilder.Entity("DotNet2020.Domain._3.Models.QuestionComplexityModel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<string>("Value")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("QuestionComplexity");
+                });
+
+            modelBuilder.Entity("DotNet2020.Domain._3.Models.QuestionModel", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<long?>("CompetencesModelId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("ComplexityId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Question")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CompetencesModelId");
+
+                    b.ToTable("Questions");
                 });
 
             modelBuilder.Entity("DotNet2020.Domain._3.Models.SpecificWorkerCompetencesModel", b =>
@@ -897,6 +958,13 @@ namespace DotNet2020.Data.Migrations
                         .HasForeignKey("GradeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("DotNet2020.Domain._3.Models.QuestionModel", b =>
+                {
+                    b.HasOne("DotNet2020.Domain._3.Models.CompetencesModel", null)
+                        .WithMany("Questions")
+                        .HasForeignKey("CompetencesModelId");
                 });
 
             modelBuilder.Entity("DotNet2020.Domain._3.Models.SpecificWorkerCompetencesModel", b =>

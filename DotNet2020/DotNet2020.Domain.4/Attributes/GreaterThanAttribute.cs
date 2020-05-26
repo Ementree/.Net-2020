@@ -1,8 +1,5 @@
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace DotNet2020.Domain._4.Attributes
 {
@@ -44,7 +41,7 @@ namespace DotNet2020.Domain._4.Attributes
                 {
                     return ValidationResult.Success;
                 }
-                else if ((DateTime)value > (DateTime)propertyTestedValue)
+                else if ((DateTime)value >= (DateTime)propertyTestedValue)
                 {
                     return ValidationResult.Success;
                 }

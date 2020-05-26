@@ -12,7 +12,7 @@ namespace DotNet2020.Domain._4_.Models.ModelView
 
         [Required(ErrorMessage = "Введите дату")]
         [GreaterThan("From", true)]
-        [LessThanCurrentDate(ErrorMessage = "SickDay можно брать только на прошедние даты")]
+        [LessThanCurrentDate(ErrorMessage = "Больничный можно брать только на прошедние даты")]
         public DateTime? To { get; set; }
     }
 }
