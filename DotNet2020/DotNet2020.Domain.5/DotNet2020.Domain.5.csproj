@@ -15,6 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Telerik.UI.for.AspNet.Core.Trial" Version="2020.1.406" />
     <PackageReference Include="YouTrackSharp" Version="2020.1.0" />
   </ItemGroup>
   

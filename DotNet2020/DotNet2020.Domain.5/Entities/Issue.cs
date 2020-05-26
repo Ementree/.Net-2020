@@ -48,6 +48,11 @@ namespace DotNet2020.Domain._5.Entities
         public string Link { get; private set; }
 
         /// <summary>
+        /// Creation time
+        /// </summary>
+        public DateTime CreationTime { get; private set; }
+
+        /// <summary>
         /// Work items
         /// </summary>
         public List<WorkItem> WorkItems { get; private set; }
@@ -56,7 +61,7 @@ namespace DotNet2020.Domain._5.Entities
         public int? SpentTime { get; private set; }
 
         public Issue(string name, string title, int? estimatedTime, int? spentTime, 
-            string creatorName, string assigneeName, string projectName, string link, List<WorkItem> workItems = null)
+            string creatorName, string assigneeName, string projectName, string link, DateTime creationTime, List<WorkItem> workItems = null)
         {
             CheckIsEmpty(name, "name");
             CheckIsEmpty(title, "title");

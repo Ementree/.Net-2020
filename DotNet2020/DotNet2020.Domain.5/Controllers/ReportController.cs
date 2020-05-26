@@ -57,6 +57,46 @@ namespace DotNet2020.Domain._5.Controllers
         }
 
         [HttpPost]
+        public IActionResult Create(CreateReportModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                if (String.IsNullOrEmpty(model.ReportName))
+                    return Error("Ошибка создания отчета!", "Название отчета должно быть не нулевым!");
+                if (model.ReportName?.Length > 100)
+                    return Error("Ошибка создания отчета!", "Название отчета должно быть не длиннее 100 символов!");
+                if (model.IssueFilter?.Length > 1000)
+                    return Error("Ошибка создания отчета!", "Фильтр должен быть не длиннее 1000 символов!");
+            }
+
+            RequestResult<bool> isContains = _storage.ContainsReport(model.ReportName);
+            if (!isContains.IsSuccess)
+                return Error("Ошибка обращения к БД!", isContains.Error.Message);
+            if (isContains.Result)
+                return Error("Ошибка создания отчета!", "Отчет с таким именем уже существует!");
+
+            // Get issues
+            var issues = _timeTrackingService.GetIssues(model.ProjectName, model.IssueFilter);
+
+            // Filter issues
+            issues = issues.Where(i => i.CreationTime >= model.Start && i.CreationTime <= model.End)
+                .ToList();
+            if (issues == null)
+                issues = new List<Issue>();
+
+            // Save report
+            var report = new Report(model.ReportName, model.ProjectName, model.IssueFilter, issues);
+            _storage.SaveReport(report);
+
+            // Get saved report with id
+            var reportResult = _storage.GetReport(report.Name);
+            if (!reportResult.IsSuccess)
+                return Error("Ошибка обращения к БД!", reportResult.Error.Message);
+
+            return RedirectToAction("Show", reportResult.Result.ReportId);
+        }
+
+        [HttpPost]
         public IActionResult Edit(int id)
         {
             var reportResult = _storage.GetReport(id);
@@ -151,53 +191,6 @@ namespace DotNet2020.Domain._5.Controllers
                 chart.SetData(reportResult.Result.Issues, 5);
 
             return View("Show", new ChartModel(reportResult.Result.ReportId, charts.Values.ToList()));
-        }
-
-        [HttpPost]
-        public IActionResult Show(CreateReportModel model)
-        {
-            if (!ModelState.IsValid)
-            {
-                if (String.IsNullOrEmpty(model.ReportName))
-                    return Error("Ошибка создания отчета!", "Название отчета должно быть не нулевым!");
-                if (model.ReportName?.Length > 100)
-                    return Error("Ошибка создания отчета!", "Название отчета должно быть не длиннее 100 символов!");
-                if (model.IssueFilter?.Length > 1000)
-                    return Error("Ошибка создания отчета!", "Фильтр должен быть не длиннее 1000 символов!");
-                return Error("Ошибка создания отчета!");
-            }
-
-            RequestResult<bool> isContains = _storage.ContainsReport(model.ReportName);
-            if (!isContains.IsSuccess)
-                return Error("Ошибка обращения к БД!", isContains.Error.Message);
-            if (isContains.Result)
-                return Error("Ошибка создания отчета!", "Отчет с таким именем уже существует!");
-
-            // Get issues
-            var issues = _timeTrackingService.GetIssues(model.ProjectName, model.IssueFilter);
-            if (issues == null)
-                issues = new List<Issue>();
-
-            // Save report
-            var report = new Report(model.ReportName, model.ProjectName, model.IssueFilter, issues);
-            _storage.SaveReport(report);
-
-            // Get saved report with id
-            var reportResult = _storage.GetReport(report.Name);
-            if (!reportResult.IsSuccess)
-                return Error("Ошибка обращения к БД!", reportResult.Error.Message);
-
-            // Filter issues
-            var issuesToShow = issues
-                .Where(i => i.SpentTime.HasValue && i.EstimatedTime.HasValue)
-                .ToList();
-
-            // Get and fill charts
-            var charts = _chartService.GetAllCharts();
-            foreach (var chart in charts.Values)
-                chart.SetData(issuesToShow, 5);
-
-            return View(new ChartModel(reportResult.Result.ReportId, charts.Values.ToList()));
         }
 
         [HttpGet]

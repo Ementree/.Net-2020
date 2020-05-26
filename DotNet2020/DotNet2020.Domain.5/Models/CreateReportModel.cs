@@ -1,9 +1,17 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace DotNet2020.Domain._5.Models
 {
     public class CreateReportModel
     {
+        public CreateReportModel()
+        {
+            var now = DateTime.Now;
+            Start = new DateTime(1990, 1, 1);
+            End = new DateTime(now.Year, now.Month, now.Day);
+        }
+
         [Required] 
         [MaxLength(100)]
         public string ReportName { get; set; }
@@ -11,5 +19,8 @@ namespace DotNet2020.Domain._5.Models
         public string[] CreateProject { get; set; }
         [MaxLength(1000)]
         public string IssueFilter { get; set; }
+
+        public DateTime Start { get; set; }
+        public DateTime End { get; set; }
     }
 }

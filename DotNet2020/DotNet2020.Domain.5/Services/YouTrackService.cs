@@ -55,7 +55,7 @@ namespace DotNet2020.Domain._5.Services
         {
             if (projectName == null) return new List<Issue>();
             if (issueFilter == null) issueFilter = "";
-            var issues = issueService.GetIssuesInProject(projectName, filter: issueFilter, take: 1000).Result;
+            var issues = issueService.GetIssuesInProject(projectName, filter: issueFilter, take: 10000).Result;
             if (issues == null) return new List<Issue>();
             return issues
                 .Select(i => CreateIssue(i))
@@ -106,6 +106,7 @@ namespace DotNet2020.Domain._5.Services
                 ((List<YouTrackSharp.Issues.Assignee>)issue.GetField("Assignee")?.Value)?.FirstOrDefault()?.UserName,
                 issue.GetField("projectShortName").AsString(),
                 serverUrl + @"/issue/" + issue.Id,
+                issue.GetField("created").AsDateTime(),
                 workItems?
                     .Select(w => new WorkItem()
                     {

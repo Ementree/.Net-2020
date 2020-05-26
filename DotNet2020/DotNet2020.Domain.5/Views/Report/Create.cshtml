@@ -1,24 +1,33 @@
 ﻿@model DotNet2020.Domain._5.Models.CreateReportModel
+@using Kendo.Mvc.UI;
 <style type="text/css">
     .container4 {
         margin: 0 auto;
     }
-</style> 
+</style>
+<script>
+    function onChange() {
+        var range = this.range();
+        document.getElementById("start").value = kendo.toString(range.start, 'd');
+        document.getElementById("end").value = kendo.toString(range.end, 'd');
+    }
+</script>
 <div class="text-center">
-    <h2> Создать отчет</h2>
+    <h2>Создать отчет</h2>
 </div>
 <br>
 <div class="row">
     <div class="container4">
-        <form asp-action="Show" method="post">
+        <form asp-action="Create" method="post">
+            <input id="start" asp-for="Start" type="datetime" hidden />
+            <input id="end" asp-for="End" type="datetime" hidden />
             <div class="form-group">
-                <label for="CreateReport">Название отчета:</label>
+                <h5><label for="CreateReport">Название отчета</label></h5>
                 <input asp-for="ReportName" class="form-control" />
                 <span asp-validation-for="ReportName" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label for="CreateReport">Проект:</label>
-                <br>
+                <h5><label for="CreateReport">Проект</label></h5>
                 <select asp-for="ProjectName">
                     @foreach (var project in Model.CreateProject)
                     {
@@ -27,9 +36,22 @@
                 </select>
             </div>
             <div class="form-group">
-                <label for="CreateReport">Фильтр:</label>
+                <h5><label for="CreateReport">Фильтр</label></h5>
                 <input asp-for="IssueFilter" class="form-control" />
                 <span asp-validation-for="IssueFilter" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <h5>Дата создания</h5>
+                @(Html.Kendo().DateRangePicker()
+                    .Name("daterangepicker")
+                    .HtmlAttributes(new { style = "width: 100%", title = "daterangepicker" })
+                    .Events(e => e.Change("onChange"))
+                    .Range(c =>
+                    {
+                        c.Start(Model.Start);
+                        c.End(Model.End);
+                    })
+                )
             </div>
             <br>
             <br>
