@@ -23,7 +23,8 @@ namespace DotNet2020.Domain._1
             get
             {
                 return ImmutableArray.Create(
-                    PropertyModifiersAnalyzer.DiagnosticId);
+                    PropertyModifiersAnalyzer.DiagnosticId,
+                    ToSelectOptimization.DiagnosticId);
             }
         }
 
@@ -44,6 +45,14 @@ namespace DotNet2020.Domain._1
                             title: PropertyModifiersAnalyzer.CodeFixTitle,
                             createChangedSolution: c => PropertyModifiersAnalyzer.CodeFix(context.Document, context, c),
                             equivalenceKey: PropertyModifiersAnalyzer.CodeFixTitle),
+                        diagnostic);
+                    break;
+                case ToSelectOptimization.DiagnosticId:
+                    context.RegisterCodeFix(
+                        CodeAction.Create(
+                            title: ToSelectOptimization.CodeFixTitle,
+                            createChangedSolution: c => ToSelectOptimization.CodeFix(context.Document, context, c),
+                            equivalenceKey: ToSelectOptimization.CodeFixTitle),
                         diagnostic);
                     break;
             }

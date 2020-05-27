@@ -11,7 +11,7 @@ namespace DotNet2020.Domain._1
     /// <summary>
     /// Анализатор для проверки наличия конструктора с параметрами у сущностей
     /// </summary>
-    class EntityСonstructorAnalyzer
+    class EntityConstructorAnalyzer
     {
         public const string DiagnosticId = "EntityСonstructorDiagnosticId";
         public const string CodeFixTitle = "add constructor with params";
