@@ -206,11 +206,12 @@ namespace DotNet2020.Domain._5.Controllers
                 .ToList();
 
             // Get and fill charts
+            var columnCount = 5;
             var charts = _chartService.GetAllCharts();
             foreach (var chart in charts.Values)
-                chart.SetData(issuesToShow, 5);
+                chart.SetData(issuesToShow, columnCount);
 
-            return View(new ChartModel(reportResult.Result.ReportId, charts.Values.ToList()));
+            return View(new ChartModel(reportResult.Result.ReportId, columnCount, charts.Values.ToList()));
         }
 
         [HttpPost]
@@ -233,7 +234,7 @@ namespace DotNet2020.Domain._5.Controllers
             foreach (var chart in charts.Values)
                 chart.SetData(issuesToShow, count);
 
-            return View(new ChartModel(reportResult.Result.ReportId, charts.Values.ToList()));
+            return View(new ChartModel(reportResult.Result.ReportId, count, charts.Values.ToList()));
         }
 
         [HttpPost]

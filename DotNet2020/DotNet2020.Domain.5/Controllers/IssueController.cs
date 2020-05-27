@@ -35,7 +35,9 @@ namespace DotNet2020.Domain._5.Controllers
             if (!reportResult.IsSuccess)
                 return Error("Ошибка обращения к БД!", reportResult.Error.Message);
 
-            var issues = _timeTrackingService.GetProblemIssues(reportResult.Result.Issues);
+            var issues = _timeTrackingService.GetProblemIssues(reportResult.Result.Issues)
+                .Where(i => i.EstimatedTime.HasValue && i.SpentTime.HasValue)
+                .ToList();
 
             return View("Show", new ShowIssuesModel() { Issues = issues, ReportId = id });
         }
@@ -49,7 +51,9 @@ namespace DotNet2020.Domain._5.Controllers
 
             var chart = _chartService.GetChart(graphId);
             chart.SetData(reportResult.Result.Issues, 6);
-            var issues = chart.GetIssues(start, end);
+            var issues = chart.GetIssues(start, end)
+                .Where(i => i.EstimatedTime.HasValue && i.SpentTime.HasValue)
+                .ToList();
             return View("Show", new ShowIssuesModel() { Issues = issues, ReportId = reportId });
         }
 
