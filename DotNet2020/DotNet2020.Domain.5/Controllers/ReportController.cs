@@ -114,20 +114,28 @@ namespace DotNet2020.Domain._5.Controllers
             if (!reportResult.IsSuccess)
                 return Error("Ошибка обращения к БД!", reportResult.Error.Message);
 
-            var projectName = reportResult.Result.ProjectName;
+            Report report = reportResult.Result;
+
+            var projectName = report.ProjectName;
 
             var users = _timeTrackingService.GetAllUsers(projectName);
             if (users == null)
                 return Error("Ошибка обращения к сервису трекинга!", $"Не удалось получить список пользователей проекта \"{projectName}\".");
             users.Insert(0, "");
 
+            var dates = _timeTrackingService.GetDateRangeFromFilter(report.IssueFilter);
+            var assignee = _timeTrackingService.GetAssingeeFromFilter(report.IssueFilter);
+
             var model = new EditReportModel()
             {
                 ReportId = id,
                 ProjectName = projectName,
                 AllUsers = users,
-                ReportName = reportResult.Result.Name,
-                IssueFilter = reportResult.Result.IssueFilter
+                ReportName = report.Name,
+                IssueFilter = report.IssueFilter,
+                Start = dates.start,
+                End = dates.end,
+                SelectedUser = assignee
             };
             return View(model);
         }
@@ -164,8 +172,7 @@ namespace DotNet2020.Domain._5.Controllers
             // Get issues
             var filter = model.IssueFilter ?? "";
             filter = _timeTrackingService.AddDateToFilter(filter, model.Start, model.End);
-            if (!String.IsNullOrEmpty(model.SelectedUser))
-                filter = _timeTrackingService.AddAssigneeToFilter(filter, model.SelectedUser);
+            filter = _timeTrackingService.AddAssigneeToFilter(filter, model.SelectedUser);
 
             var issues = _timeTrackingService.GetIssues(reportResult.Result.ProjectName, filter);
 
@@ -202,6 +209,29 @@ namespace DotNet2020.Domain._5.Controllers
             var charts = _chartService.GetAllCharts();
             foreach (var chart in charts.Values)
                 chart.SetData(issuesToShow, 5);
+
+            return View(new ChartModel(reportResult.Result.ReportId, charts.Values.ToList()));
+        }
+
+        [HttpPost]
+        public IActionResult Show(int id, int count)
+        {
+            if (count <= 2)
+                count = 2;
+            // Get report
+            var reportResult = _storage.GetReport(id);
+            if (!reportResult.IsSuccess)
+                return Error("Ошибка обращения к БД!", reportResult.Error.Message);
+
+            // Filter issues
+            var issuesToShow = reportResult.Result.Issues
+                .Where(i => i.SpentTime.HasValue && i.EstimatedTime.HasValue)
+                .ToList();
+
+            // Get and fill charts
+            var charts = _chartService.GetAllCharts();
+            foreach (var chart in charts.Values)
+                chart.SetData(issuesToShow, count);
 
             return View(new ChartModel(reportResult.Result.ReportId, charts.Values.ToList()));
         }

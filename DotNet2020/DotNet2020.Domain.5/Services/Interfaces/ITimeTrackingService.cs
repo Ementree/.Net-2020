@@ -41,15 +41,25 @@ namespace DotNet2020.Domain._5.Services.Interfaces
         /// <param name="filter">Filter</param>
         /// <param name="start">Start date</param>
         /// <param name="end">End date</param>
-        /// <returns></returns>
-        string AddDateToFilter(string filter, DateTime start, DateTime end);
+        string AddDateToFilter(string filter, DateTime? start, DateTime? end);
 
         /// <summary>
         /// Add assignee to filter
         /// </summary>
         /// <param name="filter">Filter</param>
         /// <param name="userName">User name</param>
-        /// <returns></returns>
         string AddAssigneeToFilter(string filter, string userName);
+
+        /// <summary>
+        /// Get date range from filter
+        /// </summary>
+        /// <param name="filter">Filter</param>
+        (DateTime? start, DateTime? end) GetDateRangeFromFilter(string filter);
+
+        /// <summary>
+        /// Get assignee user from filter
+        /// </summary>
+        /// <param name="filter">Filter</param>
+        string GetAssingeeFromFilter(string filter);
     }
 }

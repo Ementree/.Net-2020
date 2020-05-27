@@ -66,6 +66,10 @@
             <form asp-controller="Issue" asp-action="ShowProblematic" asp-route-id="@Model.ReportId" method="get">
                 <button type="submit">Посмотреть проблемные задачи</button>
             </form>
+            <form asp-action="Show" method="post" asp-route-id="@Model.ReportId">
+                <input type="number" min="2" max="50" name="count" value="5"/>
+                <button type="submit">Изменить число столбцов</button>
+            </form>
             <form asp-action="Available" method="get">
                 <button type="submit">Назад</button>
             </form>

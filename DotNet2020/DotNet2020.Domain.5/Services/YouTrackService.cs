@@ -118,16 +118,46 @@ namespace DotNet2020.Domain._5.Services
                     .ToList());
         }
 
-        public string AddDateToFilter(string filter, DateTime start, DateTime end)
+        public string AddDateToFilter(string filter, DateTime? start, DateTime? end)
         {
-            var startStr = String.Format("{0:yyyy-MM-dd}", start);
-            var endStr = String.Format("{0:yyyy-MM-dd}", end);
-            return AddOrChangeProperty(filter, "created", $"{startStr} .. {endStr}");
+            if (start == null && end == null)
+                return RemoveProperty(filter, "created");
+            if (start != null && end != null)
+            {
+                var startStr = String.Format("{0:yyyy-MM-dd}", start);
+                var endStr = String.Format("{0:yyyy-MM-dd}", end);
+                return AddOrChangeProperty(filter, "created", $"{startStr} .. {endStr}");
+            }
+            var date = String.Format("{0:yyyy-MM-dd}", start ?? end);
+            return AddOrChangeProperty(filter, "created", $"{date}");
         }
 
         public string AddAssigneeToFilter(string filter, string userName)
         {
+            if (String.IsNullOrEmpty(userName))
+                return RemoveProperty(filter, "assignee");
             return AddOrChangeProperty(filter, "assignee", userName);
+        }
+
+        public (DateTime? start, DateTime? end) GetDateRangeFromFilter(string filter)
+        {
+            var created = GetPropertyValue(filter, "created");
+            if (String.IsNullOrEmpty(created))
+                return (null, null);
+            var dateArray = created.Split("..");
+            if (dateArray.Length == 1)
+            {
+                var date = DateTime.ParseExact(dateArray[0].Trim(), "yyyy-MM-dd", null);
+                return (date, date);
+            }
+            var start = DateTime.ParseExact(dateArray[0].Trim(), "yyyy-MM-dd", null);
+            var end = DateTime.ParseExact(dateArray[1].Trim(), "yyyy-MM-dd", null);
+            return (start, end);
+        }
+
+        public string GetAssingeeFromFilter(string filter)
+        {
+            return GetPropertyValue(filter, "assignee");
         }
 
         private string AddOrChangeProperty(string filter, string propertyName, string value)
@@ -139,11 +169,38 @@ namespace DotNet2020.Domain._5.Services
             return $"{filter} {propertyName}: {value}";
         }
 
-        private static string RemoveProperty(string filter, string propertyName)
+        private string RemoveProperty(string filter, string propertyName)
         {
             int startIndex = filter.IndexOf(propertyName);
+            if (startIndex < 0)
+                return filter;
             int propertyLength = propertyName.Length + 1;
+            int endIndex = GetEndIndex(filter, startIndex, propertyLength);
 
+            // Remove property
+            int count = propertyLength + endIndex;
+            if (count > filter.Length - startIndex)
+                count = filter.Length - startIndex;
+            return filter.Remove(startIndex, count);
+        }
+
+        private string GetPropertyValue(string filter, string propertyName)
+        {
+            int startIndex = filter.IndexOf(propertyName);
+            if (startIndex < 0)
+                return null;
+            int propertyLength = propertyName.Length + 1;
+            int endIndex = GetEndIndex(filter, startIndex, propertyLength);
+
+            // Remove property
+            int count = endIndex;
+            if (count > filter.Length - startIndex)
+                count = filter.Length - startIndex - propertyLength;
+            return filter.Substring(startIndex + propertyLength, count).Trim();
+        }
+
+        private static int GetEndIndex(string filter, int startIndex, int propertyLength)
+        {
             // Find nearest separating symbol (':' or '#')
             string filterAfterProperty = filter.Substring(startIndex + propertyLength);
             int colonIndex = filterAfterProperty.IndexOf(':');
@@ -154,13 +211,7 @@ namespace DotNet2020.Domain._5.Services
                 tagIndex = int.MaxValue / 2;
             if (colonIndex < 0)
                 colonIndex = int.MaxValue / 2;
-            int endIndex = Math.Min(tagIndex, colonIndex);
-
-            // Remove property
-            int count = propertyLength + endIndex;
-            if (count > filter.Length - startIndex)
-                count = filter.Length - startIndex;
-            return filter.Remove(startIndex, count);
+            return Math.Min(tagIndex, colonIndex);
         }
     }
 }

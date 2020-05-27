@@ -60,6 +60,10 @@
                 <select asp-for="SelectedUser">
                     @foreach (var user in Model.AllUsers)
                     {
+                        if (user == Model.SelectedUser)
+                        {
+                            <option value="@user" selected>@user</option>
+                        }
                         <option value="@user">@user</option>
                     }
                 </select>
@@ -83,6 +87,7 @@
                         c.Start(Model.Start);
                         c.End(Model.End);
                     })
+                    .Format("yyyy.MM.dd")
                 )
             </div>
             <br>
