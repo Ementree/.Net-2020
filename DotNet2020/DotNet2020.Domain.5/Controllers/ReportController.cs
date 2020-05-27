@@ -49,9 +49,18 @@ namespace DotNet2020.Domain._5.Controllers
         [HttpGet]
         public IActionResult Create()
         {
+            var projectNames = _timeTrackingService.GetAllProjects();
+            var usersInProjects = new List<string[]>();
+            foreach (var projectName in projectNames)
+            {
+                var userNames = _timeTrackingService.GetAllUsers(projectName);
+                userNames.Insert(0, "");
+                usersInProjects.Add(userNames.ToArray());
+            }
             var model = new CreateReportModel()
             {
-                CreateProject = _timeTrackingService.GetAllProjects()
+                ProjectNames = projectNames,
+                UsersInProjects = usersInProjects.ToArray()
             };
             return View(model);
         }
@@ -75,23 +84,19 @@ namespace DotNet2020.Domain._5.Controllers
             if (isContains.Result)
                 return Error("Ошибка создания отчета!", "Отчет с таким именем уже существует!");
 
-            // Get issues
-            var issues = _timeTrackingService.GetIssues(model.ProjectName, model.IssueFilter);
-
-            // Filter issues
-            issues = issues
-                .Where(i => i.CreationTime >= model.Start && i.CreationTime <= model.End)
-                .ToList();
+            var filter = model.IssueFilter ?? "";
+            filter = _timeTrackingService.AddDateToFilter(filter, model.Start, model.End);
             if (!String.IsNullOrEmpty(model.UserName))
-                issues = issues
-                    .Where(i => i.AssigneeName == model.UserName)
-                    .ToList();
+                filter = _timeTrackingService.AddAssigneeToFilter(filter, model.UserName);
+
+            // Get issues
+            var issues = _timeTrackingService.GetIssues(model.ProjectName, filter);
 
             if (issues == null)
                 issues = new List<Issue>();
 
             // Save report
-            var report = new Report(model.ReportName, model.ProjectName, model.IssueFilter, issues);
+            var report = new Report(model.ReportName, model.ProjectName, filter, issues);
             _storage.SaveReport(report);
 
             // Get saved report with id
@@ -114,20 +119,13 @@ namespace DotNet2020.Domain._5.Controllers
             var users = _timeTrackingService.GetAllUsers(projectName);
             if (users == null)
                 return Error("Ошибка обращения к сервису трекинга!", $"Не удалось получить список пользователей проекта \"{projectName}\".");
-
-            var usersInIssues = reportResult.Result.Issues
-                .Select(i => i.AssigneeName)
-                .ToHashSet();
-            var selectedUsers = new bool[users.Length];
-            for (int i = 0; i < users.Length; i++)
-                selectedUsers[i] = usersInIssues.Contains(users[i]);
+            users.Insert(0, "");
 
             var model = new EditReportModel()
             {
                 ReportId = id,
                 ProjectName = projectName,
                 AllUsers = users,
-                SelectedUsers = selectedUsers,
                 ReportName = reportResult.Result.Name,
                 IssueFilter = reportResult.Result.IssueFilter
             };
@@ -164,8 +162,12 @@ namespace DotNet2020.Domain._5.Controllers
             }
 
             // Get issues
-            var issueFilter = model.IssueFilter == null ? "" : model.IssueFilter;
-            var issues = _timeTrackingService.GetIssues(reportResult.Result.ProjectName, model.IssueFilter);
+            var filter = model.IssueFilter ?? "";
+            filter = _timeTrackingService.AddDateToFilter(filter, model.Start, model.End);
+            if (!String.IsNullOrEmpty(model.SelectedUser))
+                filter = _timeTrackingService.AddAssigneeToFilter(filter, model.SelectedUser);
+
+            var issues = _timeTrackingService.GetIssues(reportResult.Result.ProjectName, filter);
 
             // Change time mode
             if (model.IsWorkItems)
@@ -173,20 +175,9 @@ namespace DotNet2020.Domain._5.Controllers
                 foreach (var issue in issues)
                     issue.SetTimeByWorkItems();
             }
-            // Filter by selected users
-            if (model.SelectedUsers != null)
-            {
-                var users = model.AllUsers
-                    .Zip(model.SelectedUsers)
-                    .Where(i => i.Second)
-                    .Select(i => i.First)
-                    .ToHashSet();
-                issues = issues
-                    .Where(i => users.Contains(i.AssigneeName))
-                    .ToList();
-            }
+
             // Save new report
-            var newReport = new Report(reportResult.Result.Name, reportResult.Result.ProjectName, model.IssueFilter, issues);
+            var newReport = new Report(reportResult.Result.Name, reportResult.Result.ProjectName, filter, issues);
             reportResult = _storage.EditReport(reportResult.Result.ReportId, newReport);
             if (!reportResult.IsSuccess)
                 return Error("Ошибка обращения к БД!", reportResult.Error.Message);

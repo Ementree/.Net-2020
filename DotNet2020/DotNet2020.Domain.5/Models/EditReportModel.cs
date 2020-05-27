@@ -6,6 +6,12 @@ namespace DotNet2020.Domain._5.Models
 {
     public class EditReportModel
     {
+        public EditReportModel()
+        {
+            Start = new DateTime(1990, 1, 1);
+            End = DateTime.Now;
+        }
+
         public int ReportId { get; set; }
         [Required]
         [MaxLength(100)]
@@ -13,10 +19,13 @@ namespace DotNet2020.Domain._5.Models
         [MaxLength(1000)]
         public string IssueFilter { get; set; }
         public string ProjectName { get; set; }
-        public string[] AllUsers { get; set; }
-        public bool[] SelectedUsers { get; set; }
+        public List<string> AllUsers { get; set; }
+        public string SelectedUser { get; set; }
         public bool IsAssignee { get; set; }
         public bool IsWorkItems { get; set; }
+
+        public DateTime Start { get; set; }
+        public DateTime End { get; set; }
     }
 }
 

@@ -1,4 +1,5 @@
 ﻿using DotNet2020.Domain._5.Entities;
+using System;
 using System.Collections.Generic;
 
 namespace DotNet2020.Domain._5.Services.Interfaces
@@ -32,6 +33,23 @@ namespace DotNet2020.Domain._5.Services.Interfaces
         /// <summary>
         /// Get all project users in project
         /// </summary>
-        string[] GetAllUsers(string projectName);
+        List<string> GetAllUsers(string projectName);
+
+        /// <summary>
+        /// Add start date and end date to filter
+        /// </summary>
+        /// <param name="filter">Filter</param>
+        /// <param name="start">Start date</param>
+        /// <param name="end">End date</param>
+        /// <returns></returns>
+        string AddDateToFilter(string filter, DateTime start, DateTime end);
+
+        /// <summary>
+        /// Add assignee to filter
+        /// </summary>
+        /// <param name="filter">Filter</param>
+        /// <param name="userName">User name</param>
+        /// <returns></returns>
+        string AddAssigneeToFilter(string filter, string userName);
     }
 }

@@ -16,9 +16,28 @@
         };
         $("#set").click(setValue);
     });
+
+    var values = @Json.Serialize(Model.UsersInProjects);
+
+    function onChange() {
+        let sel1 = document.getElementById("sel1");
+        let sel2 = document.getElementById("sel2");
+        let index = sel1.selectedIndex;
+        let options = values[index];
+        for (let i = sel2.options.length; i >= 0; i--) {
+            sel2.options.remove(i);
+        }
+        for (let i = 0; i < options.length; i++) {
+            let option = new Option();
+            option.text = options[i];
+            option.value = options[i];
+            sel2.options.add(option);
+        }
+    }
 </script>
 <div class="text-center">
     <h2>Создать отчет</h2>
+
 </div>
 <br>
 <div class="row">
@@ -33,8 +52,8 @@
             </div>
             <div class="form-group">
                 <h5><label for="CreateReport">Проект</label></h5>
-                <select asp-for="ProjectName">
-                    @foreach (var project in Model.CreateProject)
+                <select asp-for="ProjectName" id="sel1" onchange="onChange()">
+                    @foreach (var project in Model.ProjectNames)
                     {
                         <option value="@project">@project</option>
                     }
@@ -47,8 +66,12 @@
             </div>
             <div class="form-group">
                 <h5><label for="CreateReport">Пользователь</label></h5>
-                <input asp-for="UserName" class="form-control" />
-                <span asp-validation-for="UserName" class="text-danger"></span>
+                <select asp-for="UserName" id="sel2">
+                    @foreach(var user in Model.UsersInProjects[0])
+                    {
+                        <option value="@user">@user</option>
+                    }
+                </select>
             </div>
             <div class="form-group">
                 <h5>Дата создания</h5>

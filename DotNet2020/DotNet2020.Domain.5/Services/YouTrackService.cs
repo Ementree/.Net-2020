@@ -34,12 +34,14 @@ namespace DotNet2020.Domain._5.Services
             return projects.Select(p => p.Name).ToArray();
         }
 
-        public string[] GetAllUsers(string projectName)
+        public List<string> GetAllUsers(string projectName)
         {
-            if (projectName == null) return new string[0];
+            if (projectName == null) 
+                return new List<string>();
             var project = projectService.GetAccessibleProjects(true).Result.Where(p => p.Name == projectName).FirstOrDefault();
-            if (project == null) return new string[0];
-            return project.AssigneesLogin.Select(x => x.Value).ToArray();
+            if (project == null) 
+                return new List<string>();
+            return project.AssigneesLogin.Select(x => x.Value).ToList();
         }
 
         public Issue GetIssue(string projectName, string issueName)
@@ -114,6 +116,51 @@ namespace DotNet2020.Domain._5.Services
                         SpentTime = (int)w.Duration.TotalHours
                     })
                     .ToList());
+        }
+
+        public string AddDateToFilter(string filter, DateTime start, DateTime end)
+        {
+            var startStr = String.Format("{0:yyyy-MM-dd}", start);
+            var endStr = String.Format("{0:yyyy-MM-dd}", end);
+            return AddOrChangeProperty(filter, "created", $"{startStr} .. {endStr}");
+        }
+
+        public string AddAssigneeToFilter(string filter, string userName)
+        {
+            return AddOrChangeProperty(filter, "assignee", userName);
+        }
+
+        private string AddOrChangeProperty(string filter, string propertyName, string value)
+        {
+            if (String.IsNullOrEmpty(filter))
+                return $"{propertyName}: {value}";
+            if (filter.Contains(propertyName))
+                filter = RemoveProperty(filter, propertyName);
+            return $"{filter} {propertyName}: {value}";
+        }
+
+        private static string RemoveProperty(string filter, string propertyName)
+        {
+            int startIndex = filter.IndexOf(propertyName);
+            int propertyLength = propertyName.Length + 1;
+
+            // Find nearest separating symbol (':' or '#')
+            string filterAfterProperty = filter.Substring(startIndex + propertyLength);
+            int colonIndex = filterAfterProperty.IndexOf(':');
+            if (colonIndex > 0)
+                colonIndex -= new string(filterAfterProperty.Substring(0, colonIndex).Reverse().ToArray()).IndexOf(' ');
+            int tagIndex = filterAfterProperty.IndexOf('#');
+            if (tagIndex < 0)
+                tagIndex = int.MaxValue / 2;
+            if (colonIndex < 0)
+                colonIndex = int.MaxValue / 2;
+            int endIndex = Math.Min(tagIndex, colonIndex);
+
+            // Remove property
+            int count = propertyLength + endIndex;
+            if (count > filter.Length - startIndex)
+                count = filter.Length - startIndex;
+            return filter.Remove(startIndex, count);
         }
     }
 }
