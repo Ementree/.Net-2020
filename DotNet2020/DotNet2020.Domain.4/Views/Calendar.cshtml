@@ -186,7 +186,7 @@
             var slotRanges = [];
 
             // week long slots?
-            for (var i = 0; i < dates.length; i += 7) {
+            for (var i = 0; i < dates.length; i += 3) {
                 var rangeStart = kendo.date.getDate(dates[i]);
                 kendo.date.setTime(rangeStart, slotStartTime);
                 var rangeEnd = kendo.date.getDate(dates[i]);

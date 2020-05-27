@@ -1,29 +1,37 @@
 ﻿using DotNet2020.Domain._5.Entities;
+using System.Collections.Generic;
 
 namespace DotNet2020.Domain._5.Services.Interfaces
 {
     public interface ITimeTrackingService
     {
         /// <summary>
+        /// Get issue by project name and issue name
+        /// </summary>
+        /// <param name="projectName">Project name</param>
+        /// <param name="issueName">Issue name</param>
+        Issue GetIssue(string projectName, string issueName);
+
+        /// <summary>
         /// Get issues by project name and issue filter
         /// </summary>
         /// <param name="projectName">Project name</param>
         /// <param name="issueFilter">Issue filter</param>
-        /// <returns>Issue time info array</returns>
-        IssueTimeInfo[] GetIssues(string projectName, string issueFilter);
+        List<Issue> GetIssues(string projectName, string issueFilter = "");
 
         /// <summary>
-        /// Get issues by issue filter
+        /// Get all project names
         /// </summary>
-        /// <param name="issueFilter">Issue filter</param>
-        /// <returns>Issue time info array</returns>
-        IssueTimeInfo[] GetIssuesByIssueFilter(string issueFilter);
+        string[] GetAllProjects();
 
         /// <summary>
-        /// Get issues by project name
+        /// Get issues that were tracked by
         /// </summary>
-        /// <param name="projectName">Project name</param>
-        /// <returns>Issue time info array</returns>
-        IssueTimeInfo[] GetIssuesByProjectName(string projectName);
+        List<Issue> GetProblemIssues(List<Issue> issues);
+
+        /// <summary>
+        /// Get all project users in project
+        /// </summary>
+        string[] GetAllUsers(string projectName);
     }
 }

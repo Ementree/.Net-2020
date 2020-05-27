@@ -15,6 +15,18 @@
     <Compile Remove="Migrations\20200402113302_ResourceGroupType.Designer.cs" />
     <Compile Remove="Migrations\20200430202512_SnapShot1.cs" />
     <Compile Remove="Migrations\20200430202512_SnapShot1.Designer.cs" />
+    <Compile Remove="Migrations\20200511153902_test.cs" />
+    <Compile Remove="Migrations\20200511153902_test.Designer.cs" />
+    <Compile Remove="Migrations\20200512083533_AnswerUpdate.cs" />
+    <Compile Remove="Migrations\20200512083533_AnswerUpdate.Designer.cs" />
+    <Compile Remove="Migrations\20200512083820_QuestionUpdate.cs" />
+    <Compile Remove="Migrations\20200512083820_QuestionUpdate.Designer.cs" />
+    <Compile Remove="Migrations\20200512084800_QuestionUpdate.cs" />
+    <Compile Remove="Migrations\20200512084800_QuestionUpdate.Designer.cs" />
+    <Compile Remove="Migrations\20200512114326_questionupdate.cs" />
+    <Compile Remove="Migrations\20200512114326_questionupdate.Designer.cs" />
+    <Compile Remove="Migrations\20200512124204_updateComplexity.cs" />
+    <Compile Remove="Migrations\20200512124204_updateComplexity.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -40,6 +52,7 @@
   <ItemGroup>
     <ProjectReference Include="..\DotNet2020.Domain.3\DotNet2020.Domain.3.csproj" />
     <ProjectReference Include="..\DotNet2020.Domain.4\DotNet2020.Domain.4.csproj" />
+    <ProjectReference Include="..\DotNet2020.Domain.5\DotNet2020.Domain.5.csproj" />
     <ProjectReference Include="..\DotNet2020.Domain.6\DotNet2020.Domain.6.csproj" />
     <ProjectReference Include="..\DotNet2020.Domain.Core\DotNet2020.Domain.Core.csproj" />
   </ItemGroup>

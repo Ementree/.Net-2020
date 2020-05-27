@@ -14,6 +14,8 @@ namespace DotNet2020.Domain._3.Models
     {
         public List<string> Questions { get; set; }
         public QuestionActions Action { get; set; }
+        public List<string> Complexities { get; set; } = new List<string>();
+        public string Complexity { get; set; }
         public string NewQuestion { get; set; }
         public List<string> QuestionsToRemove { get; set; } = new List<string>();
     }
