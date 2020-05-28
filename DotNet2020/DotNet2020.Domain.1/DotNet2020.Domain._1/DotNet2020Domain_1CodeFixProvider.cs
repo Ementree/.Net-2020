@@ -36,7 +36,6 @@ namespace DotNet2020.Domain._1
         public sealed override async Task RegisterCodeFixesAsync(CodeFixContext context)
         {
             var diagnostic = context.Diagnostics.First();
-
             switch (diagnostic.Id)
             {
                 case PropertyModifiersAnalyzer.DiagnosticId:
