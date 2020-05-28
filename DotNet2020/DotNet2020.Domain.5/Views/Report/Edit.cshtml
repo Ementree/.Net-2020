@@ -1,20 +1,36 @@
 ﻿@model DotNet2020.Domain._5.Models.EditReportModel
+@using Kendo.Mvc.UI;
 <style type="text/css">
     .container4 {
         margin: 0 auto;
         white-space: nowrap;
     }
+
     .checkbox {
     }
-    .checkboxtext{
-        display:inline-block
+
+    .checkboxtext {
+        display: inline-block
     }
+
     .multiselect {
         max-height: 100px;
         overflow-y: auto;
         white-space: nowrap;
     }
 </style>
+<script>
+    $(document).ready(function () {
+        var setValue = function () {
+            var daterangepicker = $("#daterangepicker").data("kendoDateRangePicker");
+            var range = daterangepicker.range();
+
+            document.getElementById("start").value = kendo.toString(range.start, "dd.MM.yyyy HH:mm:ss");
+            document.getElementById("end").value = kendo.toString(range.end, "dd.MM.yyyy HH:mm:ss");
+        };
+        $("#set").click(setValue);
+    });
+</script>
 <div class="text-center">
     <h2>Редактировать отчет</h2>
 </div>
@@ -23,35 +39,37 @@
     <div class="container4">
         <form asp-action="ProcessEdit" method="post">
             <input asp-for="ReportId" value="@Model.ReportId" hidden />
+            <input id="start" type="text" asp-for="Start" hidden />
+            <input id="end" type="text" asp-for="End" hidden />
             <div class="form-group">
-                <label for="EditReport">Название отчета:</label>
-                <input asp-for="ReportName" class="form-control" value="@Model.ReportName" />
+                <h5><label for="CreateReport">Название отчета</label></h5>
+                <input asp-for="ReportName" class="form-control" />
                 <span asp-validation-for="ReportName" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label for="EditReport">Проект: @Model.ProjectName</label>
+                <h5><label for="CreateReport">Проект</label></h5>
+                <h6>@Model.ProjectName</h6>
             </div>
             <div class="form-group">
-                <label for="EditReport">Фильтр:</label>
-                <input asp-for="IssueFilter" class="form-control" value="@Model.IssueFilter" />
+                <h5><label for="CreateReport">Фильтр</label></h5>
+                <input asp-for="IssueFilter" class="form-control" />
                 <span asp-validation-for="IssueFilter" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label for="EditReport">Пользователи:</label>
-                <br>
-                <div class="multiselect">
-                    @for (int i = 0; i < Model.AllUsers.Length; i++)
+                <h5><label for="CreateReport">Пользователь</label></h5>
+                <select asp-for="SelectedUser">
+                    @foreach (var user in Model.AllUsers)
                     {
-                        <input class="checkbox" type="checkbox" checked="@Model.SelectedUsers[i]" asp-for="@Model.SelectedUsers[i]" />
-                        <input asp-for="@Model.AllUsers[i]" value="@Model.AllUsers[i]" hidden />
-                        <p class="checkboxtext">@Model.AllUsers[i]</p>
-                        <br />
+                        if (user == Model.SelectedUser)
+                        {
+                            <option value="@user" selected>@user</option>
+                        }
+                        <option value="@user">@user</option>
                     }
-                </div>
+                </select>
             </div>
             <div class="form-group">
-                <label for="EditReport">Режим работы:</label>
-                <br>
+                <h5><label for="EditReport">Режим работы</label></h5>
                 <div class="text-center">
                     <input class="form-check-input" type="radio" name="EditReport" asp-for="IsAssignee" value="IsAssignee" checked>
                     <label for="EditReport">Assignee&emsp;&emsp;</label>
@@ -59,11 +77,29 @@
                     <label for="EditReport">Work Items</label>
                 </div>
             </div>
+            <div class="form-group">
+                <h5>Дата создания</h5>
+                @(Html.Kendo().DateRangePicker()
+                    .Name("daterangepicker")
+                    .HtmlAttributes(new { style = "width: 100%", title = "daterangepicker" })
+                    .Range(c =>
+                    {
+                        c.Start(Model.Start);
+                        c.End(Model.End);
+                    })
+                    .Format("dd.MM.yyyy")
+                )
+            </div>
             <br>
             <br>
             <div class="text-center">
-                <button type="submit" class="btn btn-success btn-lg">Редактировать</button>
+                <button type="submit" id="set" class="btn btn-success btn-lg">Редактировать</button>
             </div>
         </form>
     </div>
+</div>
+<div>
+    <form asp-action="Show" asp-route-id="@Model.ReportId" method="get">
+        <button type="submit" style="position:absolute; bottom:10px; left:10px">Назад</button>
+    </form>
 </div>

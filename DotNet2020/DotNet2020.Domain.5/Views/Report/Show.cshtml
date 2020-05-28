@@ -6,8 +6,17 @@
 </head>
 
 <script>
-    $(function () {
-        $("#myTab2 li:eq(0) a").tab('show');
+    $(document).ready(function () {
+        $('a[data-toggle="tab"]').on('show.bs.tab', function (e) {
+            localStorage.setItem('activeTab', $(e.target).attr('href'));
+        });
+        var activeTab = localStorage.getItem('activeTab');
+        if (activeTab) {
+            $('#myTab2 a[href="' + activeTab + '"]').tab('show');
+        }
+        else {
+            $("#myTab2 li:eq(0) a").tab('show');
+        }
     });
 </script>
 <ul id="myTab2" class="nav nav-tabs">
@@ -24,48 +33,60 @@
     {
         var tabId = $"panely{i}";
         var chartId = $"chart{i}";
-    <div id="@tabId" class="tab-pane fade in active">
-        <div id='@chartId' style="height:auto; width:70%"></div>
-        <script>
-            var myPlot = document.getElementById('@chartId');
-            var arrY = @Json.Serialize(Model.Charts[i].YAxis);
-            var arrX = @Json.Serialize(Model.Charts[i].XAxis);
-
-            var data = [
+        <div id="@tabId" class="tab-pane fade">
+            <div id='@chartId'></div>
+            <script>
                 {
-                 x: arrX,
-                 y: arrY,
-                 type: 'bar'
+                    var myPlot = document.getElementById('@chartId');
+                    var arrY = @Json.Serialize(Model.Charts[i].YAxis);
+                    var arrX = @Json.Serialize(Model.Charts[i].XAxis);
+
+                    var data = [
+                        {
+                            x: arrX,
+                            y: arrY,
+                            type: 'bar'
+                        }
+                    ];
+                    var layout = {
+                        title: @Json.Serialize(Model.Charts[i].Name),
+                        showlegend: false
+                    };
+
+
+                    Plotly.newPlot('@chartId', data, layout, { staticPlot: false });
+
+                    myPlot.on('plotly_click', function (data) {
+
+                        var pts = '';
+                        for (var i = 0; i < data.points.length; i++) {
+                            pts = data.points[i].x;
+                        }
+                        var start = pts;
+                        pts = pts + @Model.Charts[i].Tick.ToString();
+                        window.open(`/Issue/ShowRange?reportId=${@Json.Serialize(Model.ReportId)}&start=${start}&end=${pts}&graphId=${@Json.Serialize(Model.Charts[i].Id)}`)
+
+                    });
                 }
-            ];
-            var layout = {
-            title: @Json.Serialize(Model.Charts[i].Name),
-            showlegend: false
-            };
-
-
-            Plotly.newPlot('@chartId', data, layout, { staticPlot: false });
-
-            myPlot.on('plotly_click', function (data) {
-
-            var pts = '';
-            for (var i = 0; i < data.points.length; i++){
-            pts = data.points[i].x;
-            }
-            var start = pts - @Model.Charts[i].Tick.ToString();
-            window.open(`/Issue/ShowRange?reportId=${@Json.Serialize(Model.ReportId)}&start=${start}&end=${pts}&graphId=${@Json.Serialize(Model.Charts[i].Id)}`)
-
-            });
-        </script>
-        <form asp-action="Edit" asp-route-id="@Model.ReportId" method="post">
-            <button type="submit">Изменить</button>
-        </form>
-        <form asp-controller="Issue" asp-action="Show" asp-route-id="@Model.ReportId" method="get">
-            <button type="submit">Посмотреть все задачи</button>
-        </form>
-        <form asp-controller="Issue" asp-action="ShowProblematic" asp-route-id="@Model.ReportId" method="get">
-            <button type="submit">Посмотреть проблемные задачи</button>
-        </form>
-    </div>
+            </script>
+            <form asp-action="Edit" asp-route-id="@Model.ReportId" method="post">
+                <button type="submit">Изменить</button>
+            </form>
+            <form asp-controller="Issue" asp-action="Show" asp-route-id="@Model.ReportId" method="get">
+                <button type="submit">Посмотреть все задачи</button>
+            </form>
+            <form asp-controller="Issue" asp-action="ShowProblematic" asp-route-id="@Model.ReportId" method="get">
+                <button type="submit">Посмотреть проблемные задачи</button>
+            </form>
+            <form asp-action="Show" method="post" asp-route-id="@Model.ReportId">
+                <input type="number" min="2" max="50" name="count" value="@Model.ColumnCount" />
+                <button type="submit">Изменить число столбцов</button>
+            </form>
+            <form asp-action="Available" method="get">
+                <button type="submit">Назад</button>
+            </form>
+        </div>
     }
+</div>
+<div>
 </div>

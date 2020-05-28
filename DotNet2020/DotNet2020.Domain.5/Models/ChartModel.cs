@@ -7,11 +7,13 @@ namespace DotNet2020.Domain._5.Models
     {
         public List<Chart> Charts { get; private set; }
         public int ReportId { get; private set; }
+        public int ColumnCount { get; private set; }
 
-        public ChartModel(int reportId, List<Chart> charts)
+        public ChartModel(int reportId, int columnCount, List<Chart> charts)
         {
             ReportId = reportId;
             Charts = charts;
+            ColumnCount = columnCount;
         }
     }
 }

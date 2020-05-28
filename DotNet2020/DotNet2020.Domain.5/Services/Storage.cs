@@ -83,8 +83,9 @@ namespace DotNet2020.Domain._5.Services
                 var report = _reports.Find(oldReportId);
                 if (report == null)
                     throw new KeyNotFoundException($"Key {oldReportId} is not found!");
-                newReport.ReportId = report.ReportId;
-                report = newReport;
+                _reports.Remove(report);
+                newReport.ReportId = oldReportId;
+                _reports.Add(newReport);
                 _db.SaveChanges();
                 return report;
             });

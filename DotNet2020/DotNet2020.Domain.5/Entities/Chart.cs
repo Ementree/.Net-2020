@@ -10,7 +10,7 @@ namespace DotNet2020.Domain._5.Entities
         public string Name { get; private set; }
         public List<double> XAxis { get; private set; } 
         public List<double> YAxis { get; private set; }
-        public double Tick { get;set; }
+        public int Tick { get;set; }
 
         private Func<Issue, double?> _selector { get; set; }
         private List<Issue> _issues { get; set; }
@@ -38,26 +38,29 @@ namespace DotNet2020.Domain._5.Entities
                 .Select(_selector)
                 .Where(d => d.HasValue)
                 .Select(d => d.Value)
-                .OrderBy(d => d);
+                .OrderBy(d => d)
+                .ToList();
 
-            if (!chart.Any())
+            if (chart.Count == 0)
                 return;
 
-            var dict = new Dictionary<double, int>();
-            Tick = Math.Ceiling((chart.Last() - chart.First()) / count);
-            var min = chart.First() + Tick;
-            foreach (var e in chart)
+            var dict = new Dictionary<int, int>();
+
+            int first = (int)Math.Floor(chart[0]);
+            int last = (int)Math.Ceiling(chart[chart.Count - 1]);
+
+            Tick = (int)Math.Ceiling((double)(last - first) / count);
+
+            int counter = 0;
+            for (int i = first; i <= last; i += Tick)
             {
-                if (!dict.ContainsKey(min))
-                    dict[min] = 0;
-                while(e>min)
-                {
-                    min += Tick;
-                    if (!dict.ContainsKey(min))
-                        dict[min] = 0;
-                }
-                dict[min]++;
+                if (!dict.ContainsKey(i))
+                    dict[i] = 0;
+
+                for (; counter < chart.Count && chart[counter] < i + Tick; counter++)
+                    dict[i]++;
             }
+
             foreach (var e in dict)
             {
                 XAxis.Add(e.Key);
@@ -68,7 +71,7 @@ namespace DotNet2020.Domain._5.Entities
         public List<Issue> GetIssues(int start, int end)
         {
             var issues = _issues.ToDictionary(i => i, _selector)
-                .Where(i => i.Value.HasValue && i.Value.Value >= start && i.Value.Value <= end)
+                .Where(i => i.Value.HasValue && i.Value.Value >= start && i.Value.Value < end)
                 .Select(i => i.Key)
                 .Clone()
                 .ToList();

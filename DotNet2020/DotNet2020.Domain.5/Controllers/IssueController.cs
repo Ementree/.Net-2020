@@ -4,6 +4,7 @@ using DotNet2020.Domain._5.Services;
 using DotNet2020.Domain._5.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System;
@@ -19,11 +20,11 @@ namespace DotNet2020.Domain._5.Controllers
         private readonly ITimeTrackingService _timeTrackingService;
         private readonly IChartService _chartService;
 
-        public IssueController(ILogger<IssueController> logger, DbContext db)
+        public IssueController(IConfiguration configuration, ILogger<IssueController> logger, DbContext db)
         {
             _logger = logger;
             _storage = new Storage(db);
-            _timeTrackingService = new YouTrackService();
+            _timeTrackingService = new YouTrackService(configuration);
             _chartService = new ChartService();
         }
 
@@ -34,9 +35,11 @@ namespace DotNet2020.Domain._5.Controllers
             if (!reportResult.IsSuccess)
                 return Error("Ошибка обращения к БД!", reportResult.Error.Message);
 
-            var issues = _timeTrackingService.GetProblemIssues(reportResult.Result.Issues);
+            var issues = _timeTrackingService.GetProblemIssues(reportResult.Result.Issues)
+                .Where(i => i.EstimatedTime.HasValue && i.SpentTime.HasValue)
+                .ToList();
 
-            return View("Show", new ShowIssuesModel() { Issues = issues });
+            return View("Show", new ShowIssuesModel() { Issues = issues, ReportId = id });
         }
 
         [HttpGet]
@@ -48,8 +51,10 @@ namespace DotNet2020.Domain._5.Controllers
 
             var chart = _chartService.GetChart(graphId);
             chart.SetData(reportResult.Result.Issues, 6);
-            var issues = chart.GetIssues(start, end);
-            return View("Show", new ShowIssuesModel() { Issues = issues });
+            var issues = chart.GetIssues(start, end)
+                .Where(i => i.EstimatedTime.HasValue && i.SpentTime.HasValue)
+                .ToList();
+            return View("Show", new ShowIssuesModel() { Issues = issues, ReportId = reportId });
         }
 
         [HttpGet]
@@ -59,9 +64,12 @@ namespace DotNet2020.Domain._5.Controllers
             if (!reportResult.IsSuccess)
                 return Error("Ошибка обращения к БД!", reportResult.Error.Message);
 
-            var issues = reportResult.Result.Issues;
+            // Filter issues
+            var issuesToShow = reportResult.Result.Issues
+                .Where(i => i.SpentTime.HasValue && i.EstimatedTime.HasValue)
+                .ToList();
 
-            return View("Show", new ShowIssuesModel() { Issues = issues });
+            return View("Show", new ShowIssuesModel() { Issues = issuesToShow, ReportId = id });
         }
 
         [HttpPost]
@@ -93,7 +101,7 @@ namespace DotNet2020.Domain._5.Controllers
             else if (!String.IsNullOrEmpty(model.OrderByDescending))
                 issues = model.Issues.OrderByDescending(i => property.GetValue(i)).ToList();
 
-            return View("Show", new ShowIssuesModel() { Issues = issues });
+            return View("Show", new ShowIssuesModel() { Issues = issues, ReportId = model.ReportId });
         }
 
         private IActionResult Error(string title = "Упс...", string message = "Что-то пошло не так :(")
