@@ -46,16 +46,17 @@
 
             Plotly.newPlot('@chartId', data, layout, { staticPlot: false });
 
-            myPlot.on('plotly_click', function (data) {
+                myPlot.on('plotly_click', function (data) {
 
-            var pts = '';
-            for (var i = 0; i < data.points.length; i++){
-            pts = data.points[i].x;
-            }
-            var start = pts - @Model.Charts[i].Tick.ToString();
-            window.open(`/Issue/ShowRange?reportId=${@Json.Serialize(Model.ReportId)}&start=${start}&end=${pts}&graphId=${@Json.Serialize(Model.Charts[i].Id)}`)
+                    var pts = '';
+                    for (var i = 0; i < data.points.length; i++) {
+                        pts = data.points[i].x;
+                    }
+                    var start = pts;
+                    pts = pts + @Model.Charts[i].Tick.ToString();
+                    window.open(`/Issue/ShowRange?reportId=${@Json.Serialize(Model.ReportId)}&start=${start}&end=${pts}&graphId=${@Json.Serialize(Model.Charts[i].Id)}`)
 
-            });
+                });
             </script>
             <form asp-action="Edit" asp-route-id="@Model.ReportId" method="post">
                 <button type="submit">Изменить</button>
