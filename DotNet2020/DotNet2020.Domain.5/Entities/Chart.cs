@@ -68,7 +68,7 @@ namespace DotNet2020.Domain._5.Entities
         public List<Issue> GetIssues(int start, int end)
         {
             var issues = _issues.ToDictionary(i => i, _selector)
-                .Where(i => i.Value.HasValue && i.Value.Value >= start && i.Value.Value <= end)
+                .Where(i => i.Value.HasValue && i.Value.Value >= start && i.Value.Value < end)
                 .Select(i => i.Key)
                 .Clone()
                 .ToList();
